@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "#Convert accessions\n\n#Very Much In Progress\n\n#accessionConverter <- function(accession_vector)\n\n#x <- \"SRX1441669\"\n#x <- \"GSE75250\"\n#accession_vector <- \"GSM1947436\"\naccession_vector <- \"ERP010604\"\n\nx <- unique(accession_vector)\nx <- x[digitSort(x)]\n\n\ndatabase_name <- \"sra_con\"\n\naccession_class <- accessionClassifier(x)\nsearch_count <- 0\naccession_df <- data.frame()\n\n\nif (accession_class %in% c(\"run_accession\", \"experiment_accession\", \"sample_accession\", \"study_accession\")){\n\n  for (a in seq_along(x)){\n    query <- paste0(\"SELECT run_accession, experiment_accession, sample_accession, study_accession, run_alias, experiment_attribute, study_name, study_alias FROM sra WHERE \", accession_class, \" = '\", x[a], \"'\")\n    print(query)\n    chunk <- dbGetQuery(get(database_name), query)\n    search_count <- search_count + as.integer(dim(chunk)[1]>=1)\n    accession_df <- rbind(accession_df, chunk)\n  }\n\n} else if (accession_class == \"gsm\"){\n\n  for (a in seq_along(x)){\n    query <- paste0(\"SELECT run_accession, experiment_accession, sample_accession, study_accession, run_alias, experiment_attribute, study_name, study_alias FROM sra WHERE run_alias\", \" LIKE '%\", x[a], \"%' OR experiment_attribute LIKE '%\", x[a], \"%'\")\n    print(query)\n    chunk <- dbGetQuery(get(database_name), query)\n    search_count <- search_count + as.integer(dim(chunk)[1]>=1)\n    accession_df <- rbind(accession_df, chunk)\n  }\n\n} else if (accession_class == \"series_id\"){\n\n  for (a in seq_along(x)){\n    query <- paste0(\"SELECT run_accession, experiment_accession, sample_accession, study_accession, run_alias, experiment_attribute, study_name, study_alias FROM sra WHERE study_name\", \" LIKE '%\", x[a], \"%' OR study_alias LIKE '%\", x[a], \"%'\")\n    print(query)\n    chunk <- dbGetQuery(get(database_name), query)\n    search_count <- search_count + as.integer(dim(chunk)[1]>=1)\n    accession_df <- rbind(accession_df, chunk)\n  }\n\n}\n\n#EXTRACTION\n\n#GSMs\n#Find entries which have GSM\\\\d\\\\d\\\\d+ structure (gsm_indices)\n#Create GSM column (NA)\n#Perform gsub on gsm_indices fields\n\n#GSEs\n#Same as GSMs\n\n\n\n#GEO SEARCH\n#   - if SRA as input: search for GSMs that exist in the accession_df (ignore NAs)\n#   - if GEO as input: search for input (GSM or GSE)\n\n#Merge by GSM, unless there were no GSMs - then by GSE???\n\n\n\n",
+    "created" : 1505320420049.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "2818408909",
+    "id" : "8727C812",
+    "lastKnownWriteTime" : 1505322380,
+    "last_content_update" : 1505322380377,
+    "path" : "~/Documents/Anna/Spider201709/SpideR/R/accessionConverter.R",
+    "project_path" : "R/accessionConverter.R",
+    "properties" : {
+    },
+    "relative_order" : 2,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}

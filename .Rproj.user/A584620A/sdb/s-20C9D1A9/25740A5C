@@ -1,0 +1,20 @@
+{
+    "collab_server" : "",
+    "contents" : "---\ntitle: \"README\"\nauthor: \"A.Sozanska\"\ndate: \"`r Sys.Date()`\"\noutput: rmarkdown::html_vignette\nvignette: >\n  %\\VignetteIndexEntry{README}\n  %\\VignetteEngine{knitr::rmarkdown}\n  %\\VignetteEncoding{UTF-8}\n---\n\nThis is a quick introduction into usage of the SpideRleg for capturing information from SRA and GEO databases.\n\n#Database Search\n##Searching for terms - searchForTerm()\nThis function allows one to specify one or more terms that should be present in each of the entries.\nUsage:\n```{r searchForTerm-General, eval=FALSE}\nsearchForTerm(library_strategy, gene = NULL, antibody = NULL, cell_type = NULL, \n    treatment = NULL, species = NULL, platform = NULL, secondary_library_strategy = NULL)\n```\n\nNOTE: all conditions set by the specified arguments need to be fulfilled in each entry, for example:\n\n```{r, eval = FALSE}\nsearchForTerm(library_strategy = \"ChIP-Seq\", antibody = \"p53\", cell_type = \"fibroblast\")\n```\nwould only return entries with p53 antibody and fibroblast cell type.\n\n###Synonyms\nWith the exception of library_strategy, all the other arguments can be character vectors\n\n###Arguments\n* library_strategy - string with the type of sequencing; needs to exactly match one of the library strategies used by SRA (e.g. ChIP-Seq, RNA-Seq).\n* gene - \n\n###Argument Requirements\nAlways required: library_strategy  \nMinimum one from: gene, antibody, cell_type, treatment  \nCompletely optional: platform, secondary_library_strategy  \n\n\n##Searching for accessions - searchForAccession()\n\n#Other functionalities\n\n##Finding about superseries - superseriesFinder()\n\n##Converting accessions - accessionConverter()\n\n\n  \n  \n-------\n  \n  \n#Auto-generated\n\n## Figures\n\nThe figure sizes have been customised so that you can easily put two images side-by-side. \n\n```{r, fig.show='hold'}\nplot(1:10)\nplot(10:1)\n```\n\nYou can enable figure captions by `fig_caption: yes` in YAML:\n\n    output:\n      rmarkdown::html_vignette:\n        fig_caption: yes\n\nThen you can use the chunk option `fig.cap = \"Your figure caption.\"` in **knitr**.\n\n## More Examples\n\nYou can write math expressions, e.g. $Y = X\\beta + \\epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.\n\n```{r, echo=FALSE, results='asis'}\nknitr::kable(head(mtcars, 10))\n```\n\nAlso a quote using `>`:\n\n> \"He who gives up [code] safety for [code] speed deserves neither.\"\n([via](https://twitter.com/hadleywickham/status/504368538874703872))\n",
+    "created" : 1505322022460.000,
+    "dirty" : true,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "48224810",
+    "id" : "25740A5C",
+    "lastKnownWriteTime" : 1505326759,
+    "last_content_update" : 1505326801450,
+    "path" : "~/Documents/Anna/Spider201709/SpideR/vignettes/README.Rmd",
+    "project_path" : "vignettes/README.Rmd",
+    "properties" : {
+    },
+    "relative_order" : 5,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_markdown"
+}

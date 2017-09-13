@@ -1,0 +1,87 @@
+---
+title: "README"
+author: "A.Sozanska"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{README}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+This is a quick introduction into usage of the SpideRleg for capturing information from SRA and GEO databases.
+
+#Database Search
+##Searching for terms - searchForTerm()
+This function allows one to specify one or more terms that should be present in each of the entries.
+Usage:
+```{r searchForTerm-General, eval=FALSE}
+searchForTerm(library_strategy, gene = NULL, antibody = NULL, cell_type = NULL, 
+    treatment = NULL, species = NULL, platform = NULL, secondary_library_strategy = NULL)
+```
+
+NOTE: all conditions set by the specified arguments need to be fulfilled in each entry, for example:
+
+```{r, eval = FALSE}
+searchForTerm(library_strategy = "ChIP-Seq", antibody = "p53", cell_type = "fibroblast")
+```
+would only return entries with p53 antibody and fibroblast cell type.
+
+###Synonyms
+
+
+###Arguments
+* library_strategy - string with the type of sequencing; needs to exactly match one of the library strategies used by SRA (e.g. ChIP-Seq, RNA-Seq).
+* gene - 
+
+###Argument Requirements
+Always required: library_strategy  
+Minimum one from: gene, antibody, cell_type, treatment  
+Completely optional: platform, secondary_library_strategy  
+
+
+##Searching for accessions - searchForAccession()
+
+#Other functionalities
+
+##Finding about superseries - superseriesFinder()
+
+##Converting accessions - accessionConverter()
+
+
+  
+  
+-------
+  
+  
+#Auto-generated
+
+## Figures
+
+The figure sizes have been customised so that you can easily put two images side-by-side. 
+
+```{r, fig.show='hold'}
+plot(1:10)
+plot(10:1)
+```
+
+You can enable figure captions by `fig_caption: yes` in YAML:
+
+    output:
+      rmarkdown::html_vignette:
+        fig_caption: yes
+
+Then you can use the chunk option `fig.cap = "Your figure caption."` in **knitr**.
+
+## More Examples
+
+You can write math expressions, e.g. $Y = X\beta + \epsilon$, footnotes^[A footnote here.], and tables, e.g. using `knitr::kable()`.
+
+```{r, echo=FALSE, results='asis'}
+knitr::kable(head(mtcars, 10))
+```
+
+Also a quote using `>`:
+
+> "He who gives up [code] safety for [code] speed deserves neither."
+([via](https://twitter.com/hadleywickham/status/504368538874703872))
