@@ -12,3 +12,8 @@ LazyData: true
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
+Depends:
+    plyr,
+    dplyr,
+    SRAdb,
+    GEOmetadb,

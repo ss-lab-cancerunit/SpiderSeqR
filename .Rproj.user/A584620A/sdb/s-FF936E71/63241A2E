@@ -1,0 +1,21 @@
+{
+    "collab_server" : "",
+    "contents" : "#Copy of pryr's where function (couldn't load pryr)\nwhere <- function(name, env = parent.frame()) {\n    if (identical(env, emptyenv())) {\n      # Base case\n      stop(\"Can't find \", name, call. = FALSE)\n\n    } else if (exists(name, envir = env, inherits = FALSE)) {\n      # Success case\n      env\n\n    } else {\n      # Recursive case\n      where(name, parent.env(env))\n\n    }\n}\n\n.onLoad <- function(libname, pkgname){\n  #print(\"Setting up SpideR\")\n\n  if(!file.exists(\"GEOmetadb.sqlite\")){\n    #if(1==1){\n    #if(!file.exists(\"test.txt\")){\n    print(\"The file GEOmetadb.sqlite was not found in the current working directory\")\n    print(\"Would you like to download the file now?\")\n    geo_menu <- menu(c(\"yes\", \"no\"))\n    if (geo_menu == 1){\n      print(\"Downloading the file\")\n    } else {\n      stop(\"GEOmetadb.sqlite is necessary to initiate package operation\")\n    }\n  }\n\n  if(!file.exists(\"SRAmetadb.sqlite\")){\n    #if(!file.exists(\"test.txt\")){\n    print(\"The file SRAmetadb.sqlite was not found in the current working directory\")\n    print(\"Would you like to download the file now?\")\n    geo_menu <- menu(c(\"yes\", \"no\"))\n    if (geo_menu == 1){\n      print(\"Downloading the file\")\n    } else {\n      stop(\"SRAmetadb.sqlite is necessary to initiate package operation\")\n    }\n  }\n\n\n  if (file.exists(\"SRAmetadb.sqlite\") & file.exists(\"GEOmetadb.sqlite\")){\n\n    print(\"Both db files are present (remember not to remove them!). Ready to proceed\")\n\n\n    #===*=== Remove when the time comes\n\n    #This didn't work\n    #sra_con <- dbConnect(SQLite(), dbname = 'SRAmetadb.sqlite')\n    #geo_con <- dbConnect(SQLite(),'GEOmetadb.sqlite')\n\n\n    #This did get the connections to the global environment, but the functions were not able to access it\n    #Two options:\n    # - change the functions to search for sra_con and geo_con in global environment\n    # - establish db connection within each function\n    #.GlobalEnv$sra_con <- dbConnect(SQLite(), dbname = 'SRAmetadb.sqlite')\n    #.GlobalEnv$geo_con <- dbConnect(SQLite(),'GEOmetadb.sqlite')\n\n    #print(where(\"sra_con\"))\n  }\n\n}\n\n.onAttach <- function(libname, pkgname){\n  packageStartupMessage(\"Welcome to SpideR\")\n}\n",
+    "created" : 1505486160371.000,
+    "dirty" : false,
+    "encoding" : "UTF-8",
+    "folds" : "",
+    "hash" : "162986148",
+    "id" : "63241A2E",
+    "lastKnownWriteTime" : 1505494761,
+    "last_content_update" : 1505494761155,
+    "path" : "~/Documents/Anna/Spider201709/SpideR/R/zzz.R",
+    "project_path" : "R/zzz.R",
+    "properties" : {
+        "tempName" : "Untitled2"
+    },
+    "relative_order" : 9,
+    "source_on_save" : false,
+    "source_window" : "",
+    "type" : "r_source"
+}
