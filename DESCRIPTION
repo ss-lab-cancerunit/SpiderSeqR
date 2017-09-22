@@ -17,3 +17,5 @@ Depends:
     dplyr,
     SRAdb,
     GEOmetadb,
+    DBI (>= 0.7),
+    RSQLite (>= 2.0),
