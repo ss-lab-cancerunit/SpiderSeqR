@@ -135,6 +135,8 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   }
   #============================================================================
 
+  saveRDS(sample_list, "sample_list.Rda")
+
 
 
   #============================================================================
@@ -239,7 +241,7 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #Add columns for sample sheets (lane and merge* (will label it mer to avoid interference with merge function))
   #============================================================================
   spider_combined <- mergeDetector(spider_combined)
-  #missingRunVerifier(spider_combined$run_accession) #Check if there are any missing runs ===*=== Disabled (dbSendQuery stopped working!)
+  missingRunVerifier(spider_combined$run_accession) #Check if there are any missing runs ===*=== Disabled (dbSendQuery stopped working!)
   #============================================================================
 
 

@@ -1,0 +1,345 @@
+ID	fileName	fileNamePE	experiment	tissue	condition	replicate	lane	merge	input	pairedEnd	macsGroup	phredScore	adapter	trimQuality	adapterPE	trimQualityPE
+SRR364095			SRP009191	NA	Nucleosome mapping in Wt (H3/H4) and H3K4A and H3K79a		1		NA	false						
+SRR364096			SRP009191	NA	Nucleosome mapping in H3K36A		1		NA	false						
+SRR364097			SRP009191	NA	Nucleosome mapping in Wt (H2A/H2B)		1		NA	false						
+SRR364098			SRP009191	NA	Nucleosome positioning in H2BK123A mutant		1		NA	false						
+SRR391063			SRP009191	NA	Nucleosome mapping in Ubiquitylation deficient mutants		3	SRX105204	NA	false						
+SRR391064			SRP009191	NA	Nucleosome mapping in Ubiquitylation deficient mutants		2	SRX105204	NA	false						
+SRR391065			SRP009191	NA	Nucleosome mapping in Ubiquitylation deficient mutants		5	SRX105204	NA	false						
+SRR391066			SRP009191	NA	Nucleosome mapping in Ubiquitylation deficient mutants		1	SRX105204	N	false						
+SRR391067			SRP009191	NA	Nucleosome mapping in Ubiquitylation deficient mutants		4	SRX105204	NA	false						
+SRR391072			SRP009191	NA	H3K36me modified nucleosomes in Wt and K123A mutants		2	SRX105193	NA	false						
+SRR391073			SRP009191	NA	H3K36me modified nucleosomes in Wt and K123A mutants		3	SRX105193	NA	false						
+SRR391074			SRP009191	NA	H3K36me modified nucleosomes in Wt and K123A mutants		4	SRX105193	NA	false						
+SRR391075			SRP009191	NA	H3K36me modified nucleosomes in Wt and K123A mutants		1	SRX105193	NA	false						
+SRR365033			SRP009191	NA	Nucleosome mapping in various strains (biological replicates)		1		NA	false						
+SRR393954			SRP009191	NA	Nucleosome mapping in Ubiquitylation deficient mutants (Biological replicates)		2	SRX105270	NA	false						
+SRR393955			SRP009191	NA	Nucleosome mapping in Ubiquitylation deficient mutants (Biological replicates)		1	SRX105270	NA	false						
+SRR393967			SRP009191	NA	H2Bk123Ub-modified Nucleosomes		1		NA	false						
+SRR1132340			SRP035339	breast cancer cell line (NF2 mutant)	Merlin re-expression strongly inhibits proliferation of Merlin-deficient cells and this correlates with its ability to regulate a cross-tissue gene expression program. We have shown that Merlin interacts with the PAF1 complex.  ChIP-seq experiments were p		1		N	true						
+SRR1132341			SRP035339	breast cancer cell line	7 wt Merlin expression- LEO1 ChiP seq		1		NA	true						
+SRR1132342			SRP035339	breast cancer cell line	L46R Merlin expression- Rabbit Antibody control ChiP-seq		1		input	true						
+SRR1132343			SRP035339	breast cancer cell line	L46R Merlin expression-Pol2 ChiP-seq		1		NA	true						
+SRR1132344			SRP035339	breast cancer cell line	L46R Merlin expression-LEO1 ChiP-seq		1		NA	true						
+SRR2627450			SRP048744	THP1, pLKO.1-PAF1 shRNA #1	Lib131; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2627449			SRP048744	THP1, pLKO.1 control	Lib130; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607716			SRP048744	THP1_WT_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib16; Homo sapiens; ChIP-Seq		1		input	false						
+SRR1607717			SRP048744	THP1_WT_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib19; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607718			SRP048744	THP1_WT_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib20; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607719			SRP048744	THP1_WT_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib22; Homo sapiens; ChIP-Seq		1		input	false						
+SRR1607720			SRP048744	THP1_WT_input -;- human acute monocytic leukemia (AML) cell line	Lib34; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607721			SRP048744	THP1_DMSO_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib70; Homo sapiens; ChIP-Seq		1		input	false						
+SRR1607723			SRP048744	THP1_DMSO_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib78; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607722			SRP048744	THP1_Flavopiridol_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib72; Homo sapiens; ChIP-Seq		1		input	false						
+SRR1607724			SRP048744	THP1_Flavopiridol_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib81; Homo sapiens; ChIP-Seq		1		input	false						
+SRR1607726			SRP048744	THP1_PAF1KD_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib107; Homo sapiens; ChIP-Seq		1		N	false						
+SRR1607729			SRP048744	THP1_vector-control_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib134; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607730			SRP048744	THP1_PAF1KD_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib135; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607731			SRP048744	THP1 ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib140; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607732			SRP048744	THP1 ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib146; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607733			SRP048744	THP1_vector-control_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib152; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607734			SRP048744	THP1_PAF1KD_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib153; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607735			SRP048744	CCRF-CEM_vector-control_ChIP-seq -;- human acute lymphocytic leukemia (ALL) cell line	Lib174; Homo sapiens; ChIP-Seq		1		input	false						
+SRR1607737			SRP048744	CCRF-CEM_vector-control_ChIP-seq -;- human acute lymphocytic leukemia (ALL) cell line	Lib176; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607736			SRP048744	CCRF-CEM_PAF1KD_ChIP-seq -;- human acute lymphocytic leukemia (ALL) cell line	Lib175; Homo sapiens; ChIP-Seq		1		N	false						
+SRR1607738			SRP048744	CCRF-CEM_PAF1KD_ChIP-seq -;- human acute lymphocytic leukemia (ALL) cell line	Lib177; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607740			SRP048744	THP1_PAF1KD_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib181; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607741			SRP048744	CCRF-CEM_input -;- human acute lymphocytic leukemia (ALL) cell line	Lib185; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607739			SRP048744	THP1_vector-control_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib180; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607725			SRP048744	THP1_vector-control_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib106; Homo sapiens; ChIP-Seq		1		input	false						
+SRR1607727			SRP048744	THP1_vector-control_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib108; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR1607728			SRP048744	THP1_PAF1KD_ChIP-seq -;- human acute monocytic leukemia (AML) cell line	Lib109; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2084572			SRP060227	S2 -;- Drosophila melanogaster cell line	Input_dsPAF1.1_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		4	SRX1078887	input	false						
+SRR2084573			SRP060227	S2 -;- Drosophila melanogaster cell line	Input_dsPAF1.1_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		1	SRX1078887	input	false						
+SRR2084574			SRP060227	S2 -;- Drosophila melanogaster cell line	Input_dsPAF1.1_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		3	SRX1078887	input	false						
+SRR2084575			SRP060227	S2 -;- Drosophila melanogaster cell line	Input_dsPAF1.1_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		2	SRX1078887	input	false						
+SRR2084568			SRP060227	S2 -;- Drosophila melanogaster cell line	Input_dsLacZ_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		2	SRX1078886	input	false						
+SRR2084569			SRP060227	S2 -;- Drosophila melanogaster cell line	Input_dsLacZ_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		1	SRX1078886	input	false						
+SRR2084570			SRP060227	S2 -;- Drosophila melanogaster cell line	Input_dsLacZ_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		3	SRX1078886	input	false						
+SRR2084571			SRP060227	S2 -;- Drosophila melanogaster cell line	Input_dsLacZ_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		4	SRX1078886	input	false						
+SRR2084564			SRP060227	S2 -;- Drosophila melanogaster cell line	dRpb1_dsPAF1.1_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		4	SRX1078885	NA	false						
+SRR2084565			SRP060227	S2 -;- Drosophila melanogaster cell line	dRpb1_dsPAF1.1_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		2	SRX1078885	NA	false						
+SRR2084566			SRP060227	S2 -;- Drosophila melanogaster cell line	dRpb1_dsPAF1.1_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		3	SRX1078885	NA	false						
+SRR2084567			SRP060227	S2 -;- Drosophila melanogaster cell line	dRpb1_dsPAF1.1_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		1	SRX1078885	NA	false						
+SRR2084560			SRP060227	S2 -;- Drosophila melanogaster cell line	dRpb1_dsLacZ_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		3	SRX1078884	NA	false						
+SRR2084561			SRP060227	S2 -;- Drosophila melanogaster cell line	dRpb1_dsLacZ_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		1	SRX1078884	NA	false						
+SRR2084562			SRP060227	S2 -;- Drosophila melanogaster cell line	dRpb1_dsLacZ_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		2	SRX1078884	NA	false						
+SRR2084563			SRP060227	S2 -;- Drosophila melanogaster cell line	dRpb1_dsLacZ_S2_rep1_ChIPSeq; Drosophila melanogaster; ChIP-Seq		4	SRX1078884	NA	false						
+SRR2084556			SRP060227	MCF7 -;- breast cancer cell line	N20_shSCR_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078883	NA	false						
+SRR2084557			SRP060227	MCF7 -;- breast cancer cell line	N20_shSCR_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078883	NA	false						
+SRR2084558			SRP060227	MCF7 -;- breast cancer cell line	N20_shSCR_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078883	NA	false						
+SRR2084559			SRP060227	MCF7 -;- breast cancer cell line	N20_shSCR_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078883	NA	false						
+SRR2084552			SRP060227	MCF7 -;- breast cancer cell line	N20_shPAF1.1_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078882	NA	false						
+SRR2084553			SRP060227	MCF7 -;- breast cancer cell line	N20_shPAF1.1_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078882	NA	false						
+SRR2084554			SRP060227	MCF7 -;- breast cancer cell line	N20_shPAF1.1_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078882	NA	false						
+SRR2084555			SRP060227	MCF7 -;- breast cancer cell line	N20_shPAF1.1_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078882	NA	false						
+SRR2084545			SRP060227	HCT116 -;- colorectal cancer cell line	Ser2P_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078880	NA	false						
+SRR2084546			SRP060227	HCT116 -;- colorectal cancer cell line	Ser2P_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078880	NA	false						
+SRR2084547			SRP060227	HCT116 -;- colorectal cancer cell line	Ser2P_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078880	NA	false						
+SRR2084544			SRP060227	HCT116 -;- colorectal cancer cell line	Ser2P_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2084548			SRP060227	MCF7 -;- breast cancer cell line	Input_shSCR_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078881	input	false						
+SRR2084549			SRP060227	MCF7 -;- breast cancer cell line	Input_shSCR_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078881	input	false						
+SRR2084550			SRP060227	MCF7 -;- breast cancer cell line	Input_shSCR_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078881	input	false						
+SRR2084551			SRP060227	MCF7 -;- breast cancer cell line	Input_shSCR_MCF7_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078881	input	false						
+SRR2084541			SRP060227	HCT116 -;- colorectal cancer cell line	Ser2P_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078878	NA	false						
+SRR2084542			SRP060227	HCT116 -;- colorectal cancer cell line	Ser2P_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078878	NA	false						
+SRR2084543			SRP060227	HCT116 -;- colorectal cancer cell line	Ser2P_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078878	NA	false						
+SRR2084537			SRP060227	HCT116 -;- colorectal cancer cell line	PAF1_WT_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078876	N	false						
+SRR2084538			SRP060227	HCT116 -;- colorectal cancer cell line	PAF1_WT_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078876	N	false						
+SRR2084539			SRP060227	HCT116 -;- colorectal cancer cell line	PAF1_WT_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078876	N	false						
+SRR2084540			SRP060227	HCT116 -;- colorectal cancer cell line	Ser2P_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2084533			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_starve_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078875	NA	false						
+SRR2084534			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_starve_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078875	NA	false						
+SRR2084535			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_starve_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078875	NA	false						
+SRR2084536			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_starve_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078875	NA	false						
+SRR2084529			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_serum_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078874	NA	false						
+SRR2084530			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_serum_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078874	NA	false						
+SRR2084531			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_serum_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078874	NA	false						
+SRR2084532			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_serum_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078874	NA	false						
+SRR2084524			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_N20shBre1A_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078872	NA	false						
+SRR2084525			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_N20shBre1A_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078872	NA	false						
+SRR2084526			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_N20shPAF1.2_N20shPAF1.1rep2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078873	NA	false						
+SRR2084527			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_N20shPAF1.2_N20shPAF1.1rep2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078873	NA	false						
+SRR2084528			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_N20shPAF1.2_N20shPAF1.1rep2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078873	NA	false						
+SRR2084511			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078868	NA	false						
+SRR2084512			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078868	NA	false						
+SRR2084513			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078868	NA	false						
+SRR2084514			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078869	NA	false						
+SRR2084515			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078869	NA	false						
+SRR2084516			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078869	NA	false						
+SRR2084521			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078871	NA	false						
+SRR2084522			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078871	NA	false						
+SRR2084523			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078871	NA	false						
+SRR2084517			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078870	NA	false						
+SRR2084518			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078870	NA	false						
+SRR2084519			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078870	NA	false						
+SRR2084520			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shSCR_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078870	NA	false						
+SRR2084508			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078867	NA	false						
+SRR2084509			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078867	NA	false						
+SRR2084510			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078867	NA	false						
+SRR2084504			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_FP_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078866	NA	false						
+SRR2084505			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_FP_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078866	NA	false						
+SRR2084506			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_FP_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078866	NA	false						
+SRR2084507			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_FP_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078866	NA	false						
+SRR2084500			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078865	NA	false						
+SRR2084501			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078865	NA	false						
+SRR2084502			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078865	NA	false						
+SRR2084503			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078865	NA	false						
+SRR2084488			SRP060227	HCT116 -;- colorectal cancer cell line	LEO1_shSCR_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078861	NA	false						
+SRR2084489			SRP060227	HCT116 -;- colorectal cancer cell line	LEO1_shSCR_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078861	NA	false						
+SRR2084490			SRP060227	HCT116 -;- colorectal cancer cell line	LEO1_shSCR_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078861	NA	false						
+SRR2084491			SRP060227	HCT116 -;- colorectal cancer cell line	LEO1_shSCR_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078861	NA	false						
+SRR2084494			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shBre1A.2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078863	NA	false						
+SRR2084495			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shBre1A.2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078863	NA	false						
+SRR2084484			SRP060227	HCT116 -;- colorectal cancer cell line	LEO1_shPAF1.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078860	NA	false						
+SRR2084485			SRP060227	HCT116 -;- colorectal cancer cell line	LEO1_shPAF1.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078860	NA	false						
+SRR2084486			SRP060227	HCT116 -;- colorectal cancer cell line	LEO1_shPAF1.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078860	NA	false						
+SRR2084487			SRP060227	HCT116 -;- colorectal cancer cell line	LEO1_shPAF1.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078860	NA	false						
+SRR2084492			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shBre1A.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078862	NA	false						
+SRR2084493			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shBre1A.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078862	NA	false						
+SRR2084496			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_starve_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078864	NA	false						
+SRR2084497			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_starve_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078864	NA	false						
+SRR2084498			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_starve_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078864	NA	false						
+SRR2084499			SRP060227	HCT116 -;- colorectal cancer cell line	N20_shPAF1.1_starve_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078864	NA	false						
+SRR2084474			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078857	input	false						
+SRR2084475			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078857	input	false						
+SRR2084476			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078857	input	false						
+SRR2084477			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078857	input	false						
+SRR2084481			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078859	input	false						
+SRR2084482			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078859	input	false						
+SRR2084483			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078859	input	false						
+SRR2084478			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078858	input	false						
+SRR2084479			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078858	input	false						
+SRR2084480			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078858	input	false						
+SRR2084468			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078855	input	false						
+SRR2084469			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078855	input	false						
+SRR2084470			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078855	input	false						
+SRR2084471			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078856	input	false						
+SRR2084472			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078856	input	false						
+SRR2084473			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.2_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078856	input	false						
+SRR2084465			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078854	input	false						
+SRR2084466			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078854	input	false						
+SRR2084467			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078854	input	false						
+SRR2084461			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078853	input	false						
+SRR2084462			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078853	input	false						
+SRR2084463			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078853	input	false						
+SRR2084464			SRP060227	HCT116 -;- colorectal cancer cell line	Input_shPAF1.1_DMSO_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078853	input	false						
+SRR2084455			SRP060227	HCT116 -;- colorectal cancer cell line	H2Bub_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078849	NA	false						
+SRR2084456			SRP060227	HCT116 -;- colorectal cancer cell line	H2Bub_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078849	NA	false						
+SRR2084459			SRP060227	HCT116 -;- colorectal cancer cell line	H2Bub_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078852	NA	false						
+SRR2084460			SRP060227	HCT116 -;- colorectal cancer cell line	H2Bub_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078852	NA	false						
+SRR2084458			SRP060227	HCT116 -;- colorectal cancer cell line	H2Bub_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2084457			SRP060227	HCT116 -;- colorectal cancer cell line	H2Bub_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2084452			SRP060227	HCT116 -;- colorectal cancer cell line	ELL2_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078848	NA	false						
+SRR2084453			SRP060227	HCT116 -;- colorectal cancer cell line	ELL2_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078848	NA	false						
+SRR2084454			SRP060227	HCT116 -;- colorectal cancer cell line	ELL2_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078848	NA	false						
+SRR2084451			SRP060227	HCT116 -;- colorectal cancer cell line	ELL2_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2084447			SRP060227	HCT116 -;- colorectal cancer cell line	ELL2_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2084436			SRP060227	HCT116 -;- colorectal cancer cell line	AFF4_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078842	NA	false						
+SRR2084437			SRP060227	HCT116 -;- colorectal cancer cell line	AFF4_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078842	NA	false						
+SRR2084438			SRP060227	HCT116 -;- colorectal cancer cell line	AFF4_shSCR_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078842	NA	false						
+SRR2084435			SRP060227	HCT116 -;- colorectal cancer cell line	AFF4_shSCR_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2084443			SRP060227	HCT116 -;- colorectal cancer cell line	CDK9_shSCR_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078844	NA	false						
+SRR2084444			SRP060227	HCT116 -;- colorectal cancer cell line	CDK9_shSCR_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078844	NA	false						
+SRR2084445			SRP060227	HCT116 -;- colorectal cancer cell line	CDK9_shSCR_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078844	NA	false						
+SRR2084446			SRP060227	HCT116 -;- colorectal cancer cell line	CDK9_shSCR_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078844	NA	false						
+SRR2084432			SRP060227	HCT116 -;- colorectal cancer cell line	AFF4_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078840	NA	false						
+SRR2084433			SRP060227	HCT116 -;- colorectal cancer cell line	AFF4_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078840	NA	false						
+SRR2084434			SRP060227	HCT116 -;- colorectal cancer cell line	AFF4_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078840	NA	false						
+SRR2084431			SRP060227	HCT116 -;- colorectal cancer cell line	AFF4_shPAF1.1_HCT116_rep1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	false						
+SRR2084439			SRP060227	HCT116 -;- colorectal cancer cell line	CDK9_shPAF1.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078843	NA	false						
+SRR2084440			SRP060227	HCT116 -;- colorectal cancer cell line	CDK9_shPAF1.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078843	NA	false						
+SRR2084441			SRP060227	HCT116 -;- colorectal cancer cell line	CDK9_shPAF1.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		4	SRX1078843	NA	false						
+SRR2084442			SRP060227	HCT116 -;- colorectal cancer cell line	CDK9_shPAF1.1_HCT116_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078843	NA	false						
+SRR2084448			SRP060227	HCT116 -;- colorectal cancer cell line	ELL2_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		2	SRX1078846	NA	false						
+SRR2084449			SRP060227	HCT116 -;- colorectal cancer cell line	ELL2_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		1	SRX1078846	NA	false						
+SRR2084450			SRP060227	HCT116 -;- colorectal cancer cell line	ELL2_shPAF1.1_HCT116_rep2_ChIPSeq; Homo sapiens; ChIP-Seq		3	SRX1078846	NA	false						
+SRR2225450			SRP063051	H3 ChIP-seq, siNS -;- C2C12	ChIP108.H3_siNS; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225451			SRP063051	Input for ChIP107.H3K4me3_siNS and ChIP108.H3_siNS -;- C2C12	ChIP109.Input_siNS; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225449			SRP063051	H3K4me3 ChIP-seq, siNS -;- C2C12	ChIP107.H3K4me3_siNS; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225448			SRP063051	Input for ChIP104.H3K4me3_siSki8 and ChIP105.H3_siSki8 -;- C2C12	ChIP106.Input_siSki8; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225447			SRP063051	H3 ChIP-seq, siSki8 -;- C2C12	ChIP105.H3_siSki8; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225446			SRP063051	H3K4me3 ChIP-seq, siSki8 -;- C2C12	ChIP104.H3K4me3_siSki8; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225445			SRP063051	Input forChIP102.H3K36me3_siNS -;- C2C12	ChIP103.Input_siNS; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225444			SRP063051	H3K36me3 ChIP-seq, siNS -;- C2C12	ChIP102.H3K36me3_siNS; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225443			SRP063051	Input for ChIP100.H3K36me3_siSki8 -;- C2C12	ChIP101.Input_siSki8; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225441			SRP063051	Input for ChIP094.PolIICTD_siNS -;- C2C12	ChIP095.Input_siNS; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225442			SRP063051	H3K36me3 ChIP-seq, siSki8 -;- C2C12	ChIP100.H3K36me3_siSki8; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225440			SRP063051	PolIICTD ChIP-seq, siNS -;- C2C12	ChIP094.PolIICTD_siNS; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225439			SRP063051	Input for ChIP091.PolIICTD_siSki8 -;- C2C12	ChIP092.Input_siSki8; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225438			SRP063051	PolIICTD ChIP-seq, siSki8 -;- C2C12	ChIP091.PolIICTD_siSki8; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225437			SRP063051	Input for ChIP087.H3K4me3_siNS and ChIP088.H3_siNS -;- C2C12	ChIP089.Input_siNS; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225436			SRP063051	H3 ChIP-seq, siNS -;- C2C12	ChIP088.H3_siNS; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225435			SRP063051	H3K4me3 ChIP-seq, siNS -;- C2C12	ChIP087.H3K4me3_siNS; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225432			SRP063051	H3K4me3 ChIP-seq, siPaf1 -;- C2C12	ChIP084.H3K4me3_siPaf1; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225433			SRP063051	H3 ChIP-seq, siPaf1 -;- C2C12	ChIP085.H3_siPaf1; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225434			SRP063051	Input for ChIP084.H3K4me3_siPaf1 and ChIP085.H3_siPaf1 -;- C2C12	ChIP086.Input_siPaf1; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225431			SRP063051	Input for ChIP082.H3K36me3_siNS -;- C2C12	ChIP083.Input_siNS; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225430			SRP063051	H3K36me3 ChIP-seq, siNS -;- C2C12	ChIP082.H3K36me3_siNS; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225429			SRP063051	Input for ChIP080.H3K36me3_siPaf1 -;- C2C12	ChIP081.Input_siPaf1; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225428			SRP063051	H3K36me3 ChIP-seq, siPaf1 -;- C2C12	ChIP080.H3K36me3_siPaf1; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225427			SRP063051	Input for PolIICTD_siNS -;- C2C12	Input_siNS.8; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225426			SRP063051	PolII ChIP-seq, siNS -;- C2C12	PolIICTD_siNS; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225425			SRP063051	Input for PolIICTD_siPaf1 -;- C2C12	Input_siPaf1.6; Mus musculus; ChIP-Seq		1		input	false						
+SRR2225424			SRP063051	PolII ChIP-seq, siPaf1 -;- C2C12	PolIICTD_siPaf1; Mus musculus; ChIP-Seq		1		NA	false						
+SRR2225421			SRP063051	Input for ChIP-seq Ski8MT -;- C2C12	Ski8MT_Input; Mus musculus; ChIP-Seq		2	SRX1176744	input	false						
+SRR2225422			SRP063051	Input for ChIP-seq Ski8MT -;- C2C12	Ski8MT_Input; Mus musculus; ChIP-Seq		1	SRX1176744	input	false						
+SRR2225423			SRP063051	Input for ChIP-seq Ski8MT -;- C2C12	Ski8MT_Input; Mus musculus; ChIP-Seq		3	SRX1176744	input	false						
+SRR2225415			SRP063051	Input for ChIP-seq Ski8MB -;- C2C12	Ski8MB_Input; Mus musculus; ChIP-Seq		3	SRX1176742	input	false						
+SRR2225416			SRP063051	Input for ChIP-seq Ski8MB -;- C2C12	Ski8MB_Input; Mus musculus; ChIP-Seq		1	SRX1176742	input	false						
+SRR2225417			SRP063051	Input for ChIP-seq Ski8MB -;- C2C12	Ski8MB_Input; Mus musculus; ChIP-Seq		2	SRX1176742	input	false						
+SRR2225412			SRP063051	ChIP-seq Ski8MB -;- C2C12	Ski8MB; Mus musculus; ChIP-Seq		2	SRX1176741	NA	false						
+SRR2225413			SRP063051	ChIP-seq Ski8MB -;- C2C12	Ski8MB; Mus musculus; ChIP-Seq		3	SRX1176741	NA	false						
+SRR2225414			SRP063051	ChIP-seq Ski8MB -;- C2C12	Ski8MB; Mus musculus; ChIP-Seq		1	SRX1176741	NA	false						
+SRR2225418			SRP063051	ChIP-seq Ski8MT -;- C2C12	Ski8MT; Mus musculus; ChIP-Seq		3	SRX1176743	NA	false						
+SRR2225419			SRP063051	ChIP-seq Ski8MT -;- C2C12	Ski8MT; Mus musculus; ChIP-Seq		2	SRX1176743	NA	false						
+SRR2225420			SRP063051	ChIP-seq Ski8MT -;- C2C12	Ski8MT; Mus musculus; ChIP-Seq		1	SRX1176743	NA	false						
+SRR2225406			SRP063051	ChIP-seq Rtf1MT -;- C2C12	Rtf1MT; Mus musculus; ChIP-Seq		2	SRX1176739	NA	false						
+SRR2225407			SRP063051	ChIP-seq Rtf1MT -;- C2C12	Rtf1MT; Mus musculus; ChIP-Seq		1	SRX1176739	NA	false						
+SRR2225408			SRP063051	ChIP-seq Rtf1MT -;- C2C12	Rtf1MT; Mus musculus; ChIP-Seq		3	SRX1176739	NA	false						
+SRR2225409			SRP063051	Input for ChIP-seq Rtf1MT -;- C2C12	Rtf1MT_Input; Mus musculus; ChIP-Seq		2	SRX1176740	input	false						
+SRR2225410			SRP063051	Input for ChIP-seq Rtf1MT -;- C2C12	Rtf1MT_Input; Mus musculus; ChIP-Seq		3	SRX1176740	input	false						
+SRR2225411			SRP063051	Input for ChIP-seq Rtf1MT -;- C2C12	Rtf1MT_Input; Mus musculus; ChIP-Seq		1	SRX1176740	input	false						
+SRR2225403			SRP063051	Input for ChIP-seq Rtf1MB -;- C2C12	Rtf1MB_Input; Mus musculus; ChIP-Seq		3	SRX1176738	input	false						
+SRR2225404			SRP063051	Input for ChIP-seq Rtf1MB -;- C2C12	Rtf1MB_Input; Mus musculus; ChIP-Seq		2	SRX1176738	input	false						
+SRR2225405			SRP063051	Input for ChIP-seq Rtf1MB -;- C2C12	Rtf1MB_Input; Mus musculus; ChIP-Seq		1	SRX1176738	input	false						
+SRR2225400			SRP063051	ChIP-seq Rtf1MB -;- C2C12	Rtf1MB; Mus musculus; ChIP-Seq		3	SRX1176737	NA	false						
+SRR2225401			SRP063051	ChIP-seq Rtf1MB -;- C2C12	Rtf1MB; Mus musculus; ChIP-Seq		2	SRX1176737	NA	false						
+SRR2225402			SRP063051	ChIP-seq Rtf1MB -;- C2C12	Rtf1MB; Mus musculus; ChIP-Seq		1	SRX1176737	NA	false						
+SRR2225396			SRP063051	ChIP-seq Paf1MT -;- C2C12	Paf1MT; Mus musculus; ChIP-Seq		2	SRX1176735	N	false						
+SRR2225397			SRP063051	ChIP-seq Paf1MT -;- C2C12	Paf1MT; Mus musculus; ChIP-Seq		1	SRX1176735	N	false						
+SRR2225398			SRP063051	Input for ChIP-seq Paf1MT -;- C2C12	Paf1MT_Input; Mus musculus; ChIP-Seq		2	SRX1176736	input	false						
+SRR2225399			SRP063051	Input for ChIP-seq Paf1MT -;- C2C12	Paf1MT_Input; Mus musculus; ChIP-Seq		1	SRX1176736	input	false						
+SRR2225394			SRP063051	Input for ChIP-seq Paf1MB -;- C2C12	Paf1MB_Input; Mus musculus; ChIP-Seq		1	SRX1176734	input	false						
+SRR2225395			SRP063051	Input for ChIP-seq Paf1MB -;- C2C12	Paf1MB_Input; Mus musculus; ChIP-Seq		2	SRX1176734	input	false						
+SRR2225392			SRP063051	ChIP-seq Paf1MB -;- C2C12	Paf1MB; Mus musculus; ChIP-Seq		2	SRX1176733	N	false						
+SRR2225393			SRP063051	ChIP-seq Paf1MB -;- C2C12	Paf1MB; Mus musculus; ChIP-Seq		1	SRX1176733	N	false						
+SRR2225390			SRP063051	Input for ChIP-seq Leo1MT -;- C2C12	Leo1MT_Input; Mus musculus; ChIP-Seq		1	SRX1176732	input	false						
+SRR2225391			SRP063051	Input for ChIP-seq Leo1MT -;- C2C12	Leo1MT_Input; Mus musculus; ChIP-Seq		2	SRX1176732	input	false						
+SRR2225386			SRP063051	Input for ChIP-seq Leo1MB -;- C2C12	Leo1MB_Input; Mus musculus; ChIP-Seq		1	SRX1176730	input	false						
+SRR2225387			SRP063051	Input for ChIP-seq Leo1MB -;- C2C12	Leo1MB_Input; Mus musculus; ChIP-Seq		2	SRX1176730	input	false						
+SRR2225388			SRP063051	ChIP-seq Leo1MT -;- C2C12	Leo1MT; Mus musculus; ChIP-Seq		2	SRX1176731	NA	false						
+SRR2225389			SRP063051	ChIP-seq Leo1MT -;- C2C12	Leo1MT; Mus musculus; ChIP-Seq		1	SRX1176731	NA	false						
+SRR2225384			SRP063051	ChIP-seq Leo1MB -;- C2C12	Leo1MB; Mus musculus; ChIP-Seq		1	SRX1176729	NA	false						
+SRR2225385			SRP063051	ChIP-seq Leo1MB -;- C2C12	Leo1MB; Mus musculus; ChIP-Seq		2	SRX1176729	NA	false						
+SRR2225378			SRP063051	ChIP-seq Ctr9MT -;- C2C12	Ctr9MT; Mus musculus; ChIP-Seq		2	SRX1176727	NA	false						
+SRR2225379			SRP063051	ChIP-seq Ctr9MT -;- C2C12	Ctr9MT; Mus musculus; ChIP-Seq		1	SRX1176727	NA	false						
+SRR2225380			SRP063051	ChIP-seq Ctr9MT -;- C2C12	Ctr9MT; Mus musculus; ChIP-Seq		3	SRX1176727	NA	false						
+SRR2225381			SRP063051	Input for ChIP-seq Ctr9MT -;- C2C12	Ctr9MT_Input; Mus musculus; ChIP-Seq		2	SRX1176728	input	false						
+SRR2225382			SRP063051	Input for ChIP-seq Ctr9MT -;- C2C12	Ctr9MT_Input; Mus musculus; ChIP-Seq		1	SRX1176728	input	false						
+SRR2225383			SRP063051	Input for ChIP-seq Ctr9MT -;- C2C12	Ctr9MT_Input; Mus musculus; ChIP-Seq		3	SRX1176728	input	false						
+SRR2225372			SRP063051	ChIP-seq Ctr9MB -;- C2C12	Ctr9MB; Mus musculus; ChIP-Seq		1	SRX1176724	NA	false						
+SRR2225373			SRP063051	ChIP-seq Ctr9MB -;- C2C12	Ctr9MB; Mus musculus; ChIP-Seq		3	SRX1176724	NA	false						
+SRR2225374			SRP063051	ChIP-seq Ctr9MB -;- C2C12	Ctr9MB; Mus musculus; ChIP-Seq		2	SRX1176724	NA	false						
+SRR2225375			SRP063051	Input for ChIP-seq Ctr9MB -;- C2C12	Ctr9MB_Input; Mus musculus; ChIP-Seq		2	SRX1176725	input	false						
+SRR2225376			SRP063051	Input for ChIP-seq Ctr9MB -;- C2C12	Ctr9MB_Input; Mus musculus; ChIP-Seq		3	SRX1176725	input	false						
+SRR2225377			SRP063051	Input for ChIP-seq Ctr9MB -;- C2C12	Ctr9MB_Input; Mus musculus; ChIP-Seq		1	SRX1176725	input	false						
+SRR2225370			SRP063051	Input for ChIP-seq Cdc73MT -;- C2C12	Cdc73MT_Input; Mus musculus; ChIP-Seq		1	SRX1176723	input	false						
+SRR2225371			SRP063051	Input for ChIP-seq Cdc73MT -;- C2C12	Cdc73MT_Input; Mus musculus; ChIP-Seq		2	SRX1176723	input	false						
+SRR2225368			SRP063051	ChIP-seq Cdc73MT -;- C2C12	Cdc73MT; Mus musculus; ChIP-Seq		2	SRX1176722	NA	false						
+SRR2225369			SRP063051	ChIP-seq Cdc73MT -;- C2C12	Cdc73MT; Mus musculus; ChIP-Seq		1	SRX1176722	NA	false						
+SRR2225366			SRP063051	Input for ChIP-seq Cdc73MB -;- C2C12	Cdc73MB_Input; Mus musculus; ChIP-Seq		2	SRX1176721	input	false						
+SRR2225367			SRP063051	Input for ChIP-seq Cdc73MB -;- C2C12	Cdc73MB_Input; Mus musculus; ChIP-Seq		1	SRX1176721	input	false						
+SRR2225364			SRP063051	ChIP-seq Cdc73MB -;- C2C12	Cdc73MB; Mus musculus; ChIP-Seq		1	SRX1176720	NA	false						
+SRR2225365			SRP063051	ChIP-seq Cdc73MB -;- C2C12	Cdc73MB; Mus musculus; ChIP-Seq		2	SRX1176720	NA	false						
+SRR2518149			SRP064197	C57BL/6 X 129/Sv -;- ESC shPhf5a WITH LIF -;- mouse embryonic stem cells -;- KH2	ChIP-Seq analysis of Paf1 in mouse ESCs under shPhf5a knockdown treatment replicate 3; Mus musculus; ChIP-Seq		1		N	false						
+SRR2518148			SRP064197	C57BL/6 X 129/Sv -;- ESC shPhf5a WITH LIF -;- mouse embryonic stem cells -;- KH2	ChIP-Seq analysis of Paf1 in mouse ESCs under shPhf5a knockdown treatment replicate 2; Mus musculus; ChIP-Seq		1		N	false						
+SRR2518147			SRP064197	C57BL/6 X 129/Sv -;- ESC shPhf5a WITH LIF -;- mouse embryonic stem cells -;- KH2	ChIP-Seq analysis of Paf1 in mouse ESCs under shPhf5a knockdown treatment replicate 1; Mus musculus; ChIP-Seq		1		N	false						
+SRR2518146			SRP064197	C57BL/6 X 129/Sv -;- ESC shControl WITH LIF -;- mouse embryonic stem cells -;- KH2	ChIP-Seq analysis of Paf1 in mouse ESCs under shControl knockdown treatment replicate 3; Mus musculus; ChIP-Seq		1		input	false						
+SRR2518145			SRP064197	C57BL/6 X 129/Sv -;- ESC shControl WITH LIF -;- mouse embryonic stem cells -;- KH2	ChIP-Seq analysis of Paf1 in mouse ESCs under shControl knockdown treatment replicate 2; Mus musculus; ChIP-Seq		1		input	false						
+SRR2518144			SRP064197	C57BL/6 X 129/Sv -;- ESC shControl WITH LIF -;- mouse embryonic stem cells -;- KH2	ChIP-Seq analysis of Paf1 in mouse ESCs under shControl knockdown treatment replicate 1; Mus musculus; ChIP-Seq		1		input	false						
+SRR4101213			SRP064197	ESC shControl WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of Leo1 in mouse ESCs under shControl knockdown treatment replicate 1; Mus musculus; ChIP-Seq		1		input	false						
+SRR4101214			SRP064197	ESC shControl WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of Leo1 in mouse ESCs under shControl knockdown treatment replicate 2; Mus musculus; ChIP-Seq		1		input	false						
+SRR4101215			SRP064197	ESC shControl WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of Cdc73 in mouse ESCs under shControl knockdown treatment replicate 1; Mus musculus; ChIP-Seq		1		input	false						
+SRR4101216			SRP064197	ESC shControl WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of Cdc73 in mouse ESCs under shControl knockdown treatment replicate 2; Mus musculus; ChIP-Seq		1		input	false						
+SRR4101218			SRP064197	ESC shPhf5a WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of Leo1 in mouse ESCs under shPhf5a knockdown treatment replicate 2; Mus musculus; ChIP-Seq		1		NA	false						
+SRR4101217			SRP064197	ESC shPhf5a WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of Leo1 in mouse ESCs under shPhf5a knockdown treatment replicate 1; Mus musculus; ChIP-Seq		1		NA	false						
+SRR4101219			SRP064197	ESC shPhf5a WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of Cdc73 in mouse ESCs under shPhf5a knockdown treatment replicate 1; Mus musculus; ChIP-Seq		1		NA	false						
+SRR4101221			SRP064197	ESC WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of HA-Phf5a in mouse ESCs under absence of doxycycline treatment replicate 1; Mus musculus; ChIP-Seq		1		NA	false						
+SRR4101220			SRP064197	ESC shPhf5a WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of Cdc73 in mouse ESCs under shPhf5a knockdown treatment replicate 2; Mus musculus; ChIP-Seq		1		NA	false						
+SRR4101222			SRP064197	ESC WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of HA-Phf5a in mouse ESCs under absence of doxycycline treatment replicate 2; Mus musculus; ChIP-Seq		1		NA	false						
+SRR4101224			SRP064197	ESC WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of HA-Phf5a in mouse ESCs under doxycycline treatment replicate 2; Mus musculus; ChIP-Seq		1		NA	false						
+SRR4101223			SRP064197	ESC WITH LIF -;- mouse embryonic stem cells	ChIP-Seq analysis of HA-Phf5a in mouse ESCs under doxycycline treatment replicate 1; Mus musculus; ChIP-Seq		1		NA	false						
+SRR3714021			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_H3K36me3_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714022			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_H3K36me3_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714023			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_BioCAPseq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714024			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_BioCAP_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714025			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_KDM2B_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714026			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_KDM2B_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714027			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_BRD4_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714028			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_BRD4_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714029			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_MED1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714030			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_MED1_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714031			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_Menin_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714032			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_Menin_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714033			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_PAF1_ChIPSeq; Homo sapiens; ChIP-Seq		1		N	true						
+SRR3714034			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation -;- Leukemia cell line; SEM	SEM_LEO1_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714039			SRP077016	Leukemia cell line (ML-2) -;- Adult monocytic cell line derived from AML M4 with t(6;11)(q27;q23) translocation -;- Leukemia cell line; ML-2	ML2_H3K79me2_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714040			SRP077016	Leukemia cell line (ML-2) -;- Adult monocytic cell line derived from AML M4 with t(6;11)(q27;q23) translocation -;- Leukemia cell line; ML-2	ML2_H3K79me2_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714041			SRP077016	Leukemia cell line (ML-2) -;- Adult monocytic cell line derived from AML M4 with t(6;11)(q27;q23) translocation -;- Leukemia cell line; ML-2	ML2_MLL_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714042			SRP077016	Leukemia cell line (ML-2) -;- Adult monocytic cell line derived from AML M4 with t(6;11)(q27;q23) translocation -;- Leukemia cell line; ML-2	ML2_MLL_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714043			SRP077016	Leukemia cell line (THP-1) -;- Paediatric monocytic cell line derived from AML M5 with t(9;11)(p21;q23) translocation -;- Leukemia cell line; THP-1	THP1_MLL_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714044			SRP077016	Leukemia cell line (THP-1) -;- Paediatric monocytic cell line derived from AML M5 with t(9;11)(p21;q23) translocation -;- Leukemia cell line; THP-1	THP1_MLL_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714045			SRP077016	Leukemia cell line (KOPN-8) -;- Infant pre B-cell line derived from ALL with t(11;19)(q23;p13) translocation -;- Leukemia cell line; KOPN-8	KOPN8_MLL_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714046			SRP077016	Leukemia cell line (KOPN-8) -;- Infant pre B-cell line derived from ALL with t(11;19)(q23;p13) translocation -;- Leukemia cell line; KOPN-8	KOPN8_MLL_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714047			SRP077016	Leukemia cell line (MV4-11) -;- Paediatric monocytic cell line derived from AML M5 with t(4;11)(q21;q23) translocation -;- Leukemia cell line; MV4-11	MV411_MLL_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714048			SRP077016	Leukemia cell line (MV4-11) -;- Paediatric monocytic cell line derived from AML M5 with t(4;11)(q21;q23) translocation -;- Leukemia cell line; MV4-11	MV411_MLL_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714049			SRP077016	Leukemia cell line (CCRF-CEM) -;- Paediatric immature T-cell line derived from ALL with t(5;14)(q35.1;q32.2) -;- Leukemia cell line; CCRF-CEM	CCRF_MLL_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714050			SRP077016	Leukemia cell line (CCRF-CEM) -;- Paediatric immature T-cell line derived from ALL with t(5;14)(q35.1;q32.2) -;- Leukemia cell line; CCRF-CEM	CCRF_MLL_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR3714051			SRP077016	Leukemia cell line (RCH-ACV) -;- Paediatric pre B-cell line derived from cALL with t(1;19)(q23;p13) translocation -;- Leukemia cell line; RCH-ACV	RCH_MLL_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR3714052			SRP077016	Leukemia cell line (RCH-ACV) -;- Paediatric pre B-cell line derived from cALL with t(1;19)(q23;p13) translocation -;- Leukemia cell line; RCH-ACV	RCH_MLL_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR4477598			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation	SEM_MLL_Replicate_ChIPSeq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR4477600			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation	SEM_MLL_Replicate_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR4477601			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation	SEM_siControl_MLL_ChIPseq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR4477602			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation	SEM_siControl_AF4_ChIPseq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR4477603			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation	SEM_siControl_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR4477604			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation	SEM_siMLL-AF4_MLL_ChIPseq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR4477605			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation	SEM_siMLL-AF4_AF4_ChIPseq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR4477606			SRP077016	Leukemia cell line (SEM) -;- Paediatric pro B-cell line derived from ALL with t(4;11)(q21;q23) translocation	SEM_siMLL-AF4_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR4477607			SRP077016	L826 -;- Presentation ALL patient sample engrafred in mice and harvested from spleen	PT_MLL_ChIPseq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR4477608			SRP077016	L826 -;- Presentation ALL patient sample engrafred in mice and harvested from spleen	PT_AF4_ChIPseq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR4477609			SRP077016	L826 -;- Presentation ALL patient sample engrafred in mice and harvested from spleen	PT_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR4477610			SRP077016	Cord blood -;- Mononuclear cells from full-term cord blood	CB_MLL_ChIPseq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR4477611			SRP077016	Cord blood -;- Mononuclear cells from full-term cord blood	CB_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						
+SRR4477612			SRP077016	Fetal bone marrow -;- Mononuclear cells from second trimester human fetal bone marrow	FBM_MLL_ChIPseq; Homo sapiens; ChIP-Seq		1		NA	true						
+SRR4477614			SRP077016	Fetal bone marrow -;- Mononuclear cells from second trimester human fetal bone marrow	FBM_InputDNA; Homo sapiens; ChIP-Seq		1		input	true						

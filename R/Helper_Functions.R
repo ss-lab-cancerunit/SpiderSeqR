@@ -53,6 +53,7 @@
 #----------------------------------------------------------------------------
 #Developed in searchForTerm5.R
 searchSRA <- function(library_strategy, gene, antibody, cell_type, treatment, species, platform){
+  print("Running searchSRA")
 
   #------------------------------------------------
   #------------------------------------------------
@@ -452,7 +453,11 @@ searchSRA <- function(library_strategy, gene, antibody, cell_type, treatment, sp
   if (dim(output_list)[1]==0) {
     stop("No results passed the verification phase")
   }
+  print("Number of entries returned:")
+  print(dim(output_list)[[1]])
+  print("searchSRA completed")
   return(output_list)
+
 }
 
 #----------------------------------------------------------------------------
@@ -476,6 +481,7 @@ conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
   #
   # Returns: logical vector (same length as df) with TRUE indicating matches to the conditions
   #
+  print("Running conditionVerifier2")
 
   if (missing(prefixes)){
     prefixes <- rep("", length(columns))
@@ -537,8 +543,10 @@ conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
     row_matches <- rep(TRUE, nrow(df))
     warning("No keywords specified. All TRUE returned")
   }
+  print("conditionVerifier2 completed")
 
   return(row_matches)
+
 }
 #------------------------------------------------
 
@@ -554,6 +562,7 @@ conditionVerifier <- function(df, keywords, columns, prefixes, suffixes){
   #
   # Returns: logical vector (same length as df) with TRUE indicating matches to the conditions
   #
+  print("Running conditionVerifier")
 
   if (missing(prefixes)){
     prefixes <- rep("", length(columns))
@@ -603,6 +612,7 @@ conditionVerifier <- function(df, keywords, columns, prefixes, suffixes){
   }
 
   return(row_matches)
+  print("conditionVerifier completed")
 }
 #------------------------------------------------
 
@@ -624,6 +634,7 @@ queryWriter <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
   #if (is.na(sql_after)){
   #  sql_after <- "%'"
   #}
+  print("Running queryWriter")
 
   query <- character()
   for (t in term){
@@ -632,6 +643,7 @@ queryWriter <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
     }
   }
   query <- substr(query, 1, nchar(query)-3) #Remove the last "OR" (which is redundant)
+  print("queryWriter completed")
   return(query)
 }
 #------------------------------------------------
@@ -640,6 +652,7 @@ queryWriter <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
 #------------------------------------------------
 
 withOut <- function(names, vector){
+  print("Running withOut")
   names <- unique(names)
   for (n in seq_along(names)){
     ind <- grep(names[n], vector)
@@ -647,6 +660,7 @@ withOut <- function(names, vector){
       vector <- vector[-ind]
     }
   }
+  print("withOut completed")
   return(vector)
 }
 
@@ -661,6 +675,7 @@ withOut <- function(names, vector){
 #Developed in gsmExtractor.R which also contains previous versions of the function
 #New version of gsmExtractor - based on gsub tagging system
 gsmExtractor <- function(output_list){
+  print("Running gsmExtractor")
   #Find indices of rows which contain GSMs
   gsm_indices <- grep("^GSM\\d\\d\\d+: ", output_list$experiment_title)
   #gsm_indices <- grep("^GSM\\d\\d\\d+", output_list$experiment_title) #Safer option, but not strictly necessary, because GSM is always followed by ": ".
@@ -673,6 +688,7 @@ gsmExtractor <- function(output_list){
 
   #Remove the GSMs from experiment_title column
   output_list$experiment_title[gsm_indices] <- gsub("^GSM\\d\\d\\d+: ", "", output_list$experiment_title[gsm_indices])
+  print("gsmExtractor completed")
   return(output_list)
 }
 #----------------------------------------------------------------------------
@@ -689,6 +705,7 @@ searchForSRPChildren <- function(srp_list, srp_columns){
   #(This is equivalent to finding all SRRs belonging to a given SRP)
   #- Extract relevant columns from the sra table
   # ===*=== COMPARE PERFORMANCE AGAINST PARAMETRISED QUERY
+  print("Running searchForSRPChildren")
   srp_all <- data.frame()
   srp_columns_collapsed <- paste(srp_columns, collapse = ", ")
 
@@ -697,6 +714,7 @@ searchForSRPChildren <- function(srp_list, srp_columns){
     srp_entry <- dbGetQuery(sra_con, srp_query)
     srp_all <- rbind(srp_all, srp_entry)
   }
+  print("searchForSRPChildren completed")
   return(srp_all)
 }
 #----------------------------------------------------------------------------
@@ -716,6 +734,7 @@ rbindUniqueCols <- function(x, y, disregard_columns){
   #            (obtained by ignoring disregard_columns)
   #
   #
+  print("Running rbindUniqueCols")
 
   if (!setequal(colnames(x), colnames(y))){
     stop("Column names need to match between the two data frames")
@@ -784,6 +803,7 @@ rbindUniqueCols <- function(x, y, disregard_columns){
 
   xy <- rbind(x, y[indices, ])
   rownames(xy) <- NULL
+  print("rbindUniqueCols completed")
 
   return(xy)
 }
@@ -799,8 +819,12 @@ naConverter <- function(x){
   # Args: data frame
   # Returns: data frame
   # swapping "" and "NA" into NA
+
+  #print("Running naConverter")
   is.na(x) <- x == ""
   is.na(x) <- x == "NA"
+  #print("naConverter completed")
+
   return(x)
 }
 #----------------------------------------------------------------------------
@@ -839,6 +863,8 @@ universalExtractor <- function(characteristics, sep_split, sep_collapse, key_wor
   #      char_extract[1] - extract of key_word[[1]]
   #      ...
   #      char_extract[k] - extract of key_word[[k]]
+
+  #print("Running universalExtractor")
 
   #Split the string
   char_split <- unlist(strsplit(characteristics, sep_split))
@@ -903,6 +929,8 @@ universalExtractor <- function(characteristics, sep_split, sep_collapse, key_wor
   #colnames(output) <- c("characteristics", "char_remainder", "char_extract1", "char_extract2")
 
   #output <- as.data.frame(t(append(char_remainder, char_extract)), stringsAsFactors = FALSE)
+
+  #print("universalExtractor completed")
   return(output)
 }
 #----------------------------------------------------------------------------
@@ -939,6 +967,8 @@ inputDetector <- function(df){
   #===*=== CHECK THAT specified columns exist within the data frame (maybe write a separate function...)
   #          function(df, column_list)
   #-------------------------------
+
+  print("Running inputDetector")
 
 
   #==============================================================
@@ -1140,6 +1170,7 @@ inputDetector <- function(df){
   cond2 <- necessary_indices & (!detected$cond1) & otherwise_indices
   df$input[cond2] <- "input"
   #-------------------------------
+  print("inputDetector completed")
 
   return(df)
 
@@ -1155,6 +1186,8 @@ columnVerifier <- function(df, column_list){
   # NOTE: Current version requires perfect matching (identical strings)
   #         Methods which actually check the indices might be more flexible (e.g. case insensitive)
   #
+
+  print("Runing columnVerifier")
   df_cols <- colnames(df)
   if (class(column_list)=="list"){
     column_list <- unlist(column_list)
@@ -1167,6 +1200,7 @@ columnVerifier <- function(df, column_list){
     print("All specified columns are within the data frame")
     print(paste(column_list, collapse = ", "))
   }
+  print("columnVerifier completed")
 }
 
 #----------------------------------------------------------------------------
@@ -1188,6 +1222,8 @@ controlDetector <- function(df){
   #        OTHERWISE - one of these string matches is sufficient to label an entry, but ONLY if none of the SRP members is labelled
   #                    NECESSARY conditions are still required for labelling
   #
+
+  print("Running controlDetector")
 
 
   #---------------------------------------------------------------
@@ -1365,6 +1401,8 @@ controlDetector <- function(df){
 
 
   #----------------------------------------------------------------------------
+
+  print("controlDetector completed")
   return(df)
 }
 #----------------------------------------------------------------------------
@@ -1383,12 +1421,15 @@ mergeDetector <- function(df){
   #                          "" - no merging required
   #                          SRX... - merge runs with corresponding SRXs
 
+  print("Running mergeDetector")
+
   df <- df %>%
     add_count(experiment_accession) %>% #Count SRRx within SRX
     group_by(experiment_accession) %>%
     mutate(lane = seq_along(n)) %>% #Indexes all SRRs within SRX
     mutate(mer = case_when(n >= 2 ~ experiment_accession, #Label with SRX when multiple SRRs exist in SRX
                            n < 2 ~ "")) #Leave empty if only one SRR in SRX
+  print("mergeDetector completed")
   return(df)
 }
 #----------------------------------------------------------------------------
@@ -1401,6 +1442,8 @@ missingRunVerifier <- function(srr_list_in){
   #  Args: list of SRRs
   #  Returns: printed notice on whether the SRXs to which the SRRs belong also have any other SRRs
   # ===*=== Double check if all the entries are identical...
+  print("Running missingRunVerifier")
+
   print("CHECKING FOR MISSING RUNS")
 
   srr_list_in <- unique(srr_list_in[order(srr_list_in)])
@@ -1423,16 +1466,19 @@ missingRunVerifier <- function(srr_list_in){
   } else { #===*=== Maybe another criterion...?
     print("There are no missing runs within the selected experiment accessions")
   }
+  print("missingRunVerifier completed")
 }
 
 #================================================
 
 #Needed for missingRunVerifier()
 parQuery <- function(db_name, query, par_list){
+  print("Running parQuery")
   res <- dbSendQuery(get(as.character(db_name)), query)
   dbBind(res, param = list(par_list))
   df <- dbFetch(res)
   dbClearResult(res)
+  print("parQuery completed")
   return(df)
 }
 #----------------------------------------------------------------------------
@@ -1443,6 +1489,7 @@ parQuery <- function(db_name, query, par_list){
 #----------------------------------------------------------------------------
 #Developed in pairedEndConverter.R
 pairedEndConverter <- function(df){
+  print("Running pairedEndConverter")
   columnVerifier(df, "library_layout")
 
   #Locate the library_layout column
@@ -1461,6 +1508,7 @@ pairedEndConverter <- function(df){
   df$pairedEnd[paired_indices] <- "true"
   df$pairedEnd[!paired_indices] <- "false"
 
+  print("pairedEndConverter completed")
   return(df)
 }
 #----------------------------------------------------------------------------
@@ -1471,6 +1519,8 @@ pairedEndConverter <- function(df){
 #----------------------------------------------------------------------------
 #Developed in gseFinder_unfolded_after_keywordExtractor2.R
 geoFinder <- function(gsm_db_name, gsm_list, gsm_columns, gse_columns){
+  print("Running geoFinder")
+
   #-------------------------
   #Constructing a query
   #-------------------------
@@ -1499,6 +1549,7 @@ geoFinder <- function(gsm_db_name, gsm_list, gsm_columns, gse_columns){
   #===*=== Addressed by column name...
   #MOVED OUTSIDE OF THIS FUNCTION
   #gsm_df <- cbind(gsm_df, characteristicsExtractor(gsm_df$characteristics_ch1))
+  print("geoFinder completed")
 
   return(gsm_df)
 }
@@ -1512,6 +1563,7 @@ geoFinder <- function(gsm_db_name, gsm_list, gsm_columns, gse_columns){
 #----------------------------------------------------------------------------
 #Developed in superseriesVerifier.R
 superseriesVerifier <- function(gse_list){
+  print("Running superseriesVerifier")
   #  Args: list of GSEs
   #  Prints the number of samples with multiple GSEs
   #  Prints the list of GSEs that co-occur with other GSEs (i.e. some of them might be superseries)
@@ -1526,5 +1578,6 @@ superseriesVerifier <- function(gse_list){
   if (length(ss_list)!=0){
     print(paste0("Consider carrying out superseries search on the following GSEs: ", paste(ss_list, collapse = ", ")))
   }
+  print("superseriesVerifier completed")
 }
 #----------------------------------------------------------------------------
