@@ -15,7 +15,7 @@ VignetteBuilder: knitr
 Depends:
     plyr,
     dplyr,
-    SRAdb,
-    GEOmetadb,
     DBI (>= 0.7),
     RSQLite (>= 2.0),
+    SRAdb,
+    GEOmetadb
