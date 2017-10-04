@@ -12,10 +12,11 @@ LazyData: true
 Suggests: knitr,
     rmarkdown
 VignetteBuilder: knitr
+biocViews:
 Depends:
     plyr,
     dplyr,
     DBI (>= 0.7),
     RSQLite (>= 2.0),
-    SRAdb,
-    GEOmetadb
+
+
