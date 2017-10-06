@@ -323,7 +323,8 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #============================================================================
   outputGenerator(spider_combined, st = st)
   #============================================================================
-  return(spider_combined)
+
+  #return(spider_combined)
 
 
 }
