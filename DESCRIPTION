@@ -16,6 +16,7 @@ biocViews:
 Depends:
     plyr,
     dplyr,
+    tidyr,
     DBI (>= 0.7),
     RSQLite (>= 2.0),
 
