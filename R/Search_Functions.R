@@ -110,6 +110,15 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #============================================================================
 
 
+  #============================================================================
+  # Save search parameters and call details in a file
+  #============================================================================
+  parameterRecordGenerator(st = st, file = do.call(filenameGenerator, c(st, list(output="PAR"), list(file_type="tab"))))
+
+  callRecordGenerator(file = do.call(filenameGenerator, c(st, list(output="CALL"), list(file_type="Rda"))))
+  #============================================================================
+
+
 
   #============================================================================
   #Find entries containing search_terms (sample_list)

@@ -89,7 +89,7 @@ where <- function(name, env = parent.frame()) {
     #print(where("sra_con"))
 
 
-    if (file.exists("SRR_GSM.sqlite") & (difftime(file.info("SRR_GSM.sqlite")$mtime, Sys.Date(), units = "days") < 14) ){
+    if (file.exists("SRR_GSM.sqlite") & (difftime(Sys.Date(), file.info("SRR_GSM.sqlite")$mtime, units = "days") < 30) ){
       print("Custom database for converting between SRA and GEO is up to date")
       print(paste0("Last modified: ", file.info("SRR_GSM.sqlite")$mtime))
     } else {

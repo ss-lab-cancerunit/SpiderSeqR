@@ -195,8 +195,11 @@ filenameGenerator <- function(library_strategy, gene=NULL, antibody=NULL, cell_t
     }
   }
 
-  today <- Sys.Date()
-  today <- format(today, format = "%y%m%d")
+  #today <- Sys.Date()
+  #today <- format(today, format = "%y%m%d")
+
+  today <- Sys.time()
+  today <- format(today, format = "%y%m%d_%H%M%S")
 
   name <- paste0(name, "_", today)
 
