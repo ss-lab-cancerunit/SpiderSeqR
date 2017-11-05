@@ -33,6 +33,7 @@ where <- function(name, env = parent.frame()) {
   #==========================================================
   #GEOmetadb
   #==========================================================
+  #if (file.exists("GEOmetadb.sqlite") & (difftime(Sys.Date(), file.info("GEOmetadb.sqlite")$mtime, units = "days") < 50)) {
   if(!file.exists("GEOmetadb.sqlite")){
     #if(1==1){
     #if(!file.exists("test.txt")){
@@ -41,6 +42,7 @@ where <- function(name, env = parent.frame()) {
     geo_menu <- menu(c("yes", "no"))
     if (geo_menu == 1){
       print("Downloading the file")
+      geofile <- getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
     } else {
       stop("GEOmetadb.sqlite is necessary to initiate package operation")
     }
@@ -50,6 +52,9 @@ where <- function(name, env = parent.frame()) {
   #==========================================================
   #SRAmetadb
   #==========================================================
+  srafile <- 'SRAmetadb.sqlite'
+
+  #if (file.exists("SRAmetadb.sqlite") & (difftime(Sys.Date(), file.info("SRAmetadb.sqlite")$mtime, units = "days") < 50)){
   if(!file.exists("SRAmetadb.sqlite")){
     #if(!file.exists("test.txt")){
     print("The file SRAmetadb.sqlite was not found in the current working directory")
@@ -57,6 +62,7 @@ where <- function(name, env = parent.frame()) {
     geo_menu <- menu(c("yes", "no"))
     if (geo_menu == 1){
       print("Downloading the file")
+      srafile <<- getSRAdbFile()
     } else {
       stop("SRAmetadb.sqlite is necessary to initiate package operation")
     }
@@ -89,7 +95,7 @@ where <- function(name, env = parent.frame()) {
     #print(where("sra_con"))
 
 
-    if (file.exists("SRR_GSM.sqlite") & (difftime(Sys.Date(), file.info("SRR_GSM.sqlite")$mtime, units = "days") < 30) ){
+    if (file.exists("SRR_GSM.sqlite") & (difftime(Sys.Date(), file.info("SRR_GSM.sqlite")$mtime, units = "days") < 50) ){
       print("Custom database for converting between SRA and GEO is up to date")
       print(paste0("Last modified: ", file.info("SRR_GSM.sqlite")$mtime))
     } else {
