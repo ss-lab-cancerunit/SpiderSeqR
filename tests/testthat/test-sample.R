@@ -10,3 +10,10 @@ test_that("Checking how testing works", {
   expect_warning(log(-1))
   expect_warning(log(-1), "NaNs produced")
 })
+
+a <-1
+b <- 3
+
+test_that("Checking the lexical scoping of testing", {
+  expect_true(a+b==4)
+})

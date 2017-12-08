@@ -53,7 +53,7 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
       for (l in seq_along(secondary_library_strategy)){
         if (!(secondary_library_strategy[[l]] %in% supported_secondary_library_strategy)) {
           sls <- paste(supported_secondary_library_strategy, collapse = ", ")
-          stop(paste0("Library strategy does not belong to the list of supported library strategies. Please try one of: ", sls, "."))
+          stop(paste0("Library strategy does not belong) to the list of supported library strategies. Please try one of: ", sls, "."))
         }
       }
     }
@@ -196,40 +196,7 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #============================================================================
   #Extract SRA sample attributes
   #============================================================================
-  #PREVIOUSLY
-  #sra_attr_keywords <- list(c("tissue: ", "cell.line: ", "source.name: ", "cell.type: "),
-  #                          c("antibody: "),
-  #                          c("hgn: "),
-  #                          c("treatment: "))
-  #===*=== Make a better choice
-
-  sra_tissue <- c("strain", "tissue", "source.?name", "isolation.?source", "isolate", "body.?site", "sample.?type", "cell.?type", "cell.?line", "ArrayExpress-CellType", "inferred.?cell.?type", "cell", "cre.?line", "cell.?description", "cell.?subtype", "cell.?or.?tisue.?type",
-                  "ArrayExpress-StrainOrLine", "lineage", "line", "strain.?or.?line",
-                  "body.?site", "site", "corrected.?sample.?site", "host.?body.?site",
-                  "tissue.?type", "host.?tissue.?sampled", "tissue.?depot",
-                  "source_material_id", "source",
-                  "organism.?part") #TISSUE #ONLY USED HERE #RESEARCHED WELL
-  sra_tissue <- paste0(sra_tissue, ": ")
-
-  sra_antibody <- c("chip.antibody", "antibody", "ArrayExpress.Immunoprecipitate", "ip.antibody", "rip.antibody", "medip.antibody", "clip.antibody", "frip.antibody", "chip-seq.antibody") #ANTIBODY #RESEARCHED WELL
-  sra_antibody <- paste0(sra_antibody, ": ")
-
-  sra_gene <- c("genotype", "ArrayExpress.Genotype", "genotype/variation", "target.gene", "genetic.background", "host.genotype", "Plant.genotype", "genetic.modification", "transgene", "gene.id", "myd88.genotype", "gene.perturbation.type", "genetic.condition", "cytogenetics", "concise.genotype.name", "genspecies.abbr", "melanoma.genetic.conditions", "marker.gene", "gene", "strain/genotype", "genotype/variation", "knockout", "knockdown", "hgn") #GENE #RESEARCHED (based on sa_categories)
-  sra_gene <- paste0(sra_gene, ": ")
-
-  sra_treatment <- c("treatment", "ArrayExpress.Treatment", "treated.with", "treatment.description", "drug.treatment", "treatment.protocol", "Vaccine.Treatment", "experimental.treatment", "diet.treatment", "treatment.group") #TREATMENT #RESEARCHED
-  sra_treatment <- paste0(sra_treatment, ": ")
-
-  sra_attr_keywords <- list(sra_tissue, sra_antibody, sra_gene, sra_treatment)
-
-
-  sra_sep_split <- " \\|\\| "
-  sra_sep_collapse <- " || "
-
-  spider_sra_attr <- ldply(spider_combined$sample_attribute, function(x) universalExtractor(x, sra_sep_split, sra_sep_collapse, sra_attr_keywords))
-
-  colnames(spider_sra_attr) <- c("sa_original", "sa_remainder", "sa_tissue", "sa_antibody", "sa_gene", "sa_treatment")
-  spider_combined <- cbind(spider_combined, spider_sra_attr[,(-1)]) #Combine extracted columns with df (except attr_original column)
+  spider_combined <- saExtractor(spider_combined)
   #============================================================================
 
 
@@ -291,30 +258,7 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #============================================================================
   #Extract characteristics_ch1 into separate columns
   #============================================================================
-
-  #===*=== Come back and add more choices to the category names
-
-  geo_tissue <- c("tissue", "cell.?type", "cell.?line") #NOT RESEARCHED
-  geo_tissue <- paste0(geo_tissue, ": ")
-
-  geo_antibody <- c("antibody") #NOT RESEARCHED
-  geo_antibody <- paste0(geo_antibody, ": ")
-
-  geo_gene <- c("genotype") #NOT RESEARCHED
-  geo_gene <- paste0(geo_gene, ": ")
-
-  geo_treatment <- c("treatment") #NOT RESEARCHED
-  geo_treatment <- paste0(geo_treatment, ": ")
-
-  geo_char_keywords <- list(geo_tissue, geo_antibody, geo_gene, geo_treatment)
-
-  geo_sep_split <- ";\t"
-  geo_sep_collapse <- ";\t"
-
-  spider_geo_char <-  ldply(spider_geo$characteristics_ch1, function(x) universalExtractor(x, geo_sep_split, geo_sep_collapse, geo_char_keywords))
-
-  colnames(spider_geo_char) <- c("ch1_original", "ch1_remainder", "ch1_tissue", "ch1_antibody", "ch1_gene", "ch1_treatment")
-  spider_geo <- cbind(spider_geo, spider_geo_char[, (-1)]) #Combine extracted columns with geo df (except ch1_original column)
+  spider_geo <- chExtractor(spider_geo)
   #============================================================================
 
 

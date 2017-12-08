@@ -93,6 +93,17 @@ Status Task
 : searchForAccession
 
 
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ !!!   Research properly different attributes
+
+ !!!   Decide if it would be worthwhile to extract experiment_attributes
+----------------------------------------------------------------------------------------------------------------------
+
+: chExtractor
+
+
 
 
 ###General behaviour
@@ -101,6 +112,8 @@ Status Task
 Status Task
 ------ ---------------------------------------------------------------------------------------------------------------
  !!!   Consider how to communicate information to the users (warnings, print, message...)
+
+ !!!   Consider what to do if entry only exists in GEO - input/control labelling, dealing with outputs 
 ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -117,17 +130,19 @@ Status Task
 
 ###Testing
 
-----------------------------------------------------------------------------------------------------------------------
-Status    Function      Task
------- ---------------- ----------------------------------------------------------------------------------------------
- !!!    inputDetector   Prepare extracts for testing (with too few columns, crucial columns only, with some columns and all columns)
+-----------------------------------------------------------------------------------------------------------------------
+Status    Function        Task
+------ ----------------- ----------------------------------------------------------------------------------------------
+ !!!    inputDetector     Prepare extracts for testing (with too few columns, crucial columns only, with some columns and all columns)
 
- !!!    controlDetector As above
+ !!!    controlDetector   As above
 
- !!!      digitSort     Test on simple examples
+ !!!      digitSort       Test on simple examples
 
- !!!    columnVerifier  Much depends on it!!!
-----------------------------------------------------------------------------------------------------------------------
+ !!!    columnVerifier    Much depends on it!!!
+
+ ...  universalExtractor  Design tests for most problematic cases...
+-----------------------------------------------------------------------------------------------------------------------
 
 
   
@@ -154,6 +169,8 @@ Status    Function      Task
 |Status|Task|
 |-|-|
 |IP|IP|
+
+
 
 ####multiline_tables
 

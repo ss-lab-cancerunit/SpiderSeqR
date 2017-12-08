@@ -20,6 +20,9 @@ searchForAccession <- function(acc_list){
 
   output_df <- searchForAccessionAcrossDBs(acc_list = x, sra_columns = "*", geo_columns = "*")
 
+  output_df <- saExtractor(output_df)
+  output_df <- chExtractor(output_df)
+
   output_df$input <- NA
   output_df$control <- NA
 
@@ -49,6 +52,8 @@ searchForAccession_temp <- function(acc_list){
   accession_class <- accessionClassifier(x)
 
   output_df <- searchGEOForGSE(acc_list = x, geo_columns = "*")
+
+  output_df <- chExtractor(output_df)
 
   output_df$input <- NA
   output_df$control <- NA

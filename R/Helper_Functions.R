@@ -848,7 +848,7 @@ naConverter <- function(x){
 #
 #gsub statement now deletes anything before the key_word as well (e.g. "chip antibody: " as opposed to "antibody: ", which would leave chip with the extracted part)
 #grep and gsub changed to case insensitive
-universalExtractor <- function(characteristics, sep_split, sep_collapse, key_words){
+universalExtractor <- function(characteristics, key_words, sep_split, sep_collapse){
   # Extracts parts of the separable string which contain key_words (without the key_words) and the remainder after all the subtractions
   #
   # Args:
@@ -883,7 +883,9 @@ universalExtractor <- function(characteristics, sep_split, sep_collapse, key_wor
           if(char_curr_extract[t]!=""){ #Current extract is nonempty
             if (length(char_extract[[k]])==0) {
               char_extract[[k]] <- append(char_extract[[k]], char_curr_extract[t]) #Append current extract
-            } else if (length(grep(char_curr_extract[t], char_extract[[k]], ignore.case = TRUE, fixed = TRUE))==0) {
+            } else if (length(grep(char_curr_extract[t], char_extract[[k]],
+                                   #ignore.case = TRUE,
+                                   fixed = TRUE))==0) {
               char_extract[[k]] <- append(char_extract[[k]], char_curr_extract[t]) #Append current extract
             }
           }
