@@ -1,0 +1,223 @@
+---
+title: "SpideR To Do"
+output:
+  html_notebook:
+    code_folding: none
+    toc: yes
+    toc_float: yes
+  html_document:
+    toc: yes
+    toc_float: yes
+---
+
+NOTE: No tasks were transferred from SpiderDev.Rmd. This should gradually be done in the future.
+In the meantime, please also refer to SpiderDev.Rmd.  
+
+###Legend
+
+|Status|Meaning|
+|-|-|
+|+|Done|
+|...|In progress|
+|!!!|To be done!|
+
+
+
+###Package setup
+
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ ...   Download and attach packages
+
+ !!!   Connect to bioconductor packages
+
+ !!!   Explicitly call package functions, i.e. package::function(); check if this is a common practice or not --> Hadley
+
+ !!!   Decide on the location of the sqlite files
+
+ !!!   Choose a method for establishing connections
+
+ !!!   Display the current limit for database file age
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+
+###Naming
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ !!!   Rename internal functions and update namespace file
+
+ !!!   Introduce consistent grammatical form and spelling for function names
+
+ !!!   Introduce consistent naming of function variables
+----------------------------------------------------------------------------------------------------------------------
+
+
+###Function-specific tasks
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ !!!   Get rid of the error of no results when no SRA/GEO correspondence...
+----------------------------------------------------------------------------------------------------------------------
+
+: Accession_Conversion
+
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ !!!   Get rid of the error of no results when no SRA/GEO correspondence...
+
+ !!!   Verify arguments
+
+ !!!   Save query info and record
+
+ !!!   Extract GSMs
+
+ !!!   Extract sample_attribute and characteristics (create separate functions for that)
+
+ !!!   Decide what to do about the format of the output for mixed library_strategy accessions
+
+ !!!   Decide on what accessions to use by default - SRA or GEO?
+
+----------------------------------------------------------------------------------------------------------------------
+
+: searchForAccession
+
+
+
+
+###General behaviour
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ !!!   Consider how to communicate information to the users (warnings, print, message...)
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+###Performance
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ !!!   Investigate possibilities of more optimised queries
+----------------------------------------------------------------------------------------------------------------------
+
+
+
+###Testing
+
+----------------------------------------------------------------------------------------------------------------------
+Status    Function      Task
+------ ---------------- ----------------------------------------------------------------------------------------------
+ !!!    inputDetector   Prepare extracts for testing (with too few columns, crucial columns only, with some columns and all columns)
+
+ !!!    controlDetector As above
+
+ !!!      digitSort     Test on simple examples
+
+ !!!    columnVerifier  Much depends on it!!!
+----------------------------------------------------------------------------------------------------------------------
+
+
+  
+
+###Some experiences with tables
+
+####Basic tables
+
+| Right-aligned | Left-aligned | Centered | Default |
+|-:|:-|:-:|-|
+|1|1|1|1|
+|12|12|12|12| 
+|*1*|_2_|~~3~~|4^2^|
+
+
+|Status|Task|
+|-|-----------|
+|IP|Managing the output|
+
+|Status|Task|
+|-|-----------|
+|IP|IP|
+
+|Status|Task|
+|-|-|
+|IP|IP|
+
+####multiline_tables
+
+Part of Pandoc Markdown 
+(http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html#pandoc_markdown)  
+Are suppressed by using markdown_strict as opposed to markdown.
+
+-------------------------------------------------------------
+ Centered   Default           Right Left
+  Header    Aligned         Aligned Aligned
+----------- ------- --------------- -------------------------
+   First    row                12.0 Example of a row that
+                                    spans multiple lines.
+
+  Second    row                 5.0 Here's another one. Note
+                                    the blank line between
+                                    rows.
+-------------------------------------------------------------
+
+Table: This is the example from the website.
+
+
+
+
+---------------------------------------------------------------------------------------------
+ Head  Text
+------ --------------------------------------------------------------------------------------
+ !!!   Something multiline
+       More?
+
+ ...   Nothing
+---------------------------------------------------------------------------------------------
+
+: Almost successful multiline (new line is not recognised)
+
+
+
+
+--------------------------------------------------------------------------------------------------------------------
+Status Task
+------ -------------------------------------------------------------------------------------------------------------
+ ...   Download and attach packages
+
+ !!!   Connect to bioconductor packages
+
+ !!!   Explicitly call package functions, i.e. package::function(); check if this is a common practice or not --> Hadley
+
+ !!!   Decide on the location of the sqlite files
+
+ !!!   Choose a method for establishing connections
+----------------------------------------------------------------------------------------------------------------------
+
+: Fairly successful multiline (line is wrapped)
+
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ !!!   Sample task
+----------------------------------------------------------------------------------------------------------------------
+
+: This is a template of a table
+
+
+

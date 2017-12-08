@@ -1,15 +1,16 @@
-
-#accessionConverter.R
+#
+#
+#NEW
+#searchForAccessionAcrossDBs - initial accessionConverter with more function arguments (i.e. table columns for sra and geo)
+#
+#CHANGED
+#convertAccession (previously accessionConverter) - a wrapper around searchForAccessionAcrossDBs
 #Converts a list of accessions (of one type) into all possible accessions within SRA and GEO
 
-#------------------------------------------------------
-#------------------------------------------------------
-accessionConverter <- function(acc_list){
 
-  geo_columns <- c("gsm", "series_id")
-  #srr_gsm_columns <- c("gsm", "gsm_check", "run_accession")
-  sra_columns <- c("run_accession", "experiment_accession", "sample_accession", "study_accession")
 
+
+searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 
   accession_class <- accessionClassifier(acc_list)
 
@@ -32,11 +33,15 @@ accessionConverter <- function(acc_list){
       geo_df <- searchGEOForGSE(acc_list, geo_columns)
     }
 
+    #saveRDS(geo_df, "geo_df.Rda")
+
     #SRR_GSM data frame
     srr_gsm_df <- searchSRR_GSM(geo_df$gsm)
+    #saveRDS(srr_gsm_df, "srr_gsm_df.Rda")
 
     #SRA data frame
     sra_df <- searchSRAForAccession(srr_gsm_df$run_accession, sra_columns)
+    #saveRDS(sra_df, "sra_df.Rda")
 
 
     #Merge
@@ -78,10 +83,25 @@ accessionConverter <- function(acc_list){
 
   #=============================================================
 
+  return(output_df)
+
+}
+
+
+convertAccession <- function(acc_list){
+
+  geo_columns <- c("gsm", "series_id")
+  #srr_gsm_columns <- c("gsm", "gsm_check", "run_accession")
+  sra_columns <- c("run_accession", "experiment_accession", "sample_accession", "study_accession")
+
+  output_df <- searchForAccessionAcrossDBs(acc_list, geo_columns = geo_columns, sra_columns = sra_columns)
+
   output_df <- output_df[ , c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id", "gsm_check")]
 
   return(output_df)
 
 }
-#------------------------------------------------------
-#------------------------------------------------------
+
+
+
+
