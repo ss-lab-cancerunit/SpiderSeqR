@@ -37,6 +37,10 @@ Status Task
 
  !!!   Decide on the location of the sqlite files
 
+ !!!   Decide on the acceptable age of all the files (include SRA, GEO and  SRR_GSM)
+
+ !!!   Decide on the way of enforcing file age (stop vs offer the chance to update)
+
  !!!   Choose a method for establishing connections
 
  !!!   Display the current limit for database file age
@@ -113,7 +117,7 @@ Status Task
  !!!   Make digitSort able to deal with NAs (in any form) !!!
 ----------------------------------------------------------------------------------------------------------------------
 
-: digitSort (orderAccession/sortAccession)
+: digitSort (orderAccession/sortAccession!!!)
 
 
 ----------------------------------------------------------------------------------------------------------------------
@@ -138,6 +142,8 @@ Status Task
  !!!   Consider how to communicate information to the users (warnings, print, message...)
 
  !!!   Consider what to do if entry only exists in GEO - input/control labelling, dealing with outputs 
+
+ !!!   Sort out what happens with regard to the weird data types at the output (?)
 ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -155,19 +161,41 @@ Status Task
 ###Testing
 
 -----------------------------------------------------------------------------------------------------------------------
-Status    Function        Task
------- ----------------- ----------------------------------------------------------------------------------------------
- !!!    inputDetector     Prepare extracts for testing (with too few columns, crucial columns only, with some columns and all columns)
+Status          Function            Task
+------ -------------------------- --------------------------------------------------------------------------------------
+ !!!         inputDetector            Prepare extracts for testing (with too few columns, crucial columns only, with some columns and all columns)
 
- !!!    controlDetector   As above
+ !!!        controlDetector           As above
 
- !!!      digitSort       Test on simple examples
+ !!!            digitSort             Test on simple examples
 
- !!!    columnVerifier    Much depends on it!!!
+ !!!          columnVerifier          Much depends on it!!!
 
- ...  universalExtractor  Design tests for most problematic cases...
+ ...        universalExtractor        Design tests for most problematic cases...
+
+ ...   Accession_Search_Functions     Design tests for other functions
+
 -----------------------------------------------------------------------------------------------------------------------
 
+####Accession_Search_Functions
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+  +     Incorrect accessions
+
+  +     Non-existent accessions
+
+  +     Accessions of different types
+  
+  +     Wrong column names
+
+  +     Correct number of matches
+  
+ !!!    More tests for correct matches
+----------------------------------------------------------------------------------------------------------------------
+
+: searchSRAForAccession
 
   
 
@@ -259,6 +287,13 @@ Status Task
 ----------------------------------------------------------------------------------------------------------------------
 
 : This is a template of a table
+
+
+####Tasks
+
+- [ ] Incomplete item
+- [x] Supposedly complete item
+Does not seem to work in R (github task lists)
 
 
 

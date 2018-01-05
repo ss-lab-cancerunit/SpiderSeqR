@@ -1,14 +1,15 @@
-
-
-#Functions for searching within the three databases: GEO, SRA and SRR_GSM
-
+# Accession_Search_Functions.R
+#
+#Functions for searching for accessions within the three databases: GEO, SRA and SRR_GSM
+#These functions are used by higher level functions such as searchForAccessionAcrosDBs, convertAccession and searchForAccession
+#
 #CONTAINS:
-#searchGEOForGSM()
-#searchGEOForGSE()
-
-#searchSRAForAccession()
-
-#searchSRR_GSM()
+# - searchGEOForGSM()
+# - searchGEOForGSE()
+#
+# - searchSRAForAccession()
+#
+# - searchSRR_GSM()
 
 
 

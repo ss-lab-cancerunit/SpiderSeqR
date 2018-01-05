@@ -14,7 +14,7 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 
   accession_class <- accessionClassifier(acc_list)
 
-  if (!(accession_class %in% c("gsm", "series_id", "run_accesion", "experiment_accession", "sample_accession", "study_accession"))){
+  if (!(accession_class %in% c("gsm", "series_id", "run_accession", "experiment_accession", "sample_accession", "study_accession"))){
     stop("Accession needs to belong to one of the supported classes")
   }
 
