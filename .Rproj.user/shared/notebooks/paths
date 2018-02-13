@@ -1,4 +1,4 @@
-/HDD/Anna/SpideR_Packaging201709/DRIP-Seq/DRIP-seq_v2.Rmd="F92D3C89"
+/HDD/Anna/SpideR_Packaging201709/DRIP-Seq/DRIP_V2_20180207/DRIP-seq_v2.Rmd="F371AEFA"
 /HDD/Anna/SpideR_Packaging201709/DRIP-Seq/DRIP_seq.Rmd="34020E7"
 /HDD/Anna/SpideR_Packaging201709/Historical_Files/Code_around_universalExtractor_pre-saExtractor_and_chExtractor.R="9D91CDDD"
 /HDD/Anna/SpideR_Packaging201709/Historical_Files/Control_flow_SRR_GSM.R="A2A469F2"
@@ -29,3 +29,5 @@
 /HDD/Anna/SpideR_Packaging201709/SpideR/tests/testthat/test-universalExtractor.R="BF47BC4E"
 /HDD/Anna/SpideR_Packaging201709/SpideR_GUIDE.Rmd="49466A72"
 /HDD/Anna/SpideR_Packaging201709/SpiderDev.Rmd="21E14076"
+/run/user/1001/gvfs/sftp:host=192.168.43.182/scratch/public/anna2/DRIP-Seq/configs/SRR2028294_trim.json="5CC6DA8"
+/run/user/1001/gvfs/sftp:host=192.168.43.182/scratch/public/anna2/DRIP-Seq/configs/SRR2075679_trim.json="69E03DD"
