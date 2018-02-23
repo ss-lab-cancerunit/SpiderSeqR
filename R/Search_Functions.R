@@ -266,7 +266,10 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #Merge spider_comibined and spider_geo
   #============================================================================
   spider_combined <- merge(spider_combined, spider_geo, by.x = "sample", by.y = "gsm", all.x = TRUE)
-  superseriesVerifier(spider_combined$series_id) #Give info on superseries
+
+  #saveRDS(spider_combined, "spider_combined_prelim.Rda")
+
+  spider_superseries <- superseriesVerifier(spider_combined$series_id) #Give info on superseries
   #============================================================================
 
 
@@ -274,7 +277,8 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #============================================================================
   # Generate outputs
   #============================================================================
-  outputGenerator(spider_combined, st = st)
+
+  outputGenerator(spider_combined, spider_superseries, st = st)
   #============================================================================
 
   #return(spider_combined)

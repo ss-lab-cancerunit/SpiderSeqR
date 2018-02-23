@@ -1566,20 +1566,29 @@ geoFinder <- function(gsm_db_name, gsm_list, gsm_columns, gse_columns){
 #Developed in superseriesVerifier.R
 superseriesVerifier <- function(gse_list){
   print("Running superseriesVerifier")
-  #  Args: list of GSEs
+  #  Args: list of GSEs (as appear in the GEO db)
   #  Prints the number of samples with multiple GSEs
   #  Prints the list of GSEs that co-occur with other GSEs (i.e. some of them might be superseries)
 
   print("CHECKING FOR PRESENCE OF SUPERSERIES")
+
+  #Grepl GSE..., GSE... (...)
   ss_match <- grepl("^GSE\\d\\d\\d+,GSE\\d\\d\\d+.*$", gse_list)
   print(paste0(sum(ss_match), " out of ", length(gse_list), " entries belong to more than one GSE (some of them might be superseries)"))
 
-  #Get a list of GSEs that co-occur with other GSEs (i.e. GSEs from samples which have more than one GSEs)
-  ss_list <- unlist(strsplit(unique(gse_list[ss_match]), split=","))
-  ss_list <- unique(ss_list[order(ss_list)])
-  if (length(ss_list)!=0){
-    print(paste0("Consider carrying out superseries search on the following GSEs: ", paste(ss_list, collapse = ", ")))
+  if (sum(ss_match)>0){
+    #Get a list of GSEs that co-occur with other GSEs (i.e. GSEs from samples which have more than one GSEs)
+    ss_list <- unlist(strsplit(unique(gse_list[ss_match]), split=","))
+    ss_list <- unique(ss_list[order(ss_list)])
+    if (length(ss_list)!=0){
+      print(paste0("Consider carrying out superseries search on the following GSEs: ", paste(ss_list, collapse = ", ")))
+    }
+    return(ss_list)
+
+  } else {
+    return(NULL)
   }
+
   print("superseriesVerifier completed")
 }
 #----------------------------------------------------------------------------

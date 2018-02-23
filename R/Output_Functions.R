@@ -23,8 +23,9 @@
 #============================================================================
 
 #Developed in outputGenerator.R
-outputGenerator <- function(df, st){
+outputGenerator <- function(df, ss, st){
   # Args: df - data frame to output (unfilter)
+  #       ss - list of series (GSE) from superseriesVerifier
   #       st - search terms (used for conditional filtering and file naming)
   # Returns: nothing
   #
@@ -60,6 +61,10 @@ outputGenerator <- function(df, st){
                 row.names = FALSE,
                 quote = FALSE
     )
+  }
+
+  if (!is.null(ss)){
+    saveRDS(ss, do.call(filenameGenerator, c(st, list(output="ss"), list(file_type="Rda"))))
   }
 
 
