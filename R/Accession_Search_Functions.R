@@ -26,6 +26,8 @@
 #------------------------------------------------------
 searchGEOForGSM <- function(acc_list, geo_columns){
 
+  print("Running searchGEOForGSM")
+
   #Remove duplicates and order
   acc_list <- unique(acc_list)
   acc_list <- acc_list[digitSort(acc_list)]
@@ -33,6 +35,11 @@ searchGEOForGSM <- function(acc_list, geo_columns){
   #Stop if list is not valid (i.e. non-gsm entries)
   if (accessionClassifier(acc_list)!="gsm"){
     stop("Only GSMs are allowed")
+  }
+
+  #Make sure that the query will not be empty
+  if (length(acc_list)==0){
+    acc_list <- "nth"
   }
 
   geo_columns <- paste0(geo_columns, collapse = ", ")
@@ -48,6 +55,11 @@ searchGEOForGSM <- function(acc_list, geo_columns){
     df <- rbind(df, chunk)
   }
 
+  #print(colnames(chunk))
+  #if (dim(df)[1]==0){
+  #  df <- chunk
+  #}
+
   print(paste0("Found results for ", search_count, " out of ", length(acc_list), " accession search terms"))
 
   if (search_count!=length(acc_list)){
@@ -56,14 +68,21 @@ searchGEOForGSM <- function(acc_list, geo_columns){
 
   df <- unique(df)
 
+
+  print("searchGEOForGSM completed")
+
   return(df)
 }
 #------------------------------------------------------
 #------------------------------------------------------
 
+
+
 #------------------------------------------------------
 #------------------------------------------------------
 searchGEOForGSE <- function(acc_list, geo_columns){
+
+  print("Running searchGEOForGSE")
 
   #Remove duplicates and order
   acc_list <- unique(acc_list)
@@ -72,6 +91,11 @@ searchGEOForGSE <- function(acc_list, geo_columns){
   #Stop if list is not valid (i.e. non-gsm entries)
   if (accessionClassifier(acc_list)!="series_id"){
     stop("Only GSEs are allowed")
+  }
+
+  #Make sure that the query will not be empty
+  if (length(acc_list)==0){
+    acc_list <- "nth"
   }
 
   geo_columns <- paste0(geo_columns, collapse = ", ")
@@ -95,10 +119,15 @@ searchGEOForGSE <- function(acc_list, geo_columns){
 
   df <- unique(df)
 
+  print("searchGEOForGSE completed")
+
   return(df)
+
+
 }
 #------------------------------------------------------
 #------------------------------------------------------
+
 
 
 #------------------------------------------------------
@@ -110,6 +139,9 @@ searchSRAForAccession <- function(acc_list, sra_columns){
   #
   # Returns: df from SRA with matches to the acc_list
   #
+
+
+  print("Running searchSRAForAccession")
 
   #------------------------------------------------
   #------------------------------------------------
@@ -129,6 +161,11 @@ searchSRAForAccession <- function(acc_list, sra_columns){
 
   x <- unique(acc_list)
   x <- x[digitSort(x)]
+
+  #Make sure that the query will not be empty
+  if (length(acc_list)==0){
+    acc_list <- "nth"
+  }
 
   accession_class <- accessionClassifier(x)
   search_count <- 0
@@ -158,6 +195,10 @@ searchSRAForAccession <- function(acc_list, sra_columns){
   }
 
   accession_df <- unique(accession_df)
+
+
+  print("searchSRAForAccession completed")
+
   return(accession_df)
 }
 #------------------------------------------------------
@@ -168,12 +209,20 @@ searchSRAForAccession <- function(acc_list, sra_columns){
 #------------------------------------------------------
 searchSRR_GSM <- function(acc_list, srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
 
+
+  print("Running searchSRR_GSM")
+
   accession_class <- accessionClassifier(acc_list)
 
   #This is a safeguard in case incomplete SRA accessions had equivalents in GEO
   #Can only remove it if it is certain that this is not the case
   if (!(accession_class %in% c("run_accession", "gsm"))){
     stop("Only SRRs and GSMs are accepted")
+  }
+
+  #Make sure that the query will not be empty
+  if (length(acc_list)==0){
+    acc_list <- "nth"
   }
 
   acc_list <- unique(acc_list)
@@ -202,6 +251,10 @@ searchSRR_GSM <- function(acc_list, srr_gsm_columns = c("run_accession", "gsm", 
   }
 
   accession_df <- unique(accession_df)
+
+
+  print("searchSRR_GSM completed")
+
   return(accession_df)
 
 }

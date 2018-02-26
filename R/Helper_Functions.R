@@ -674,17 +674,21 @@ withOut <- function(names, vector){
 #----------------------------------------------------------------------------
 #Developed in gsmExtractor.R which also contains previous versions of the function
 #New version of gsmExtractor - based on gsub tagging system
-gsmExtractor <- function(output_list){
+gsmExtractor <- function(output_list, sampleColumn = TRUE){
   print("Running gsmExtractor")
   #Find indices of rows which contain GSMs
   gsm_indices <- grep("^GSM\\d\\d\\d+: ", output_list$experiment_title)
   #gsm_indices <- grep("^GSM\\d\\d\\d+", output_list$experiment_title) #Safer option, but not strictly necessary, because GSM is always followed by ": ".
 
-  #Create a new column
-  output_list$sample <- NA
 
-  #Extract the GSMs to sample column
-  output_list$sample[gsm_indices] <- gsub("^(GSM\\d\\d\\d+).*$", "\\1", output_list$experiment_title[gsm_indices])
+  if (sampleColumn == TRUE){
+    #Create a new column
+    output_list$sample <- NA
+
+    #Extract the GSMs to sample column
+    output_list$sample[gsm_indices] <- gsub("^(GSM\\d\\d\\d+).*$", "\\1", output_list$experiment_title[gsm_indices])
+  }
+
 
   #Remove the GSMs from experiment_title column
   output_list$experiment_title[gsm_indices] <- gsub("^GSM\\d\\d\\d+: ", "", output_list$experiment_title[gsm_indices])
@@ -1431,6 +1435,7 @@ mergeDetector <- function(df){
     mutate(lane = seq_along(n)) %>% #Indexes all SRRs within SRX
     mutate(mer = case_when(n >= 2 ~ experiment_accession, #Label with SRX when multiple SRRs exist in SRX
                            n < 2 ~ "")) #Leave empty if only one SRR in SRX
+  df <- as.data.frame(df)
   print("mergeDetector completed")
   return(df)
 }
@@ -1503,7 +1508,8 @@ pairedEndConverter <- function(df){
   paired_indices <- grepl("PAIRED", df$library_layout)
   #unpaired_indices <- grepl("SINGLE", df$library_layout)
 
-  print(sum(paired_indices))
+  print(paste0("Found ", sum(paired_indices), " runs with paired ends"))
+  #print(sum(paired_indices))
   #print(sum(unpaired_indices))
 
   df$pairedEnd <- NA

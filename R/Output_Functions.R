@@ -23,7 +23,7 @@
 #============================================================================
 
 #Developed in outputGenerator.R
-outputGenerator <- function(df, ss, st){
+outputGenerator <- function(df, ss=NULL, st){
   # Args: df - data frame to output (unfilter)
   #       ss - list of series (GSE) from superseriesVerifier
   #       st - search terms (used for conditional filtering and file naming)
@@ -154,7 +154,6 @@ outputGenerator <- function(df, ss, st){
 
 
 
-
 #============================================================================
 # filenameGenerator()
 #============================================================================
@@ -216,6 +215,260 @@ filenameGenerator <- function(library_strategy, gene=NULL, antibody=NULL, cell_t
 
 }
 #============================================================================
+
+
+
+#============================================================================
+# outputGenerator_acc()
+#============================================================================
+
+#Developed in outputGenerator.R
+#Based largely on outputGenerator()
+# Differences:
+# - arguments (accession instead of st elements)
+# - filtering method
+
+outputGenerator_acc <- function(df, ss=NULL, accession){
+  # Args: df - data frame to output (unfilter)
+  #       ss - list of series (GSE) from superseriesVerifier
+  #       accession - accession for which search was undertaken
+  # Returns: nothing
+  #
+  # Action: orders the df, replaces tabs (in characteristics_ch1), filters rows as appropriate, outputs files
+  #
+  # Creates the following files:
+  # - ChIP-Seq - if present
+  # - RNA-Seq - if present
+  # - OTHER - if present
+  #
+  #
+  # All the files are made available as sample sheets (.csv and .Rda) and database extracts (.csv, .Rda)
+  #
+
+  print("Running outputGenerator_acc")
+
+  #ORDER BY SRP, then SRS,  then SRX, then SRR
+  order_columns <- list(df$study_accession,
+                        df$sample_accession,
+                        df$experiment_accession,
+                        df$run_accession)
+
+  #Using custom function for ordering to disregard the '_RP/_RS/_RX/_RR' prefixes
+  df <- df[digitSort(order_columns),]
+
+  #Converting tabs in characteristics_ch1 column
+  df$characteristics_ch1 <- unlist(lapply(df$characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
+
+
+  cwt <- function(object, filename){
+    # Custom write table (a wrapper to unify the parameters)
+    write.table(x = object,
+                file = filename,
+                sep = "\t",
+                row.names = FALSE,
+                quote = FALSE
+    )
+  }
+
+  if (!is.null(ss)){
+    saveRDS(ss, do.call(filenameGenerator, c(st, list(output="ss"), list(file_type="Rda"))))
+  }
+
+
+  #============================================================================
+  # Generate unfiltered outputs
+  #============================================================================
+  #GENERATE SAMPLE SHEET
+  df_sample_sheet <- universalSampleSheetGenerator(df, "OTHER")
+
+  #SAVE SAMPLE SHEET
+  saveRDS(df_sample_sheet, filenameGenerator_acc(library_strategy = "ALL", accession = accession, output = "sm", file_type = "Rda"))
+  cwt(df_sample_sheet, filenameGenerator_acc(library_strategy = "ALL", accession = accession, output = "sm", file_type = "csv"))
+
+  #GENERATE DB EXTRACT
+  df_db_extract <- dbExtractGenerator(df)
+
+  #SAVE DB EXTRACT
+  saveRDS(df_db_extract, filenameGenerator_acc(library_strategy = "ALL", accession = accession, output = "db", file_type = "Rda"))
+  cwt(df_db_extract, filenameGenerator_acc(library_strategy = "ALL", accession = accession, output = "db", file_type = "csv"))
+  #============================================================================
+
+
+
+
+  #============================================================================
+  # Filter by library_strategy
+  #============================================================================
+  #FILTER CHIP-SEQ DATA
+  df_chip <- filter(df, library_strategy == "ChIP-Seq")
+
+  #FILTER RNA-SEQ DATA
+  df_rna <- filter(df, library_strategy == "RNA-Seq")
+
+  #FILTER OTHER DATA
+  df_other <- filter(df, !(library_strategy %in% c("ChIP-Seq", "RNA-Seq")) )
+  #============================================================================
+
+
+
+  #============================================================================
+  # Generate outputs and save ChIP samples
+  #============================================================================
+  #Check if empty
+  if (dim(df_chip)[1]!=0){
+
+    #GENERATE SAMPLE SHEET
+    df_chip_sample_sheet <- universalSampleSheetGenerator(df_chip, "ChIP-Seq")
+
+    #SAVE SAMPLE SHEET
+    saveRDS(df_chip_sample_sheet, filenameGenerator_acc(library_strategy = "ChIP-Seq", accession = accession, output = "sm", file_type = "Rda"))
+    cwt(df_chip_sample_sheet, filenameGenerator_acc(library_strategy = "ChIP-Seq", accession = accession, output = "sm", file_type = "csv"))
+
+    #GENERATE DB EXTRACT
+    df_chip_db_extract <- dbExtractGenerator(df_chip)
+
+    #SAVE DB EXTRACT
+    saveRDS(df_chip_db_extract, filenameGenerator_acc(library_strategy = "ChIP-Seq", accession = accession, output = "db", file_type = "Rda"))
+    cwt(df_chip_db_extract, filenameGenerator_acc(library_strategy = "ChIP-Seq", accession = accession, output = "db", file_type = "csv"))
+
+  }
+
+  #============================================================================
+
+
+
+
+  #============================================================================
+  # Generate outputs and save RNA samples
+  #============================================================================
+
+  #Check if empty
+  if (dim(df_rna)[1]!=0){
+
+    #GENERATE SAMPLE SHEET
+    df_rna_sample_sheet <- universalSampleSheetGenerator(df_rna, "RNA-Seq")
+
+    #SAVE SAMPLE SHEET
+    saveRDS(df_rna_sample_sheet, filenameGenerator_acc(library_strategy = "RNA-Seq", accession = accession, output = "sm", file_type = "Rda"))
+    cwt(df_rna_sample_sheet, filenameGenerator_acc(library_strategy = "RNA-Seq", accession = accession, output = "sm", file_type = "csv"))
+
+    #GENERATE DB EXTRACT
+    df_rna_db_extract <- dbExtractGenerator(df_rna)
+
+    #SAVE DB EXTRACT
+    saveRDS(df_rna_db_extract, filenameGenerator_acc(library_strategy = "RNA-Seq", accession = accession, output = "db", file_type = "Rda"))
+    cwt(df_rna_db_extract, filenameGenerator_acc(library_strategy = "RNA-Seq", accession = accession, output = "db", file_type = "csv"))
+
+  }
+
+  #============================================================================
+
+
+
+  #============================================================================
+  # Generate outputs and save OTHER samples
+  #============================================================================
+  #Check if empty
+  if (dim(df_other)[1]!=0){
+
+    #GENERATE SAMPLE SHEET
+    df_other_sample_sheet <- universalSampleSheetGenerator(df_other, "OTHER")
+
+    #SAVE SAMPLE SHEET
+    saveRDS(df_other_sample_sheet, filenameGenerator_acc(library_strategy = "OTHER", accession = accession, output = "sm", file_type = "Rda"))
+    cwt(df_other_sample_sheet, filenameGenerator_acc(library_strategy = "OTHER", accession = accession, output = "sm", file_type = "csv"))
+
+    #GENERATE DB EXTRACT
+    df_other_db_extract <- dbExtractGenerator(df_other)
+
+    #SAVE DB EXTRACT
+    saveRDS(df_other_db_extract, filenameGenerator_acc(library_strategy = "OTHER", accession = accession, output = "db", file_type = "Rda"))
+    cwt(df_other_db_extract, filenameGenerator_acc(library_strategy = "OTHER", accession = accession, output = "db", file_type = "csv"))
+
+  }
+
+  #============================================================================
+
+
+
+
+
+
+
+  print("outputGenerator_acc completed")
+}
+#============================================================================
+
+
+
+
+#============================================================================
+# filenameGenerator_acc()
+#============================================================================
+#Developed in outputGenerator.R
+#Based largely on filenameGenerator
+#Differences:
+# - arguments
+# - order (accession before library strategy)
+# - number of letters allowed (12 instead of 8)
+
+filenameGenerator_acc <- function(library_strategy, accession, output, file_type){
+
+  print("Running filenameGenerator_acc")
+
+  argument_list <- c("accession", "library_strategy", "output") #file_type will be handled separately
+
+  #Shorten library_strategy names whenever appropriate
+  ls_substitute_list <- list()
+  ls_substitute_list[[1]] <- c("RNA-Seq", "ChIP-Seq") #Original names
+  ls_substitute_list[[2]] <- c("RNA", "ChIP") #New names
+
+  for (s in seq_along(ls_substitute_list[[1]])){
+    if (library_strategy == ls_substitute_list[[1]][s]){
+      library_strategy <- ls_substitute_list[[2]][s]
+    }
+  }
+
+  #Shorten secondary_library_strategy names
+  for (s in seq_along(ls_substitute_list[[1]])){
+    for (l in seq_along(secondary_library_strategy)){
+      if (secondary_library_strategy[l] == ls_substitute_list[[1]][s]){
+        secondary_library_strategy <- ls_substitute_list[[2]][s]
+      }
+    }
+  }
+
+  name <- character()
+  for (arg in seq_along(argument_list)){
+    chunk <- get(argument_list[arg])[[1]] #Only the first element will be used for naming
+    if (!is.null(chunk)){
+      if (nchar(chunk)>8){
+        chunk <- substr(chunk, 1, 12) #Truncate long entries to max. 12 characters
+      }
+      name <- paste0(name, "_", chunk)
+    }
+  }
+
+  #today <- Sys.Date()
+  #today <- format(today, format = "%y%m%d")
+
+  today <- Sys.time()
+  today <- format(today, format = "%y%m%d_%H%M%S")
+
+  name <- paste0(name, "_", today)
+
+  name <- substr(name, 2, (nchar(name)))
+  name <- paste0(name, ".", file_type) #file_type added separately at the end
+
+  print("filenameGenerator_acc completed")
+  return(name)
+
+
+}
+
+#============================================================================
+
+
 
 
 
