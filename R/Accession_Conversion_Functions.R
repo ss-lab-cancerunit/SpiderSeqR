@@ -68,14 +68,14 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
     sra_df <- searchSRAForAccession(acc_list, sra_columns)
 
     #TEMP
-    #.GlobalEnv$sra_df_temp <- sra_df
+    .GlobalEnv$temp_sra_df <- sra_df
     #...
 
     #SRR_GSM data frame
     srr_gsm_df <- searchSRR_GSM(sra_df$run_accession)
 
     #TEMP
-    #.GlobalEnv$srr_gsm_df_temp <- srr_gsm_df
+    .GlobalEnv$temp_srr_gsm_df <- srr_gsm_df
     #...
 
     #GEO data frame
@@ -87,22 +87,22 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
     #}
 
     #TEMP
-    #.GlobalEnv$geo_df_temp <- geo_df
+    .GlobalEnv$temp_geo_df <- geo_df
     #...
 
     #Merge
     #DOUBLE CHECK IF WANT ALL OR ALL.X ===*===
-    sra_srr_gsm_df <- merge(sra_df, srr_gsm_df, by.sra_df = "run_accession", by.srr_gsm_df = "run_accession", all = TRUE)
+    sra_srr_gsm_df <- merge(sra_df, srr_gsm_df, by.x = "run_accession", by.y = "run_accession", all = TRUE)
 
     #TEMP
-    #.GlobalEnv$sra_srr_gsm_df_temp <- sra_srr_gsm_df
+    .GlobalEnv$temp_sra_srr_gsm_df <- sra_srr_gsm_df
     #...
 
 
-    sra_srr_gsm_geo_df <- merge(sra_srr_gsm_df, geo_df, by.sra_srr_gsm_df = "gsm", by.geo_df = "gsm", all = TRUE)
+    sra_srr_gsm_geo_df <- merge(sra_srr_gsm_df, geo_df, by.x = "gsm", by.y = "gsm", all = TRUE)
 
     #TEMP
-    #.GlobalEnv$sra_srr_gsm_geo_df_temp <- sra_srr_gsm_geo_df
+    .GlobalEnv$temp_sra_srr_gsm_geo_df <- sra_srr_gsm_geo_df
     #...
 
     output_df <- sra_srr_gsm_geo_df
@@ -114,6 +114,8 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
   return(output_df)
 
 }
+
+
 
 
 convertAccession <- function(acc_list){

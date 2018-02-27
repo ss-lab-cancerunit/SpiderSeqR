@@ -255,6 +255,7 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
 
   #Using custom function for ordering to disregard the '_RP/_RS/_RX/_RR' prefixes
   df <- df[digitSort(order_columns),]
+  #df <- df[orderAccessions(order_columns),]
 
   #Converting tabs in characteristics_ch1 column
   df$characteristics_ch1 <- unlist(lapply(df$characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
