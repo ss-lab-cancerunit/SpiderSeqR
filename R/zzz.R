@@ -11,9 +11,10 @@ where <- function(name, env = parent.frame()) {
     } else {
       # Recursive case
       where(name, parent.env(env))
-
     }
+  
 }
+
 
 
 #PROBLEM WITH LOADING BIOCONDUCTOR PACKAGES:
@@ -25,55 +26,121 @@ where <- function(name, env = parent.frame()) {
 
 .onLoad <- function(libname, pkgname){
   #Setup:
-  # - GEOmetadb
   # - SRAmetadb
+  # - GEOmetadb
   # - SRR_GSM (custom database for converting between the ids of SRA and GSMs (GEO))
   #print("Setting up SpideR")
+  
+  # Logic:
+  # - SRAmetadb:
+  #    * if does not exist - download (else: stop)
+  #    * if exists and not up to date - offer to re-download (else: warning)
+  # - GEOmetadb:
+  #    * if does not exist - download (else: stop)
+  #    * if exists and not up to date - offer to re-download (else: warning)
+  # - SRR_GSM:
+  #    * if d
+  
+  
+  sra_file <- "SRAmetadb.sqlite"
+  geo_file <- "GEOmetadb.sqlite"
+  age_limit <- 120 #Maximum acceptable age of the database files (in days)
 
+  
   #==========================================================
-  #GEOmetadb
+  # SRAmetadb
   #==========================================================
-  #if (file.exists("GEOmetadb.sqlite") & (difftime(Sys.Date(), file.info("GEOmetadb.sqlite")$mtime, units = "days") < 50)) {
-  if(!file.exists("GEOmetadb.sqlite")){
-    #if(1==1){
-    #if(!file.exists("test.txt")){
-    print("The file GEOmetadb.sqlite was not found in the current working directory")
+  
+  # NO SRA FILE
+  if(!file.exists(sra_file)){ # NO FILE
+    
+    print(paste0("The file ", sra_file, " was not found in the current working directory"))
     print("Would you like to download the file now?")
+    
+    sra_menu <- menu(c("yes", "no"))
+    if (sra_menu == 1){
+      print("Downloading the file")
+      sra_file <<- getSRAdbFile()
+    } else {
+      stop(paste0(sra_file, " file is necessary for the package operation"))
+    }
+  }
+  
+  
+  # OLD SRA FILE
+  if(file.exists(sra_file) & (difftime(Sys.Date(), file.info(sra_file)$mtime, units = "days") > age_limit) ){ # OLD FILE
+    
+    print(paste0("The file ", geo_file, " is out of date"))
+    print(paste0("Last modified: ", file.info(sra_file)$mtime))
+    print("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?")
+    
+    sra_menu <- menu(c("yes", "no"))
+    if (sra_menu == 1){
+      print("Downloading the file")
+      sra_file <<- getSRAdbFile()
+    } else {
+      warning(paste0("Next time consider downloading a new version of ", sra_file, " file"))
+    }
+    
+  }
+  
+  
+  #==========================================================
+  
+  
+  
+  
+  
+  
+  #==========================================================
+  # GEOmetadb
+  #==========================================================
+
+  # NO GEO FILE
+  if(!file.exists(geo_file)){ #NO FILE
+
+    
+    print(paste0("The file ", geo_file, " was not found in the current working directory"))
+    print("Would you like to download the file right now?")
+    
     geo_menu <- menu(c("yes", "no"))
     if (geo_menu == 1){
       print("Downloading the file")
-      geofile <- getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
+      geo_gz_file <- getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
     } else {
-      stop("GEOmetadb.sqlite is necessary to initiate package operation")
+      stop(paste0(geo_file, " file is necessary for the package operation"))
     }
   }
-  #==========================================================
+  
+  
+  # OLD GEO FILE
+  if(file.exists(geo_file) & (difftime(Sys.Date(), file.info(geo_file)$mtime, units = "days") > age_limit) ){ #OLD FILE
 
-  #==========================================================
-  #SRAmetadb
-  #==========================================================
-  srafile <- 'SRAmetadb.sqlite'
-
-  #if (file.exists("SRAmetadb.sqlite") & (difftime(Sys.Date(), file.info("SRAmetadb.sqlite")$mtime, units = "days") < 50)){
-  if(!file.exists("SRAmetadb.sqlite")){
-    #if(!file.exists("test.txt")){
-    print("The file SRAmetadb.sqlite was not found in the current working directory")
-    print("Would you like to download the file now?")
+    print(paste0("The file ", geo_file, " is out of date"))
+    print(paste0("Last modified: ", file.info(geo_file)$mtime))
+    print("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?")
+    
     geo_menu <- menu(c("yes", "no"))
     if (geo_menu == 1){
       print("Downloading the file")
-      srafile <<- getSRAdbFile()
+      geo_gz_file <- getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
     } else {
-      stop("SRAmetadb.sqlite is necessary to initiate package operation")
+      warning(paste0("Next time consider downloading a new version of ", geo_file, " file"))
     }
+    
   }
+  
   #==========================================================
 
+  
+  
+
+
 
   #==========================================================
-  #Both files present
+  # Both files present (proceed to SRR_GSM step)
   #==========================================================
-  if (file.exists("SRAmetadb.sqlite") & file.exists("GEOmetadb.sqlite")){
+  if (file.exists(sra_file) & file.exists(geo_file)){
 
     print("Both db files are present (remember not to remove them!). Ready to proceed")
 
@@ -95,7 +162,7 @@ where <- function(name, env = parent.frame()) {
     #print(where("sra_con"))
 
 
-    if (file.exists("SRR_GSM.sqlite") & (difftime(Sys.Date(), file.info("SRR_GSM.sqlite")$mtime, units = "days") < 120) ){
+    if (file.exists("SRR_GSM.sqlite") & (difftime(Sys.Date(), file.info("SRR_GSM.sqlite")$mtime, units = "days") < age_limit) ){
       print("Custom database for converting between SRA and GEO is up to date")
       print(paste0("Last modified: ", file.info("SRR_GSM.sqlite")$mtime))
     } else {
@@ -124,8 +191,8 @@ where <- function(name, env = parent.frame()) {
         #MERGE CHUNKS
         #WRITE AS AN SQLITE FILE (ESTABLISH THE CONNECTION?)
 
-        sra_con <- dbConnect(SQLite(), dbname = 'SRAmetadb.sqlite')
-        geo_con <- dbConnect(SQLite(),'GEOmetadb.sqlite')
+        sra_con <- dbConnect(SQLite(), dbname = sra_file)
+        geo_con <- dbConnect(SQLite(), dbname = geo_file)
 
         db_df <- data.frame()
         rs <- dbSendQuery(sra_con, "SELECT
@@ -202,7 +269,7 @@ where <- function(name, env = parent.frame()) {
         #db_df <- db_df[digitSort(order_columns),]
 
         #Save df as an slite object
-        srr_gsm <- dbConnect(SQLite(), dbname = 'SRR_GSM.sqlite')
+        srr_gsm <- dbConnect(SQLite(), dbname = "SRR_GSM.sqlite")
         dbWriteTable(conn = srr_gsm, name = "srr_gsm", value = db_df, overwrite = TRUE)
 
         .GlobalEnv$db_df <- db_df
@@ -226,5 +293,8 @@ where <- function(name, env = parent.frame()) {
 
 
 .onAttach <- function(libname, pkgname){
+  .GlobalEnv$sra_con <- dbConnect(SQLite(), dbname = sra_file)
+  .GlobalEnv$geo_con <- dbConnect(SQLite(), dbname = geo_file)
+  .GlobalEnv$srr_gsm <- dbConnect(SQLite(), dbname = srr_gsm_file)
   packageStartupMessage("Welcome to SpideR")
 }

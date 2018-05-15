@@ -16,9 +16,9 @@
 
 
 #DATABASE CONNECTIONS ===*=== Come back and redo
-.GlobalEnv$sra_con <- dbConnect(SQLite(), dbname = 'SRAmetadb.sqlite')
-.GlobalEnv$geo_con <- dbConnect(SQLite(),'GEOmetadb.sqlite')
-.GlobalEnv$srr_gsm <- dbConnect(SQLite(),'SRR_GSM.sqlite')
+#.GlobalEnv$sra_con <- dbConnect(SQLite(), dbname = 'SRAmetadb.sqlite')
+#.GlobalEnv$geo_con <- dbConnect(SQLite(),'GEOmetadb.sqlite')
+#.GlobalEnv$srr_gsm <- dbConnect(SQLite(),'SRR_GSM.sqlite')
 
 
 
