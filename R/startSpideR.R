@@ -1,7 +1,10 @@
+
+
 startSpideR <- function(dir){
   ori_wd <- getwd()
   setwd(dir)
-  print(getwd())
+  print(paste0("Location of database files: ", getwd()))
+
   
   #Setup:
   # - SRAmetadb
@@ -64,6 +67,9 @@ startSpideR <- function(dir){
       warning(paste0("Next time consider downloading a new version of ", sra_file, " file"))
     }
     
+  } else if(file.exists(sra_file)) {
+    print(paste0("The file ", sra_file, " is up to date"))
+    print(paste0("Last modified: ", file.info(sra_file)$mtime))
   }
   
   
@@ -110,6 +116,9 @@ startSpideR <- function(dir){
       warning(paste0("Next time consider downloading a new version of ", geo_file, " file"))
     }
     
+  } else if(file.exists(geo_file)) {
+    print(paste0("The file ", geo_file, " is up to date"))
+    print(paste0("Last modified: ", file.info(geo_file)$mtime))
   }
   
   #==========================================================
@@ -151,7 +160,7 @@ startSpideR <- function(dir){
   } else { # FILE PRESENT
     if (difftime(Sys.Date(), file.info(srr_gsm_file)$mtime, units = "days") < age_limit){ # FILE UP TO DATE
       db_needed <- FALSE
-      print("Custom database for converting between SRA and GEO is up to date")
+      print("The custom database for converting between SRA and GEO is up to date")
       print(paste0("Last modified: ", file.info(srr_gsm_file)$mtime))
       
     } else { # OLD FILE
