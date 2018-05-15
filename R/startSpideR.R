@@ -1,37 +1,8 @@
-# Working file for initialising SpideR (tested rather well!)
-# Mostly transferred to startSpideR function, which provides interactive interface (and allows one to specify the directory for the database files)
-# This file might be interesting for:
-# - where function
-# - comments on establishing database connections
-
-# Copy of pryr's where function (couldn't load pryr)
-# Currently not in use anywhere (was used to check the environment of sra_con connection...)
-where <- function(name, env = parent.frame()) {
-    if (identical(env, emptyenv())) {
-      # Base case
-      stop("Can't find ", name, call. = FALSE)
-
-    } else if (exists(name, envir = env, inherits = FALSE)) {
-      # Success case
-      env
-
-    } else {
-      # Recursive case
-      where(name, parent.env(env))
-    }
+startSpideR <- function(dir){
+  ori_wd <- getwd()
+  setwd(dir)
+  print(getwd())
   
-}
-
-
-
-#PROBLEM WITH LOADING BIOCONDUCTOR PACKAGES:
-#IN SESSION LOADING:
-#source("https://bioconductor.org/biocLite.R")
-#biocLite(c("SRAdb", "GEOmetadb"))
-
-
-
-.onLoad <- function(libname, pkgname){
   #Setup:
   # - SRAmetadb
   # - GEOmetadb
@@ -56,7 +27,7 @@ where <- function(name, env = parent.frame()) {
   geo_file <- "GEOmetadb.sqlite"
   srr_gsm_file <- "SRR_GSM.sqlite"
   age_limit <- 360 #Maximum acceptable age of the database files (in days)
-
+  
   
   #==========================================================
   # SRAmetadb
@@ -106,10 +77,10 @@ where <- function(name, env = parent.frame()) {
   #==========================================================
   # GEOmetadb
   #==========================================================
-
+  
   # NO GEO FILE
   if(!file.exists(geo_file)){ # NO FILE
-
+    
     
     print(paste0("The file ", geo_file, " was not found in the current working directory"))
     print("Would you like to download the file right now?")
@@ -126,7 +97,7 @@ where <- function(name, env = parent.frame()) {
   
   # OLD GEO FILE
   if(file.exists(geo_file) & (difftime(Sys.Date(), file.info(geo_file)$mtime, units = "days") > age_limit) ){ # OLD FILE
-
+    
     print(paste0("The file ", geo_file, " is out of date"))
     print(paste0("Last modified: ", file.info(geo_file)$mtime))
     print("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?")
@@ -142,7 +113,7 @@ where <- function(name, env = parent.frame()) {
   }
   
   #==========================================================
-
+  
   
   
   
@@ -182,7 +153,7 @@ where <- function(name, env = parent.frame()) {
       db_needed <- FALSE
       print("Custom database for converting between SRA and GEO is up to date")
       print(paste0("Last modified: ", file.info(srr_gsm_file)$mtime))
-
+      
     } else { # OLD FILE
       
       print(paste0("The file ", srr_gsm_file, " is out of date"))
@@ -322,48 +293,14 @@ where <- function(name, env = parent.frame()) {
   
   #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
- 
-
-}
-
-
-
-
-#==========================================================
-# PREVIOUSLY IN .onLoad()
-#==========================================================
-#===*=== Remove when the time comes
-
-#This didn't work
-#sra_con <- dbConnect(SQLite(), dbname = 'SRAmetadb.sqlite')
-#geo_con <- dbConnect(SQLite(),'GEOmetadb.sqlite')
-
-
-#This did get the connections to the global environment, but the functions were not able to access it
-#Two options:
-# - change the functions to search for sra_con and geo_con in global environment
-# - establish db connection within each function
-#.GlobalEnv$sra_con <- dbConnect(SQLite(), dbname = 'SRAmetadb.sqlite')
-#.GlobalEnv$geo_con <- dbConnect(SQLite(),'GEOmetadb.sqlite')
-
-#print(where("sra_con"))
-#==========================================================
-
-
-
-
-
-
-.onAttach <- function(libname, pkgname){
   
-  # REPEATED FROM .onLoad()
-  sra_file <- "SRAmetadb.sqlite"
-  geo_file <- "GEOmetadb.sqlite"
-  srr_gsm_file <- "SRR_GSM.sqlite"
   
   .GlobalEnv$sra_con <- dbConnect(SQLite(), dbname = sra_file)
   .GlobalEnv$geo_con <- dbConnect(SQLite(), dbname = geo_file)
   .GlobalEnv$srr_gsm <- dbConnect(SQLite(), dbname = srr_gsm_file)
   
-  packageStartupMessage("Welcome to SpideR")
+  print("Welcome to SpideR")
+  
+  
+  setwd(ori_wd)
 }
