@@ -15,6 +15,9 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 biocViews:
+Imports:
+    SRAdb,
+    GEOmetadb
 Depends:
     plyr,
     dplyr,

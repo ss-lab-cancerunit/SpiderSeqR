@@ -64,7 +64,7 @@ where <- function(name, env = parent.frame()) {
     sra_menu <- menu(c("yes", "no"))
     if (sra_menu == 1){
       print("Downloading the file")
-      sra_file <<- getSRAdbFile()
+      sra_file <<- SRAdb::getSRAdbFile()
     } else {
       stop(paste0(sra_file, " file is necessary for the functioning of the package"))
     }
@@ -74,14 +74,14 @@ where <- function(name, env = parent.frame()) {
   # OLD SRA FILE
   if(file.exists(sra_file) & (difftime(Sys.Date(), file.info(sra_file)$mtime, units = "days") > age_limit) ){ # OLD FILE
     
-    print(paste0("The file ", geo_file, " is out of date"))
+    print(paste0("The file ", sra_file, " is out of date"))
     print(paste0("Last modified: ", file.info(sra_file)$mtime))
     print("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?")
     
     sra_menu <- menu(c("yes", "no"))
     if (sra_menu == 1){
       print("Downloading the file")
-      sra_file <<- getSRAdbFile()
+      sra_file <<- SRAdb::getSRAdbFile()
     } else {
       warning(paste0("Next time consider downloading a new version of ", sra_file, " file"))
     }
@@ -110,7 +110,7 @@ where <- function(name, env = parent.frame()) {
     geo_menu <- menu(c("yes", "no"))
     if (geo_menu == 1){
       print("Downloading the file")
-      geo_gz_file <- getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
+      geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
     } else {
       stop(paste0(geo_file, " file is necessary for the functioning of the package"))
     }
@@ -127,7 +127,7 @@ where <- function(name, env = parent.frame()) {
     geo_menu <- menu(c("yes", "no"))
     if (geo_menu == 1){
       print("Downloading the file")
-      geo_gz_file <- getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
+      geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
     } else {
       warning(paste0("Next time consider downloading a new version of ", geo_file, " file"))
     }
@@ -321,6 +321,7 @@ where <- function(name, env = parent.frame()) {
 
 
 
+
 #==========================================================
 # PREVIOUSLY IN .onLoad()
 #==========================================================
@@ -343,9 +344,19 @@ where <- function(name, env = parent.frame()) {
 
 
 
+
+
+
 .onAttach <- function(libname, pkgname){
+  
+  # REPEATED FROM .onLoad()
+  sra_file <- "SRAmetadb.sqlite"
+  geo_file <- "GEOmetadb.sqlite"
+  srr_gsm_file <- "SRR_GSM.sqlite"
+  
   .GlobalEnv$sra_con <- dbConnect(SQLite(), dbname = sra_file)
   .GlobalEnv$geo_con <- dbConnect(SQLite(), dbname = geo_file)
   .GlobalEnv$srr_gsm <- dbConnect(SQLite(), dbname = srr_gsm_file)
+  
   packageStartupMessage("Welcome to SpideR")
 }
