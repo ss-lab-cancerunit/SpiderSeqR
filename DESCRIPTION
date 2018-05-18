@@ -1,8 +1,8 @@
 Package: SpideR
-Type: Package
-Title: What the Package Does (Title Case)
 Version: 0.1.0
-Author: Anna Sozanska, Charlie Fletcher
+Title: What the Package Does (Title Case)
+Authors@R: c(person("A.", "Sozanska", role = c("aut", "cre"), email = "as2382@cam.ac.uk"), person("C.", "Fletcher", role = "aut"))
+Author: Anna Sozanska [aut, cre], Charlie Fletcher [aut]
 Maintainer: Anna Sozanska <as2382@cam.ac.uk>
 Description: More about what it does (maybe more than one line)
     Use four spaces when indenting paragraphs within the Description.
@@ -16,11 +16,12 @@ Suggests:
 VignetteBuilder: knitr
 biocViews:
 Imports:
-    SRAdb,
-    GEOmetadb
+    SRAdb (>= 1.40),
+    GEOmetadb (>= 1.40)
 Depends:
-    plyr,
-    dplyr,
-    tidyr,
+    plyr (>= 1.8),
+    dplyr (>= 0.7),
+    tidyr (>= 0.8),
     DBI (>= 0.7),
     RSQLite (>= 2.0)
+RoxygenNote: 6.0.1
