@@ -55,7 +55,7 @@ outputGenerator <- function(df, ss=NULL, st){
 
   cwt <- function(object, filename){
     # Custom write table (a wrapper to unify the parameters)
-    write.table(x = object,
+    utils::write.table(x = object,
                 file = filename,
                 sep = "\t",
                 row.names = FALSE,
@@ -72,17 +72,17 @@ outputGenerator <- function(df, ss=NULL, st){
     #======
     #ChIP
     #======
-    target <- filter(df, library_strategy == st$library_strategy & input %in% c("N", "input"))
+    target <- dplyr::filter(df, library_strategy == st$library_strategy & input %in% c("N", "input"))
   } else if (st$library_strategy =="RNA-Seq"){
     #======
     #RNA
     #======
-    target <- filter(df, library_strategy == st$library_strategy & control %in% c("N", "control", "otherwise"))
+    target <- dplyr::filter(df, library_strategy == st$library_strategy & control %in% c("N", "control", "otherwise"))
   } else {
     #======
     #ELSE
     #======
-    target <- filter(df, library_strategy == st$library_strategy)
+    target <- dplyr::filter(df, library_strategy == st$library_strategy)
   }
 
 
@@ -108,7 +108,7 @@ outputGenerator <- function(df, ss=NULL, st){
     #=========================
     # 'ALL' sheet (all entries within SRP that are from the specified library_strategy)
     #=========================
-    all <- filter(df, library_strategy == st$library_strategy)
+    all <- dplyr::filter(df, library_strategy == st$library_strategy)
 
     #GENERATE ALL SAMPLE SHEET
     all_sample_sheet <- universalSampleSheetGenerator(df=all, library_strategy = st$library_strategy)
@@ -130,7 +130,7 @@ outputGenerator <- function(df, ss=NULL, st){
       #    ------ONLY AVAILABLE FOR CHIP------
       #=========================
 
-      secondary <- filter(df, library_strategy == st$secondary_library_strategy)
+      secondary <- dplyr::filter(df, library_strategy == st$secondary_library_strategy)
 
       #GENERATE SECONDARY SAMPLE SHEET
       secondary_sample_sheet <- universalSampleSheetGenerator(df=secondary, library_strategy = st$secondary_library_strategy)
@@ -263,7 +263,7 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
 
   cwt <- function(object, filename){
     # Custom write table (a wrapper to unify the parameters)
-    write.table(x = object,
+    utils::write.table(x = object,
                 file = filename,
                 sep = "\t",
                 row.names = FALSE,
@@ -301,13 +301,13 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
   # Filter by library_strategy
   #============================================================================
   #FILTER CHIP-SEQ DATA
-  df_chip <- filter(df, library_strategy == "ChIP-Seq")
+  df_chip <- dplyr::filter(df, library_strategy == "ChIP-Seq")
 
   #FILTER RNA-SEQ DATA
-  df_rna <- filter(df, library_strategy == "RNA-Seq")
+  df_rna <- dplyr::filter(df, library_strategy == "RNA-Seq")
 
   #FILTER OTHER DATA
-  df_other <- filter(df, !(library_strategy %in% c("ChIP-Seq", "RNA-Seq")) )
+  df_other <- dplyr::filter(df, !(library_strategy %in% c("ChIP-Seq", "RNA-Seq")) )
   #============================================================================
 
 
@@ -764,7 +764,7 @@ columnSelector <- function(df, df_columns, out_columns){
 
   for (n in seq_along(df_columns)){
     #print(select(df, eval(df_columns[n])))
-    where[["out"]][out_columns[n]] <- select(df, eval(df_columns[n]))
+    where[["out"]][out_columns[n]] <- dplyr::select(df, eval(df_columns[n]))
   }
 
   out <- out[,-1]

@@ -208,11 +208,11 @@ startSpideR <- function(dir){
     #MERGE CHUNKS
     #WRITE AS AN SQLITE FILE (ESTABLISH THE CONNECTION?)
     
-    sra_con <- dbConnect(SQLite(), dbname = sra_file)
-    geo_con <- dbConnect(SQLite(), dbname = geo_file)
+    sra_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = sra_file)
+    geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
     
     db_df <- data.frame()
-    rs <- dbSendQuery(sra_con, "SELECT
+    rs <- DBI::dbSendQuery(sra_con, "SELECT
                       run_accession,
                       experiment_accession,
                       sample_accession,
@@ -221,8 +221,8 @@ startSpideR <- function(dir){
                       experiment_attribute --For GSM
                       FROM sra WHERE run_alias LIKE 'GSM%' OR experiment_attribute LIKE '%GSM%'")
     
-    while (!dbHasCompleted(rs)){
-      chunk <- dbFetch(rs, 1000)
+    while (!DBI::dbHasCompleted(rs)){
+      chunk <- DBI::dbFetch(rs, 1000)
       
       #Create intermediate columns for extracting GSM information
       chunk$run_gsm <- NA #from run_alias
@@ -268,7 +268,7 @@ startSpideR <- function(dir){
     }
     
     
-    dbClearResult(rs)
+    DBI::dbClearResult(rs)
     
     
     #Remove duplicates
@@ -286,13 +286,13 @@ startSpideR <- function(dir){
     #db_df <- db_df[digitSort(order_columns),]
     
     #Save df as an slite object
-    srr_gsm <- dbConnect(SQLite(), dbname = "SRR_GSM.sqlite")
-    dbWriteTable(conn = srr_gsm, name = "srr_gsm", value = db_df, overwrite = TRUE)
+    srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), dbname = "SRR_GSM.sqlite")
+    DBI::dbWriteTable(conn = srr_gsm, name = "srr_gsm", value = db_df, overwrite = TRUE)
     
     .GlobalEnv$db_df <- db_df
     
-    dbDisconnect(sra_con)
-    dbDisconnect(geo_con)
+    DBI::dbDisconnect(sra_con)
+    DBI::dbDisconnect(geo_con)
     
     
   }
@@ -304,12 +304,13 @@ startSpideR <- function(dir){
   #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
   
   
-  .GlobalEnv$sra_con <- dbConnect(SQLite(), dbname = sra_file)
-  .GlobalEnv$geo_con <- dbConnect(SQLite(), dbname = geo_file)
-  .GlobalEnv$srr_gsm <- dbConnect(SQLite(), dbname = srr_gsm_file)
+  .GlobalEnv$sra_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = sra_file)
+  .GlobalEnv$geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
+  .GlobalEnv$srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), dbname = srr_gsm_file)
   
   print("Welcome to SpideR")
   
   
   setwd(ori_wd)
+  
 }

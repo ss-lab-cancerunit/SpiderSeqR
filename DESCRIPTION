@@ -15,13 +15,15 @@ Suggests:
     testthat
 VignetteBuilder: knitr
 biocViews:
-Imports:
-    SRAdb (>= 1.40),
-    GEOmetadb (>= 1.40)
 Depends:
+    R (>= 3.4)
+Imports:
     plyr (>= 1.8),
     dplyr (>= 0.7),
     tidyr (>= 0.8),
     DBI (>= 0.7),
-    RSQLite (>= 2.0)
+    RSQLite (>= 2.0),
+    SRAdb (>= 1.40),
+    GEOmetadb (>= 1.40),
+    utils
 RoxygenNote: 6.0.1

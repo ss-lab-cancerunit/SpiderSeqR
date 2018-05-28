@@ -50,7 +50,7 @@ searchGEOForGSM <- function(acc_list, geo_columns){
   for (a in seq_along(acc_list)){
     query <- paste0("SELECT ", geo_columns, " FROM gsm WHERE gsm = '", acc_list[a], "'")
     print(query)
-    chunk <- dbGetQuery(get("geo_con"), query)
+    chunk <- DBI::dbGetQuery(get("geo_con"), query)
     search_count <- search_count + as.integer(dim(chunk)[1]>=1)
     df <- rbind(df, chunk)
   }
@@ -106,7 +106,7 @@ searchGEOForGSE <- function(acc_list, geo_columns){
   for (a in seq_along(acc_list)){
     query <- paste0("SELECT ", geo_columns, " FROM gsm WHERE series_id LIKE '%", acc_list[a], "' OR series_id LIKE '%", acc_list[a], ",%'")
     print(query)
-    chunk <- dbGetQuery(get("geo_con"), query)
+    chunk <- DBI::dbGetQuery(get("geo_con"), query)
     search_count <- search_count + as.integer(dim(chunk)[1]>=1)
     df <- rbind(df, chunk)
   }
@@ -178,7 +178,7 @@ searchSRAForAccession <- function(acc_list, sra_columns){
     for (a in seq_along(x)){
       query <- paste0(query_beg, x[a], "'")
       print(query)
-      chunk <- dbGetQuery(get(database_name), query)
+      chunk <- DBI::dbGetQuery(get(database_name), query)
       search_count <- search_count + as.integer(dim(chunk)[1]>=1)
       accession_df <- rbind(accession_df, chunk)
     }
@@ -238,7 +238,7 @@ searchSRR_GSM <- function(acc_list, srr_gsm_columns = c("run_accession", "gsm", 
   for (a in seq_along(acc_list)){
     query <- paste0(query_beg, acc_list[a], "'")
     print(query)
-    chunk <- dbGetQuery(get("srr_gsm"), query)
+    chunk <- DBI::dbGetQuery(get("srr_gsm"), query)
     search_count <- search_count + as.integer(dim(chunk)[1]>=1)
     accession_df <- rbind(accession_df, chunk)
   }

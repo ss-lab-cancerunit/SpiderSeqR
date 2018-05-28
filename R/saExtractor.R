@@ -55,7 +55,7 @@ saExtractor <- function(df){
   #===============================================================================================
 
 
-  df_sra_attr <- ldply(df$sample_attribute, function(x) universalExtractor(x, sra_attr_keywords, sra_sep_split, sra_sep_collapse))
+  df_sra_attr <- plyr::ldply(df$sample_attribute, function(x) universalExtractor(x, sra_attr_keywords, sra_sep_split, sra_sep_collapse))
 
   colnames(df_sra_attr) <- c("sa_original", "sa_remainder", "sa_tissue", "sa_antibody", "sa_gene", "sa_treatment")
   df <- cbind(df, df_sra_attr[,(-1)]) #Combine extracted columns with df (except attr_original column)

@@ -160,7 +160,7 @@ searchSRA <- function(library_strategy, gene, antibody, cell_type, treatment, sp
 
 
   #GET THE QUERY
-  output_list <- dbGetQuery(get(database_name), query)
+  output_list <- DBI::dbGetQuery(get(database_name), query)
 
   #STOP IF NO RESULTS
   if ( (dim(output_list)[1]) == 0 ) {
@@ -715,7 +715,7 @@ searchForSRPChildren <- function(srp_list, srp_columns){
 
   for (srp in srp_list){
     srp_query <- paste0("SELECT ", srp_columns_collapsed, " FROM sra WHERE study_accession = '", srp, "'")
-    srp_entry <- dbGetQuery(sra_con, srp_query)
+    srp_entry <- DBI::dbGetQuery(sra_con, srp_query)
     srp_all <- rbind(srp_all, srp_entry)
   }
   print("searchForSRPChildren completed")
@@ -1416,6 +1416,16 @@ controlDetector <- function(df){
 
 
 #----------------------------------------------------------------------------
+#' @importFrom dplyr %>%
+dplyr::`%>%`
+
+#----------------------------------------------------------------------------
+
+
+
+
+
+#----------------------------------------------------------------------------
 #Developed in mergeDetector.R
 mergeDetector <- function(df){
   # Args: df - data frame (MUST HAVE experiment_accession column)
@@ -1430,10 +1440,10 @@ mergeDetector <- function(df){
   print("Running mergeDetector")
 
   df <- df %>%
-    add_count(experiment_accession) %>% #Count SRRx within SRX
-    group_by(experiment_accession) %>%
-    mutate(lane = seq_along(n)) %>% #Indexes all SRRs within SRX
-    mutate(mer = case_when(n >= 2 ~ experiment_accession, #Label with SRX when multiple SRRs exist in SRX
+    dplyr::add_count(experiment_accession) %>% #Count SRRx within SRX
+    dplyr::group_by(experiment_accession) %>%
+    dplyr::mutate(lane = seq_along(n)) %>% #Indexes all SRRs within SRX
+    dplyr::mutate(mer = dplyr::case_when(n >= 2 ~ experiment_accession, #Label with SRX when multiple SRRs exist in SRX
                            n < 2 ~ "")) #Leave empty if only one SRR in SRX
   df <- as.data.frame(df)
   print("mergeDetector completed")
@@ -1481,10 +1491,10 @@ missingRunVerifier <- function(srr_list_in){
 #Needed for missingRunVerifier()
 parQuery <- function(db_name, query, par_list){
   print("Running parQuery")
-  res <- dbSendQuery(get(as.character(db_name)), query)
-  dbBind(res, param = list(par_list))
-  df <- dbFetch(res)
-  dbClearResult(res)
+  res <- DBI::dbSendQuery(get(as.character(db_name)), query)
+  DBI::dbBind(res, param = list(par_list))
+  df <- DBI::dbFetch(res)
+  DBI::dbClearResult(res)
   print("parQuery completed")
   return(df)
 }
@@ -1535,10 +1545,10 @@ geoFinder <- function(gsm_db_name, gsm_list, gsm_columns, gse_columns){
   gsm_columns_sql <- paste(gsm_columns, collapse = ", m.")
   gse_columns_sql <- paste(gse_columns, collapse = ", e.")
   gsm_query <- paste0("SELECT DISTINCT m.", gsm_columns_sql, ", e.", gse_columns_sql, " FROM gse e INNER JOIN gsm m ON ((m.series_id LIKE e.gse) OR (m.series_id LIKE '%' || e.gse || ',%') OR (m.series_id LIKE '%' || e.gse) ) WHERE m.gsm = :g")
-  gsm_res <- dbSendQuery(get(as.character(gsm_db_name)), gsm_query)
-  dbBind(gsm_res, param = list(g = gsm_list))
-  gsm_df <- dbFetch(gsm_res)
-  dbClearResult(gsm_res)
+  gsm_res <- DBI::dbSendQuery(get(as.character(gsm_db_name)), gsm_query)
+  DBI::dbBind(gsm_res, param = list(g = gsm_list))
+  gsm_df <- DBI::dbFetch(gsm_res)
+  DBI::dbClearResult(gsm_res)
 
   #-------------------------
   #Post-query processing

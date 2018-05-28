@@ -24,6 +24,5 @@
 #'   \item reproduceResults (name to be changed)
 #' }
 #'
-#' @useDynLib SpideR, .registration = TRUE
 #' @docType package
 "_PACKAGE"
