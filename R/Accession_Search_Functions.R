@@ -27,6 +27,9 @@
 searchGEOForGSM <- function(acc_list, geo_columns){
 
   print("Running searchGEOForGSM")
+  
+  database_name <- "geo_con"
+  database_env <- ".GlobalEnv"
 
   #Remove duplicates and order
   acc_list <- unique(acc_list)
@@ -50,7 +53,7 @@ searchGEOForGSM <- function(acc_list, geo_columns){
   for (a in seq_along(acc_list)){
     query <- paste0("SELECT ", geo_columns, " FROM gsm WHERE gsm = '", acc_list[a], "'")
     print(query)
-    chunk <- DBI::dbGetQuery(get("geo_con"), query)
+    chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
     search_count <- search_count + as.integer(dim(chunk)[1]>=1)
     df <- rbind(df, chunk)
   }
@@ -83,7 +86,10 @@ searchGEOForGSM <- function(acc_list, geo_columns){
 searchGEOForGSE <- function(acc_list, geo_columns){
 
   print("Running searchGEOForGSE")
-
+  
+  database_name <- "geo_con"
+  database_env <- ".GlobalEnv"
+  
   #Remove duplicates and order
   acc_list <- unique(acc_list)
   acc_list <- acc_list[digitSort(acc_list)]
@@ -106,7 +112,7 @@ searchGEOForGSE <- function(acc_list, geo_columns){
   for (a in seq_along(acc_list)){
     query <- paste0("SELECT ", geo_columns, " FROM gsm WHERE series_id LIKE '%", acc_list[a], "' OR series_id LIKE '%", acc_list[a], ",%'")
     print(query)
-    chunk <- DBI::dbGetQuery(get("geo_con"), query)
+    chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
     search_count <- search_count + as.integer(dim(chunk)[1]>=1)
     df <- rbind(df, chunk)
   }
@@ -149,6 +155,7 @@ searchSRAForAccession <- function(acc_list, sra_columns){
   #------------------------------------------------
   #------------------------------------------------
   database_name <- "sra_con"
+  database_env <- ".GlobalEnv"
   sra_table <- "sra"
 
   #sra_columns <- c("experiment_name", "run_attribute", "experiment_accession", "experiment_url_link", "experiment_title", "library_strategy", "library_layout", "sample_alias", "taxon_id", "library_construction_protocol", "run_accession", "study_accession", "run_alias", "experiment_alias", "sample_name", "sample_attribute", "experiment_attribute")
@@ -178,7 +185,7 @@ searchSRAForAccession <- function(acc_list, sra_columns){
     for (a in seq_along(x)){
       query <- paste0(query_beg, x[a], "'")
       print(query)
-      chunk <- DBI::dbGetQuery(get(database_name), query)
+      chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
       search_count <- search_count + as.integer(dim(chunk)[1]>=1)
       accession_df <- rbind(accession_df, chunk)
     }
@@ -211,6 +218,9 @@ searchSRR_GSM <- function(acc_list, srr_gsm_columns = c("run_accession", "gsm", 
 
 
   print("Running searchSRR_GSM")
+  
+  database_name <- "srr_gsm"
+  database_env <- ".GlobalEnv"
 
   accession_class <- accessionClassifier(acc_list)
 
@@ -238,7 +248,7 @@ searchSRR_GSM <- function(acc_list, srr_gsm_columns = c("run_accession", "gsm", 
   for (a in seq_along(acc_list)){
     query <- paste0(query_beg, acc_list[a], "'")
     print(query)
-    chunk <- DBI::dbGetQuery(get("srr_gsm"), query)
+    chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
     search_count <- search_count + as.integer(dim(chunk)[1]>=1)
     accession_df <- rbind(accession_df, chunk)
   }
