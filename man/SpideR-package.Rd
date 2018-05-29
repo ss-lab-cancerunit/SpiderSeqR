@@ -22,6 +22,7 @@ SpideR integrates different sources of sequencing data and automates the search 
 \section{SpideR functions}{
 
 \itemize{
+  \item \code{\link{startSpideR}}
   \item \code{\link{searchForTerm}}
   \item \code{\link{searchSRA}}
   \item searchForAccession

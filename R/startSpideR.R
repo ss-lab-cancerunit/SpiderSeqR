@@ -1,5 +1,5 @@
 
-
+#' @export
 startSpideR <- function(dir){
   ori_wd <- getwd()
   setwd(dir)

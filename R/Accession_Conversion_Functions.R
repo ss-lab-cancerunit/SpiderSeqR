@@ -117,14 +117,49 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 
 
 
-
-convertAccession <- function(acc_list){
+#' Converts a vector of accessions (of one type) into all possible accessions within SRA and GEO
+#' 
+#' @param acc_vector A vector of accessions (must be of the same type)
+#' @return A data frame with conversion between all possible accession types
+#' @examples
+#' convertAccession("ERP016268")
+#' 
+#' @section Background on accessions:
+#' At the time of the writing, there are following accession types within SRA and GEO (starting with the highest level)
+#' 
+#' SRA
+#' \enumerate{
+#'     \item SRP - project_accession
+#'     \item SRX - experiment_accession
+#'     \item SRS - sample_accession
+#'     \item SRR - run_accession
+#' }
+#' 
+#' NOTE: depending on the location of the database, these accessions might begin with a different letter (S, E or D), so the set can be either SRP/SRX/SRS/SRR or ERP/ERX/ERS/ERR or DRP/DRX/DRS/ERR. However, accessions beginning with 'S' are the most common.
+#' 
+#' 
+#' GEO
+#' \enumerate{
+#'     \item GSE - series_id
+#'     \item GSM - sample
+#' }
+#' 
+#' NOTE: GEO accessions are further complicated by existence of 'superseries', which act as higher level series. In these cases a given GSM would belong to multiple (at least two) GSEs - its series_id and superseries.
+#' 
+#' 
+#' @section Accession types:
+#' \code{accessionClassifier} accepts only one accession type at the time. For example, the following queries are NOT allowed: \code{accessionClassifier("SRRXXXXX", "SRPXXXXX")}, \code{accessionClassifier("GSEXXXXX", "SRPXXXXX")}
+#' 
+#' SRA accessions differing by the first letter belong to the same type, hence it is possible to run: \code{accessionClassifier("SRPXXXXX", "ERPXXXXX")}
+#' 
+#' @export
+convertAccession <- function(acc_vector){
 
   geo_columns <- c("gsm", "series_id")
   #srr_gsm_columns <- c("gsm", "gsm_check", "run_accession")
   sra_columns <- c("run_accession", "experiment_accession", "sample_accession", "study_accession")
 
-  output_df <- searchForAccessionAcrossDBs(acc_list, geo_columns = geo_columns, sra_columns = sra_columns)
+  output_df <- searchForAccessionAcrossDBs(acc_vector, geo_columns = geo_columns, sra_columns = sra_columns)
 
   output_df <- output_df[ , c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id", "gsm_check")]
 

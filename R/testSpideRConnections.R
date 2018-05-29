@@ -23,3 +23,17 @@ testSpideRConnections <- function(){
 # database_name <- "sra_con"
 # database_env <- ".GlobalEnv"
 # DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+
+
+
+# Checking whether embedding connections works
+
+testEmbed <- function(){
+  database_name <- "sra_con"
+  database_env <- ".GlobalEnv"
+  return(testcon(get(database_name, envir = get(database_env))))
+}
+
+testCon <- function(db_con){
+  as.numeric(DBI::dbGetQuery(db_con, "SELECT count(*) FROM sra"))
+}
