@@ -61,6 +61,7 @@ searchSRA <- function(library_strategy, gene, antibody, cell_type, treatment, sp
   #------------------------------------------------
   #------------------------------------------------
   database_name <- "sra_con"
+  database_env <- ".GlobalEnv"
   sra_table <- "sra"
   #sra_columns <- c("experiment_name", "run_attribute", "experiment_accession", "experiment_url_link", "experiment_title", "library_strategy", "library_layout", "sample_alias", "taxon_id", "library_construction_protocol", "run_accession", "study_accession", "run_alias", "experiment_alias", "sample_name", "sample_attribute", "experiment_attribute")
   #sra_columns <- c("experiment_title")
@@ -160,7 +161,7 @@ searchSRA <- function(library_strategy, gene, antibody, cell_type, treatment, sp
 
 
   #GET THE QUERY
-  output_list <- DBI::dbGetQuery(get(database_name), query)
+  output_list <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
 
   #STOP IF NO RESULTS
   if ( (dim(output_list)[1]) == 0 ) {
@@ -710,12 +711,16 @@ searchForSRPChildren <- function(srp_list, srp_columns){
   #- Extract relevant columns from the sra table
   # ===*=== COMPARE PERFORMANCE AGAINST PARAMETRISED QUERY
   print("Running searchForSRPChildren")
+  
+  database_name <- "sra_con"
+  database_env <- ".GlobalEnv"
+
   srp_all <- data.frame()
   srp_columns_collapsed <- paste(srp_columns, collapse = ", ")
 
   for (srp in srp_list){
     srp_query <- paste0("SELECT ", srp_columns_collapsed, " FROM sra WHERE study_accession = '", srp, "'")
-    srp_entry <- DBI::dbGetQuery(sra_con, srp_query)
+    srp_entry <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), srp_query)
     srp_all <- rbind(srp_all, srp_entry)
   }
   print("searchForSRPChildren completed")
@@ -1460,16 +1465,19 @@ missingRunVerifier <- function(srr_list_in){
   #  Returns: printed notice on whether the SRXs to which the SRRs belong also have any other SRRs
   # ===*=== Double check if all the entries are identical...
   print("Running missingRunVerifier")
+  
+  database_name <- "sra_con"
+  database_env <- ".GlobalEnv"
 
   print("CHECKING FOR MISSING RUNS")
 
   srr_list_in <- unique(srr_list_in[order(srr_list_in)])
 
-  miss_exp <- parQuery("sra_con", "SELECT experiment_accession, run_accession FROM sra WHERE run_accession = ?", srr_list_in)
+  miss_exp <- parQuery(get(database_name, envir = get(database_env)), "SELECT experiment_accession, run_accession FROM sra WHERE run_accession = ?", srr_list_in)
 
   srx_list <- unique(miss_exp$experiment_accession)
 
-  miss_run <- parQuery("sra_con", "SELECT experiment_accession, run_accession FROM sra WHERE experiment_accession = ?", srx_list)
+  miss_run <- parQuery(get(database_name, envir = get(database_env)), "SELECT experiment_accession, run_accession FROM sra WHERE experiment_accession = ?", srx_list)
 
   srr_list_out <- miss_run$run_accession
   srr_list_out <- unique(srr_list_out[order(srr_list_out)])
@@ -1489,9 +1497,9 @@ missingRunVerifier <- function(srr_list_in){
 #================================================
 
 #Needed for missingRunVerifier()
-parQuery <- function(db_name, query, par_list){
+parQuery <- function(db_con, query, par_list){
   print("Running parQuery")
-  res <- DBI::dbSendQuery(get(as.character(db_name)), query)
+  res <- DBI::dbSendQuery(db_con, query)
   DBI::dbBind(res, param = list(par_list))
   df <- DBI::dbFetch(res)
   DBI::dbClearResult(res)
@@ -1536,7 +1544,7 @@ pairedEndConverter <- function(df){
 
 #----------------------------------------------------------------------------
 #Developed in gseFinder_unfolded_after_keywordExtractor2.R
-geoFinder <- function(gsm_db_name, gsm_list, gsm_columns, gse_columns){
+geoFinder <- function(db_con, gsm_list, gsm_columns, gse_columns){
   print("Running geoFinder")
 
   #-------------------------
@@ -1545,7 +1553,7 @@ geoFinder <- function(gsm_db_name, gsm_list, gsm_columns, gse_columns){
   gsm_columns_sql <- paste(gsm_columns, collapse = ", m.")
   gse_columns_sql <- paste(gse_columns, collapse = ", e.")
   gsm_query <- paste0("SELECT DISTINCT m.", gsm_columns_sql, ", e.", gse_columns_sql, " FROM gse e INNER JOIN gsm m ON ((m.series_id LIKE e.gse) OR (m.series_id LIKE '%' || e.gse || ',%') OR (m.series_id LIKE '%' || e.gse) ) WHERE m.gsm = :g")
-  gsm_res <- DBI::dbSendQuery(get(as.character(gsm_db_name)), gsm_query)
+  gsm_res <- DBI::dbSendQuery(db_con, gsm_query)
   DBI::dbBind(gsm_res, param = list(g = gsm_list))
   gsm_df <- DBI::dbFetch(gsm_res)
   DBI::dbClearResult(gsm_res)
