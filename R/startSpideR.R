@@ -1,6 +1,6 @@
 
 #' @export
-startSpideR <- function(dir){
+startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_expiry){
   ori_wd <- getwd()
   setwd(dir)
   print(paste0("Location of database files: ", getwd()))
@@ -29,7 +29,38 @@ startSpideR <- function(dir){
   sra_file <- "SRAmetadb.sqlite"
   geo_file <- "GEOmetadb.sqlite"
   srr_gsm_file <- "SRR_GSM.sqlite"
-  age_limit <- 360 #Maximum acceptable age of the database files (in days)
+
+  
+  #==========================================================
+  # Setting expiry parameters
+  #==========================================================
+  # Logic:
+  # Use specific parameters (sra, geo, srr_gsm) if available. If not, use the expiry date from general_expiry
+  
+  if ((!missing(general_expiry))&(!missing(sra_expiry))&(!missing(geo_expiry))&(!missing(srr_gsm_expiry))){
+    warning("general_expiry argument will be ignored, since all the individual expiry dates have been provided")
+  }
+  
+  if (missing(sra_expiry)){
+    sra_expiry <- general_expiry
+  }
+  if (missing(geo_expiry)){
+    geo_expiry <- general_expiry
+  }
+  if (missing(srr_gsm_expiry)){
+    srr_gsm_expiry <- general_expiry
+  }
+  
+  if ( !(is.numeric(general_expiry)) | !(is.numeric(sra_expiry)) | !(is.numeric(geo_expiry)) | !(is.numeric(srr_gsm_expiry)) ){
+    stop("Expiry parameters must be numeric")
+  }
+  #==========================================================
+  
+  
+  print("Expiry dates for databases (number of days since file creation date):")
+  print(paste0("SRA: ", sra_expiry, " days"))
+  print(paste0("GEO: ", geo_expiry, " days"))
+  print(paste0("SRR_GSM: ", srr_gsm_expiry, " days"))
   
   
   #==========================================================
@@ -53,7 +84,7 @@ startSpideR <- function(dir){
   
   
   # OLD SRA FILE
-  if(file.exists(sra_file) & (difftime(Sys.Date(), file.info(sra_file)$mtime, units = "days") > age_limit) ){ # OLD FILE
+  if(file.exists(sra_file) & (difftime(Sys.Date(), file.info(sra_file)$mtime, units = "days") > sra_expiry) ){ # OLD FILE
     
     print(paste0("The file ", sra_file, " is out of date"))
     print(paste0("Last modified: ", file.info(sra_file)$mtime))
@@ -102,7 +133,7 @@ startSpideR <- function(dir){
   
   
   # OLD GEO FILE
-  if(file.exists(geo_file) & (difftime(Sys.Date(), file.info(geo_file)$mtime, units = "days") > age_limit) ){ # OLD FILE
+  if(file.exists(geo_file) & (difftime(Sys.Date(), file.info(geo_file)$mtime, units = "days") > geo_expiry) ){ # OLD FILE
     
     print(paste0("The file ", geo_file, " is out of date"))
     print(paste0("Last modified: ", file.info(geo_file)$mtime))
@@ -158,7 +189,7 @@ startSpideR <- function(dir){
     }
     
   } else { # FILE PRESENT
-    if (difftime(Sys.Date(), file.info(srr_gsm_file)$mtime, units = "days") < age_limit){ # FILE UP TO DATE
+    if (difftime(Sys.Date(), file.info(srr_gsm_file)$mtime, units = "days") < srr_gsm_expiry){ # FILE UP TO DATE
       db_needed <- FALSE
       print("The custom database for converting between SRA and GEO is up to date")
       print(paste0("Last modified: ", file.info(srr_gsm_file)$mtime))
