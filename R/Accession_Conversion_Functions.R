@@ -123,12 +123,13 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 #' @return A data frame with conversion between all possible accession types
 #' @examples
 #' convertAccession("ERP016268")
+#' convertAccession(c("SRP010068", "SRP020088"))
 #' 
 #' 
 #' 
 #' 
 #' @section Accepted Accession Types:
-#' \code{accessionClassifier} accepts any of the 4 SRA or 2 GEO accessions (see section 'Background Information on Accession Types'). 
+#' \code{accessionClassifier} accepts any of the 4 SRA or 2 GEO accession types (see section \emph{'Background Information on Accession Types')}. 
 #' \code{accessionClassifier} accepts only one accession type at a time. 
 #' 
 #' For example, the following queries are NOT allowed: \code{accessionClassifier("SRR_____", "SRP_____")}, \code{accessionClassifier("GSE_____", "SRP_____")}. In order to obtain the above results, it is necessary to run separate queries for each accession type, and, if desirable, bind the data frames together (e.g. \code{rbind(accessionClassifier("SRR_____"), accessionClassifier("SRP_____"))}).
