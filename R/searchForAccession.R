@@ -15,7 +15,7 @@ searchForAccession <- function(acc_list){
   x <- unique(acc_list)
   x <- x[digitSort(x)]
 
-  accession_class <- accessionClassifier(x)
+  accession_class <- classifyAccession(x)
 
 
   output_df <- searchForAccessionAcrossDBs(acc_list = x, sra_columns = "*", geo_columns = "*")
@@ -53,6 +53,8 @@ searchForAccession <- function(acc_list){
 }
 
 
+
+
 searchForAccession_temp <- function(acc_list){
   #
   # IN PROGRESS - to find omitted processing steps, see SpideR_ToDo.Rmd
@@ -66,7 +68,7 @@ searchForAccession_temp <- function(acc_list){
   x <- unique(acc_list)
   x <- x[digitSort(x)]
 
-  accession_class <- accessionClassifier(x)
+  accession_class <- classifyAccession(x)
 
   output_df <- searchGEOForGSE(acc_list = x, geo_columns = "*")
 

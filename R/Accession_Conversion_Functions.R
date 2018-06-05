@@ -12,7 +12,7 @@
 
 searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 
-  accession_class <- accessionClassifier(acc_list)
+  accession_class <- classifyAccession(acc_list)
 
   if (!(accession_class %in% c("gsm", "series_id", "run_accession", "experiment_accession", "sample_accession", "study_accession"))){
     stop("Accession needs to belong to one of the supported classes")
@@ -32,22 +32,44 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
     if (accession_class == "series_id"){
       geo_df <- searchGEOForGSE(acc_list, geo_columns)
     }
+    
+    #TEMP
+    .GlobalEnv$temp_geo_df <- geo_df
+    #...
 
     #saveRDS(geo_df, "geo_df.Rda")
 
     #SRR_GSM data frame
     srr_gsm_df <- searchSRR_GSM(geo_df$gsm)
     #saveRDS(srr_gsm_df, "srr_gsm_df.Rda")
+    
+    #TEMP
+    .GlobalEnv$temp_srr_gsm_df <- srr_gsm_df
+    #...
 
     #SRA data frame
-    sra_df <- searchSRAForAccession(srr_gsm_df$run_accession, sra_columns)
+    if(length(srr_gsm_df$run_accession)!=0){ # Only search SRA if there is viable GEO/SRA conversion
+      sra_df <- searchSRAForAccession(srr_gsm_df$run_accession, sra_columns)
+    } else { # Generate an empty data frame if no results in SRR_GSM
+      sra_df <- setNames(data.frame(matrix(ncol = length(sra_columns), nrow = 0)), sra_columns)
+    }
+    
     #saveRDS(sra_df, "sra_df.Rda")
+    
+    #TEMP
+    .GlobalEnv$temp_sra_df <- sra_df
+    #...
 
 
     #Merge
     #DOUBLE CHECK IF WANT ALL OR ALL.X ===*===
     geo_srr_gsm_df <- merge(geo_df, srr_gsm_df, by.x = "gsm", by.y = "gsm", all = TRUE)
     geo_srr_gsm_sra_df <- merge(geo_srr_gsm_df, sra_df, by.x = "run_accession", by.y = "run_accession", all = TRUE)
+    
+    #TEMP
+    .GlobalEnv$temp_geo_srr_gsm_df <- geo_srr_gsm_df
+    .GlobalEnv$temp_geo_srr_gsm_sra_df <- geo_srr_gsm_sra_df
+    #...
 
     #Rename data frame
     output_df <- geo_srr_gsm_sra_df
@@ -79,7 +101,11 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
     #...
 
     #GEO data frame
-    geo_df <- searchGEOForGSM(srr_gsm_df$gsm, geo_columns)
+    if(length(srr_gsm_df$gsm)!=0){ # Only search GEO if there is viable SRA/GEO conversion
+      geo_df <- searchGEOForGSM(srr_gsm_df$gsm, geo_columns)
+    } else { # Generate an empty data frame if no results in SRR_GSM
+      geo_df <- setNames(data.frame(matrix(ncol = length(geo_columns), nrow = 0)), geo_columns)
+    }
 
     #Create an empty data frame with appropriate column names
     #if(dim(geo_df)[1]==0){
@@ -122,19 +148,26 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 #' @param acc_vector A vector of accessions \strong{(all must belong to the same type)}
 #' @return A data frame with conversion between all possible accession types
 #' @examples
-#' convertAccession("ERP016268")
+#' 
 #' convertAccession(c("SRP010068", "SRP020088"))
+#' 
+#' convertAccession("GSE1") # Only in GEO. Takes a while because GSE1... is ubiquitous
+#' convertAccession(c("GSE1", "GSE45530")) # Mixed GEO/SRA. Takes a while because GSE1... is ubiquitous
+#' 
+#' convertAccession("ERP016268") # Only in SRA
+#' convertAccession(c("ERP016268", "SRP020088")) # Mixed SRA/GEO
+#' 
 #' 
 #' 
 #' 
 #' 
 #' @section Accepted Accession Types:
-#' \code{accessionClassifier} accepts any of the 4 SRA or 2 GEO accession types (see section \emph{'Background Information on Accession Types')}. 
-#' \code{accessionClassifier} accepts only one accession type at a time. 
+#' \code{convertAccession} accepts any of the 4 SRA or 2 GEO accession types (see section \emph{'Background Information on Accession Types')}. 
+#' \code{convertAccession} accepts only one accession type at a time. 
 #' 
-#' For example, the following queries are NOT allowed: \code{accessionClassifier("SRR_____", "SRP_____")}, \code{accessionClassifier("GSE_____", "SRP_____")}. In order to obtain the above results, it is necessary to run separate queries for each accession type, and, if desirable, bind the data frames together (e.g. \code{rbind(accessionClassifier("SRR_____"), accessionClassifier("SRP_____"))}).
+#' For example, the following queries are NOT allowed: \code{convertAccession("SRR_____", "SRP_____")}, \code{convertAccession("GSE_____", "SRP_____")}. In order to obtain the above results, it is necessary to run separate queries for each accession type, and, if desirable, bind the data frames together (e.g. \code{rbind(convertAccession("SRR_____"), convertAccession("SRP_____"))}).
 #' 
-#' SRA accessions differing by the first letter belong to the same type, hence it is possible to run: \code{accessionClassifier("SRP_____", "ERP_____")}
+#' SRA accessions differing by the first letter belong to the same type, hence it is possible to run: \code{convertAccession("SRP_____", "ERP_____")}
 #' 
 #' 
 #' 
@@ -189,13 +222,16 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 convertAccession <- function(acc_vector){
 
   geo_columns <- c("gsm", "series_id")
-  #srr_gsm_columns <- c("gsm", "gsm_check", "run_accession")
+  #srr_gsm_columns <- c("gsm", "gsm_check", "run_accession") # Not needed (searchSRR_GSM has defaults)
   sra_columns <- c("run_accession", "experiment_accession", "sample_accession", "study_accession")
 
   output_df <- searchForAccessionAcrossDBs(acc_vector, geo_columns = geo_columns, sra_columns = sra_columns)
 
-  output_df <- output_df[ , c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id", "gsm_check")]
-
+  # Reorder columns (order always the same, regardless of accession type)
+  #output_df <- output_df[ , c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id", "gsm_check")]
+  output_df <- output_df[ , c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id")] # Remove gsm_check
+  
+  
   return(output_df)
 
 }

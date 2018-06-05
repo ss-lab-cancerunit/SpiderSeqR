@@ -1,11 +1,11 @@
 Package: SpideR
 Version: 0.1.0
-Title: What the Package Does (Title Case)
+Title: A Tool for Integration of Big Bio Data
 Authors@R: c(person("A.", "Sozanska", role = c("aut", "cre"), email = "as2382@cam.ac.uk"), person("C.", "Fletcher", role = "aut"))
 Author: Anna Sozanska [aut, cre], Charlie Fletcher [aut]
 Maintainer: Anna Sozanska <as2382@cam.ac.uk>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Description: SpideR integrates different sources of sequencing data 
+    and automates the search and retrieval of information.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true

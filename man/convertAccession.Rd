@@ -17,12 +17,12 @@ Converts a vector of accessions into all possible accession types within SRA and
 }
 \section{Accepted Accession Types}{
 
-\code{accessionClassifier} accepts any of the 4 SRA or 2 GEO accession types (see section \emph{'Background Information on Accession Types')}. 
-\code{accessionClassifier} accepts only one accession type at a time. 
+\code{convertAccession} accepts any of the 4 SRA or 2 GEO accession types (see section \emph{'Background Information on Accession Types')}. 
+\code{convertAccession} accepts only one accession type at a time. 
 
-For example, the following queries are NOT allowed: \code{accessionClassifier("SRR_____", "SRP_____")}, \code{accessionClassifier("GSE_____", "SRP_____")}. In order to obtain the above results, it is necessary to run separate queries for each accession type, and, if desirable, bind the data frames together (e.g. \code{rbind(accessionClassifier("SRR_____"), accessionClassifier("SRP_____"))}).
+For example, the following queries are NOT allowed: \code{convertAccession("SRR_____", "SRP_____")}, \code{convertAccession("GSE_____", "SRP_____")}. In order to obtain the above results, it is necessary to run separate queries for each accession type, and, if desirable, bind the data frames together (e.g. \code{rbind(convertAccession("SRR_____"), convertAccession("SRP_____"))}).
 
-SRA accessions differing by the first letter belong to the same type, hence it is possible to run: \code{accessionClassifier("SRP_____", "ERP_____")}
+SRA accessions differing by the first letter belong to the same type, hence it is possible to run: \code{convertAccession("SRP_____", "ERP_____")}
 }
 
 \section{Output format}{

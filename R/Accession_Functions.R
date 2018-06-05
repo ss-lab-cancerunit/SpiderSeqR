@@ -2,8 +2,8 @@
 # Functions related to searching for accessions
 #
 # Currently includes:
-# - searchForAccession - main function that returns df from SRA REMOVED TEMPORARILY (20171207) - building proper version
-# - accessionClassifier - given an accession vector, classifies it into correct class or returns an error if not all elements are matched to the same class
+# [- searchForAccession - main function that returns df from SRA - REMOVED (20171207) - building proper version]
+# - classifyAccession - given an accession vector, classifies it into correct class or returns an error if not all elements are matched to the same class
 # - vConditionVerifier - grepl'es on the input vector according to any of the regular expressions (an OR operation)
 
 # USES:
@@ -16,15 +16,44 @@
 #searchForAccession("GSM522267")
 
 
+#----------------------------------------------------------------------------
 
 
-accessionClassifier <- function(x){
+#' Classify accessions
+#'
+#' @param x Vector of accessions
+#' @return Accession class (error if input does not match any)
+#' 
+#' @examples 
+#' classifyAccession("GSM11111")
+#' classifyAccession(c("GSM11111", "GSE2222")) #Will throw error
+#' 
+#' 
+#' 
+#' @section Supported accession classes:
+#' \itemize{
+#'    \item [DES]RP - study_accession
+#'    \item [DES]RS - sample_accession
+#'    \item [DES]RX - experiment_accession
+#'    \item [DES]RR - run_accession
+#'    \item GSE - series_id
+#'    \item GSM - gsm
+#' }
+#' 
+#' \strong{NOTE:} Input vector needs to contain accessions belonging to only one type at any given time, otherwise the function will generate an error.
+#' 
+#' @keywords internal
+#'  
+classifyAccession <- function(x){
+  
   accession_regexp <- list(c("[DES]RP"),
                            c("[DES]RS"),
                            c("[DES]RX"),
                            c("[DES]RR"),
                            c("GSE"),
                            c("GSM"))
+  
+  accession_regexp <- paste0("^", accession_regexp, "\\d+$") # Only allow perfect matches to accession numbers
 
   accession_name <- c("study_accession",
                       "sample_accession",
@@ -32,6 +61,11 @@ accessionClassifier <- function(x){
                       "run_accession",
                       "series_id", #A little tricky to deal with
                       "gsm") #A little tricky to deal with
+  
+  # Note: if length(x)==0, the last class from accession_name is assigned
+  if(length(x)==0){
+    stop("Accession vector must have length > 0")
+  }
 
   accession_class <- NA
 
@@ -41,7 +75,7 @@ accessionClassifier <- function(x){
   }
 
   if (is.na(accession_class)){
-    stop("Input needs to completely match one of the accession classes")
+    stop("Input needs to completely match only one of the accession classes")
   }
   return(accession_class)
 }
@@ -49,7 +83,18 @@ accessionClassifier <- function(x){
 
 
 
+#----------------------------------------------------------------------------
 
+
+
+#' Verify matches to regular expressions
+#'
+#' @param regexpr_vector Vector with regular expressions (to be used by grepl)
+#' @param x Character string to be checked for matches to regular expressions
+#' @return A logical vector with TRUE at positions where there was a match to at least one of the reqular expressions (OR operation)
+#' 
+#' @keywords internal
+#' 
 vConditionVerifier <- function(regexpr_vector, x){
   rv <- regexpr_vector
 

@@ -36,7 +36,7 @@ searchGEOForGSM <- function(acc_list, geo_columns){
   acc_list <- acc_list[digitSort(acc_list)]
 
   #Stop if list is not valid (i.e. non-gsm entries)
-  if (accessionClassifier(acc_list)!="gsm"){
+  if (classifyAccession(acc_list)!="gsm"){
     stop("Only GSMs are allowed")
   }
 
@@ -95,7 +95,7 @@ searchGEOForGSE <- function(acc_list, geo_columns){
   acc_list <- acc_list[digitSort(acc_list)]
 
   #Stop if list is not valid (i.e. non-gsm entries)
-  if (accessionClassifier(acc_list)!="series_id"){
+  if (classifyAccession(acc_list)!="series_id"){
     stop("Only GSEs are allowed")
   }
 
@@ -174,7 +174,7 @@ searchSRAForAccession <- function(acc_list, sra_columns){
     acc_list <- "nth"
   }
 
-  accession_class <- accessionClassifier(x)
+  accession_class <- classifyAccession(x)
   search_count <- 0
   accession_df <- data.frame()
 
@@ -222,7 +222,7 @@ searchSRR_GSM <- function(acc_list, srr_gsm_columns = c("run_accession", "gsm", 
   database_name <- "srr_gsm"
   database_env <- ".GlobalEnv"
 
-  accession_class <- accessionClassifier(acc_list)
+  accession_class <- classifyAccession(acc_list)
 
   #This is a safeguard in case incomplete SRA accessions had equivalents in GEO
   #Can only remove it if it is certain that this is not the case
