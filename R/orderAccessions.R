@@ -18,16 +18,23 @@ shuffleList <- function(x){
   # x - list to be shuffled
   # Returns:
   # shuffled x (relationships between levels are preserved)
-  subs <- length(x)
-  ind <- sample(1:length(x[[1]]), length(x[[1]]))
-  for (s in 1:subs){
-    if (length(ind)!=length(x[[s]])){
-      stop("Sublists must have the same length")
+  if (is.list(x)){
+    subs <- length(x)
+    ind <- sample(1:length(x[[1]]), length(x[[1]]))
+    for (s in 1:subs){
+      if (length(ind)!=length(x[[s]])){
+        stop("Sublists must have the same length")
+      }
+      x[[s]] <- x[[s]][ind]
     }
-    x[[s]] <- x[[s]][ind]
+  } else {
+    x <- x[sample(1:length(x), length(x))]
   }
+
+
   return(x)
 }
+
 
 #=============================================================
 
@@ -51,11 +58,30 @@ checkOrder <- function(x, order_function){
   
   x_shuffled <- x # Store shuffled x
   
-  for (i in seq_along(x)){
-    #print(do.call(order_function, x_shuffled))
-    x[[i]] <- x[[i]][do.call(order_function, x_shuffled)]
+  
+  if (is.list(x_shuffled)){
+    
+    ord <- do.call(order_function, list(x_shuffled)) # NOTE: must pass the list wrapped as a list
+    
+    print(ord)
+    
+    for (i in seq_along(x)){
+      x[[i]] <- x[[i]][ord]
+    }
+    
+  } else {
+    
+    
+    ord <- do.call(order_function, list(list(x_shuffled))) # NOTE: must pass the list wrapped as a list
+    
+    print(ord)
+    
+    x <- x[ord]
+    
   }
   
+  
+
   print("List after ordering:")
   print(x)
   
@@ -75,7 +101,39 @@ checkOrder <- function(x, order_function){
 
 a1 <- c(rep(1, 3), rep(2, 3), rep(3, 3))
 a2 <- c(11:13, 21:23, 31:33)
+
+a1 <- paste0(a1, "a")
+a2 <- paste0(a2, "x")
 a <- list(a1, a2)
+
+
+
+b1 <- c(rep("c1", 3), rep("b2", 3), rep("a3", 3))
+b2 <- c(11:13, 21:23, 31:33)
+b <- list(b1, b2)
+
+checkOrder(b, "orderAccessions") 
+
+
+
+
+c1 <- c(rep("c1", 3), rep("b2", 3), rep("a3", 3))
+c2 <- c(31:33, 11:13, 21:23)
+
+c1 <- c(c1, NA, NA)
+c2 <- c(c2, NA, NA)
+c <- list(c1, c2)
+
+checkOrder(c, "orderAccessions") 
+
+
+d1 <- c("SRP1", "DRP02", "SRP20", "ERP000500", NA)
+checkOrder(d1, "orderAccessions")
+
+d1 <- c(rep("SRP1", 3), rep("DRP02", 3), rep("ERP000500", 3), rep(NA, 3)) 
+d2 <- c("e111", "d112", "c113", "788", "789", "790", "c1", "b2", "a3", "11", "12", "13")
+d <- list (d1, d2)
+checkOrder(d, "orderAccessions")
 
 checkOrder(a, "order") # A demo for order() function
 
@@ -84,11 +142,57 @@ checkOrder(list(1:10), "orderAccessions") # This works
 checkOrder(a, "orderAccessions") # Does not seem to work atm
 
 
+orderAccessions <- function(x, na.last = TRUE){
+  # Steps:
+  # - warning if not just alphanumeric
+  # - remove alpha
+  # - sort by numeric
+  
+  if (is.list(x)){
+    x_num <- list()
+    
+    for (i in seq_along(x)){
+      
+      
+      n_nas <- sum(is.na(x[[i]])) # NOTE: NAs do not give TRUE on grepl below
+      if ( sum(grepl("^[[:alnum:]]*$", x[[i]])) != (length(x[[i]]) - n_nas) ){
+        stop("Only alphanumeric characters are allowed")
+      }
+      
+      #Remove alphanumeric characters and convert remainder to numeric
+      x_num[[i]] <- as.numeric(gsub("[[:alpha:]]", "", x[[i]]))
+      
+    }
+    
+    ord <- do.call(order, c(x_num, na.last = na.last))
+    
+  } else {
+    
+    n_nas <- sum(is.na(x)) # NOTE: NAs do not give TRUE on grepl below
+    if ( sum(grepl("^[[:alnum:]]*$", x)) != (length(x) - n_nas) ){
+      stop("Only alphanumeric characters are allowed")
+    }
+    
+    #Remove alphanumeric characters and convert remainder to numeric
+    x_num <- as.numeric(gsub("[[:alpha:]]", "", x))
+    
+    ord <- do.call(order, list(x_num, na.last = na.last))
+    
+  }
+  
+  return(ord)
+  
+}
+
+
+
 
 
 
 #Modified version for dealing with lists
-orderAccessions <- function(x, na.last = TRUE){
+#Seems to work, but will discontinue development...
+#Gives some errors on NAs etc... (the list handling is not exactly transparent here)
+orderAccessions_old_complicated <- function(x, na.last = TRUE){
   #Function for ordering accessions
   # - ignores alphanumeric strings (removes them for the purpose of ordering)
   # - returns order based on the order of numeric remainder
