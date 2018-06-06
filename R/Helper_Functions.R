@@ -824,6 +824,27 @@ rbindUniqueCols <- function(x, y, disregard_columns){
 #----------------------------------------------------------------------------
 #From characteristics3.R
 #Needed for universalExtractor()
+
+#----------------------------------------------------------------------------
+# Testing in progress (seems to leave out character NAs)
+
+#df1 <- data.frame(a=1:3, b=4:6)
+#df2 <- data.frame(x=c(6,5,4), y = c(1,2,3))
+
+#df1b <- df1
+#df1b[1,3] <- NA
+#df1b[1,2] <- ""
+#df1b[1,1] <- "NA"
+
+
+#View(naConverter(df1b))
+
+#class(df1b[1,1])
+#class(df1b[1,2])
+#class(df1b[1,3])
+
+#is.na(df1b)
+#----------------------------------------------------------------------------
 naConverter <- function(x){
   # Args: data frame
   # Returns: data frame

@@ -10,9 +10,27 @@
 
 
 
-searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 
-  accession_class <- classifyAccession(acc_list)
+
+#'
+#'  Search for accession across databases
+#' 
+#' \code{searchForAccessionAcrossDBs} classifies accessions, searches for them in their original database (SRA or GEO), then, if conversion is possible, searches for corresponding accessions in the other database (SRA or GEO). If no conversion is possible, the columns from the corresponding database are returned empty (NAs).
+#' 
+#' 
+#' @param acc_vector A vector of accessions \strong{(all must belong to the same type)}
+#' @param sra_columns A character vector with names of the columns to be returned from SRA
+#' @param geo_columns A character vector with names of the columns to be returned from GEO
+#' @return A data frame with the results of the query
+#' 
+#' @examples
+#' searchForAccessionAcrossDBs("GSE45530")
+#' 
+#' @keywords internal
+#' 
+searchForAccessionAcrossDBs <- function(acc_vector, sra_columns, geo_columns){
+
+  accession_class <- classifyAccession(acc_vector)
 
   if (!(accession_class %in% c("gsm", "series_id", "run_accession", "experiment_accession", "sample_accession", "study_accession"))){
     stop("Accession needs to belong to one of the supported classes")
@@ -27,10 +45,10 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 
     #GEO data frame
     if (accession_class == "gsm"){
-      geo_df <- searchGEOForGSM(acc_list, geo_columns)
+      geo_df <- searchGEOForGSM(acc_vector, geo_columns)
     }
     if (accession_class == "series_id"){
-      geo_df <- searchGEOForGSE(acc_list, geo_columns)
+      geo_df <- searchGEOForGSE(acc_vector, geo_columns)
     }
     
     #TEMP
@@ -87,7 +105,7 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
   if (accession_class %in% c("run_accession", "experiment_accession", "sample_accession", "study_accession")){
 
     #SRA data frame
-    sra_df <- searchSRAForAccession(acc_list, sra_columns)
+    sra_df <- searchSRAForAccession(acc_vector, sra_columns)
 
     #TEMP
     .GlobalEnv$temp_sra_df <- sra_df
@@ -143,10 +161,14 @@ searchForAccessionAcrossDBs <- function(acc_list, sra_columns, geo_columns){
 
 
 
-#' Converts a vector of accessions into all possible accession types within SRA and GEO
+#' 
+#' Convert accessions
+#'
+#' \code{convertAccession} converts a vector of accessions (all belonging into the same accession type) into all possible accession types within SRA and GEO. If no SRA/GEO conversion is possible, all the missing accession types are marked as NAs.
+#' 
 #' 
 #' @param acc_vector A vector of accessions \strong{(all must belong to the same type)}
-#' @return A data frame with conversion between all possible accession types
+#' @return A data frame with conversion between all accession types
 #' @examples
 #' 
 #' convertAccession(c("SRP010068", "SRP020088"))

@@ -2,23 +2,23 @@
 #searchForAccession - under construction (20171207)
 
 
-searchForAccession <- function(acc_list){
+searchForAccession <- function(acc_vector){
   #
   # IN PROGRESS - to find omitted processing steps, see SpideR_ToDo.Rmd
   #
   # Args: a character vector with accessions
   #       (needs to completely match to one accession class; no partial matches or mixed classes allowed)
   #
-  # Returns: df from SRA with matches to the acc_list
+  # Returns: df from SRA with matches to the acc_vector
   #
 
-  x <- unique(acc_list)
+  x <- unique(acc_vector)
   x <- x[digitSort(x)]
 
   accession_class <- classifyAccession(x)
 
 
-  output_df <- searchForAccessionAcrossDBs(acc_list = x, sra_columns = "*", geo_columns = "*")
+  output_df <- searchForAccessionAcrossDBs(acc_vector = x, sra_columns = "*", geo_columns = "*")
 
   #output_df <- gsmExtractor(output_df, sampleColumn = TRUE) #Create sample column
   output_df <- gsmExtractor(output_df, sampleColumn = FALSE) #Don't create sample column
@@ -45,7 +45,7 @@ searchForAccession <- function(acc_list){
 
   output_df <- naConverter(output_df)
 
-  outputGenerator_acc(output_df, accession = acc_list)
+  outputGenerator_acc(output_df, accession = acc_vector)
 
   return(output_df)
 
@@ -55,22 +55,22 @@ searchForAccession <- function(acc_list){
 
 
 
-searchForAccession_temp <- function(acc_list){
+searchForAccession_temp <- function(acc_vector){
   #
   # IN PROGRESS - to find omitted processing steps, see SpideR_ToDo.Rmd
   #
   # Args: a character vector with accessions
   #       (needs to completely match to one accession class; no partial matches or mixed classes allowed)
   #
-  # Returns: df from SRA with matches to the acc_list
+  # Returns: df from SRA with matches to the acc_vector
   #
 
-  x <- unique(acc_list)
+  x <- unique(acc_vector)
   x <- x[digitSort(x)]
 
   accession_class <- classifyAccession(x)
 
-  output_df <- searchGEOForGSE(acc_list = x, geo_columns = "*")
+  output_df <- searchGEOForGSE(acc_vector = x, geo_columns = "*")
 
   output_df <- chExtractor(output_df)
 

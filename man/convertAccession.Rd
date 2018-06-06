@@ -2,7 +2,7 @@
 % Please edit documentation in R/Accession_Conversion_Functions.R
 \name{convertAccession}
 \alias{convertAccession}
-\title{Converts a vector of accessions into all possible accession types within SRA and GEO}
+\title{Convert accessions}
 \usage{
 convertAccession(acc_vector)
 }
@@ -10,10 +10,10 @@ convertAccession(acc_vector)
 \item{acc_vector}{A vector of accessions \strong{(all must belong to the same type)}}
 }
 \value{
-A data frame with conversion between all possible accession types
+A data frame with conversion between all accession types
 }
 \description{
-Converts a vector of accessions into all possible accession types within SRA and GEO
+\code{convertAccession} converts a vector of accessions (all belonging into the same accession type) into all possible accession types within SRA and GEO. If no SRA/GEO conversion is possible, all the missing accession types are marked as NAs.
 }
 \section{Accepted Accession Types}{
 
@@ -74,8 +74,15 @@ NOTE: GEO accession system is further complicated by existence of 'superseries',
 }
 
 \examples{
-convertAccession("ERP016268")
+
 convertAccession(c("SRP010068", "SRP020088"))
+
+convertAccession("GSE1") # Only in GEO. Takes a while because GSE1... is ubiquitous
+convertAccession(c("GSE1", "GSE45530")) # Mixed GEO/SRA. Takes a while because GSE1... is ubiquitous
+
+convertAccession("ERP016268") # Only in SRA
+convertAccession(c("ERP016268", "SRP020088")) # Mixed SRA/GEO
+
 
 
 
