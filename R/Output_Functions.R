@@ -5,7 +5,7 @@
 
 #- outputGenerator() - main function
 #- filenameGenerator() - for generating file names
-#- digitSort() - for sorting by _R_s (ignoring the letter prefix)
+#- orderAccessions() - for sorting by _R_s (ignoring the letter prefix) - previously digitSort
 
 #- universalSampleSheetGenerator() - layout for sample sheets
 #    USES:
@@ -47,7 +47,7 @@ outputGenerator <- function(df, ss=NULL, st){
                         df$run_accession)
 
   #Using custom function for ordering to disregard the '_RP/_RS/_RX/_RR' prefixes
-  df <- df[digitSort(order_columns),]
+  df <- df[orderAccessions(order_columns),]
 
   #Converting tabs in characteristics_ch1 column
   df$characteristics_ch1 <- unlist(lapply(df$characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
@@ -254,7 +254,7 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
                         df$run_accession)
 
   #Using custom function for ordering to disregard the '_RP/_RS/_RX/_RR' prefixes
-  df <- df[digitSort(order_columns),]
+  df <- df[orderAccessions(order_columns),]
   #df <- df[orderAccessions(order_columns),]
 
   #Converting tabs in characteristics_ch1 column
@@ -474,47 +474,68 @@ filenameGenerator_acc <- function(library_strategy, accession, output, file_type
 
 
 #============================================================================
-# digitSort()
+# orderAccessions()
 #============================================================================
 
-#Developed in outputGenerator.R
-digitSort <- function(inp){
-  # Args: a vector or a list of vectors
-  #          of the following form:
-  #            [A-Za-z]+[0-9]+
-  #          (throws an error if vectors do not conform)
-  #
-  # Returns: a vector of indices
-  #          ordered according to v1, (v2, v3... )
-  #
-  # Ordering disregards any letters occurring before the digits
-  #          i.e. c("A2", "B1", "C3") will yield 2, 1, 3
-  #
-  print("Running digitSort")
-
-  if (class(inp)!="list"){
-    check <- grepl("[A-Za-z]+[0-9]+", inp)
-    if (sum(check)!=length(inp)){
-      stop("Vector needs to be in [A-Za-z]+[0-9]+ format")
-    }
-    inp_extr <- gsub("([A-Za-z]+)([0-9]+)", "\\2", inp)
-    #print(inp_extr)
-    inp_order <- do.call(order, list(inp_extr)) #inp_extr needs to be converted to a list
-
-  } else {
-    inp_extr <- list()
-    for (el in seq_along(inp)){
-      check <- grepl("[A-Za-z]+[0-9]+", inp[[el]])
-      if (sum(check)!=length(inp[[el]])){
-        stop("Vector needs to be in [A-Za-z]+[0-9]+ format")
+#' Order Accessions
+#' 
+#' \code{orderAccessions} orders character vectors or lists according to numbers, disregarding any lettrs.
+#' 
+#' @param x Character vector (or list containing character vectors) to be ordered
+#' @param na.last For controlling the treatment of NAs (see \code{\link[base]{order}})
+#' @return Integer vector with order of indices
+#' 
+#' @seealso \code{\link[base]{order}}
+#' 
+#' @keywords internal
+#' 
+#' 
+orderAccessions <- function(x, na.last = TRUE){
+  # Steps (separate tracks for lists and vectors):
+  # - warning if not just alphanumeric (correct for NAs)
+  # - remove alpha
+  # - sort by numeric
+  
+  print("Running orderAccessions")
+  
+  if (is.list(x)){
+    x_num <- list()
+    
+    for (i in seq_along(x)){
+      
+      
+      n_nas <- sum(is.na(x[[i]])) # NOTE: NAs do not give TRUE on grepl below
+      if ( sum(grepl("^[[:alnum:]]*$", x[[i]])) != (length(x[[i]]) - n_nas) ){
+        stop("Only alphanumeric characters are allowed")
       }
-      inp_extr[[el]] <- gsub("([A-Za-z]+)([0-9]+)", "\\2", inp[[el]])
+      
+      #Remove alphanumeric characters and convert remainder to numeric
+      x_num[[i]] <- as.numeric(gsub("[[:alpha:]]", "", x[[i]]))
+      
     }
-    inp_order <- do.call(order, inp_extr) #inp_extr is already a list
+    
+    ord <- do.call(order, c(x_num, na.last = na.last))
+    
+  } else {
+    
+    n_nas <- sum(is.na(x)) # NOTE: NAs do not give TRUE on grepl below
+    if ( sum(grepl("^[[:alnum:]]*$", x)) != (length(x) - n_nas) ){
+      stop("Only alphanumeric characters are allowed")
+    }
+    
+    #Remove alphanumeric characters and convert remainder to numeric
+    x_num <- as.numeric(gsub("[[:alpha:]]", "", x))
+    
+    ord <- do.call(order, list(x_num, na.last = na.last))
+    
   }
-  print("digitSort completed")
-  return(inp_order)
+  
+  print("orderAccessions completed")
+  
+  return(ord)
+  
 }
+
 #============================================================================
 
 

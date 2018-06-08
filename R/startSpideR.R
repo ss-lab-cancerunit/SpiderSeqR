@@ -314,7 +314,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
     #                      db_df$experiment_accession,
     #                      db_df$run_accession,
     #                      db_df$gsm)
-    #db_df <- db_df[digitSort(order_columns),]
+    #db_df <- db_df[orderAccessions(order_columns),]
     
     #Save df as an slite object
     srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), dbname = "SRR_GSM.sqlite")

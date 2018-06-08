@@ -1,0 +1,74 @@
+---
+title: "Vignette Title"
+author: "Vignette Author"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+```{r, echo = FALSE}
+knitr::opts_chunk$set(
+  eval = FALSE
+)
+```
+
+
+
+# Quick SpideR
+
+## Setup
+
+```{r}
+library(SpideR)
+startSpideR(dir=getwd()) # The 'dir' argument determines the location of large database files
+```
+
+
+
+## Search for (unknown) experiments - by search terms
+
+```{r}
+searchForTerm(library_strategy = "ChIP-Seq", antibody = c("p53", "tp53"), species = c("9606", "10090"))
+```
+
+
+## Search for (known) experiments - by accession numbers
+
+```{r}
+searchForAccession("SRP010068")
+```
+
+
+## Convert between accession types
+
+```{r}
+df <- convertAccession("SRP010068")
+```
+
+
+---
+
+# SpideR Overview
+
+- what is SpideR for?
+- what are the requirements for using it?
+
+
+
+# SpideR Setup
+
+- Requirements (time and space)
+
+# Tasks
+
+- Search for unknown experiments by search terms
+- Search for known experiments by their accession number
+- Convert between accession types
+- Repeat SpideR query from the past (NOTE: db might have changed etc.)
+
+
+https://www.ncbi.nlm.nih.gov/taxonomy 

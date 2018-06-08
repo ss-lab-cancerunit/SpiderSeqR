@@ -6,8 +6,7 @@
 # - classifyAccession - given an accession vector, classifies it into correct class or returns an error if not all elements are matched to the same class
 # - vConditionVerifier - grepl'es on the input vector according to any of the regular expressions (an OR operation)
 
-# USES:
-# - digitSort - sorting by digits, disregarding preceding letters (NOT INCLUDED!)
+
 
 
 #USAGE

@@ -33,7 +33,7 @@ searchGEOForGSM <- function(acc_vector, geo_columns){
 
   #Remove duplicates and order
   acc_vector <- unique(acc_vector)
-  acc_vector <- acc_vector[digitSort(acc_vector)]
+  acc_vector <- acc_vector[orderAccessions(acc_vector)]
 
   #Stop if list is not valid (i.e. non-gsm entries)
   if (classifyAccession(acc_vector)!="gsm"){
@@ -92,7 +92,7 @@ searchGEOForGSE <- function(acc_vector, geo_columns){
   
   #Remove duplicates and order
   acc_vector <- unique(acc_vector)
-  acc_vector <- acc_vector[digitSort(acc_vector)]
+  acc_vector <- acc_vector[orderAccessions(acc_vector)]
 
   #Stop if list is not valid (i.e. non-gsm entries)
   if (classifyAccession(acc_vector)!="series_id"){
@@ -167,7 +167,7 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
   #------------------------------------------------
 
   x <- unique(acc_vector)
-  x <- x[digitSort(x)]
+  x <- x[orderAccessions(x)]
 
   #Make sure that the query will not be empty
   if (length(acc_vector)==0){
@@ -236,7 +236,7 @@ searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm"
   }
 
   acc_vector <- unique(acc_vector)
-  acc_vector <- acc_vector[digitSort(acc_vector)]
+  acc_vector <- acc_vector[orderAccessions(acc_vector)]
 
   srr_gsm_columns <- paste0(srr_gsm_columns, collapse = ", ")
 

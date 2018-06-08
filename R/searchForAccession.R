@@ -13,7 +13,7 @@ searchForAccession <- function(acc_vector){
   #
 
   x <- unique(acc_vector)
-  x <- x[digitSort(x)]
+  x <- x[orderAccessions(x)]
 
   accession_class <- classifyAccession(x)
 
@@ -66,7 +66,7 @@ searchForAccession_temp <- function(acc_vector){
   #
 
   x <- unique(acc_vector)
-  x <- x[digitSort(x)]
+  x <- x[orderAccessions(x)]
 
   accession_class <- classifyAccession(x)
 
