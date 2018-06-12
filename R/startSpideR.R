@@ -1,4 +1,91 @@
 
+
+#' Prepare the environment to run SpideR
+#' 
+#' \code{startSpideR} prepares the environment so that other SpideR functions can be used. Run \code{startSpideR} every time you begin with a clear environment and want to use any of the other SpideR functions.
+#' In particular, the function does the following:
+#' \itemize{
+#'     \item Ensure that SRAmetadb.sqlite is downloaded and up to date
+#'     \item Ensure that GEOmetadb.sqlite is downloaded and up to date
+#'     \item Ensure that SRR_GSM.sqlite is created and up to date
+#'     \item Set up database connections to the above files in the \code{.GlobalEnv}
+#' } 
+#' 
+#' 
+#' Depending on the contents of the specified directory, \code{startSpideR} may download/create the database files. It will always create the database connections in the global environment.
+#' 
+#' It is necessary to fulfil all the above requirements; without them the package will not work.
+#' The first two database files are relatively large in size (33 GB and 6 GB at the time of writing), so please ensure that you have adequate internet connection and sufficient disk space.
+#' 
+#' It is recommended that the newest version of the databases is used. However, it is possible to ignore this requirement by manually setting the expiry date of the files (or by running default settings of the function and selecting the option not to download the newer files).
+#' 
+#' 
+#' 
+#' @section When to run \code{startSpideR}?:
+#' 
+#' Run \code{startSpideR} every time you start with a fresh environment. There is no harm in running it too many times.
+#' 
+#' 
+#' 
+#' @section Which options to choose from \code{startSpideR} menu options?:
+#' 
+#' Should you have any missing or outdated files in the specified directory, \code{startSpideR} will offer to download/create the files. 
+#' 
+#' Please note that it is \emph{required} to have all the three database files; if you choose not to download/create them, it will not be possible to run other SpideR functions. 
+#' 
+#' However, it is \emph{not required} for all the files to be up-to-date; \code{startSpideR} will suggest re-downloading/re-creating the files, but you can still use SpideR, even if you do not agree to re-download/re-create the files.
+#' 
+#' 
+#' 
+#' @section Time and space requirements:
+#' 
+#' The following files must be present in order to run other SpideR functions; \code{startSpideR} will download/create them if necessary:
+#' \itemize{
+#'   \item SRAmetadb.sqlite (from SRAdb package)
+#'   \item GEOmetadb.sqlite (from GEOmetadb package)
+#'   \item SRR_GSM.sqlite (custom-made at the time of running \code{startSpideR})
+#' }
+#' 
+#' 
+#' They take approximately 40 GB of disk space (33 GB, 6 GB, <50 MB respectively at the time of writing), so please ensure that you have adequate internet connection and sufficient disk space. In order to save disk space, the previous files will be overwritten when downloading a newer version.
+#' 
+#' 
+#' Running \code{startSpideR} for the first time will inevitably take some time, because large database files need to be downloaded and custom database created. However, once all the files are present, the function should take an order of \emph{seconds} to complete (it is a matter of setting up database connections).
+#' 
+#' 
+#' 
+#' @examples 
+#' 
+#' # Database files are stored (or will be downloaded) 
+#' #    in the working directory
+#' startSpideR(dir = getwd()) 
+#' 
+#' # Use the following if you would like to download 
+#' #   the newest database files
+#' startSpideR(dir = getwd(), general_expiry = 0) 
+#' 
+#' # Use the following if you have old database files
+#' #   that you do not wish to re-download on this occasion
+#' startSpideR(dir = getwd(), general_expiry = 365) 
+#' 
+#' # Use the following if you only wish to ignore 
+#' #    an old SRAmetadb.sqlite file, 
+#' #    but get reminders to re-download the other files
+#' startSpideR(dir = getwd(), sra_expiry = 365) 
+#' 
+#' 
+#' 
+#' 
+#' @param dir Directory where database files will be stored
+#' @param general_expiry Maximum number of days since creation of all database files
+#' @param sra_expiry Maximum number of days since creation of SRAmetadb.sqlite file
+#' @param geo_expiry Maximum number of days since creation of GEOmetadb.sqlite file
+#' @param srr_gsm_expiry Maximum number of days since creation of SRR_GSM.sqlite file
+#' 
+#' @return Nothing. If necessary, it may download/create database files. Sets up database connections in the global environment.
+#' 
+#'
+#'
 #' @export
 startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_expiry){
   ori_wd <- getwd()

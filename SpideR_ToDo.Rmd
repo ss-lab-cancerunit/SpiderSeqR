@@ -29,21 +29,21 @@ In the meantime, please also refer to SpiderDev.Rmd.
 ----------------------------------------------------------------------------------------------------------------------
 Status Task
 ------ ---------------------------------------------------------------------------------------------------------------
- ...   Download and attach packages
+  +    Download and attach packages
 
- !!!   Connect to bioconductor packages
+ ...   Connect to bioconductor packages (need to double check whether it works!)
 
- !!!   Explicitly call package functions, i.e. package::function(); check if this is a common practice or not --> Hadley
+  +    Explicitly call package functions, i.e. package::function(); check if this is a common practice or not --> Hadley
 
- !!!   Decide on the location of the sqlite files
+  +    Decide on the location of the sqlite files
 
- !!!   Decide on the acceptable age of all the files (include SRA, GEO and  SRR_GSM)
+  +    Decide on the acceptable age of all the files (include SRA, GEO and  SRR_GSM)
 
- !!!   Decide on the way of enforcing file age (stop vs offer the chance to update)
+  +    Decide on the way of enforcing file age (stop vs offer the chance to update)
 
- !!!   Choose a method for establishing connections
+  +    Choose a method for establishing connections
 
- !!!   Display the current limit for database file age
+  +    Display the current limit for database file age
 ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -54,9 +54,9 @@ Status Task
 ----------------------------------------------------------------------------------------------------------------------
 Status Task
 ------ ---------------------------------------------------------------------------------------------------------------
- !!!   Rename internal functions and update namespace file
+ ...   Rename internal functions and update namespace file (gradually exporting functions)
 
- !!!   Introduce consistent grammatical form and spelling for function names
+ ...   Introduce consistent grammatical form and spelling for function names
 
  !!!   Introduce consistent naming of function variables
 ----------------------------------------------------------------------------------------------------------------------
@@ -95,6 +95,17 @@ Status Task
 ----------------------------------------------------------------------------------------------------------------------
 
 : searchForAccession
+
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ !!!   Make sure that the file extension corresponds to separator
+
+ !!!   Change function name to generateOutputs
+----------------------------------------------------------------------------------------------------------------------
+
+: outputGenerator
 
 
 ----------------------------------------------------------------------------------------------------------------------

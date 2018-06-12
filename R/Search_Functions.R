@@ -7,6 +7,26 @@
 #do.call(searchForTerm, st)
 
 
+#' Search for samples matching criteria of interest
+#' 
+#' \code{searchForTerm} provides an automated framework for searching for samples matching a range of different criteria from the SRA database. It also supplements the sample information with data from GEO.
+#' 
+#' 
+#' @param library_strategy Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one library_strategy is allowed in a single query
+#' @param gene A character vector with genes of interest (it is recommended to provide a few synonyms)
+#' @param antibody A character vector with antibodies of interest (it is recommended to provide a few synonyms, some studies annotate their antibodies with trade names/symbols)
+#' @param cell_type A character vector describing source types of interest (cell type, tissue, organ etc.)
+#' @param treatment A character vector with keywords regarding treatment protocol
+#' @param species A character vector with taxonomy IDs
+#' @param platform A character vector with sequencing platforms
+#' @param secondary_library_strategy Additional experimental method of interest filtered from the studies featured in search results
+#' 
+#' @return Nothing. Creates a range of files with the query information and search results.
+#' 
+#' 
+#' 
+#' 
+#' @export
 #NEW searchForTerm FUNCTION (in progress) - WILL BE COMPLETED IN INDEV3.R
 searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=NULL, treatment=NULL, species=NULL, platform=NULL, secondary_library_strategy=NULL){
   #Function for searching

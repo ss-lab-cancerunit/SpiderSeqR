@@ -53,13 +53,25 @@ outputGenerator <- function(df, ss=NULL, st){
   df$characteristics_ch1 <- unlist(lapply(df$characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
 
 
-  cwt <- function(object, filename){
+  # ===*=== TBD
+  cwt_prev <- function(object, filename){
     # Custom write table (a wrapper to unify the parameters)
+    # Previous settings, which didn't facilitate automatic opening by Excel
     utils::write.table(x = object,
                 file = filename,
                 sep = "\t",
                 row.names = FALSE,
                 quote = FALSE
+    )
+  }
+  
+  cwt <- function(object, filename){
+    # Custom write table (a wrapper to unify the parameters)
+    utils::write.table(x = object,
+                       file = filename,
+                       sep = ";",
+                       row.names = FALSE,
+                       quote = TRUE
     )
   }
 
