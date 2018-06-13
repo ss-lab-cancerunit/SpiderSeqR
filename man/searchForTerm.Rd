@@ -9,7 +9,7 @@ searchForTerm(library_strategy, gene = NULL, antibody = NULL,
   secondary_library_strategy = NULL)
 }
 \arguments{
-\item{library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq)}
+\item{library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one library_strategy is allowed in a single query}
 
 \item{gene}{A character vector with genes of interest (it is recommended to provide a few synonyms)}
 
