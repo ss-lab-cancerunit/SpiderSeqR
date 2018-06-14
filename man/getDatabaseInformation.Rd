@@ -2,7 +2,7 @@
 % Please edit documentation in R/getDatabaseInformation.R
 \name{getDatabaseInformation}
 \alias{getDatabaseInformation}
-\title{Get general information on database contents}
+\title{Get summaries of database contents}
 \usage{
 getDatabaseInformation()
 }
@@ -10,12 +10,13 @@ getDatabaseInformation()
 Data frame with requested information
 }
 \description{
-\code{getDatabaseInformation} allows users to get insights into the contents of the database. Run the function and select the menu option with summary of interest.
+\code{getDatabaseInformation} allows users to get insights into the contents of certain parts of the databases. Run the function and select the menu option with the summary of interest.
 }
 \section{Available information}{
 
 \itemize{
   \item \emph{Library_strategy counts in SRA database} - a dataframe with all the library strategies featuring in SRA and their counts
+  \item (more in progress... ===*===)
 }
 }
 

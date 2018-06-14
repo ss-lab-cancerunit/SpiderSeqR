@@ -573,8 +573,11 @@ universalSampleSheetGenerator <- function(df, library_strategy){
   print("universalSampleSheetGenerator completed")
   return(sample_sheet)
 }
+#============================================================================
 
 
+#============================================================================
+# chipSampleSheetGenerator()
 #============================================================================
 chipSampleSheetGenerator <- function(df){
   # Arg: df from which sample sheet will be generated
@@ -621,6 +624,10 @@ chipSampleSheetGenerator <- function(df){
 }
 #============================================================================
 
+
+
+#============================================================================
+# rnaSampleSheetGenerator()
 #============================================================================
 rnaSampleSheetGenerator <- function(df){
   # Arg: df from which sample sheet will be generated
@@ -667,6 +674,10 @@ rnaSampleSheetGenerator <- function(df){
 }
 #============================================================================
 
+
+
+#============================================================================
+# otherSampleSheetGenerator()
 #============================================================================
 otherSampleSheetGenerator <- function(df){
   # Arg: df from which sample sheet will be generated
@@ -715,8 +726,6 @@ otherSampleSheetGenerator <- function(df){
 }
 #============================================================================
 
-#============================================================================
-#============================================================================
 
 
 

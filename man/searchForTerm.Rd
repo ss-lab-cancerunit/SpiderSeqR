@@ -9,7 +9,7 @@ searchForTerm(library_strategy, gene = NULL, antibody = NULL,
   secondary_library_strategy = NULL)
 }
 \arguments{
-\item{library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one library_strategy is allowed in a single query}
+\item{library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one library_strategy is allowed in a single query. To get a list of available library strategies, run \code{ getDatabaseInformation()}}
 
 \item{gene}{A character vector with genes of interest (it is recommended to provide a few synonyms)}
 
@@ -31,3 +31,10 @@ Nothing. Creates a range of files with the query information and search results.
 \description{
 \code{searchForTerm} provides an automated framework for searching for samples matching a range of different criteria from the SRA database. It also supplements the sample information with data from GEO.
 }
+\section{Argument requirements}{
+
+\strong{REQUIRED}: library_strategy AND at least one of gene, antibody, cell_type or treatment
+
+\strong{OPTIONAL}: species, platform, secondary_library_strategy
+}
+

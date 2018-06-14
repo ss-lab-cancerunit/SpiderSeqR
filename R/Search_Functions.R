@@ -12,7 +12,7 @@
 #' \code{searchForTerm} provides an automated framework for searching for samples matching a range of different criteria from the SRA database. It also supplements the sample information with data from GEO.
 #' 
 #' 
-#' @param library_strategy Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one library_strategy is allowed in a single query
+#' @param library_strategy Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one library_strategy is allowed in a single query. To get a list of available library strategies, run \code{ getDatabaseInformation()}
 #' @param gene A character vector with genes of interest (it is recommended to provide a few synonyms)
 #' @param antibody A character vector with antibodies of interest (it is recommended to provide a few synonyms, some studies annotate their antibodies with trade names/symbols)
 #' @param cell_type A character vector describing source types of interest (cell type, tissue, organ etc.)
@@ -22,6 +22,11 @@
 #' @param secondary_library_strategy Additional experimental method of interest filtered from the studies featured in search results
 #' 
 #' @return Nothing. Creates a range of files with the query information and search results.
+#' 
+#' @section Argument requirements:
+#' \strong{REQUIRED}: library_strategy AND at least one of: gene, antibody, cell_type or treatment
+#' 
+#' \strong{OPTIONAL}: species, platform, secondary_library_strategy
 #' 
 #' 
 #' 
@@ -34,6 +39,7 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #REQUIRED: library_strategy AND at least one of gene, antibody, cell_type or treatment
   #OPTIONAL: species, platform, secondary_library_strategy
 
+  
   #============================================================================
   # Checking arguments
   #============================================================================
@@ -43,7 +49,23 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
 
   e <- environment()
 
-  supported_library_strategy <- c("ChIP-Seq", "RNA-Seq")
+  # The top 15 most popular entries for library_strategy
+  supported_library_strategy <- c("WGS",
+                                  "AMPLICON",
+                                  "RNA-Seq",
+                                  "OTHER",
+                                  "WXS",
+                                  "ChIP-Seq",
+                                  "CLONE",
+                                  "POOLCLONE",
+                                  "Bisulfite-Seq",
+                                  "SELEX",
+                                  "miRNA-Seq",
+                                  "WGA",
+                                  "RAD-Seq",
+                                  "Targeted-Capture",
+                                  "ATAC-seq")
+  
   supported_secondary_library_strategy <- supported_library_strategy
 
   #Require library_strategy (not missing, not NULL, not "", not a vector of length >1, must belong to the list)
@@ -59,10 +81,10 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
     stop("Only one library_strategy can be supported at any given time")
   } else if (!(library_strategy %in% supported_library_strategy)){
     sls <- paste(supported_library_strategy, collapse = ", ")
-    stop(paste0("Library strategy does not belong to the list of supported library strategies. Please try one of: ", sls, "."))
+    warning(paste0("Library strategy does not belong to the recommended options. If you do not get satisfying results, please try one of: ", sls, ". Alternatively, check your options with getDatabaseInformation()"))
   }
 
-
+  
   #Check validity of secondary_library_strategy (may be NULL, BUT not NA, not "", all elements belong to the list)
   if (!is.null(secondary_library_strategy)){
     if (is.na(secondary_library_strategy)){
