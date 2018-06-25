@@ -8,6 +8,18 @@
 \description{
 SpideR integrates different sources of sequencing data and automates the search and retrieval of information.
 }
+\section{SpideR functions}{
+
+\itemize{
+  \item \code{\link{startSpideR}} - always run it before using SpideR
+  \item \code{\link{searchForTerm}} - search for experiments of interest
+  \item \code{\link{convertAccession}} - convert between accession types
+  \item \code{\link{searchForAccession}} - search for specific experiments (output similar to that of \code{\link{searchForTerm}})
+  \item \code{\link{reproduceResults}} (name to be changed) - run the queries again
+  \item \code{\link{getDatabaseInformation}} - get basic information on databases (interactive function)
+}
+}
+
 \section{Things to include here ===*===}{
 
 
@@ -16,18 +28,6 @@ SpideR integrates different sources of sequencing data and automates the search 
   \item Explicit links to information on setup
   \item List of databases accessed by SpideR
   \item Main functions (under development)
-}
-}
-
-\section{SpideR functions}{
-
-\itemize{
-  \item \code{\link{startSpideR}}
-  \item \code{\link{searchForTerm}}
-  \item \code{\link{searchSRA}}
-  \item searchForAccession
-  \item convertAccession
-  \item reproduceResults (name to be changed)
 }
 }
 

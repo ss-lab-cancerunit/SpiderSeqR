@@ -28,6 +28,9 @@
 #' 
 #' \strong{OPTIONAL}: species, platform, secondary_library_strategy
 #' 
+#' @section Further information:
+#' For further information (especially on the output files) please refer to the package vignettes.
+#' 
 #' 
 #' 
 #' 

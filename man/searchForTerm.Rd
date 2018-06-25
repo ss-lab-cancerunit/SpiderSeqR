@@ -33,8 +33,13 @@ Nothing. Creates a range of files with the query information and search results.
 }
 \section{Argument requirements}{
 
-\strong{REQUIRED}: library_strategy AND at least one of gene, antibody, cell_type or treatment
+\strong{REQUIRED}: library_strategy AND at least one of: gene, antibody, cell_type or treatment
 
 \strong{OPTIONAL}: species, platform, secondary_library_strategy
+}
+
+\section{Further information}{
+
+For further information (especially on the output files) please refer to the package vignettes.
 }
 
