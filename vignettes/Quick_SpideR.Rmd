@@ -1,0 +1,79 @@
+---
+title: "Quick SpideR"
+author: "AS"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+Quick SpideR - cheat sheet with rapid intro to SpideR package.
+
+
+# Why SpideR?
+SpideR allows for search and retrieval of data from SRA and GEO databases.  
+
+
+
+# Setup
+
+You must run the following in order to start using SpideR.  
+
+```{r, eval = FALSE}
+library(SpideR)
+startSpideR(dir=getwd()) # The 'dir' argument determines the location of large database files
+```
+
+
+# SpideR by Task
+For more detailed information, please refer to the main package vignette.  
+
+The subsections below introduce typical tasks and examples of how they can be completed using main SpideR functions.  
+
+
+## Search for (unknown) experiments - by search terms (searchForTerm)
+
+**TASK:** *"I would like to find the ChIP-Seq experiments that were done about p53 on human and mouse systems."*  
+```{r, eval = FALSE}
+searchForTerm(library_strategy = "ChIP-Seq", antibody = c("p53", "tp53"), species = c("9606", "10090"))
+```
+
+
+
+## Search for (known) experiments - by accession numbers (searchForAccession)
+
+**TASK:** *"I would like to retrieve a handy list of samples from a study I already know."*  
+```{r, eval = FALSE}
+searchForAccession("SRP010068")
+```
+
+
+## Convert between accession types (convertAccession)
+**TASK:** *"I have a study accession number and would like to find a list of sample accessions that belong to it."*  
+```{r, eval = FALSE}
+df <- convertAccession("SRP010068") 
+```
+
+Note that, unlike in the examples above, here we save the result to a data frame (the functions above generated output files on your computer).  
+<br>
+
+
+**TASK:** *"I would like to convert a list of accessions in SRA to accessions in GEO."*  
+```{r, eval = FALSE}
+x <- c("SRR7348421", "SRR7348425", "SRR7348430")
+df <- convertAccession(x)
+```
+
+
+
+## Find out more about the databases (getDatabaseInformation)
+
+**TASK:** *"I would like to know what are the experiment types (library_strategy) featured in the database."*
+```{r, eval = FALSE}
+getDatabaseInformation() #choose a relevant option from the menu when it appears
+```
+
+

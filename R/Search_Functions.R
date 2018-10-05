@@ -9,7 +9,7 @@
 
 #' Search for samples matching criteria of interest
 #' 
-#' \code{searchForTerm} provides an automated framework for searching for samples matching a range of different criteria from the SRA database. It also supplements the sample information with data from GEO.
+#' \code{searchForTerm} provides an automated framework for searching within SRA database for samples matching a range of different criteria (e.g. experimental method, tissue type). It also supplements the sample information with data from GEO (if available).
 #' 
 #' 
 #' @param library_strategy Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one library_strategy is allowed in a single query. To get a list of available library strategies, run \code{ getDatabaseInformation()}
@@ -17,7 +17,7 @@
 #' @param antibody A character vector with antibodies of interest (it is recommended to provide a few synonyms, some studies annotate their antibodies with trade names/symbols)
 #' @param cell_type A character vector describing source types of interest (cell type, tissue, organ etc.)
 #' @param treatment A character vector with keywords regarding treatment protocol
-#' @param species A character vector with taxonomy IDs
+#' @param species A character vector with taxonomy IDs (e.g. "9606" for human)
 #' @param platform A character vector with sequencing platforms
 #' @param secondary_library_strategy Additional experimental method of interest filtered from the studies featured in search results
 #' 
@@ -32,6 +32,10 @@
 #' For further information (especially on the output files) please refer to the package vignettes.
 #' 
 #' 
+#' @examples
+#' searchForTerm(library_strategy = "RNA-Seq", gene = c("p53", "tp53"), species = "9606") 
+#' st <- list(library_strategy="ChIP-Seq", gene="STAT1", antibody="STAT1", secondary_library_strategy = "RNA-Seq")
+#' do.call(searchForTerm, st)
 #' 
 #' 
 #' @export

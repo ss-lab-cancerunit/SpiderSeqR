@@ -54,6 +54,8 @@ searchForAccessionAcrossDBs <- function(acc_vector, sra_columns, geo_columns){
     #TEMP
     .GlobalEnv$temp_geo_df <- geo_df
     #...
+    
+    if (dim(geo_df)[1]==0) stop("No matching entries found")
 
     #saveRDS(geo_df, "geo_df.Rda")
 
@@ -111,6 +113,8 @@ searchForAccessionAcrossDBs <- function(acc_vector, sra_columns, geo_columns){
     .GlobalEnv$temp_sra_df <- sra_df
     #...
 
+    if (dim(sra_df)[1]==0) stop("No matching entries found")
+    
     #SRR_GSM data frame
     srr_gsm_df <- searchSRR_GSM(sra_df$run_accession)
 
