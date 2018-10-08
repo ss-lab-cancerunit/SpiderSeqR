@@ -1,0 +1,106 @@
+---
+title: "SpideR Guide"
+author: "AS"
+date: "`r Sys.Date()`"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Vignette Title}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+
+# Sources of Documentation
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(eval = FALSE)
+```
+
+This vignette aims to provide the most comprehensive piece of documentation on the SpideR package.  
+<br>
+For quick reference, please refer to Quick_SpideR vignette.  
+<br>
+Package documentation can also be viewed via help pages, i.e.  
+```{r}
+#Main page of package documentation
+package?SpideR
+
+# Documentation for individual functions
+?searchForTerm
+?searchForAccession
+#etc.
+```
+
+
+# SpideR Overview
+
+SpideR allows for search and retrieval of data from SRA and GEO databases.  
+Its aim is to provide a more unified framework to access these two databases, integrate information between them and allow efficient and convenient retrieval of the data.  
+It can be used in a variety of ways including tasks such as:  
+
+- Searching for experiments that were done about X  
+- Searching for experiments based on their accession number  
+- Converting between accession numbers  
+
+# Requirements
+
+SpideR relies on the SRAdb and GEOmetadb packages. They provide large database files (at the time of writing about 40 GB in total).  
+The user can specify the location of these files when running startSpideR(dir="Path_To_Folder_Of_Interest").  
+
+<br>
+In general, the requirements for running SpideR include:  
+
+- R (we recommend to use it via RStudio)  
+- dependency R packages (as per DESCRIPTION file), including:  
+    * SRAdb  
+    * GEOmetadb 
+    * **NOTE:** these two need to be installed manually via Bioconductor  
+- at least 40 GB of free disc space  
+
+
+# Setup
+
+1. Before proceeding, please ensure that you have the following packages installed (they are distributed via Bioconductor):
+
+- SRAdb
+- GEOmetadb
+
+2. Install SpideR.
+
+Under the development version ===*===, this is done by downloading the SpideR directory, opening a session in that directory and running:
+```{r}
+devtools::load_all()
+```
+
+
+3. Initialise SpideR.
+
+This has to be done every time you want to use SpideR in a new session.
+
+```{r}
+startSpideR(dir=getwd()) # dir specifies the location where database files will be stored
+```
+
+
+It may take a considerable amount of time the first time it is run. This is due to the need for downloading large database files and creating an extra custom database.  
+However, once these are in place, the above command should take a matter of seconds or less.  
+
+# SpideR by Functions
+
+## Brief Overview
+
+1. searchForTerm - search for (unknown) experiments matching search terms of interest
+2. searchForAccession - search for (known) experiments which match the accession numbers
+3. accessionConverter - convert between SRA and/or GEO accessions
+4. reproduceResults / rerunQuery ===*=== - run again a SpideR query from the past (NB: the results might differ if the database changed)
+5. getDatabaseInformation - get basic information about the databases
+
+
+
+
+
+-------
+
+
+
+https://www.ncbi.nlm.nih.gov/taxonomy 

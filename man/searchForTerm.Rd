@@ -5,8 +5,8 @@
 \title{Search for samples matching criteria of interest}
 \usage{
 searchForTerm(library_strategy, gene = NULL, antibody = NULL,
-  cell_type = NULL, treatment = NULL, species = NULL, platform = NULL,
-  secondary_library_strategy = NULL)
+  cell_type = NULL, treatment = NULL, species = NULL,
+  platform = NULL, secondary_library_strategy = NULL)
 }
 \arguments{
 \item{library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one library_strategy is allowed in a single query. To get a list of available library strategies, run \code{ getDatabaseInformation()}}
@@ -19,7 +19,7 @@ searchForTerm(library_strategy, gene = NULL, antibody = NULL,
 
 \item{treatment}{A character vector with keywords regarding treatment protocol}
 
-\item{species}{A character vector with taxonomy IDs}
+\item{species}{A character vector with taxonomy IDs (e.g. "9606" for human)}
 
 \item{platform}{A character vector with sequencing platforms}
 
@@ -29,7 +29,7 @@ searchForTerm(library_strategy, gene = NULL, antibody = NULL,
 Nothing. Creates a range of files with the query information and search results.
 }
 \description{
-\code{searchForTerm} provides an automated framework for searching for samples matching a range of different criteria from the SRA database. It also supplements the sample information with data from GEO.
+\code{searchForTerm} provides an automated framework for searching within SRA database for samples matching a range of different criteria (e.g. experimental method, tissue type). It also supplements the sample information with data from GEO (if available).
 }
 \section{Argument requirements}{
 
@@ -43,3 +43,10 @@ Nothing. Creates a range of files with the query information and search results.
 For further information (especially on the output files) please refer to the package vignettes.
 }
 
+\examples{
+searchForTerm(library_strategy = "RNA-Seq", gene = c("p53", "tp53"), species = "9606") 
+st <- list(library_strategy="ChIP-Seq", gene="STAT1", antibody="STAT1", secondary_library_strategy = "RNA-Seq")
+do.call(searchForTerm, st)
+
+
+}

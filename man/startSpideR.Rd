@@ -4,7 +4,8 @@
 \alias{startSpideR}
 \title{Prepare the environment to run SpideR}
 \usage{
-startSpideR(dir, general_expiry = 90, sra_expiry, geo_expiry, srr_gsm_expiry)
+startSpideR(dir, general_expiry = 90, sra_expiry, geo_expiry,
+  srr_gsm_expiry)
 }
 \arguments{
 \item{dir}{Directory where database files will be stored}
