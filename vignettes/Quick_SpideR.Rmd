@@ -19,6 +19,14 @@ SpideR allows for search and retrieval of data from SRA and GEO databases.
 
 
 # Setup
+To begin with, ensure that you have the following installed:
+
+- R
+- SpideR
+- SRAdb
+- GEOmetadb
+- any additional package dependencies (as prompted during SpideR installation process)
+
 
 You must run the following in order to start using SpideR.  
 

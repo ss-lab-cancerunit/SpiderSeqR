@@ -16,9 +16,9 @@ vignette: >
 knitr::opts_chunk$set(eval = FALSE)
 ```
 
-This vignette aims to provide the most comprehensive piece of documentation on the SpideR package.  
+This vignette aims to provide the most comprehensive piece of documentation on the SpideR package (NOTE: currently under construction ===*=== ).  
 <br>
-For quick reference, please refer to Quick_SpideR vignette.  
+For a quick reference, please refer to Quick_SpideR vignette.  
 <br>
 Package documentation can also be viewed via help pages, i.e.  
 ```{r}
@@ -82,8 +82,14 @@ startSpideR(dir=getwd()) # dir specifies the location where database files will 
 ```
 
 
-It may take a considerable amount of time the first time it is run. This is due to the need for downloading large database files and creating an extra custom database.  
+It may take a considerable amount of time the first time it is run. This is due to the need for downloading large database files and creating an extra custom database. 
+
+
 However, once these are in place, the above command should take a matter of seconds or less.  
+
+NOTE: it is necessary to download large database files in order to use any of the SpideR functions. However, it is not strictly necessary to have the most up-to-date files; the SpideR will work even if startSpideR generates warnings to get newer database files.
+
+
 
 # SpideR by Functions
 
@@ -92,7 +98,7 @@ However, once these are in place, the above command should take a matter of seco
 1. searchForTerm - search for (unknown) experiments matching search terms of interest
 2. searchForAccession - search for (known) experiments which match the accession numbers
 3. accessionConverter - convert between SRA and/or GEO accessions
-4. reproduceResults / rerunQuery ===*=== - run again a SpideR query from the past (NB: the results might differ if the database changed)
+4. reproduceResults / rerunQuery (function name will be changed ===*=== ) - run again a SpideR query from the past (NB: the results might differ if the database changed)
 5. getDatabaseInformation - get basic information about the databases
 
 
