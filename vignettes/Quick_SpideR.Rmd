@@ -10,7 +10,7 @@ vignette: >
 ---
 
 
-Quick SpideR - cheat sheet with rapid intro to SpideR package.
+Quick SpideR - a cheat sheet with rapid intro to SpideR package.
 
 
 # Why SpideR?

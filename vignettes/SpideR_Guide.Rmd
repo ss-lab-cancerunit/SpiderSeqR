@@ -103,6 +103,23 @@ NOTE: it is necessary to download large database files in order to use any of th
 
 
 
+## Search for (known) experiments - by accession numbers (searchForAccession)
+
+**TASK:** *"I would like to retrieve a handy list of samples from a study I already know."*  
+```{r, eval = FALSE}
+searchForAccession("SRP010068")
+```
+
+
+To be included: ===*===
+
+- what is this function for
+- argument requirements
+- explanation on the format of the arguments (vector vs not, matches)
+- info on outputs and file naming
+- advice on what to do to maximise results (e.g. flexible search, other library strategy)
+
+
 
 
 -------

@@ -21,11 +21,15 @@ getDatabaseInformation <- function(){
   
   
   print("What kind of database information are you interested in?")
-  menu_options <- menu(c("Available library_strategy types (and their counts)", #1
-                         "Available taxon_id's (and their counts)", #2
-                         "Available source_name_ch1 (and their counts)", #3
-                         "Available label_ch1 (and their counts)", #4
-                         "Available molecule_ch1 (and their counts)", #5
+  menu_options <- menu(c("SRA: Available library_strategy types (and their counts)", #1
+                         "SRA: Available taxon_id's (and their counts)", #2
+                         "GEO: Available source_name_ch1 (and their counts)", #3
+                         "GEO: Available label_ch1 (and their counts)", #4
+                         "GEO: Available molecule_ch1 (and their counts)", #5
+                         "SRA: Number of run accessions", #6
+                         "SRA: Number of experiment accessions", #7
+                         "SRA: Number of sample accessions", #8
+                         "SRA: Number of study accessions", #9
                          "None (exit)"))
   
   
@@ -37,7 +41,7 @@ getDatabaseInformation <- function(){
     #rownames(df) <- NULL
     return(df)
     
-  } else if (menu_options ==2 ){
+  } else if (menu_options == 2 ){
     df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)), "SELECT taxon_id, count(*) AS count FROM sra GROUP BY taxon_id ORDER BY count DESC")
     return(df)
     
@@ -54,6 +58,26 @@ getDatabaseInformation <- function(){
     return(df)
     
   } else if (menu_options == 6){
+    
+    df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)), "SELECT count (DISTINCT run_accession) FROM sra")
+    return(df)
+    
+  } else if (menu_options == 7){
+    
+    df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)), "SELECT count (DISTINCT experiment_accession) FROM sra")
+    return(df)
+    
+  } else if (menu_options == 8){
+    
+    df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)), "SELECT count (DISTINCT sample_accession) FROM sra")
+    return(df)
+    
+  } else if (menu_options == 9){
+    
+    df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)), "SELECT count (DISTINCT study_accession) FROM sra")
+    return(df)
+    
+  } else if (menu_options == 10){
     
     print("Nothing to investigate")
     return(NULL)
