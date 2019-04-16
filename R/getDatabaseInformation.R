@@ -7,8 +7,15 @@
 #' @return Data frame with requested information
 #' 
 #' @section Available information:
+#' In order to obtain the most up to date list of available information, run the function
+#' Currently, it includes:
 #' \itemize{
 #'   \item \emph{Library_strategy counts in SRA database} - a dataframe with all the library strategies featuring in SRA and their counts
+#'   \item \emph{taxon_id's and their counts}
+#'   \item \emph{source_name_ch1 and their counts}
+#'   \item \emph{label_ch and their counts}
+#'   \item \emph{molecule_ch1 and their counts}
+#'   \item \emph{Number of accessions} in the SRA and GEO databases
 #'   \item (more in progress... ===*===)
 #' }
 #' 
@@ -26,10 +33,10 @@ getDatabaseInformation <- function(){
                          "GEO: Available source_name_ch1 (and their counts)", #3
                          "GEO: Available label_ch1 (and their counts)", #4
                          "GEO: Available molecule_ch1 (and their counts)", #5
-                         "SRA: Number of run accessions", #6
-                         "SRA: Number of experiment accessions", #7
-                         "SRA: Number of sample accessions", #8
-                         "SRA: Number of study accessions", #9
+                         "SRA: Number of run accessions (SRR)", #6
+                         "SRA: Number of experiment accessions (SRX)", #7
+                         "SRA: Number of sample accessions (SRS)", #8
+                         "SRA: Number of study accessions (SRP)", #9
                          "None (exit)"))
   
   
