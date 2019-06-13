@@ -19,7 +19,7 @@ SpideR allows for search and retrieval of data from SRA and GEO databases.
 
 
 # Setup
-To begin with, ensure that you have the following installed:
+In order to use SpideR, please ensure that you have the following installed:
 
 - R
 - SpideR
@@ -28,11 +28,11 @@ To begin with, ensure that you have the following installed:
 - any additional package dependencies (as prompted during SpideR installation process)
 
 
-You must run the following in order to start using SpideR.  
+You must run the following in order to start using SpideR (this should be done every time a new session is commenced).  
 
 ```{r, eval = FALSE}
 library(SpideR)
-startSpideR(dir=getwd()) # The 'dir' argument determines the location of large database files
+startSpideR(dir=getwd()) # The 'dir' argument determines the location of large database files (running this command for the first time can be time consuming, but will be fast on all successive runs provided that the directory does not change)
 ```
 
 
