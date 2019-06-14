@@ -257,12 +257,15 @@ convertAccession <- function(acc_vector){
   #output_df <- output_df[ , c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id", "gsm_check")]
   output_df <- output_df[ , c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id")] # Remove gsm_check
   
+  temp_unordered_output_df <- output_df #===*===
+  
   order_columns <- list(output_df$study_accession, 
                         output_df$sample_accession,
                         output_df$experiment_accession,
                         output_df$run_accession,
                         output_df$series_id,
                         output_df$gsm)
+  
   output_df <- output_df[orderAccessions(order_columns), ]
   
   return(output_df)
