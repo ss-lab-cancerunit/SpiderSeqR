@@ -25,4 +25,4 @@ Imports:
     SRAdb (>= 1.40),
     GEOmetadb (>= 1.40),
     utils
-RoxygenNote: 6.1.0
+RoxygenNote: 6.1.1

@@ -473,39 +473,112 @@ filenameGenerator_acc <- function(library_strategy, accession, output, file_type
 #' 
 orderAccessions <- function(x, na.last = TRUE){
   # Steps (separate tracks for lists and vectors):
-  # - warning if not just alphanumeric (correct for NAs)
-  # - remove alpha
+  # - warning if not just alphanumeric (correct for NAs). NOTE: can contain commas
+  # - identify elements which contain commas
+  # - for comma entries:
+  #      - separate by commas
+  #      - remove letters
+  #      - convert to numeric
+  #      - find the smallest number
+  # - for non-comma entries: remove alpha
   # - sort by numeric
   
   print("Running orderAccessions")
   
-  if (is.list(x)){
+  if (is.list(x)){ #Input is a list
+    
     x_num <- list()
     
     for (i in seq_along(x)){
       
       
-      n_nas <- sum(is.na(x[[i]])) # NOTE: NAs do not give TRUE on grepl below
-      if ( sum(grepl("^[[:alnum:]]*$", x[[i]])) != (length(x[[i]]) - n_nas) ){
-        stop("Only alphanumeric characters are allowed")
+      #n_nas <- sum(is.na(x[[i]])) # NOTE: NAs do not give TRUE on grepl below
+      ##if ( sum(grepl("^[[:alnum:]]*$", x[[i]])) != (length(x[[i]]) - n_nas) ){
+      #if ( sum(grepl("^[a-zA-Z0-9,]*$", x[[i]])) != (length(x[[i]]) - n_nas) ){ # Relaxed constraints to include comma
+      #  stop("Only alphanumeric characters are allowed")
+      #}
+      
+      checkCondition("^[a-zA-Z0-9,]*$", x[[i]])
+      
+      x_num[[i]] <- rep(NA, length(x[[i]])) #Initialise the subset of the list with a correct length
+      
+      comma_ind <- grepl(",", x[[i]])
+      #print(comma_ind)
+      
+      #Special treatment for entries with commas (superseries)
+      for (j in seq_along(x[[i]])){
+        if (comma_ind[j]){
+          a <- x[[i]][j] #Get the current entry
+          #print(a)
+          a <- unlist(strsplit(a, split = ",")) #Now a vector (split by commas)
+          #print(a)
+          
+          checkCondition("^[[:alnum:]]*$", a)
+          
+          a <- as.numeric(gsub("[[:alpha:]]", "", a)) #Remove letters
+          #print(a)
+          a <- min(a) #Set as minimum
+          
+          #print(a)
+          x_num[[i]][j] <- a
+          #print(a)
+        }
+        
       }
       
+      
+      
       #Remove alphanumeric characters and convert remainder to numeric
-      x_num[[i]] <- as.numeric(gsub("[[:alpha:]]", "", x[[i]]))
+      x_num[[i]][!comma_ind] <- as.numeric(gsub("[[:alpha:]]", "", x[[i]][!comma_ind]))
       
     }
     
     ord <- do.call(order, c(x_num, na.last = na.last))
     
-  } else {
+  } else { #Input is not a list
     
-    n_nas <- sum(is.na(x)) # NOTE: NAs do not give TRUE on grepl below
-    if ( sum(grepl("^[[:alnum:]]*$", x)) != (length(x) - n_nas) ){
-      stop("Only alphanumeric characters are allowed")
+    
+    
+    #n_nas <- sum(is.na(x)) # NOTE: NAs do not give TRUE on grepl below
+    ##if ( sum(grepl("^[[:alnum:]]*$", x)) != (length(x) - n_nas) ){
+    #if ( sum(grepl("^[a-zA-Z0-9,]*$", x)) != (length(x) - n_nas) ){  
+    #  stop("Only alphanumeric characters are allowed")
+    #}
+    
+    checkCondition("^[a-zA-Z0-9,]*$", x)
+    
+    
+    x_num <- rep(NA, length(x)) #Initialise the subset of the list with a correct length
+    
+    comma_ind <- grepl(",", x)
+    #print(comma_ind)
+    
+    #Special treatment for entries with commas (superseries)
+    for (j in seq_along(x)){
+      if (comma_ind[j]){
+        a <- x[j] #Get the current entry
+        #print(a)
+        a <- unlist(strsplit(a, split = ",")) #Now a vector (split by commas)
+        #print(a)
+        
+        checkCondition("^[[:alnum:]]*$", a)
+        
+        a <- as.numeric(gsub("[[:alpha:]]", "", a)) #Remove letters
+        #print(a)
+        a <- min(a) #Set as minimum
+        
+        #print(a)
+        x_num[j] <- a
+        #print(a)
+      }
+      
     }
     
+    
     #Remove alphanumeric characters and convert remainder to numeric
-    x_num <- as.numeric(gsub("[[:alpha:]]", "", x))
+    x_num[!comma_ind] <- as.numeric(gsub("[[:alpha:]]", "", x[!comma_ind]))
+    
+    
     
     ord <- do.call(order, list(x_num, na.last = na.last))
     
@@ -519,6 +592,42 @@ orderAccessions <- function(x, na.last = TRUE){
 
 #============================================================================
 
+
+
+
+#============================================================================
+# checkCondition()
+#============================================================================
+#' Check Condition
+#' 
+#' \code{checkCondition} verifies a condition (using grepl), ignoring any NA elements in a vector
+#' 
+#' @param x Character vector (or list containing character vectors) to be checked
+#' @param condition String with a regular expression to be checked
+#' @param message Error message to be displayed (not required)
+#' @return Nothing. Produces an error message if condition is not fulfilled in all vector elements
+#' 
+#' @keywords internal
+#' 
+#' 
+checkCondition <- function(condition, x, message){
+  
+  n_nas <- sum(is.na(x))
+  
+  #print(sum(grepl(condition, x)))
+  #print((length(x)-n_nas))
+  
+  if (sum(grepl(condition, x)) != (length(x)-n_nas)){
+    if (missing(message)){
+      stop("The string contains forbidden characters")
+    } else {
+      stop(message)
+    }
+  }
+  
+}
+
+#============================================================================
 
 
 

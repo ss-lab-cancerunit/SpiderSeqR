@@ -37,6 +37,9 @@ getDatabaseInformation <- function(){
                          "SRA: Number of experiment accessions (SRX)", #7
                          "SRA: Number of sample accessions (SRS)", #8
                          "SRA: Number of study accessions (SRP)", #9
+                         "SRA: Random sample of the database (size 20)", #10
+                         "GEO: Random sample of the GSM database (size 20)", #11
+                         "GEO: Random sample of the GSE database (size 20)", #12
                          "None (exit)"))
   
   
@@ -85,6 +88,18 @@ getDatabaseInformation <- function(){
     return(df)
     
   } else if (menu_options == 10){
+    
+    df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)), "SELECT * FROM sra ORDER BY RANDOM() LIMIT 20")
+    
+  } else if (menu_options == 11){
+    
+    df <- DBI::dbGetQuery(get(geo_database_name, envir = get(database_env)), "SELECT * FROM gsm ORDER BY RANDOM() LIMIT 20")
+    
+  } else if (menu_options == 12){
+    
+    df <- DBI::dbGetQuery(get(geo_database_name, envir = get(database_env)), "SELECT * FROM gse ORDER BY RANDOM() LIMIT 20")
+    
+  } else if (menu_options == 13){
     
     print("Nothing to investigate")
     return(NULL)

@@ -263,7 +263,7 @@ convertAccession <- function(acc_vector){
                         output_df$sample_accession,
                         output_df$experiment_accession,
                         output_df$run_accession,
-                        output_df$series_id,
+                        #output_df$series_id,
                         output_df$gsm)
   
   output_df <- output_df[orderAccessions(order_columns), ]
