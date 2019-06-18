@@ -1642,17 +1642,18 @@ superseriesVerifier <- function(gse_list){
 
 
 #----------------------------------------------------------------------------
-# converLibraryStrategy
+# manageLibraryStrategy
 #----------------------------------------------------------------------------
 #'
 #'
-#' Convert Between Library Strategy Formats
+#' Manage Library Strategy Formats
 #' 
-#' \code{convertLibraryStrategy} converts between different formats of library strategy strings
+#' \code{manageLibraryStrategy} by default converts between different formats of library strategy strings and offers a few other tasks related to library strategies
 #' 
 #' @param x Character vector to be converted
 #' @param input String denoting the input format (see below)
 #' @param output String denoting the output format (see below)
+#' @param task String denoting the task to be performed (see below)
 #' @param mismatch.ignore Logical denoting whether mismatches are allowed (if TRUE and no match, original character is returned)
 #' 
 #' @return Library strategy in a desired format
@@ -1664,20 +1665,42 @@ superseriesVerifier <- function(gse_list){
 #'     \item syn (synonyms) - potential synonym
 #' }
 #' 
+#' 
+#' Available tasks:
+#' \enumerate{
+#'     \item conv - convert between formats
+#'     \item ex - produce a list of library strategies
+#'     \item check_can - check if x is in canonical form
+#' }
+#' 
+#' 
 #' Currently, the function supports the following conversions:
 #' \enumerate{
-#'     \item can -> short
-#'     \item syn -> can
+#'     \item can -> short, i.e. input = "can", ouput = "short"
+#'     \item syn -> can, i.e. input = "syn", output = "can"
 #' }
+#' 
+#' 
+#' 
+#' @examples
+#' 
+#' manageLibraryStrategy("RNA-Seq", input = "can", output = "short") #Convert into short form
+#' 
+#' manageLibraryStrategy("RNA", input = "syn", output = "can") #Convert into canonical form
+#' 
+#' manageLibraryStrategy(task = "ex") #List supported formats for library strategy
+#' 
+#' manageLibraryStrategy("RNA-Seq", task = "check_can") #Check whether library strategy is in canonical form
+#' 
 #' 
 #' 
 #' 
 #' @keywords internal
 #' 
 #' 
-convertLibraryStrategy <- function(x, input, output, mismatch.ignore = FALSE){
+manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore = FALSE){
   
-  print("Running convertLibraryStrategy")
+  print("Running manageLibraryStrategy")
   
   
   
@@ -1748,11 +1771,29 @@ convertLibraryStrategy <- function(x, input, output, mismatch.ignore = FALSE){
   }
   
   
+  #Non-converting tasks
+  if (task == "ex"){ #Special track for task == "ex"
+
+    y <- list(Canonical_Forms = can,
+              Short_Forms = short, 
+              Currently_Accepted_Synonyms = syn)
+    print("manageLibraryStrategy completed")
+    return(y)
+    
+  } else if (task == "check_can"){ #Special track for task == "check_can"
+    y <- x %in% can
+    print("manageLibraryStrategy completed")
+    return(y)
+  }
   
-  #Only two combinations are allowed (syn->can, can->short)
+  
+  
+  
+  #Only two combinations are allowed (syn->can, can->short); (or output = "ex" which was done earlier)
   if ( !( (input == "can" & output == "short") | (input == "syn" & output == "can") ) ){
     stop("Invalid input-output combination provided")
   }
+
   
   
   #CONVERSION: can->short
@@ -1820,7 +1861,10 @@ convertLibraryStrategy <- function(x, input, output, mismatch.ignore = FALSE){
     
   }
   
-  print("convertLibraryStrategy completed")
+
+  
+  
+  print("manageLibraryStrategy completed")
   
   return(y)
   

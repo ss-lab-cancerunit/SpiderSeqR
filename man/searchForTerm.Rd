@@ -44,7 +44,11 @@ For further information (especially on the output files) please refer to the pac
 }
 
 \examples{
+
+#Simple search
 searchForTerm(library_strategy = "RNA-Seq", gene = c("p53", "tp53"), species = "9606") 
+
+#Search with parameters stored in a list
 st <- list(library_strategy="ChIP-Seq", gene="STAT1", antibody="STAT1", secondary_library_strategy = "RNA-Seq")
 do.call(searchForTerm, st)
 

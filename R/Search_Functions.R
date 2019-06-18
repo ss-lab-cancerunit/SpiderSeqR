@@ -33,12 +33,17 @@
 #' 
 #' 
 #' @examples
+#' 
+#' #Simple search
 #' searchForTerm(library_strategy = "RNA-Seq", gene = c("p53", "tp53"), species = "9606") 
+#' 
+#' #Search with parameters stored in a list
 #' st <- list(library_strategy="ChIP-Seq", gene="STAT1", antibody="STAT1", secondary_library_strategy = "RNA-Seq")
 #' do.call(searchForTerm, st)
 #' 
 #' 
 #' @export
+#
 #NEW searchForTerm FUNCTION (in progress) - WILL BE COMPLETED IN INDEV3.R
 searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=NULL, treatment=NULL, species=NULL, platform=NULL, secondary_library_strategy=NULL){
   #Function for searching
@@ -74,6 +79,19 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
                                   "ATAC-seq")
   
   supported_secondary_library_strategy <- supported_library_strategy
+  
+  
+  
+  library_warning_message <- "Library strategy does not belong to the recommended options. If you do not get satisfying results, please run manageLibraryStrategy for further information" 
+  
+  
+  print(manageLibraryStrategy(secondary_library_strategy, task="check_can"))
+  
+  
+  if( !manageLibraryStrategy(library_strategy, task="check_can") ){
+    warning(library_warning_message)
+  }
+  
 
   #Require library_strategy (not missing, not NULL, not "", not a vector of length >1, must belong to the list)
   if (missing(library_strategy)){
@@ -92,6 +110,10 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   }
 
   
+
+  
+  
+  
   #Check validity of secondary_library_strategy (may be NULL, BUT not NA, not "", all elements belong to the list)
   if (!is.null(secondary_library_strategy)){
     if (is.na(secondary_library_strategy)){
@@ -105,6 +127,13 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
           stop(paste0("Library strategy does not belong) to the list of supported library strategies. Please try one of: ", sls, "."))
         }
       }
+    }
+  }
+  
+  #Warning message if library_strategy not in canonical form
+  if (!is.null(secondary_library_strategy)){
+    if( !manageLibraryStrategy(secondary_library_strategy, task="check_can") ){
+      warning(library_warning_message)
     }
   }
 
