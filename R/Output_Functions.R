@@ -194,7 +194,7 @@ filenameGenerator <- function(library_strategy, gene=NULL, antibody=NULL, cell_t
   #today <- format(today, format = "%y%m%d")
 
   today <- Sys.time()
-  today <- format(today, format = "%y%m%d_%H%M%S")
+  today <- format(today, format = "%y%m%d-%H%M%S")
 
   name <- paste0(name, "_", today)
 
@@ -400,25 +400,18 @@ filenameGenerator_acc <- function(library_strategy, accession, output, file_type
 
   argument_list <- c("accession", "library_strategy", "output") #file_type will be handled separately
 
-  #Shorten library_strategy names whenever appropriate
-  ls_substitute_list <- list()
-  ls_substitute_list[[1]] <- c("RNA-Seq", "ChIP-Seq") #Original names
-  ls_substitute_list[[2]] <- c("RNA", "ChIP") #New names
+  ##Shorten library_strategy names whenever appropriate
+  #ls_substitute_list <- list()
+  #ls_substitute_list[[1]] <- c("RNA-Seq", "ChIP-Seq") #Original names
+  #ls_substitute_list[[2]] <- c("RNA", "ChIP") #New names
 
-  for (s in seq_along(ls_substitute_list[[1]])){
-    if (library_strategy == ls_substitute_list[[1]][s]){
-      library_strategy <- ls_substitute_list[[2]][s]
-    }
-  }
+  #for (s in seq_along(ls_substitute_list[[1]])){
+  #  if (library_strategy == ls_substitute_list[[1]][s]){
+  #    library_strategy <- ls_substitute_list[[2]][s]
+  #  }
+  #}
 
-  #Shorten secondary_library_strategy names
-  for (s in seq_along(ls_substitute_list[[1]])){
-    for (l in seq_along(secondary_library_strategy)){
-      if (secondary_library_strategy[l] == ls_substitute_list[[1]][s]){
-        secondary_library_strategy <- ls_substitute_list[[2]][s]
-      }
-    }
-  }
+  library_strategy <- convertLibraryStrategy(library_strategy, input = "can", output = "short", mismatch.ignore = TRUE)
 
   name <- character()
   for (arg in seq_along(argument_list)){
@@ -435,7 +428,7 @@ filenameGenerator_acc <- function(library_strategy, accession, output, file_type
   #today <- format(today, format = "%y%m%d")
 
   today <- Sys.time()
-  today <- format(today, format = "%y%m%d_%H%M%S")
+  today <- format(today, format = "%y%m%d-%H%M%S")
 
   name <- paste0(name, "_", today)
 

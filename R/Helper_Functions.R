@@ -1637,3 +1637,202 @@ superseriesVerifier <- function(gse_list){
   print("superseriesVerifier completed")
 }
 #----------------------------------------------------------------------------
+
+
+
+
+#----------------------------------------------------------------------------
+# converLibraryStrategy
+#----------------------------------------------------------------------------
+#'
+#'
+#' Convert Between Library Strategy Formats
+#' 
+#' \code{convertLibraryStrategy} converts between different formats of library strategy strings
+#' 
+#' @param x Character vector to be converted
+#' @param input String denoting the input format (see below)
+#' @param output String denoting the output format (see below)
+#' @param mismatch.ignore Logical denoting whether mismatches are allowed (if TRUE and no match, original character is returned)
+#' 
+#' @return Library strategy in a desired format
+#' 
+#' Format types:
+#' \enumerate{
+#'     \item can (canonical) - as exists within the database
+#'     \item short (shorthand) - shortened version of the canonical form
+#'     \item syn (synonyms) - potential synonym
+#' }
+#' 
+#' Currently, the function supports the following conversions:
+#' \enumerate{
+#'     \item can -> short
+#'     \item syn -> can
+#' }
+#' 
+#' 
+#' 
+#' @keywords internal
+#' 
+#' 
+convertLibraryStrategy <- function(x, input, output, mismatch.ignore = FALSE){
+  
+  print("Running convertLibraryStrategy")
+  
+  
+  
+  # Canonical names (as exist within the SRA database)
+  can <- c("WGS", #1
+           "AMPLICON", #2
+           "RNA-Seq", #3
+           "OTHER", #4
+           "WXS", #5
+           "ChIP-Seq", #6
+           "CLONE", #7
+           "POOLCLONE", #8
+           "Bisulfite-Seq", #9
+           "SELEX", #10
+           "miRNA-Seq", #11
+           "WGA", #12
+           "RAD-Seq", #13
+           "Targeted-Capture", #14
+           "ATAC-seq") #15
+  
+  
+  #Shorthand forms
+  short <- c("WGS", #1
+             "AMPLI", #2
+             "RNA", #3
+             "OTHER", #4
+             "WXS", #5
+             "ChIP", #6
+             "CLONE", #7
+             "POOLCL", #8
+             "Bisulf", #9
+             "SELEX", #10
+             "miRNA", #11
+             "WGA", #12
+             "RAD", #13
+             "Tar-Cap", #14
+             "ATAC") #15
+  
+  
+  #Synonym forms
+  syn <- list(c("WGS"), #1
+              c("AMPLICON"), #2
+              c("RNA-Seq"), #3
+              c("OTHER"), #4
+              c("WXS"), #5
+              c("ChIP-Seq"), #6
+              c("CLONE"), #7
+              c("POOLCLONE"), #8
+              c("Bisulfite-Seq"), #9
+              c("SELEX"), #10
+              c("miRNA-Seq"), #11
+              c("WGA"), #12
+              c("RAD-Seq"), #13
+              c("Targeted-Capture"), #14
+              c("ATAC-seq")) #15
+  
+  
+  #Make sure that the list of synonyms also contains short and canonical forms
+  for (i in seq_along(syn)){
+    syn[[i]] <- c(can[[i]], syn[[i]], short[[i]])
+    syn[[i]] <- unique(syn[[i]])
+  }
+  
+  
+  #Sanity check that all formats have the same length
+  if ( (length(can)!=length(short)) | (length(can)!=length(syn)) | (length(short)!=length(syn)) ){
+    stop("The format lists have unequal lengths")
+  }
+  
+  
+  
+  #Only two combinations are allowed (syn->can, can->short)
+  if ( !( (input == "can" & output == "short") | (input == "syn" & output == "can") ) ){
+    stop("Invalid input-output combination provided")
+  }
+  
+  
+  #CONVERSION: can->short
+  if (input == "can" & output == "short"){
+    
+    print("CONVERSION: can -> short")
+    
+    ind <- grep(paste0("^", x, "$"), can)
+    
+    if (mismatch.ignore==TRUE){ #Mismatch allowed
+      if (length(ind) !=1){ #If none/too many matches were found
+        y <- x
+      } else { #Only one match found
+        y <- short[ind]
+      }
+
+    } else { #Mismatch not allowed
+      if (length(ind) != 1) {
+        stop("Unexpected number of matches")
+      }
+      y <- short[ind]
+    }
+   
+   
+  }
+  
+  
+  
+  
+  #CONVERSION: syn->can
+  if (input == "syn" & output == "can"){
+    
+    print("CONVERSION: syn -> can")
+    
+    ind <- rep(list(integer(0)),15)
+    res_num <- 0
+    ind_fin <- NULL
+    
+    for (j in seq_along(syn)){
+      ind[[j]] <- grep(paste0("^", x, "$"), syn[[j]])
+      #print(ind)
+      if (length(ind[[j]])>0){
+        ind_fin <- c(ind_fin, j)
+      }
+      #print(ind_fin)
+      res_num <- (length(ind[[j]])>0) + res_num
+      #print(res_num)
+    }
+    
+    if (mismatch.ignore == TRUE){ #Mismatch allowed
+      if (res_num == 1){
+        y <- can[ind_fin]
+      } else {
+        y <- x
+      }
+    } else { #Mismatch not allowed
+      if (res_num >1){
+        stop("Multiple matches were found. Please make your search term unique")
+      } else if (res_num == 0){
+        stop("No results found")
+      } else if (res_num == 1){
+        y <- can[ind_fin]
+      }
+    }
+    
+  }
+  
+  print("convertLibraryStrategy completed")
+  
+  return(y)
+  
+  
+}
+
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+
+
+
+
+
+
+
