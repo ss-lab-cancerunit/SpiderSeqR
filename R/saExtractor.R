@@ -19,7 +19,21 @@ saExtractor <- function(df){
   #===*=== Make a better choice
 
 
+  print("Running saExtractor")
+  
   columnVerifier(df, "sample_attribute")
+  
+  if (sum(!is.na(df$sample_attribute)) ==0 ){ #Return unchanged df if no not-NA elements in df
+    df$sa_remainder <- NA
+    df$sa_tissue <- NA
+    df$sa_antibody <- NA
+    df$sa_gene <- NA
+    df$sa_treatment <- NA
+    warning("No not-NA sample attributes available")
+    print("saExtractor completed")
+    return(df)
+  }
+  
 
   #===============================================================================================
   # Setting up keywords
@@ -61,6 +75,7 @@ saExtractor <- function(df){
   df <- cbind(df, df_sra_attr[,(-1)]) #Combine extracted columns with df (except attr_original column)
   #============================================================================
 
+  print("saExtractor completed")
   return(df)
 
 }

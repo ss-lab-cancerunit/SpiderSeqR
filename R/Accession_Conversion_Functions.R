@@ -71,7 +71,12 @@ searchForAccessionAcrossDBs <- function(acc_vector, sra_columns, geo_columns){
     if(length(srr_gsm_df$run_accession)!=0){ # Only search SRA if there is viable GEO/SRA conversion
       sra_df <- searchSRAForAccession(srr_gsm_df$run_accession, sra_columns)
     } else { # Generate an empty data frame if no results in SRR_GSM
-      sra_df <- setNames(data.frame(matrix(ncol = length(sra_columns), nrow = 0)), sra_columns)
+      if (sra_columns == "*"){
+        sql_sra_columns <- listSRAFields() #Set sql_sra_columns to the list of all
+      } else {
+        sql_sra_columns <- sra_columns #Otherwise keep all of them intact
+      }
+      sra_df <- setNames(data.frame(matrix(ncol = length(sql_sra_columns), nrow = 0)), sql_sra_columns)
     }
     
     #saveRDS(sra_df, "sra_df.Rda")
@@ -123,11 +128,25 @@ searchForAccessionAcrossDBs <- function(acc_vector, sra_columns, geo_columns){
     #...
 
     #GEO data frame
+    #if(length(srr_gsm_df$gsm)!=0){ # Only search GEO if there is viable SRA/GEO conversion
+    #  geo_df <- searchGEOForGSM(srr_gsm_df$gsm, geo_columns)
+    #} else { # Generate an empty data frame if no results in SRR_GSM
+    #  geo_df <- setNames(data.frame(matrix(ncol = length(geo_columns), nrow = 0)), geo_columns)
+    #}
+    
+    
+    #GEO data frame
     if(length(srr_gsm_df$gsm)!=0){ # Only search GEO if there is viable SRA/GEO conversion
       geo_df <- searchGEOForGSM(srr_gsm_df$gsm, geo_columns)
     } else { # Generate an empty data frame if no results in SRR_GSM
-      geo_df <- setNames(data.frame(matrix(ncol = length(geo_columns), nrow = 0)), geo_columns)
+      if (geo_columns == "*"){
+        sql_geo_columns <- listGSMFields() #Set sql_geo_columns to the list of all
+      } else {
+        sql_geo_columns <- geo_columns #Otherwise keep all of them intact
+      }
+      geo_df <- setNames(data.frame(matrix(ncol = length(sql_geo_columns), nrow = 0)), sql_geo_columns)
     }
+    
 
     #Create an empty data frame with appropriate column names
     #if(dim(geo_df)[1]==0){

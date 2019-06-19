@@ -1464,6 +1464,14 @@ mergeDetector <- function(df){
   #                          SRX... - merge runs with corresponding SRXs
 
   print("Running mergeDetector")
+  
+  if (sum(!is.na(df$experiment_accession))==0){
+    df$lane <- NA
+    df$mer <- NA
+    warning("No not-NA experiment_accesion elements")
+    print("mergeDetector completed")
+    return(df)
+  }
 
   df <- df %>%
     dplyr::add_count(experiment_accession) %>% #Count SRRx within SRX

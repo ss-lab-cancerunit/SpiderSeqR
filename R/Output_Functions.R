@@ -400,19 +400,10 @@ filenameGenerator_acc <- function(library_strategy, accession, output, file_type
 
   argument_list <- c("accession", "library_strategy", "output") #file_type will be handled separately
 
-  ##Shorten library_strategy names whenever appropriate
-  #ls_substitute_list <- list()
-  #ls_substitute_list[[1]] <- c("RNA-Seq", "ChIP-Seq") #Original names
-  #ls_substitute_list[[2]] <- c("RNA", "ChIP") #New names
+  #Shorten the library_strategy
+  library_strategy <- manageLibraryStrategy(library_strategy, input = "can", output = "short", mismatch.ignore = TRUE)
 
-  #for (s in seq_along(ls_substitute_list[[1]])){
-  #  if (library_strategy == ls_substitute_list[[1]][s]){
-  #    library_strategy <- ls_substitute_list[[2]][s]
-  #  }
-  #}
-
-  library_strategy <- convertLibraryStrategy(library_strategy, input = "can", output = "short", mismatch.ignore = TRUE)
-
+  #Combine together the arguments and truncate if necessary
   name <- character()
   for (arg in seq_along(argument_list)){
     chunk <- get(argument_list[arg])[[1]] #Only the first element will be used for naming
@@ -424,9 +415,6 @@ filenameGenerator_acc <- function(library_strategy, accession, output, file_type
     }
   }
 
-  #today <- Sys.Date()
-  #today <- format(today, format = "%y%m%d")
-
   today <- Sys.time()
   today <- format(today, format = "%y%m%d-%H%M%S")
 
@@ -437,7 +425,6 @@ filenameGenerator_acc <- function(library_strategy, accession, output, file_type
 
   print("filenameGenerator_acc completed")
   return(name)
-
 
 }
 

@@ -275,3 +275,54 @@ searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm"
 
 
 
+#------------------------------------------------------
+#------------------------------------------------------
+#' List all column names of SRA table
+#' 
+#' @return Character vector containing column names of SRA table
+#' 
+#' 
+#' @examples
+#' listSRAFields()
+#'  
+#' @keywords internal
+#' 
+listSRAFields <- function(){
+  database_name <- "sra_con"
+  database_env <- ".GlobalEnv"
+  sra_table <- "sra"
+  
+  y <- DBI::dbListFields(get(database_name, envir = get(database_env)), sra_table)
+  
+  return(y)
+}
+
+#------------------------------------------------------
+#------------------------------------------------------
+
+#------------------------------------------------------
+#------------------------------------------------------
+#' List all column names of the GSM table
+#' 
+#' @return Character vector containing column names of GSM table
+#' 
+#' 
+#' @examples 
+#' listGSMFields()
+#'  
+#' @keywords internal
+#' 
+listGSMFields <- function(){
+  database_name <- "geo_con"
+  database_env <- ".GlobalEnv"
+  geo_table <- "gsm"
+  
+  y <- DBI::dbListFields(get(database_name, envir = get(database_env)), geo_table)
+  
+  return(y)
+}
+
+#------------------------------------------------------
+#------------------------------------------------------
+
+
