@@ -40,6 +40,7 @@ getDatabaseInformation <- function(){
                          "SRA: Random sample of the database (size 20)", #10
                          "GEO: Random sample of the GSM database (size 20)", #11
                          "GEO: Random sample of the GSE database (size 20)", #12
+                         "GEO: Number of studies per study type", #13
                          "None (exit)"))
   
   
@@ -100,6 +101,21 @@ getDatabaseInformation <- function(){
     df <- DBI::dbGetQuery(get(geo_database_name, envir = get(database_env)), "SELECT * FROM gse ORDER BY RANDOM() LIMIT 20")
     
   } else if (menu_options == 13){
+    
+    df <- dbGetQuery(geo_con, "SELECT type, count(*) AS total FROM gse GROUP BY type") #Frequency table of study types in GSE table
+
+    tot <- tot_copy
+    
+    df <- df %>% 
+      tidyr::separate_rows(type, sep = ";\t") %>% 
+      dplyr::group_by(type) %>% 
+      dplyr::summarise_all(sum) %>% 
+      dplyr::arrange(desc(total))
+    
+    df <- as.data.frame(df)
+    return(df)
+    
+  } else if (menu_options == 14){
     
     print("Nothing to investigate")
     return(NULL)
