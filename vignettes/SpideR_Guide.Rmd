@@ -97,9 +97,134 @@ NOTE: it is necessary to download large database files in order to use any of th
 
 1. searchForTerm - search for (unknown) experiments matching search terms of interest
 2. searchForAccession - search for (known) experiments which match the accession numbers
-3. accessionConverter - convert between SRA and/or GEO accessions
+3. convertAccession - convert between SRA and/or GEO accessions
 4. reproduceResults / rerunQuery (function name will be changed ===*=== ) - run again a SpideR query from the past (NB: the results might differ if the database changed)
 5. getDatabaseInformation - get basic information about the databases
+
+
+## Search for (unknown) experiments - by search terms (searchForTerm)
+
+```{r}
+searchForTerm(library_strategy, gene=NULL, antibody=NULL, cell_type=NULL, treatment=NULL, species=NULL, platform=NULL, secondary_library_strategy=NULL) 
+```
+
+REQUIRED ARGUMENTS: library_strategy AND at least one of gene, antibody, cell_type or treatment 
+OPTIONAL ARGUMENTS: species, platform, secondary_library_strategy
+
+###Argument format
+* library_strategy - one of the standardised entries, such as: "ChIP-Seq", "RNA-Seq", "HiC" etc. ===*=== [to do: provide a full list]
+* gene* - a name of the gene. It is recommended that a vector with synonyms is used, for example gene=c("STAT1", "STAT-1", "STAT91", "STAT-91", "ISGF-3", "ISGF3") instead of gene="STAT1". However, adding multiple synonyms can extend the query time
+* antibody* - a name of the antibody. Similarly, a vector with synonyms can be used
+* treatment* - information on treatment ===*=== [to do: double check if really can be a vector]
+* species* - code for species, for example species=c("9606", "10090") for human and mouse entries
+* platform* - sequencing platform, for example platform-"ILLUMINA"
+* secondary_library_strategy - an extra library_strategy that will be used to filter the entries from the same studies as the matching entries.  
+
+An asterisk (\*) denotes arguments which can be vectors. In such case an entry will be returned if there is a match to ANY ONE of the vector elements
+NOTE:
+
+* The primary use for the antibody argument is for relevant library strategies, such as ChIP-Seq. ===*=== [to do: add a warning if otherwise]
+* Some studies fill their library_strategy as "OTHER", so if more results are needed, rerun the same query with library_strategy="OTHER"
+* Secondary_library_strategy can be used to find entries within the same studies, which have a library_strategy of interest.  
+For example, if searchForTerm(library_strategy="ChIP-Seq", antibody="STAT1") yielded entries A, B, C, D, then searchForTerm(library_strategy="ChIP-Seq", antibody="STAT1", secondary_library_strategy="RNA-Seq") would produce the same results AND on top of that return any RNA-Seq entries within the same studies as A, B, C, D.
+
+###Sample query
+
+```{r}
+searchForTerm(library_strategy="ChIP-Seq", antibody="STAT1") # This will search for all entries which have "STAT1" in antibody field
+```
+
+
+NOTE:
+
+* Not all submissions have 'antibody' information specifically. When that is the case, other fields are searched, which might lead to false positives
+
+
+
+
+###Output files
+The searchForTerm function outputs a number of files. Depending on the application, some or all of them might be useful for the user.  
+The current naming system includes the main keywords of the query as well as date and time. The middle part of the file name depends on the output file type.   
+
+The current file name structure is as follows:  
+(Query summary)\_(file type)\_(date)_(time).extension
+
+The legend for file types:  
+
+- db - database extract (i.e. lists of relevant samples with associated information)
+- sm - sample sheet
+- CALL - function call
+- PAR - parameters of the function call (can be used to re-run the query with the reproduceResults function)  
+
+
+Depending on the contents the database extracts/sample sheets will have the following additional attributes:
+
+- tar - only runs of interest (and any potential inputs/controls)
+- all - all runs within a study (which belong to the library strategy of interest)
+- 2ry - all runs within a study filtered by the secondary library strategy. This file is only output if secondary library strategy has been specified
+
+
+For example, the query 
+```{r}
+searchForTerm(library_strategy = "ChIP-Seq", antibody = "STAT1", secondary_library_strategy = "RNA-Seq")
+```
+
+
+
+will generate the following set of output files: 
+
+* ChIP_STAT1_2RNA_CALL_180213-110628.Rda 
+* ChIP_STAT1_2RNA_PAR_180213-110627.tab 
+* ChIP_STAT1_2RNA_tar_db_180213-110816.csv
+* ChIP_STAT1_2RNA_tar_db_180213-110816.Rda
+* ChIP_STAT1_2RNA_tar_sm_180213-110816.csv
+* ChIP_STAT1_2RNA_tar_sm_180213-110816.Rda
+* ChIP_STAT1_2RNA_all_db_180213-110817.csv 
+* ChIP_STAT1_2RNA_all_db_180213-110817.Rda 
+* ChIP_STAT1_2RNA_all_sm_180213-110816.csv
+* ChIP_STAT1_2RNA_all_sm_180213-110816.Rda
+* ChIP_STAT1_2RNA_2ry_db_180213-110817.csv
+* ChIP_STAT1_2RNA_2ry_db_180213-110817.Rda
+* ChIP_STAT1_2RNA_2ry_sm_180213-110817.csv
+* ChIP_STAT1_2RNA_2ry_sm_180213-110817.Rda
+
+
+These files can be subdivided depending on their content:
+
+
+- Files for reproducing the query:  
+
+    * ChIP_STAT1_2RNA_CALL_180213-110628.Rda  - R object with the function call  
+    * ChIP_STAT1_2RNA_PAR_180213-110627.tab - tab file with parameters of the function call  
+  
+- Files with ChIP-Seq samples of interest (and any associated inputs); the set of studies to which these belong is used for the two other sets of outputs, as outlined below:
+
+    * ChIP_STAT1_2RNA_tar_db_180213-110816.csv  - database extract
+    * ChIP_STAT1_2RNA_tar_db_180213-110816.Rda  - database extract
+    * ChIP_STAT1_2RNA_tar_sm_180213-110816.csv  - sample sheet
+    * ChIP_STAT1_2RNA_tar_sm_180213-110816.Rda - sample sheet
+  
+- Files with all ChIP-Seq samples from the same studies as the samples in ...\_tar\_... file (any associated inputs will naturally be included):
+
+    * ChIP_STAT1_2RNA_all_db_180213-110817.csv  - database extract
+    * ChIP_STAT1_2RNA_all_db_180213-110817.Rda  - database extract
+    * ChIP_STAT1_2RNA_all_sm_180213-110816.csv  - sample sheet
+    * ChIP_STAT1_2RNA_all_sm_180213-110816.Rda  - sample sheet
+    
+- Files with all RNA-Seq samples from the same studies as the samples in ...\_tar\_... file
+
+    * ChIP_STAT1_2RNA_2ry_db_180213-110817.csv  - database extract 
+    * ChIP_STAT1_2RNA_2ry_db_180213-110817.Rda  - database extract
+    * ChIP_STAT1_2RNA_2ry_sm_180213-110817.csv  - sample sheet
+    * ChIP_STAT1_2RNA_2ry_sm_180213-110817.Rda  - sample sheet
+
+
+Where:  
+
+- ChIP_STAT1_2RNA containS compressed information on the query  
+- central part of the file name refers to its contents/type  
+- 180213-110817 is the date and time of file creation  
+
 
 
 
@@ -109,6 +234,13 @@ NOTE: it is necessary to download large database files in order to use any of th
 ```{r, eval = FALSE}
 searchForAccession("SRP010068")
 ```
+
+
+
+
+
+
+
 
 
 To be included: ===*===
