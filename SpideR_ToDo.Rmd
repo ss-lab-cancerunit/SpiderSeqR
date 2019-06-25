@@ -13,7 +13,7 @@ output:
 NOTE: No tasks were transferred from SpiderDev.Rmd. This should gradually be done in the future.
 In the meantime, please also refer to SpiderDev.Rmd.  
 
-###Legend
+### Legend
 
 |Status|Meaning|
 |-|-|
@@ -23,7 +23,7 @@ In the meantime, please also refer to SpiderDev.Rmd.
 
 
 
-###Package setup
+### Package setup
 
 
 ----------------------------------------------------------------------------------------------------------------------
@@ -49,7 +49,7 @@ Status Task
 
 
 
-###Naming
+### Naming
 
 ----------------------------------------------------------------------------------------------------------------------
 Status Task
@@ -59,17 +59,23 @@ Status Task
  ...   Introduce consistent grammatical form and spelling for function names
 
  !!!   Introduce consistent naming of function variables
+ 
+ !!!   Double check whether there are no traces of changed functions (e.g. accessionConverter vs convertAccession)
+ 
+ !!!   Decide on the naming of reproduceResults
 ----------------------------------------------------------------------------------------------------------------------
 
 
-###Function-specific tasks
+### Function-specific tasks
 
 
 
 ----------------------------------------------------------------------------------------------------------------------
 Status Task
 ------ ---------------------------------------------------------------------------------------------------------------
- !!!   Get rid of the error of no results when no SRA/GEO correspondence...
+ +      Get rid of the error of no results when no SRA/GEO correspondence...  
+ 
+ ...    Manage the NA types  
 ----------------------------------------------------------------------------------------------------------------------
 
 : Accession_Conversion
@@ -145,7 +151,7 @@ Status Task
 
 
 
-###General behaviour
+### General behaviour
 
 ----------------------------------------------------------------------------------------------------------------------
 Status Task
@@ -159,7 +165,7 @@ Status Task
 
 
 
-###Performance
+### Performance
 
 ----------------------------------------------------------------------------------------------------------------------
 Status Task
@@ -169,7 +175,7 @@ Status Task
 
 
 
-###Testing
+### Testing
 
 -----------------------------------------------------------------------------------------------------------------------
 Status          Function            Task
@@ -188,7 +194,7 @@ Status          Function            Task
 
 -----------------------------------------------------------------------------------------------------------------------
 
-####Accession_Search_Functions
+#### Accession_Search_Functions
 
 ----------------------------------------------------------------------------------------------------------------------
 Status Task
@@ -209,10 +215,20 @@ Status Task
 : searchSRAForAccession
 
   
+  
+  
+  
+----------------------------------------------------------------------------------------  
+----------------------------------------------------------------------------------------  
+  
+----------------------------------------------------------------------------------------  
+----------------------------------------------------------------------------------------  
+  
+  
 
-###Some experiences with tables
+### Some experiences with tables
 
-####Basic tables
+#### Basic tables
 
 | Right-aligned | Left-aligned | Centered | Default |
 |-:|:-|:-:|-|
@@ -235,7 +251,7 @@ Status Task
 
 
 
-####multiline_tables
+#### multiline_tables
 
 Part of Pandoc Markdown 
 (http://rmarkdown.rstudio.com/authoring_pandoc_markdown.html#pandoc_markdown)  
@@ -300,7 +316,7 @@ Status Task
 : This is a template of a table
 
 
-####Tasks
+#### Tasks
 
 - [ ] Incomplete item
 - [x] Supposedly complete item
