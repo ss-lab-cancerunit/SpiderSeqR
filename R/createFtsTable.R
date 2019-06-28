@@ -13,15 +13,17 @@
 #----------------------------------------------------
 #Creating gsm_ft
 
-#Uncomment to run
+#Uncomment to run and change to gsm if needed
 
 #geo_ft <- dbConnect(SQLite(), dbname = "GEOmetadb_ft.sqlite")
-start_time <- Sys.time()
-createFtsTable("geo_ft", "gse", "gse_ft")
-end_time <- Sys.time()
-end_time - start_time
+#start_time <- Sys.time()
+#createFtsTable("geo_ft", "gse", "gse_ft")
+#end_time <- Sys.time()
+#end_time - start_time
 
-# NOTE on timings
+# NOTE on timings for GSE: about 1 min
+#
+# NOTE on timings for GSM
 # 16:47 start
 # 17:05 insertion finished (18 min)
 # 17:09 optimisation finished (22 min)
@@ -51,7 +53,8 @@ createFtsTable <- function(database_name, table_name, new_table_name){
   column_names <- paste0(column_names, collapse = "", sep = ", ")
   column_names <- substr(column_names, 1, nchar(column_names)-2)
   
-  creation_query <- paste0("CREATE VIRTUAL TABLE ", new_table_name, " USING fts4 (", column_names, ")")
+  # NOTE: fts4 used previously, but SRAdb uses fts3
+  creation_query <- paste0("CREATE VIRTUAL TABLE ", new_table_name, " USING fts3 (", column_names, ")")
   print(creation_query)
   DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), creation_query)
   

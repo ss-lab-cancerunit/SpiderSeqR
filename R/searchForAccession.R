@@ -2,7 +2,7 @@
 #searchForAccession - under construction (20171207)
 
 
-searchForAccession <- function(acc_vector){
+searchForAccession <- function(acc_vector, file_output = TRUE){
   #
   # IN PROGRESS - to find omitted processing steps, see SpideR_ToDo.Rmd
   #
@@ -47,7 +47,10 @@ searchForAccession <- function(acc_vector){
   
   .GlobalEnv$temp_output_df <- output_df
 
-  outputGenerator_acc(output_df, accession = acc_vector)
+  if (file_output == TRUE){
+    outputGenerator_acc(output_df, accession = acc_vector)
+  }
+
 
   return(output_df)
 

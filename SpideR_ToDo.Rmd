@@ -161,6 +161,8 @@ Status Task
  !!!   Consider what to do if entry only exists in GEO - input/control labelling, dealing with outputs 
 
  !!!   Sort out what happens with regard to the weird data types at the output (?)
+ 
+ !!!   Check consistence of database handling: DBI::dbGetQuery(get(database_name, envir=get(database_envir)), query)
 ----------------------------------------------------------------------------------------------------------------------
 
 
@@ -216,12 +218,25 @@ Status Task
 
   
   
-  
+### Documentation
+
+
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+  !!!     Package-level help - include basic usage examples and abstract style summary and links to further info (vignettes)
+
+  !!!     Create a demo database from SRA and GEO for the vignette
+
+----------------------------------------------------------------------------------------------------------------------
+
+: Documentation
+
   
 ----------------------------------------------------------------------------------------  
-----------------------------------------------------------------------------------------  
-  
-----------------------------------------------------------------------------------------  
+
+
 ----------------------------------------------------------------------------------------  
   
   
