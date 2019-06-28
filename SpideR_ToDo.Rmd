@@ -147,7 +147,28 @@ Status Task
 
 : naConverter
 
+### Search functionalities
 
+
+----------------------------------------------------------------------------------------------------------------------
+Status Task
+------ ---------------------------------------------------------------------------------------------------------------
+ ...   Search for term
+
+ !!!   Search by date (currently not possible - SRA does not list dates and the only available update_date is not in date format)
+ 
+ !!!   Search by pubmed ids
+ 
+ !!!   Search by bioproject ids
+ 
+ !!!   Search by platform accesion
+ 
+ !!!   Search by number of samples within the study
+ 
+ !!!   Search by author
+----------------------------------------------------------------------------------------------------------------------
+
+: search functionalities
 
 
 
@@ -163,6 +184,8 @@ Status Task
  !!!   Sort out what happens with regard to the weird data types at the output (?)
  
  !!!   Check consistence of database handling: DBI::dbGetQuery(get(database_name, envir=get(database_envir)), query)
+ 
+ !!!   Replace creation of global environment variables with a spider.env which will contain all the connections
 ----------------------------------------------------------------------------------------------------------------------
 
 
