@@ -1,13 +1,5 @@
 
-
-
-
-
-
-
-
-
-
+# A few functions for filtering based on accession-level information in SRA
 
 search_term <- "stat3"
 acc_levels <- c("run", "sample")
@@ -27,6 +19,7 @@ acc_levels <- c("run", "sample")
 #' 
 #' 
 findSRAAccessionLevelColumnNames <- function(acc_levels = c("run", "experiment", "sample", "study")){
+  
   col_list <- dbListFields(sra_con, "sra_ft")
   
   # Store index of first column relevant for an accession level
@@ -40,6 +33,22 @@ findSRAAccessionLevelColumnNames <- function(acc_levels = c("run", "experiment",
   exp_cols <- col_list[exp_beg:(sample_beg-1)]
   sample_cols <- col_list[sample_beg:(study_beg-1)]
   study_cols <- col_list[study_beg:length(col_list)]
+  
+  
+  all_levels <- c("run", "experiment", "sample", "study", "gsm", "gse")
+  sra_levels <- c("run", "experiment", "sample", "study")
+  
+  # Check that there is at least one valid SRA level provided
+  if (sum(acc_levels %in% sra_levels)==0){
+    stop("Provide at least one valid SRA accession level")
+  }
+  
+  # Check that all accession levels belong to the set of acceptable levels
+  if (sum(acc_levels %in% all_levels)!=length(acc_levels)){
+    warning("Some accession levels do not belong to SRA/GEO type")
+  }
+  
+
   
   # Create a vector with column names of interest
   sel_cols <- NULL
@@ -89,7 +98,7 @@ createLevelSpecificQuery <- function(search_term, acc_levels){
 
 
 #' Find rows of df which match a pattern within columns of levels of interest
-#' @param pattern Pattern to check for
+#' @param pattern Pattern to check for (can be a vector, in which case elements are treated as alternatives)
 #' @param df Data frame
 #' @param acc_levels Accession levels
 #' @return Logical vector denoting which rows match criteria
@@ -98,6 +107,7 @@ createLevelSpecificQuery <- function(search_term, acc_levels){
 #' 
 #' 
 findSRAIndicesBasedOnMatchesInLevels <-function(pattern, df, acc_levels){
+  
   sel_cols <- findSRAAccessionLevelColumnNames(acc_levels)
   col_ind <- NULL
   
@@ -111,11 +121,18 @@ findSRAIndicesBasedOnMatchesInLevels <-function(pattern, df, acc_levels){
   
   for (i in seq_along(col_ind)){
     #i <- 5
-    curr_match <- grepl(pattern, df[,col_ind[i]], ignore.case = TRUE)
+    curr_match <- rep(FALSE, dim(df)[1])
+    
+    for(j in seq_along(pattern)){
+      curr_match <- curr_match | grepl(pattern[j], df[,col_ind[i]], ignore.case = TRUE)
+    }
+
     #sum(curr_match)
     #print(df[curr_match,col_ind[i]])
     row_total <- row_total + curr_match
   }
+  
+  if (sum(row_total > 0)==0) warning("No matches within the specified accession levels")
   
   return(row_total > 0)
 

@@ -104,8 +104,6 @@ getDatabaseInformation <- function(){
     
     df <- dbGetQuery(geo_con, "SELECT type, count(*) AS total FROM gse GROUP BY type") #Frequency table of study types in GSE table
 
-    tot <- tot_copy
-    
     df <- df %>% 
       tidyr::separate_rows(type, sep = ";\t") %>% 
       dplyr::group_by(type) %>% 

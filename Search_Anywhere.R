@@ -12,6 +12,7 @@
 #' searchAnywhere("stat3")
 #' searchAnywhere("tp53 OR p53") #Can list synonyms
 #' 
+#' 
 #' searchAnywhere ("p53", acc_levels = c("gsm", "gse")) #Only search in GEO
 #' 
 #' @section Argument requirements:
@@ -22,6 +23,15 @@
 #' 
 #' Another use of accession levels is to restrict search to only one database. To do so, only list accession levels specific to one database: SRA (run, experiment, sample, study) or GEO (gsm, gse).
 #' 
+#' 
+#' @section Examples of usage:
+#' 
+#' 
+#' Under construction ===*===
+#' 
+#' \enumerate{
+#'     \item Search for rare types of experiments ('library_strategy: HiC'; 'hic library_strategy: OTHER')
+#' }
 #' 
 searchAnywhere <- function(query_both, query_sra, query_geo, acc_levels = c("run", "experiment", "sample", "study", "gsm", "gse")){
   
@@ -41,5 +51,77 @@ searchAnywhere <- function(query_both, query_sra, query_geo, acc_levels = c("run
   # ===*===
   
 }
+
+
+searchAnywhereSRA <- function(query, acc_levels = c("run", "experiment", "sample", "study")){
+  
+  
+  
+  df <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+  
+  #------TBC
+  # ===*===
+}
+
+
+#getDatabaseInformation()
+acc_levels <- "run"
+query <- "stat3"
+
+
+filterSRAQueryByAccessionLevel <- function(query, df, acc_levels){
+  
+}
+
+
+# Select columns within df
+df_filt <- subsetSRAByAccessionLevel(df, acc_levels)
+
+
+# Create db
+filter_db_file <- "filter_db.sqlite"
+
+if (file.exists(filter_db_file)) file.remove(filter_db_file)
+
+.GlobalEnv$filter_con <- DBI::dbConnect(SQLite(), dbname = filter_db_file)
+dbWriteTable(conn = filter_con, name="filt_sra", value = df_filt)
+
+
+# Create fts table of the db
+createFtsTable("filter_con", "filt_sra", "filt_sra_ft")
+query <- paste0("SELECT * FROM filt_sra_ft WHERE filt_sra_ft MATCH '", query, "'")
+
+df_out <- DBI::dbSendQuery(.GlobalEnv$filter_con, query)
+
+
+
+
+
+
+
+
+#' Subset (by column) of a df based on SRA accession levels of interest
+#' 
+#' @param df Data frame to be subset
+#' @param acc_levels Accession levels of interest
+#' @return Data frame only with columns corresponding to accession levels of interest
+#'
+#'
+#'
+subsetSRAByAccessionLevel <- function(df, acc_levels){
+  
+  sel_cols <- findSRAAccessionLevelColumnNames(acc_levels)
+  col_ind <- NULL
+  
+  for (i in seq_along(sel_cols)){
+    x <- grep(paste0("^", sel_cols[i], "$"), colnames(df))
+    col_ind <- c(col_ind, x)
+  }
+  
+  return(df[,col_ind])
+}
+
+
+
 
 
