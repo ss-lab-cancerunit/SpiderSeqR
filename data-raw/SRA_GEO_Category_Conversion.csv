@@ -1,0 +1,42 @@
+Category,DB,Name
+Transcriptome MA,GEO,Expression profiling by array
+Transcriptome MA,GEO,Expression profiling by genome tiling array
+Transcriptome NGS,GEO,Expression profiling by high throughput sequencing
+Transcriptome NGS,SRA,RNA-Seq
+DNA-binding MA,GEO,Genome binding/occupancy profiling by genome tiling array
+DNA-binding MA,GEO,Genome binding/occupancy profiling by array
+DNA-binding NGS,GEO,Genome binding/occupancy profiling by high throughput sequencing
+DNA-binding NGS,SRA,ChIP-Seq
+DNA-binding NGS,SRA,MNase-Seq
+DNA-binding NGS,SRA,SELEX
+Non-coding RNA MA,GEO,Non-coding RNA profiling by array
+Non-coding RNA MA,GEO,Non-coding RNA profiling by genome tiling array
+Non-coding RNA NGS,GEO,Non-coding RNA profiling by high throughput sequencing
+Non-coding RNA NGS,SRA,ncRNA-Seq
+Methylation MA,GEO,Methylation profiling by genome tiling array
+Methylation MA,GEO,Methylation profiling by array
+Methylation NGS,GEO,Methylation profiling by high throughput sequencing
+Methylation NGS,SRA,Bisulfite-Seq
+Methylation NGS,SRA,MeDIP-Seq
+Methylation NGS,SRA,MRE-Seq
+Methylation NGS,SRA,MBD-Seq
+Variation MA,GEO,Genome variation profiling by SNP array
+Variation MA,GEO,Genome variation profiling by genome tiling array
+Variation MA,GEO,Genome variation profiling by array
+Variation MA,GEO,SNP genotyping by SNP array
+DNA NGS,SRA,WGS
+DNA NGS,SRA,WXS
+DNA NGS,SRA,AMPLICON
+DNA NGS,SRA,WGA
+DNA NGS,SRA,WCS
+DNA NGS,SRA,Targeted-Capture
+Accessibility NGS,SRA,ATAC-seq
+Accessibility NGS,SRA,DNase-Hypersensitivity
+RNA-Seq,GEO,Expression profiling by high throughput sequencing
+RNA-Seq,SRA,RNA-Seq
+RNA,GEO,Expression profiling by high throughput sequencing
+RNA,SRA,RNA-Seq
+ChIP-Seq,GEO,Genome binding/occupancy profiling by high throughput sequencing
+ChIP-Seq,SRA,ChIP-Seq
+ChIP,GEO,Genome binding/occupancy profiling by high throughput sequencing
+ChIP,SRA,ChIP-Seq

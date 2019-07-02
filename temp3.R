@@ -8,71 +8,6 @@ acc_levels <- c("run", "sample")
 
 
 
-
-#' Find SRA column names corresponding to accession levels
-#' 
-#' @param acc_levels Accession levels
-#' @return Vector with column names
-#' 
-#' @examples 
-#' findSRAAccessionLevelColumnNames("run")
-#' 
-#' 
-findSRAAccessionLevelColumnNames <- function(acc_levels = c("run", "experiment", "sample", "study")){
-  
-  col_list <- dbListFields(sra_con, "sra_ft")
-  
-  # Store index of first column relevant for an accession level
-  run_beg <- grep("^run_ID$", col_list)
-  exp_beg <- grep("^experiment_ID$", col_list)
-  sample_beg <- grep("^sample_ID$", col_list)
-  study_beg <- grep("^study_ID$", col_list)
-  
-  
-  run_cols <- col_list[run_beg:(exp_beg-1)]
-  exp_cols <- col_list[exp_beg:(sample_beg-1)]
-  sample_cols <- col_list[sample_beg:(study_beg-1)]
-  study_cols <- col_list[study_beg:length(col_list)]
-  
-  
-  all_levels <- c("run", "experiment", "sample", "study", "gsm", "gse")
-  sra_levels <- c("run", "experiment", "sample", "study")
-  
-  # Check that there is at least one valid SRA level provided
-  if (sum(acc_levels %in% sra_levels)==0){
-    stop("Provide at least one valid SRA accession level")
-  }
-  
-  # Check that all accession levels belong to the set of acceptable levels
-  if (sum(acc_levels %in% all_levels)!=length(acc_levels)){
-    warning("Some accession levels do not belong to SRA/GEO type")
-  }
-  
-
-  
-  # Create a vector with column names of interest
-  sel_cols <- NULL
-  if ("run" %in% acc_levels){
-    sel_cols <- c(sel_cols, run_cols)
-  }
-  if ("experiment" %in% acc_levels){
-    sel_cols <- c(sel_cols, exp_cols)
-  }
-  if ("sample" %in% acc_levels){
-    sel_cols <- c(sel_cols, sample_cols)
-  }
-  if ("study" %in% acc_levels){
-    sel_cols <- c(sel_cols, study_cols)
-  }
-  
-  if (is.null(sel_cols)) stop("Provide at least one accession level to search within")
-  
-  return(sel_cols)
-}
-
-
-
-
 #' Create a query at a subsection of the table
 #' 
 #' @param search_term Search term for MATCH function
@@ -89,10 +24,6 @@ createLevelSpecificQuery <- function(search_term, acc_levels){
   
   return(query)
 }
-
-
-
-
 
 
 

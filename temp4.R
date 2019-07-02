@@ -30,9 +30,3 @@ if(not_allowed){
 }
 
 
-
-
-
-
-
-

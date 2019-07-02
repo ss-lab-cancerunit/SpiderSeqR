@@ -4,15 +4,17 @@
 \alias{searchAnywhere}
 \title{Search Anywhere within SRA and GEO databases (under construction!)}
 \usage{
-searchAnywhere(query_both, query_sra, query_geo, acc_levels = c("run",
-  "experiment", "sample", "study", "gsm", "gse"))
+searchAnywhere(query_both, sra_query, geo_query, category_both,
+  sra_library_strategy, sra_other_library_strategy = c("OTHER", "NA",
+  "NULL"), geo_type, acc_levels = c("run", "experiment", "sample",
+  "study", "gsm", "gse"))
 }
 \arguments{
 \item{query_both}{Search term for both SRA and GEO}
 
-\item{query_sra}{Search term for SRA only}
+\item{sra_query}{Search term for SRA only}
 
-\item{query_geo}{Search term for GEO only}
+\item{geo_query}{Search term for GEO only}
 
 \item{acc_levels}{Accession levels at which the search is conducted}
 }
@@ -21,20 +23,38 @@ Search Anywhere within SRA and GEO databases (under construction!)
 }
 \section{Argument requirements}{
 
-Either query_both or \textbf{both} query_sra and query_geo need to be provided (this is to facilitate column-specific search in the databases; if you wish to search within specific columns, provide query_sra and query_geo with appropriate column names)
+Either query_both or \strong{both} sra_query and geo_query need to be provided (this is to facilitate column-specific search in the databases; if you wish to search within specific columns, provide sra_query and geo_query with appropriate column names)
 }
 
 \section{Accession levels}{
 
-Each accession level is associated with its own set of information. Sometimes the information is replicated across levels, sometimes it is unique to the level. Only information associated with the specified accession levels will be subject of the search. For example, it is common for study abstracts to mention a lot of gene names or proteins that were not a direct object of the study; by searching everywhere studies with a mere mention of a gene will be included. Restricting accession levels (\code{searchAnywhere(query_both = "p53", acc_levels = c("run", "experiment", "sample", "gsm"))}) will help avoid including these cases. However, always consider using a broader search and comparing the results to the more refined one.
+Each accession level is associated with its own set of information. Sometimes the information is replicated across levels, sometimes it is unique to the level. Only information associated with the specified accession levels will be subject of the search. For example, it is common for study abstracts to mention a lot of gene names or proteins that were not a direct object of the study; by searching everywhere studies with a mere mention of a gene will be included. 
+
+Restricting accession levels, e.g.  
+
+\code{searchAnywhere(query_both = "p53", acc_levels = c("run", "experiment", "sample", "gsm"))}  
+
+will help avoid including these cases. However, always consider using a broader search and comparing the results to the more refined one.
 
 Another use of accession levels is to restrict search to only one database. To do so, only list accession levels specific to one database: SRA (run, experiment, sample, study) or GEO (gsm, gse).
+}
+
+\section{Examples of usage}{
+
+
+
+Under construction ===*===
+
+\enumerate{
+    \item Search for rare types of experiments ('library_strategy: HiC'; 'hic library_strategy: OTHER')
+}
 }
 
 \examples{
 searchAnywhere("*stat3*") #The broadest search
 searchAnywhere("stat3")
 searchAnywhere("tp53 OR p53") #Can list synonyms
+
 
 searchAnywhere ("p53", acc_levels = c("gsm", "gse")) #Only search in GEO
 

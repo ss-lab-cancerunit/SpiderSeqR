@@ -14,7 +14,7 @@ Suggests:
     rmarkdown,
     testthat
 VignetteBuilder: knitr
-biocViews:
+biocViews: Infrastructure, Sequencing, Microarray
 Depends:
     R (>= 3.4)
 Imports:
