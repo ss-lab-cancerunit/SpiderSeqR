@@ -1841,7 +1841,7 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
     ind_fin <- NULL
     
     for (j in seq_along(syn)){
-      ind[[j]] <- grep(paste0("^", x, "$"), syn[[j]])
+      ind[[j]] <- grep(paste0("^", x, "$"), syn[[j]], ignore.case = TRUE)
       #print(ind)
       if (length(ind[[j]])>0){
         ind_fin <- c(ind_fin, j)

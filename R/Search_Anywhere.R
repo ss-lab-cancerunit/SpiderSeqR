@@ -39,7 +39,8 @@
 #'     \item Search for rare types of experiments ('library_strategy: HiC'; 'hic library_strategy: OTHER')
 #' }
 #' 
-searchAnywhere <- function(query_both, sra_query, geo_query, category_both, sra_library_strategy, sra_other_library_strategy = c("OTHER", "NA", "NULL"), geo_type, acc_levels = c("run", "experiment", "sample", "study", "gsm", "gse")){
+searchAnywhere <- function(query_both, category_both=NULL, acc_levels = c("run", "experiment", "sample", "study", "gsm", "gse"), sra_library_strategy=NULL, sra_other_library_strategy = c("OTHER", "NA", "NULL"), geo_type=NULL, sra_query, geo_query, ...){
+  
   
   #Checking arguments (either query_both or sra_query AND geo_query)
   if (!missing(query_both)){
@@ -50,13 +51,26 @@ searchAnywhere <- function(query_both, sra_query, geo_query, category_both, sra_
     geo_query <- query_both
   } else if (missing(sra_query) | missing(geo_query)){
     stop("Either query_both or both 'sra_query & geo_query' need to be provided")
+    # ===*=== Add clause that checks for acc_levels
+  }
+  
+  
+  
+  
+  # Convert sra_library_strategy from a list of synonyms to a canonical form
+  if (!is.null(sra_library_strategy)){
+    x <- character()
+    for (s in seq_along(sra_library_strategy)){
+      x[s] <- manageLibraryStrategy(sra_library_strategy[s], input = "syn", output = "can")
+    }
+    sra_library_strategy <- x
   }
   
   
   # Populate sra_library_strategy and geo_type with converted categories
-  if (!missing(category_both)){
+  if (!is.null(category_both)){
     
-    if ( !missing(sra_library_strategy) | !missing(geo_type)){
+    if ( !is.null(sra_library_strategy) | !is.null(geo_type)){
       warning("category_both already provided; sra_library_strategy/geo_type will be ignored")
     }
     
@@ -65,11 +79,28 @@ searchAnywhere <- function(query_both, sra_query, geo_query, category_both, sra_
     print(sra_library_strategy)
     print(geo_type)
     
-    
+  }
+  
+  sra_arg_check <- list(...)$sra_arg_check
+  if (!is.null(sra_arg_check)){
+    searchAnywhereSRA(sra_query, sra_library_strategy, sra_other_library_strategy, acc_levels = acc_levels, sra_arg_check)
   }
   
   
-  sra_df <- searchAnywhereSRA(sra_query, sra_library_strategy, sra_other_library_strategy, acc_levels = acc_levels)
+  # Search in SRA if any of the acc_levels are from SRA
+  # ===*===
+  if (sum(acc_levels %in% c("run", "experiment", "sample", "study"))>0){
+    if (!(!is.null(category_both) & length(sra_library_strategy)==0)){ # Don't search if category_both doesn't include SRA
+      sra_df <- searchAnywhereSRA(sra_query, acc_levels = acc_levels, sra_library_strategy = sra_library_strategy, sra_other_library_strategy = sra_other_library_strategy) # NOT PASSING ANY OTHER ARGUMENTS HERE ===*===
+    }
+  }
+  
+  
+  if (sum(acc_levels %in% c("gse", "gsm"))>0){
+    if (!(!is.null(category_both) & length(geo_type)==0)){ # Don't search if category_both doesn't include GEO
+      geo_df <- searchAnywhereGEO(geo_query, acc_levels = acc_levels, geo_type = geo_type)
+    }  
+  }
 
   
   
@@ -86,7 +117,13 @@ searchAnywhere <- function(query_both, sra_query, geo_query, category_both, sra_
 
 
 
-
+searchAnywhereGEO <- function(geo_query, acc_levels = c("gse", "gsm"), geo_type){
+  l <- list()
+  l$geo_query <- geo_query
+  l$acc_levels <- acc_levels
+  l$geo_type <- geo_type
+  print(l)
+}
 
 #------------------------------------------
 # ------------------DONE-------------------
@@ -99,43 +136,88 @@ searchAnywhere <- function(query_both, sra_query, geo_query, category_both, sra_
 #' 
 #' @param query Query passed to fts MATCH operator
 #' @param library_strategy Character vector denoting library_strategy/ies of choice (OPTIONAL)
-#' @param other_library_strategy A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided
+#' @param sra_other_library_strategy A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided
 #' @param acc_levels Character vector denoting which accession levels will be searched. Choose from some/all of c("run", "experiment", "sample", "study")
 #' 
 #' @examples 
 #' searchAnywhereSRA("stat3") # stat3
 #' searchAnywhereSRA("stat3 taxon_id: 9606") # stat3 in human samples
 #' searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq")
-#' searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq", other_library_strategy = FALSE) # stat3 chip-seq not including unclassified library strategies
+#' searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq", sra_other_library_strategy = FALSE) # stat3 chip-seq not including unclassified library strategies
 #' searchAnywhereSRA("stat3", acc_levels = c("run", "experiment", "sample")) #stat3 ignoring matches at study level
 #' 
 #' 
 #' 
-searchAnywhereSRA <- function(query, library_strategy, other_library_strategy = c("OTHER", "NA", "NULL"), acc_levels = c("run", "experiment", "sample", "study")){
+searchAnywhereSRA <- function(query, acc_levels = c("run", "experiment", "sample", "study"), sra_library_strategy=NULL, sra_other_library_strategy = c("OTHER", "NA", "NULL"),  ...){
+  
+  sra_arg_check <- list(...)$sra_arg_check
+  if(!is.null(sra_arg_check)){
+    if(isTRUE(sra_arg_check)){
+      
+      #return(as.list(match.call(def=sys.function(-1), call = sys.call(-1))))
+      
+      # Previously
+      
+      #print(as.list(match.call(expand.dots = TRUE)))
+      print(as.list(match.call(def=sys.function(-1), call = sys.call(-1))))
+      
+      l <- list()
+      l$query <- query
+      l$sra_library_strategy <- sra_library_strategy
+      l$sra_other_library_strategy <- sra_other_library_strategy
+      l$acc_levels <- acc_levels
+      l$dots <- list(...)
+      
+      return(l)
+      
+      
+      print(paste0("query: ", query))
+      print(paste0("sra_library_strategy: ", sra_library_strategy))
+      print(paste0("sra_other_library_strategy: ", sra_other_library_strategy))
+      print(paste0("acc_levels: ", acc_levels))
+      print(paste0("other: ", unlist(list(...))))
+      
+      #return(as.list(match.call(expand.dots = TRUE)))
+      
+      
+      #argg <- c(as.list(environment()), list(...))
+      #return(argg)
+      
+      
+      #l <- as.list(match.call(expand.dots = TRUE))
+      #print(l)
+      #return(get(as.character((l[3]))))
+      
+      
+      #Didn't work
+      #return(as.list(get(as.character(unlist((match.call(expand.dots = TRUE)))))))
+
+    }
+  }
   
   database_name <- "sra_con"
   database_env <- ".GlobalEnv"
 
   query_full <- paste0("SELECT * FROM sra_ft WHERE sra_ft MATCH '", query, "'")
   
-  if (!missing(library_strategy)){
+  if (!is.null(sra_library_strategy)){
     
     # other library strategy clause
-    ls_query <- paste0("library_strategy = '", library_strategy, sep = "' OR ", collapse = "")
+    ls_query <- paste0("library_strategy = '", sra_library_strategy, sep = "' OR ", collapse = "")
     
     
-    if( sum(c("OTHER", "NA", "NULL") %in% other_library_strategy) > 0 ){
+    if( sum(c("OTHER", "NA", "NULL") %in% sra_other_library_strategy) > 0 ){
       ols_clause <- character()
       ols_clause[1] <- "library_strategy = 'OTHER'"
       ols_clause[2] <- "library_strategy = 'NA'"
       ols_clause[3] <- "library_strategy IS NULL"
       
       ols_check <- logical()
-      ols_check[1] <- "OTHER" %in% other_library_strategy
-      ols_check[2] <- "NA" %in% other_library_strategy
-      ols_check[3] <- "NULL" %in% other_library_strategy
+      ols_check[1] <- "OTHER" %in% sra_other_library_strategy
+      ols_check[2] <- "NA" %in% sra_other_library_strategy
+      ols_check[3] <- "NULL" %in% sra_other_library_strategy
       
-      # other_library_strategy clause
+      # sra_other_library_strategy clause
       ols_query <- paste0(ols_clause[ols_check], sep = " OR ", collapse = "")
       
       ls_query <- paste0(ls_query, ols_query)
@@ -151,6 +233,17 @@ searchAnywhereSRA <- function(query, library_strategy, other_library_strategy = 
   
   print(query_full)
   
+  
+
+  
+  
+  query_check <- list(...)$query_check
+  if(!is.null(query_check)){
+    if (isTRUE(query_check)){
+      return(query_full)
+    }
+  }
+
   
   df <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query_full)
   
@@ -245,7 +338,7 @@ subsetSRAByAccessionLevel <- function(df, acc_levels, add_run_accession = TRUE){
 #' Converts from SRA-GEO Categories to corresponding SRA library_strategy and GEO (study) type.
 #' For further details regarding available categories (and their corresponding elements), inspect the \code{SRA_GEO_Category_Conversion} object or see its documentation page: \code{?SRA_GEO_Category_Conversion}.
 #'
-#' @param x Character with a category (can be a vector). NOTE: must match exactly
+#' @param x Character with a category (can be a vector). NOTE: must match exactly (but matching is case insensitive)
 #' @return A list with a vector each for sra_library_strategy and geo_type
 #'
 #'
@@ -253,13 +346,31 @@ convertCategoriesToLibraryStrategyType <- function(x){
   
   df <- SRA_GEO_Category_Conversion # Retrieve category conversion data frame
   
-  if (sum(df$Category %in% x)==0) stop("Provide a valid category")
+  # Make matching case insensitive
+  x <- tolower(x)
+  df_lower <- df
+  df_lower$Category <- tolower(df_lower$Category)
   
-  df <- df[df$Category %in% x,] # Filter by matching category/categories
+  
+  if (sum(df_lower$Category %in% x)==0) stop("Provide a valid category")
+  
+  df <- df[df_lower$Category %in% x,] # Filter by matching category/categories
   
   y <- list()
-  y$sra_library_strategy <- df$Name[df$DB=="SRA"]
-  y$geo_type <- df$Name <- df$Name[df$DB=="GEO"]
+  
+  y$sra_library_strategy <- dplyr::filter(df, DB == "SRA")$Name
+  y$geo_type <- dplyr::filter(df, DB == "GEO")$Name
+  
+  #if (length(y$sra_library_strategy)==0){
+  #  y$sra_library_strategy <- NULL
+  #}
+  
+  #if (length(y$geo_type)==0){
+  #  y$geo_type <- NULL
+  #}
+  
+  #y$sra_library_strategy <- df$Name[df$DB=="SRA"]
+  #y$geo_type <- df$Name <- df$Name[df$DB=="GEO"]
   
   return(y)
   

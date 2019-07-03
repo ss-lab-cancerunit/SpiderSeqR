@@ -4,18 +4,18 @@
 \alias{searchAnywhereSRA}
 \title{Fulltext search in SRA}
 \usage{
-searchAnywhereSRA(query, library_strategy,
-  other_library_strategy = c("OTHER", "NA", "NULL"),
-  acc_levels = c("run", "experiment", "sample", "study"))
+searchAnywhereSRA(query, acc_levels = c("run", "experiment", "sample",
+  "study"), sra_library_strategy = NULL,
+  sra_other_library_strategy = c("OTHER", "NA", "NULL"), ...)
 }
 \arguments{
 \item{query}{Query passed to fts MATCH operator}
 
-\item{library_strategy}{Character vector denoting library_strategy/ies of choice (OPTIONAL)}
-
-\item{other_library_strategy}{A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided}
-
 \item{acc_levels}{Character vector denoting which accession levels will be searched. Choose from some/all of c("run", "experiment", "sample", "study")}
+
+\item{sra_other_library_strategy}{A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided}
+
+\item{library_strategy}{Character vector denoting library_strategy/ies of choice (OPTIONAL)}
 }
 \description{
 Fulltext search in SRA
@@ -24,7 +24,7 @@ Fulltext search in SRA
 searchAnywhereSRA("stat3") # stat3
 searchAnywhereSRA("stat3 taxon_id: 9606") # stat3 in human samples
 searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq")
-searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq", other_library_strategy = FALSE) # stat3 chip-seq not including unclassified library strategies
+searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq", sra_other_library_strategy = FALSE) # stat3 chip-seq not including unclassified library strategies
 searchAnywhereSRA("stat3", acc_levels = c("run", "experiment", "sample")) #stat3 ignoring matches at study level
 
 

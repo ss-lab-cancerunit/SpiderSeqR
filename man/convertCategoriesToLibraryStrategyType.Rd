@@ -7,7 +7,7 @@
 convertCategoriesToLibraryStrategyType(x)
 }
 \arguments{
-\item{x}{Character with a category (can be a vector). NOTE: must match exactly}
+\item{x}{Character with a category (can be a vector). NOTE: must match exactly (but matching is case insensitive)}
 }
 \value{
 A list with a vector each for sra_library_strategy and geo_type
