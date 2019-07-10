@@ -4,8 +4,7 @@ Title: A Tool for Integration of Big Bio Data
 Authors@R: c(person("A.", "Sozanska", role = c("aut", "cre"), email = "as2382@cam.ac.uk"), person("C.", "Fletcher", role = "aut"))
 Author: Anna Sozanska [aut, cre], Charlie Fletcher [aut]
 Maintainer: Anna Sozanska <as2382@cam.ac.uk>
-Description: SpideR integrates different sources of sequencing data 
-    and automates the search and retrieval of information.
+Description: Integration of sequencing metadata from SRA and GEO for automatic search information retrieval.
 License: What license is it under?
 Encoding: UTF-8
 LazyData: true
