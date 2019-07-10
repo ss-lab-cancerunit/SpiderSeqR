@@ -26,8 +26,11 @@ library(DBI)
 #srps <- c('SRP042189', 'SRP119890', 'SRP134708', 'ERP004444', 'ERP010785', 'SRP029441', 'SRP018785', 'SRP100699', 'SRP065899', 'SRP120023')
 
 
-gses <- c('GSE48253', 'GSE69001', 'GSE27360', 'GSE82246', 'GSE36467', 'GSE76553', 'GSE10309', 'GSE116221')
-srps <- c('SRP134708', 'DRP003157', 'SRP061795', 'SRP029758')
+gses <- c('GSE48253', 'GSE69001', 'GSE27360', 'GSE82246', 'GSE36467', 'GSE76553', 'GSE10309', 'GSE80767')
+srps <- c('SRP134708', 'DRP003157', 'SRP061795', 'SRP029758', 'SRP076433', 'SRP148363', 'SRP062911')
+
+
+
 
 
 
@@ -62,9 +65,6 @@ searchGSMsInGSM <- function(gsms){
   }
   return(gsm_df)
 }
-
-
-
 
 
 
@@ -104,6 +104,10 @@ searchSRPsInSRA <- function(srps){
   }
   return(sra_df)
 }
+
+
+
+
 
 # Search for GSEs ####
 
@@ -169,7 +173,10 @@ gse_df <- rbind(gse_df, searchGSEs(gses_sra_2))
 
 
 
-# Tidy up
+
+
+# Tidy up ####
+
 gse_df <- unique(gse_df)
 gsm_df <- unique(gsm_df)
 srr_df <- unique(srr_df)
@@ -184,11 +191,7 @@ sra_demo <- sra_df
 
 
 
-
-#saveRDS(gsm_df, "gsm_df.Rda")
-#saveRDS(gse_df, "gse_df.Rda")
-#saveRDS(srr_df, "srr_df.Rda")
-#saveRDS(sra_df, "sra_df.Rda")
+# Save data ####
 
 usethis::use_data(gse_demo)
 usethis::use_data(gsm_demo)
@@ -197,4 +200,3 @@ usethis::use_data(sra_demo)
 
 
 
-#usethis::use_data("Demo_DBs")
