@@ -61,7 +61,7 @@ appendGSEColumns <- function(df, gse_columns){
 
 
 #----------------------------
-
+# INPUTS
 
 GSE44563 <- searchForAccession("GSE44563", file_output = FALSE) # single gse
 
@@ -74,11 +74,15 @@ df <- df_whole[ ,c(2, 5,4, 11)]
 gse_columns <- c("gse", "title", "type", "pubmed_id")
 #gse_columns <- dbListFields(geo_con, "gse")
 
+# ARGUMENTS
+# df, gse_columns
 
 #--------
 
+
 database_name <- "geo_con"
 database_env <- ".GlobalEnv"
+
 
 # ===*=== Clause to interpret "*" as all fields
 # ===*=== Check columns in the column list (maybe)
@@ -88,14 +92,15 @@ database_env <- ".GlobalEnv"
 gse_columns_sql <- paste0(gse_columns, sep = ", ", collapse = "")
 gse_columns_sql <- substr(gse_columns_sql, 1, nchar(gse_columns_sql)-2)
 
-
+# Convert df to long format (sample, series_id)
 df_ids <- df %>% dplyr::select(sample, series_id)
 df_ids_long <- df_ids %>% tidyr::separate_rows(series_id, sep = ",")
 
-
+# Find a list of gses to search for
 gse_list <- unique(df_ids_long$series_id)
 #gse_list <- c("GSE25899", "GSE10936", "nth") #what if no results or only some
 
+# Search for information in GSE
 gse_df <- data.frame()
 for (s in seq_along(gse_list)){
   
@@ -103,7 +108,6 @@ for (s in seq_along(gse_list)){
   chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
   gse_df <- rbind(gse_df, chunk)
 }
-
 colnames(gse_df)[grepl("^gse$", colnames(gse_df))] <- "series_id"
 
 
@@ -113,9 +117,11 @@ collapsible_columns <- colnames(df_ids_long)
 collapsible_columns <- collapsible_columns[!grepl("sample", collapsible_columns)]
 collapsible_columns <- collapsible_columns[!grepl("series_id", collapsible_columns)]
 
+x <- character()
 for (c in seq_along(collapsible_columns)){
 #for (c in 1){
-  x[c] <- paste0(collapsible_columns[c], " = paste(", collapsible_columns[c], ", collapse = ';;' )" )
+  #x[c] <- paste0(collapsible_columns[c], " = paste(", collapsible_columns[c], ", collapse = ';;' )" )
+  x[c] <- paste0(collapsible_columns[c], " = paste(unique(", collapsible_columns[c], "), collapse = ';;' )" )
 }
 
 collapse_expression <- paste0(x, collapse = "", sep = ", ")
