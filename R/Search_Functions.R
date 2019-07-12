@@ -324,7 +324,7 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #gsm_list <- c("GSM2342088")
   #gsm_list <- c("GSM2342088", "GSM2140962")
 
-  gsm_list <- spider_combined$sample #Get GSMs from column created by gsmExtractor()
+  gsm_list <- spider_combined$gsm #Get GSMs from column created by gsmExtractor() # sampletogsm ===*===
   gsm_list <- unique(gsm_list[!is.na(gsm_list)]) #Leave only unique, non-na entries
   #-------------------------
 
@@ -344,7 +344,7 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   #============================================================================
   #Merge spider_comibined and spider_geo
   #============================================================================
-  spider_combined <- merge(spider_combined, spider_geo, by.x = "sample", by.y = "gsm", all.x = TRUE)
+  spider_combined <- merge(spider_combined, spider_geo, by.x = "gsm", by.y = "gsm", all.x = TRUE) # by.x sampletogsm ===*===
 
   #saveRDS(spider_combined, "spider_combined_prelim.Rda")
 

@@ -25,7 +25,7 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
 
 
   #Instead, rename the native gsm column to sample to match the column naming in searchForTerm
-  names(output_df)[names(output_df)=="gsm"] <- "sample"
+  #names(output_df)[names(output_df)=="gsm"] <- "sample" # sampletogsm ===*===
 
 
 

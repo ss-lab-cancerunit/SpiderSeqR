@@ -684,10 +684,10 @@ gsmExtractor <- function(output_list, sampleColumn = TRUE){
 
   if (sampleColumn == TRUE){
     #Create a new column
-    output_list$sample <- NA
+    output_list$gsm <- NA # sampletogsm ===*===
 
     #Extract the GSMs to sample column
-    output_list$sample[gsm_indices] <- gsub("^(GSM\\d\\d\\d+).*$", "\\1", output_list$experiment_title[gsm_indices])
+    output_list$gsm[gsm_indices] <- gsub("^(GSM\\d\\d\\d+).*$", "\\1", output_list$experiment_title[gsm_indices]) # sampletogsm ===*===
   }
 
 

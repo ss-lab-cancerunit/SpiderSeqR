@@ -802,7 +802,7 @@ dbExtractGenerator <- function(df){
                   "experiment_accession",
                   "sample_accession",
                   "study_accession",
-                  "sample",
+                  "gsm", #sampletogsm ===*===
                   "series_id",
                   "library_strategy",
                   "platform",
