@@ -21,11 +21,19 @@ searchAnywhereSRA(query, acc_levels = c("run", "experiment", "sample",
 Fulltext search in SRA
 }
 \examples{
-searchAnywhereSRA("stat3") # stat3
-searchAnywhereSRA("stat3 taxon_id: 9606") # stat3 in human samples
+# stat3
+searchAnywhereSRA("stat3") 
+
+# stat3 in human samples
+searchAnywhereSRA("stat3 taxon_id: 9606") 
+
+# stat3 chip-seq (including unclassified library strategies)
 searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq")
-searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq", sra_other_library_strategy = FALSE) # stat3 chip-seq not including unclassified library strategies
-searchAnywhereSRA("stat3", acc_levels = c("run", "experiment", "sample")) #stat3 ignoring matches at study level
+# stat3 chip-seq not including unclassified library strategies
+searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq", sra_other_library_strategy = FALSE) 
+
+#stat3 ignoring matches at study level
+searchAnywhereSRA("stat3", acc_levels = c("run", "experiment", "sample")) 
 
 
 

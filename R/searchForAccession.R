@@ -18,7 +18,7 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
   accession_class <- classifyAccession(x)
 
 
-  output_df <- searchForAccessionAcrossDBs(acc_vector = x, sra_columns = "*", geo_columns = "*")
+  output_df <- searchForAccessionAcrossDBs(acc_vector = x, sra_columns = "*", geo_columns = "*", gse_columns = "*")
 
   #output_df <- gsmExtractor(output_df, sampleColumn = TRUE) #Create sample column
   output_df <- gsmExtractor(output_df, sampleColumn = FALSE) #Don't create sample column

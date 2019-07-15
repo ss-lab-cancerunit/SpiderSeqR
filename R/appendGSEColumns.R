@@ -54,6 +54,15 @@ appendGSEColumns <- function(df, gse_columns){
   database_env <- ".GlobalEnv"
   
   # Checks and housekeeping (arguments) ####
+  if (missing(gse_columns)){
+    warning("No gse_columns provided")
+    return(df)
+  }
+  
+  if (is.null(gse_columns)){
+    warning("No gse_columns provided")
+    return(df)
+  }
   
   # Check for gsm and series_id columns
   if ( !("gsm" %in% colnames(df) & "series_id" %in% colnames(df))){
@@ -62,10 +71,10 @@ appendGSEColumns <- function(df, gse_columns){
     #return(df_out)
   }
   
-  all_gse_columns <- dbListFields(get(database_name, envir = get(database_env)), "gse")
+  all_gse_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "gse")
   
   # Change * to full column list
-  if (gse_columns == "*"){
+  if (length(gse_columns) == 1 & gse_columns[1] == "*"){
     gse_columns <- all_gse_columns
   }
   
@@ -115,6 +124,8 @@ appendGSEColumns <- function(df, gse_columns){
     return(df_out)
   }
   
+  # Rename columns
+  colnames(gse_df)[colnames(gse_df)!="series_id"] <- paste0("GSE_", colnames(gse_df)[colnames(gse_df)!="series_id"])
   
   # Join (and collapse) gse_df and df_ids_long dfs ####
   
@@ -169,6 +180,7 @@ appendGSEColumns <- function(df, gse_columns){
   #df_out <- df_ids_long %>% dplyr::left_join(df, by = c("gsm", "series_id")) # This order is better for display purposes
   
   df_out <- as.data.frame(df_out)
+  .GlobalEnv$temp_df_out <- df_out
   
   print("findPubmedIDs completed")
   return(df_out)

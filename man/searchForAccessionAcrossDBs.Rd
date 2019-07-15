@@ -4,7 +4,8 @@
 \alias{searchForAccessionAcrossDBs}
 \title{Search for accession across databases}
 \usage{
-searchForAccessionAcrossDBs(acc_vector, sra_columns, geo_columns)
+searchForAccessionAcrossDBs(acc_vector, sra_columns, geo_columns,
+  gse_columns)
 }
 \arguments{
 \item{acc_vector}{A vector of accessions \strong{(all must belong to the same type)}}

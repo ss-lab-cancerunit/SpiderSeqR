@@ -160,7 +160,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
     print(paste0("The file ", sra_file, " was not found in the current working directory"))
     print("Would you like to download the file now?")
     
-    sra_menu <- menu(c("yes", "no"))
+    sra_menu <- utils::menu(c("yes", "no"))
     if (sra_menu == 1){
       print("Downloading the file")
       sra_file <<- SRAdb::getSRAdbFile()
@@ -177,7 +177,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
     print(paste0("Last modified: ", file.info(sra_file)$mtime))
     print("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?")
     
-    sra_menu <- menu(c("yes", "no"))
+    sra_menu <- utils::menu(c("yes", "no"))
     if (sra_menu == 1){
       print("Downloading the file")
       sra_file <<- SRAdb::getSRAdbFile()
@@ -209,7 +209,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
     print(paste0("The file ", geo_file, " was not found in the current working directory"))
     print("Would you like to download the file right now?")
     
-    geo_menu <- menu(c("yes", "no"))
+    geo_menu <- utils::menu(c("yes", "no"))
     if (geo_menu == 1){
       print("Downloading the file")
       geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
@@ -226,7 +226,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
     print(paste0("Last modified: ", file.info(geo_file)$mtime))
     print("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?")
     
-    geo_menu <- menu(c("yes", "no"))
+    geo_menu <- utils::menu(c("yes", "no"))
     if (geo_menu == 1){
       print("Downloading the file")
       geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
@@ -266,7 +266,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   if (!file.exists(srr_gsm_file)){ # NO FILE
     
     print("Would you like to create a cutstom database for converting between GEO and SRA? This might take a little while, but it is necessary for the correct functioning of the package.")
-    srr_gsm_menu <- menu(c("yes", "no"))
+    srr_gsm_menu <- utils::menu(c("yes", "no"))
     if (srr_gsm_menu == 1){ # WILLING TO CREATE DB
       print("Database will be created shortly")
       db_needed <- TRUE
@@ -286,7 +286,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
       print(paste0("The file ", srr_gsm_file, " is out of date"))
       print(paste0("Last modified: ", file.info(srr_gsm_file)$mtime))
       print("Would you like to create a new version of the file right now? (this is recommended, though not necessary)?")
-      srr_gsm_menu <- menu(c("yes", "no"))
+      srr_gsm_menu <- utils::menu(c("yes", "no"))
       if (srr_gsm_menu == 1){ # WILLING TO CREATE DB
         print("Database will be re-created shortly")
         db_needed <- TRUE

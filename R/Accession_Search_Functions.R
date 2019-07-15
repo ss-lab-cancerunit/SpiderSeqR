@@ -24,7 +24,7 @@
 
 #------------------------------------------------------
 #------------------------------------------------------
-searchGEOForGSM <- function(acc_vector, geo_columns){
+searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
 
   print("Running searchGEOForGSM")
   
@@ -62,6 +62,8 @@ searchGEOForGSM <- function(acc_vector, geo_columns){
   #if (dim(df)[1]==0){
   #  df <- chunk
   #}
+  
+  df <- appendGSEColumns(df, gse_columns)
 
   print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
 
@@ -83,7 +85,7 @@ searchGEOForGSM <- function(acc_vector, geo_columns){
 
 #------------------------------------------------------
 #------------------------------------------------------
-searchGEOForGSE <- function(acc_vector, geo_columns){
+searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
 
   print("Running searchGEOForGSE")
   
@@ -116,6 +118,9 @@ searchGEOForGSE <- function(acc_vector, geo_columns){
     search_count <- search_count + as.integer(dim(chunk)[1]>=1)
     df <- rbind(df, chunk)
   }
+  
+  df <- appendGSEColumns(df, gse_columns)
+
 
   print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
 

@@ -21,7 +21,9 @@ Imports:
     dplyr (>= 0.7),
     DBI (>= 0.7),
     RSQLite (>= 2.0),
+    tidyr,
     SRAdb (>= 1.40),
     GEOmetadb (>= 1.40),
-    utils
+    utils,
+    stats
 RoxygenNote: 6.1.1

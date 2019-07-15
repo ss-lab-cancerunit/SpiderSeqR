@@ -1691,14 +1691,17 @@ superseriesVerifier <- function(gse_list){
 #' 
 #' 
 #' @examples
+#' # Convert into short form
+#' manageLibraryStrategy("RNA-Seq", input = "can", output = "short") 
 #' 
-#' manageLibraryStrategy("RNA-Seq", input = "can", output = "short") #Convert into short form
+#' # Convert into canonical form
+#' manageLibraryStrategy("RNA", input = "syn", output = "can") 
 #' 
-#' manageLibraryStrategy("RNA", input = "syn", output = "can") #Convert into canonical form
+#' # List supported formats for library strategy
+#' manageLibraryStrategy(task = "ex") 
 #' 
-#' manageLibraryStrategy(task = "ex") #List supported formats for library strategy
-#' 
-#' manageLibraryStrategy("RNA-Seq", task = "check_can") #Check whether library strategy is in canonical form
+#' # Check whether library strategy is in canonical form
+#' manageLibraryStrategy("RNA-Seq", task = "check_can") 
 #' 
 #' 
 #' 
