@@ -119,7 +119,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
 
   
   #==========================================================
-  # Setting expiry parameters
+  # Setting expiry parameters ####
   #==========================================================
   # Logic:
   # Use specific parameters (sra, geo, srr_gsm) if available. If not, use the expiry date from general_expiry
@@ -151,7 +151,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   
   
   #==========================================================
-  # SRAmetadb
+  # SRAmetadb ####
   #==========================================================
   
   # NO SRA FILE
@@ -199,7 +199,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   
   
   #==========================================================
-  # GEOmetadb
+  # GEOmetadb ####
   #==========================================================
   
   # NO GEO FILE
@@ -260,7 +260,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   
   
   #==========================================================
-  # FIND OUT WHETHER IT IS NECESSARY TO CREATE CUSTOM DATABASE
+  # FIND OUT WHETHER IT IS NECESSARY TO CREATE CUSTOM DATABASE ####
   #==========================================================
   
   if (!file.exists(srr_gsm_file)){ # NO FILE
@@ -302,7 +302,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   
   
   #==========================================================
-  # Create custom database
+  # Create custom database ####
   #==========================================================
   if (db_needed){
     print("Creating the custom database")
@@ -426,6 +426,17 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   .GlobalEnv$geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
   .GlobalEnv$srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), dbname = srr_gsm_file)
   
+  print("==========================================================")
+  print(paste0("Further info on ", sra_file, " database:"))
+  print("==========================================================")
+  print(DBI::dbGetQuery(get("geo_con", envir = get(".GlobalEnv")), "SELECT * FROM metaInfo"))
+  
+  print("==========================================================")
+  print(paste0("Further info on ", geo_file, " database:"))
+  print("==========================================================")
+  print(DBI::dbGetQuery(get("sra_con", envir = get(".GlobalEnv")), "SELECT * FROM metaInfo"))
+  
+  print("==========================================================")
   print("Welcome to SpideR")
   
   

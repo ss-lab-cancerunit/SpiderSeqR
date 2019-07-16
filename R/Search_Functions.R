@@ -328,7 +328,10 @@ searchForTerm <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=
   gsm_list <- unique(gsm_list[!is.na(gsm_list)]) #Leave only unique, non-na entries
   #-------------------------
 
-  spider_geo <- geoFinder(get(gsm_db_name, envir = get(database_env)), gsm_list = gsm_list, gsm_columns = gsm_columns, gse_columns = gse_columns)
+  #spider_geo <- geoFinder(get(gsm_db_name, envir = get(database_env)), gsm_list = gsm_list, gsm_columns = gsm_columns, gse_columns = gse_columns)
+  spider_geo <- searchGEOForGSM(gsm_list, geo_columns = gsm_columns, gse_columns = gse_columns)
+  #.GlobalEnv$temp_spider_geo <- spider_geo
+  
 
   #============================================================================
 

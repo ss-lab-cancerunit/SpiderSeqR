@@ -1573,6 +1573,16 @@ pairedEndConverter <- function(df){
 
 #----------------------------------------------------------------------------
 #Developed in gseFinder_unfolded_after_keywordExtractor2.R
+#' Search for GSMs in GEO
+#' 
+#' @param db_con Database connection (object, not character)
+#' @param gsm_list GSMs to search for
+#' @param gsm_columns Columns within gsm table
+#' @param gse_columns Columns within gse table
+#' 
+#' Performs search within GEO gsm and gse tables
+#' 
+#' @keywords internal
 geoFinder <- function(db_con, gsm_list, gsm_columns, gse_columns){
   print("Running geoFinder")
 

@@ -125,6 +125,48 @@ searchAnywhereGEO <- function(geo_query, acc_levels = c("gse", "gsm"), geo_type)
   print(l)
 }
 
+
+searchAnywhereGSM <- function(geo_query, type){ # No acc_levels needed in this case
+  
+  database_name <- "geo_con"
+  database_env <- ".GlobalEnv"
+  
+  # List all tables within geo_con
+  geo_tables <- DBI::dbListTables(get(database_name, envir = get(database_env)))
+  
+  # Construct a query within gsm ####
+  if (!("gsm_ft" %in% geo_tables)){
+    # Standard search ####
+    gsm_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "gsm")
+    full_query <- "SELECT * FROM gsm WHERE ( " # initial bracket
+    for (g in gsm_columns){
+      chunk <- paste0("( ", g, " LIKE '%", geo_query, "%') OR ")
+      full_query <- paste0(full_query, chunk)
+    }
+    full_query <- substr(full_query, 1, nchar(full_query)-4)
+    full_query <- paste0(full_query, " )") # final bracket
+    print(full_query)
+    df <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), full_query)
+  } else {
+    # Fts search ####
+    stop("No fts support yet")
+    #df <- 1 # To be added ===*===
+  }
+  
+  # Append gse columns ####
+  df <- appendGSEColumns(df, "*")
+  
+  # Filter by type if provided ####
+  if (!is.null(type)){
+    filt_ind <- grepl(type, df$GSE_type)
+    df <- df[filt_ind,]
+  }
+  
+  
+  
+  return(df)
+}
+
 #------------------------------------------
 # ------------------DONE-------------------
 #------------------------------------------
@@ -134,7 +176,7 @@ searchAnywhereGEO <- function(geo_query, acc_levels = c("gse", "gsm"), geo_type)
 #' 
 #' Fulltext search in SRA
 #' 
-#' @param query Query passed to fts MATCH operator
+#' @param query Query passed to fts MATCH operator (cannot be a vector)
 #' @param library_strategy Character vector denoting library_strategy/ies of choice (OPTIONAL)
 #' @param sra_other_library_strategy A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided
 #' @param acc_levels Character vector denoting which accession levels will be searched. Choose from some/all of c("run", "experiment", "sample", "study")
@@ -255,6 +297,7 @@ searchAnywhereSRA <- function(query, acc_levels = c("run", "experiment", "sample
   
   df <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query_full)
   
+  .GlobalEnv$temp_searchAnywhereSRA <- df
   
   df <- filterSRAQueryByAccessionLevel(query, df, acc_levels)
   
@@ -292,7 +335,7 @@ filterSRAQueryByAccessionLevel <- function(query, df, acc_levels){
   
   if (file.exists(filter_db_file)) file.remove(filter_db_file)
   
-  .GlobalEnv$filter_con <- DBI::dbConnect(SQLite(), dbname = filter_db_file)
+  .GlobalEnv$filter_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = filter_db_file)
   DBI::dbWriteTable(conn = filter_con, name="filt_sra", value = df_filt)
   
   
@@ -352,6 +395,11 @@ subsetSRAByAccessionLevel <- function(df, acc_levels, add_run_accession = TRUE){
 #'
 convertCategoriesToLibraryStrategyType <- function(x){
   
+  # devtools::check()
+  DB <- NULL
+  SRA_GEO_Category_Conversion <- NULL
+  
+  utils::data("SRA_GEO_Category_Conversion", envir = environment())
   df <- SRA_GEO_Category_Conversion # Retrieve category conversion data frame
   
   # Make matching case insensitive

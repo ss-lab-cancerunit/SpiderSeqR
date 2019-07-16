@@ -182,7 +182,7 @@ appendGSEColumns <- function(df, gse_columns){
   df_out <- as.data.frame(df_out)
   .GlobalEnv$temp_df_out <- df_out
   
-  print("findPubmedIDs completed")
+  print("appendGSEColumns completed")
   return(df_out)
   
   

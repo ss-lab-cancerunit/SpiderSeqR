@@ -28,7 +28,7 @@ getDatabaseInformation <- function(){
   
   
   print("What kind of database information are you interested in?")
-  menu_options <- menu(c("SRA: Available library_strategy types (and their counts)", #1
+  menu_options <- utils::menu(c("SRA: Available library_strategy types (and their counts)", #1
                          "SRA: Available taxon_id's (and their counts)", #2
                          "GEO: Available source_name_ch1 (and their counts)", #3
                          "GEO: Available label_ch1 (and their counts)", #4
@@ -102,13 +102,17 @@ getDatabaseInformation <- function(){
     
   } else if (menu_options == 13){
     
-    df <- dbGetQuery(geo_con, "SELECT type, count(*) AS total FROM gse GROUP BY type") #Frequency table of study types in GSE table
+    # Devtools::check()
+    type <- NULL
+    total <- NULL
+    
+    df <- DBI::dbGetQuery(get(geo_database_name, envir = get(database_env)), "SELECT type, count(*) AS total FROM gse GROUP BY type") #Frequency table of study types in GSE table
 
     df <- df %>% 
       tidyr::separate_rows(type, sep = ";\t") %>% 
       dplyr::group_by(type) %>% 
       dplyr::summarise_all(sum) %>% 
-      dplyr::arrange(desc(total))
+      dplyr::arrange(dplyr::desc(total))
     
     df <- as.data.frame(df)
     return(df)
