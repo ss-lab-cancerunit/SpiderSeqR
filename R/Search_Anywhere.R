@@ -2,10 +2,18 @@
 
 #' Search Anywhere within SRA and GEO databases (under construction!)
 #' 
-#' @param query_both Search term for both SRA and GEO
+#' @param query_all Search term for both SRA and GEO
+#' @param category_both
+#' @param acc_levels Accession levels at which the search is conducted
+#' @param sra_library_strategy
+#' @param sra_other_library_strategy
+#' @param geo_type
 #' @param sra_query Search term for SRA only
 #' @param geo_query Search term for GEO only
-#' @param acc_levels Accession levels at which the search is conducted
+#' @param gsm_query
+#' @param gse_query
+#' 
+#' 
 #' 
 #' @examples 
 #' searchAnywhere("*stat3*") #The broadest search
@@ -16,14 +24,14 @@
 #' searchAnywhere ("p53", acc_levels = c("gsm", "gse")) #Only search in GEO
 #' 
 #' @section Argument requirements:
-#' Either query_both or \strong{both} sra_query and geo_query need to be provided (this is to facilitate column-specific search in the databases; if you wish to search within specific columns, provide sra_query and geo_query with appropriate column names)
+#' Either query_all or \strong{both} sra_query and geo_query need to be provided (this is to facilitate column-specific search in the databases; if you wish to search within specific columns, provide sra_query and geo_query with appropriate column names)
 #' 
 #' @section Accession levels:
 #' Each accession level is associated with its own set of information. Sometimes the information is replicated across levels, sometimes it is unique to the level. Only information associated with the specified accession levels will be subject of the search. For example, it is common for study abstracts to mention a lot of gene names or proteins that were not a direct object of the study; by searching everywhere studies with a mere mention of a gene will be included. 
 #' 
 #' Restricting accession levels, e.g.  
 #' 
-#' \code{searchAnywhere(query_both = "p53", acc_levels = c("run", "experiment", "sample", "gsm"))}  
+#' \code{searchAnywhere(query_all = "p53", acc_levels = c("run", "experiment", "sample", "gsm"))}  
 #' 
 #' will help avoid including these cases. However, always consider using a broader search and comparing the results to the more refined one.
 #' 
@@ -39,25 +47,53 @@
 #'     \item Search for rare types of experiments ('library_strategy: HiC'; 'hic library_strategy: OTHER')
 #' }
 #' 
-searchAnywhere <- function(query_both, category_both=NULL, acc_levels = c("run", "experiment", "sample", "study", "gsm", "gse"), sra_library_strategy=NULL, sra_other_library_strategy = c("OTHER", "NA", "NULL"), geo_type=NULL, sra_query, geo_query, ...){
+searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", "experiment", "sample", "study", "gsm", "gse"), sra_library_strategy=NULL, sra_other_library_strategy = c("OTHER", "NA", "NULL"), geo_type=NULL, sra_query, geo_query, gsm_query, gse_query, ...){
   
   
-  #Checking arguments (either query_both or sra_query AND geo_query)
-  if (!missing(query_both)){
-    if (!missing(sra_query) | !missing(geo_query)){
-      warning("query_both already provided; sra_query/geo will be ignored")
+  # Query arguments ####
+  # Checking arguments (either query_all or sra_query AND geo_query (OR gsm_query AND gse_query))
+  
+  if (!missing(query_all)){ # QUERY_ALL PRESENT
+    
+    if (!missing(sra_query) | !missing(geo_query) | !missing(gsm_query) | !missing(gse_query)){
+      warning("query_all already provided; sra/geo/gsm/gse_query will be ignored")
     }
-    sra_query <- query_both
-    geo_query <- query_both
-  } else if (missing(sra_query) | missing(geo_query)){
-    stop("Either query_both or both 'sra_query & geo_query' need to be provided")
-    # ===*=== Add clause that checks for acc_levels
+    
+    sra_query <- query_all
+    gsm_query <- query_all
+    gse_query <- query_all
+    
+  } else { # QUERY_ALL ABSENT
+    
+    #sra_query as provided (sra_query <- sra_query)
+    if (missing(sra_query)){
+      stop("sra_query is required")
+    }
+    
+    if (!missing(geo_query)){ ## QUERY_ALL ABSENT; GEO_QUERY PRESENT
+      
+      if( !missing(gsm_query) | !missing(gse_query)){
+        warning("geo_query already provided; gsm/gse_query will be ignored")
+      }
+      
+      gsm_query <- geo_query
+      gse_query <- geo_query
+      
+    } else { ## QUERY_ALL ABSENT; GEO_QUERY ABSENT
+      
+      # gsm_query, gse_query as provided (gsm_query <- gsm_query; gse_query <- gse_query)
+      if ( missing(gsm_query) | missing(gse_query)){
+        stop("gsm_query and gse_query are both required in the absence of query_all or geo_query")
+      }
+    }
+    
   }
+
   
   
   
   
-  # Convert sra_library_strategy from a list of synonyms to a canonical form
+  # Convert sra_library_strategy from a list of synonyms to a canonical form (will be disregarded if category_both is provided)
   if (!is.null(sra_library_strategy)){
     x <- character()
     for (s in seq_along(sra_library_strategy)){
@@ -81,10 +117,11 @@ searchAnywhere <- function(query_both, category_both=NULL, acc_levels = c("run",
     
   }
   
-  sra_arg_check <- list(...)$sra_arg_check
-  if (!is.null(sra_arg_check)){
-    searchAnywhereSRA(sra_query, sra_library_strategy, sra_other_library_strategy, acc_levels = acc_levels, sra_arg_check)
-  }
+  # Developer check ===*===
+  #sra_arg_check <- list(...)$sra_arg_check
+  #if (!is.null(sra_arg_check)){
+  #  searchAnywhereSRA(sra_query, sra_library_strategy, sra_other_library_strategy, acc_levels = acc_levels, sra_arg_check)
+  #}
   
   
   # Search in SRA if any of the acc_levels are from SRA
@@ -98,7 +135,7 @@ searchAnywhere <- function(query_both, category_both=NULL, acc_levels = c("run",
   
   if (sum(acc_levels %in% c("gse", "gsm"))>0){
     if (!(!is.null(category_both) & length(geo_type)==0)){ # Don't search if category_both doesn't include GEO
-      geo_df <- searchAnywhereGEO(geo_query, acc_levels = acc_levels, geo_type = geo_type)
+      geo_df <- searchAnywhereGEO(gsm_query = gsm_query, gse_query = gse_query, acc_levels = acc_levels, geo_type = geo_type)
     }  
   }
 
@@ -116,17 +153,45 @@ searchAnywhere <- function(query_both, category_both=NULL, acc_levels = c("run",
 
 
 
+#' Search anywhere within gse and gsm tables of GEO database
+#' 
+#' @param gsm_query String to search for within gsm table
+#' @param gse_query String to search for within gse table
+#' @param acc_levels Character vector indicating where to conduct the search (only "gse" and "gsm" are considered)
+#' @param geo_type Study type for filtering results (optional)
+#' @return Data frame with result data from whole GEO (gsm and gse tables)
+#' 
+#' 
+searchAnywhereGEO <- function(gsm_query, gse_query, acc_levels = c("gse", "gsm"), geo_type=NULL){
+  
+  if ("gsm" %in% acc_levels){
+    df_gsm <- searchAnywhereGSM(gsm_query, geo_type)
+    df_out <- df_gsm
+  }
+  
+  if ("gse" %in% acc_levels){
+    df_gse <- searchAnywhereGSE(gse_query, geo_type)
+    df_out <- df_gse
+  }
+  
+  if (sum(c("gsm", "gse") %in% acc_levels)==2){
+    df_out <- unique((rbind(df_gsm, df_gse)))
+    
+  }
 
-searchAnywhereGEO <- function(geo_query, acc_levels = c("gse", "gsm"), geo_type){
-  l <- list()
-  l$geo_query <- geo_query
-  l$acc_levels <- acc_levels
-  l$geo_type <- geo_type
-  print(l)
+  return(df_out)
 }
 
 
-searchAnywhereGSM <- function(geo_query, type){ # No acc_levels needed in this case
+
+#' Search anywhere within gsm table of GEO database
+#' 
+#' @param gsm_query String to search for 
+#' @param geo_type Study type for filtering results (optional)
+#' @return Data frame with result data from whole GEO (gsm and gse tables)
+#' 
+#' 
+searchAnywhereGSM <- function(gsm_query, geo_type){ # No acc_levels needed in this case
   
   database_name <- "geo_con"
   database_env <- ".GlobalEnv"
@@ -140,7 +205,7 @@ searchAnywhereGSM <- function(geo_query, type){ # No acc_levels needed in this c
     gsm_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "gsm")
     full_query <- "SELECT * FROM gsm WHERE ( " # initial bracket
     for (g in gsm_columns){
-      chunk <- paste0("( ", g, " LIKE '%", geo_query, "%') OR ")
+      chunk <- paste0("( ", g, " LIKE '%", gsm_query, "%') OR ")
       full_query <- paste0(full_query, chunk)
     }
     full_query <- substr(full_query, 1, nchar(full_query)-4)
@@ -156,16 +221,71 @@ searchAnywhereGSM <- function(geo_query, type){ # No acc_levels needed in this c
   # Append gse columns ####
   df <- appendGSEColumns(df, "*")
   
-  # Filter by type if provided ####
-  if (!is.null(type)){
-    filt_ind <- grepl(type, df$GSE_type)
+  # Filter by geo_type if provided ####
+  if (!is.null(geo_type)){
+    filt_ind <- grepl(geo_type, df$GSE_type)
+    df <- df[filt_ind,]
+  }
+  
+  return(df)
+}
+
+
+#' Search anywhere within gse table of GEO database
+#' 
+#' @param gse_query String to search for 
+#' @param geo_type Study type for filtering results (optional)
+#' @return Data frame with result data from whole GEO (gsm and gse tables)
+#' 
+#' 
+searchAnywhereGSE <- function(gse_query, geo_type){
+  
+  database_name <- "geo_con"
+  database_env <- ".GlobalEnv"
+  
+  # List all tables within geo_con
+  geo_tables <- DBI::dbListTables(get(database_name, envir = get(database_env)))
+  
+  # Construct a query within gse ####
+  if (!("gse_ft" %in% geo_tables)){
+    # Standard search ####
+    gse_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "gse")
+    full_query <- "SELECT * FROM gse WHERE ( " # initial bracket
+    for (g in gse_columns){
+      chunk <- paste0("( ", g, " LIKE '%", gse_query, "%') OR ")
+      full_query <- paste0(full_query, chunk)
+    }
+    full_query <- substr(full_query, 1, nchar(full_query)-4)
+    full_query <- paste0(full_query, " )") # final bracket
+    print(full_query)
+    df <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), full_query)
+  } else {
+    # Fts search ####
+    stop("No fts support yet")
+    #df <- 1 # To be added ===*===
+  }
+  
+  # Filter by geo_type if provided ####
+  if (!is.null(geo_type)){
+    filt_ind <- rep(FALSE, dim(df)[1])
+    for (t in geo_type){
+      filt_ind <- filt_ind | grepl(geo_type, df$type) # Note that column name here is type, not GSE_type
+    }
     df <- df[filt_ind,]
   }
   
   
+  # Search across GEO for GSEs ####
+  df <- searchGEOForGSE(df$gse, "*", "*")
   
+
   return(df)
+  
+  
 }
+
+
+
 
 #------------------------------------------
 # ------------------DONE-------------------
@@ -414,8 +534,20 @@ convertCategoriesToLibraryStrategyType <- function(x){
   
   y <- list()
   
+  #.GlobalEnv$temp_convertCat_y_ori <- df
+  
+  
   y$sra_library_strategy <- dplyr::filter(df, DB == "SRA")$Name
   y$geo_type <- dplyr::filter(df, DB == "GEO")$Name
+  
+  if (length(y$sra_library_strategy)==0){
+    y[1] <- list(NULL) # This is a slight trick to avoid losing that list element altogether
+  }
+  if (length(y$geo_type)==0){
+    y[2] <- list(NULL) # This is a slight trick to avoid losing that list element altogether
+  }
+  
+  #.GlobalEnv$temp_convertCat_y_later <- y
   
   #if (length(y$sra_library_strategy)==0){
   #  y$sra_library_strategy <- NULL
