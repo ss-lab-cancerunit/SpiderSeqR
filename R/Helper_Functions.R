@@ -165,7 +165,7 @@ searchSRA <- function(library_strategy, gene, antibody, cell_type, treatment, sp
 
   #STOP IF NO RESULTS
   if ( (dim(output_list)[1]) == 0 ) {
-    stop("No results found for input symbols, check symbols/Synonyms entered or whether such entries exist on ncbi.")
+    stop("No results found for input symbols, check symbols/synonyms entered or whether such entries exist on ncbi.")
   }
 
   print("SQL query completed")
@@ -1898,6 +1898,36 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
 
 
 
+#----------------------------------------------------------------------------
+# renameGSMColumns
+#----------------------------------------------------------------------------
+#'
+#' Rename df columns derived from gsm table to 'GSM_'
+#' 
+#' @param df Data frame
+#' @return Data frame with modified column names
+renameGSMColumns <- function(df){
+  
+  database_name <- "geo_con"
+  database_env <- ".GlobalEnv"
+  
+  if (!is.data.frame(df)){
+    stop("df is not a data frame")
+  }
+  
+  gsm_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "gsm")
+  gsm_columns <- gsm_columns[!gsm_columns %in% c("gsm", "series_id")] # Exclude gsm and series_id
+  
+  
+  gsm_id <- (colnames(df) %in% gsm_columns)
+  
+  
+  colnames(df)[gsm_id] <- paste0("GSM_", colnames(df)[gsm_id])
+  
+  return(df)
+}
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 
 
 

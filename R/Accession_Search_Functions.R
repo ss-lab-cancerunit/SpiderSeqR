@@ -57,6 +57,9 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
     search_count <- search_count + as.integer(dim(chunk)[1]>=1)
     df <- rbind(df, chunk)
   }
+  
+  # Rename GSM columns
+  df <- renameGSMColumns(df)
 
   #print(colnames(chunk))
   #if (dim(df)[1]==0){
@@ -118,6 +121,9 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
     search_count <- search_count + as.integer(dim(chunk)[1]>=1)
     df <- rbind(df, chunk)
   }
+  
+  # Rename GSM columns
+  df <- renameGSMColumns(df)
   
   df <- appendGSEColumns(df, gse_columns)
 

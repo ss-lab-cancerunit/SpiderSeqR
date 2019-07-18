@@ -2,7 +2,7 @@
 
 #' Search Anywhere within SRA and GEO databases (under construction!)
 #' 
-#' @param query_all Search term for both SRA and GEO
+#' @param query_all Search term for both SRA and GEO (gse and gsm tables)
 #' @param category_both
 #' @param acc_levels Accession levels at which the search is conducted
 #' @param sra_library_strategy
@@ -23,8 +23,41 @@
 #' 
 #' searchAnywhere ("p53", acc_levels = c("gsm", "gse")) #Only search in GEO
 #' 
+#' 
+#' @section Delete some things below:
+#' TO BE DELETED ===*====
+#' 
 #' @section Argument requirements:
 #' Either query_all or \strong{both} sra_query and geo_query need to be provided (this is to facilitate column-specific search in the databases; if you wish to search within specific columns, provide sra_query and geo_query with appropriate column names)
+#' 
+#' 
+#' @section Query arguments:
+#' 
+#' Query arguments include query_both, sra_query, geo_query, gsm_query and gse_query.
+#' In the simplest case, it is recommended to just use query_both, which will apply to all the searches across databases. However, for user in need of more fine-tuning, other query arguements can be used (e.g. when you wish to search within specific columns of each database table; this is mostly appropriate for use in fts search).
+#' Only the highest level query arguments will be considered. Hence the following combinations of arguments are accepted (any extra query arguments will be ignored): 
+#' \itemize{
+#'     \item query_both
+#'     \item sra_query and geo_query
+#'     \item sra_query and gsm_query and gse_query
+#' 
+#' }
+#' @section Category_both, sra_library_strategy and geo_type:
+#' 
+#' SRA and GEO have distinct ways of specifying the type of their data (such as e.g. RNA-Seq, ChIP-Seq or microarray expression experiments). SRA stores that information as *library_strategy*, GEO records *types*. For users' convenience, a data frame with the conversion between the commmonest *library_strategies* and *types* is provided in \code{SRA_GEO_Category_Conversion} (for more details, please examine \code{SRA_GEO_Category_Conversion} or its documentation, \code{?SRA_GEO_Category_Conversion}). Hence, it is possible to specify *category*, which refers to either one or both SRA and GEO (some categories exist within both SRA and GEO, some only in one of the databases; e.g. only GEO stores microarray data).
+#' 
+#' Similarly to query arguments, the highest level argument will be taken into account and if lower-level arguments exist, they will be ignored. Hence, the user can provide the following combinations of arguments:
+#' \itemize{
+#'     \item NONE of category_both, sra_library_strategy and geo_type
+#'     \item category_both ONLY
+#'     \item sra_library_strategy AND geo_type
+#'     \item sra_library_strategy ONLY*
+#'     \item geo_type ONLY* 
+#' }
+#' * If only one of the sra_library_strategy and geo_type is provided, no search will be undertaken in the database corresponding to the missing argument. The same is the case if the supplied category_both refers only to one of the databases (e.g. search in SRA only if category_both = "DNA NGS" (DNA sequencing))
+#' 
+#' 
+#' 
 #' 
 #' @section Accession levels:
 #' Each accession level is associated with its own set of information. Sometimes the information is replicated across levels, sometimes it is unique to the level. Only information associated with the specified accession levels will be subject of the search. For example, it is common for study abstracts to mention a lot of gene names or proteins that were not a direct object of the study; by searching everywhere studies with a mere mention of a gene will be included. 
@@ -91,8 +124,7 @@ searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", 
 
   
   
-  
-  
+  # category_both, sra_library_strategy and geo_type ####
   # Convert sra_library_strategy from a list of synonyms to a canonical form (will be disregarded if category_both is provided)
   if (!is.null(sra_library_strategy)){
     x <- character()
@@ -102,20 +134,79 @@ searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", 
     sra_library_strategy <- x
   }
   
-  
+  # category_both PRESENT ####
   # Populate sra_library_strategy and geo_type with converted categories
   if (!is.null(category_both)){
     
     if ( !is.null(sra_library_strategy) | !is.null(geo_type)){
-      warning("category_both already provided; sra_library_strategy/geo_type will be ignored")
+      #warning("category_both already provided; sra_library_strategy/geo_type will be ignored")
+      message("category_both already provided; sra_library_strategy/geo_type will be ignored")
     }
     
     sra_library_strategy <- convertCategoriesToLibraryStrategyType(category_both)$sra_library_strategy
     geo_type <- convertCategoriesToLibraryStrategyType(category_both)$geo_type
-    print(sra_library_strategy)
-    print(geo_type)
+    #print(sra_library_strategy)
+    #print(geo_type)
+    
+    # If catagory_both has no corresponding library_strategy in SRA, don't search there
+    if (is.null(sra_library_strategy)){
+      length_pre <- length(acc_levels)
+      acc_levels <- acc_levels[!acc_levels %in% c("run", "experiment", "sample", "study")]
+      if (length(acc_levels) < length_pre){
+        #warning("Category_both does not exist in SRA - will not search there")
+        message("Category_both does not exist in SRA - will not search there")
+      }
+    }
+    
+    # If catagory_both has no corresponding type in GEO, don't search there
+    if (is.null(geo_type)){
+      length_pre <- length(acc_levels)
+      acc_levels <- acc_levels[!acc_levels %in% c("gsm", "gse")]
+      if (length(acc_levels) < length_pre){
+        #warning("Category_both does not exist in GEO - will not search there")
+        message("Category_both does not exist in GEO - will not search there")
+      }
+    }
+    
+    
+  } else {
+    
+    # category_both ABSENT ####
+    
+    # Omit search within SRA if geo_type exists, but sra_library_strategy is null
+    if (!is.null(geo_type) & is.null(sra_library_strategy)){
+      length_pre <- length(acc_levels)
+      acc_levels <- acc_levels[!acc_levels %in% c("run", "experiment", "sample", "study")]
+      if (length(acc_levels) < length_pre){
+        #warning("SRA library strategy not provided. Will only search in GEO")
+        message("SRA library strategy not provided. Will only search in GEO")
+      }
+    }
+    
+    # Omit search within GEO if sra_library_strategy exists, but geo_type is null
+    if (is.null(geo_type) & !is.null(sra_library_strategy)){
+      length_pre <- length(acc_levels)
+      acc_levels <- acc_levels[!acc_levels %in% c("gsm", "gse")]
+      if (length(acc_levels) < length_pre){
+        #warning("GEO type not provided. Will onlly search in SRA")
+        message("GEO type not provided. Will onlly search in SRA")
+      }
+    }
     
   }
+  
+  message("===SEARCH DETAILS===")
+  message("---QUERY---")
+  message("sra_query: ", sra_query)
+  message("gsm_query: ", gsm_query)
+  message("gse_query: ", gse_query)
+  message("---LIBRARY_STRATEGY/TYPE---")
+  message("sra_library_strategy: ", sra_library_strategy)
+  message("geo_type: ", geo_type)
+  message("---ACCESSION LEVELS FOR SEARCHING---")
+  message("acc_levels: ", paste0(acc_levels, collapse = ", "))
+  message("=====================")
+  
   
   # Developer check ===*===
   #sra_arg_check <- list(...)$sra_arg_check
@@ -124,18 +215,36 @@ searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", 
   #}
   
   
+  if (sum(acc_levels %in% c("run", "experiment", "sample", "study"))>0){
+    print("Search SRA")
+    sra_df <- searchAnywhereSRA(sra_query = sra_query, acc_levels = acc_levels, sra_library_strategy = sra_library_strategy, sra_other_library_strategy = sra_other_library_strategy)
+    sra_out <- searchForAccessionAcrossDBsDF(sra_df$run_accession, "*", "*", "*", sra_df)
+    
+    
+  }
+  
+  if (sum(acc_levels %in% c("gse", "gsm"))>0){
+    print("Search GEO")
+    geo_df <- searchAnywhereGEO(gsm_query = gsm_query, gse_query = gse_query, acc_levels = acc_levels, geo_type = geo_type)
+    geo_out <- searchForAccessionAcrossDBsDF(geo_df$gsm, "*", "*", "*", geo_df)
+  }
+  
+  
+  # TBD ####
   # Search in SRA if any of the acc_levels are from SRA
   # ===*===
   if (sum(acc_levels %in% c("run", "experiment", "sample", "study"))>0){
     if (!(!is.null(category_both) & length(sra_library_strategy)==0)){ # Don't search if category_both doesn't include SRA
-      sra_df <- searchAnywhereSRA(sra_query, acc_levels = acc_levels, sra_library_strategy = sra_library_strategy, sra_other_library_strategy = sra_other_library_strategy) # NOT PASSING ANY OTHER ARGUMENTS HERE ===*===
+      #print("Search SRA")
+      #sra_df <- searchAnywhereSRA(sra_query, acc_levels = acc_levels, sra_library_strategy = sra_library_strategy, sra_other_library_strategy = sra_other_library_strategy) # NOT PASSING ANY OTHER ARGUMENTS HERE ===*===
     }
   }
   
   
   if (sum(acc_levels %in% c("gse", "gsm"))>0){
     if (!(!is.null(category_both) & length(geo_type)==0)){ # Don't search if category_both doesn't include GEO
-      geo_df <- searchAnywhereGEO(gsm_query = gsm_query, gse_query = gse_query, acc_levels = acc_levels, geo_type = geo_type)
+      #print("Search GEO")
+      #geo_df <- searchAnywhereGEO(gsm_query = gsm_query, gse_query = gse_query, acc_levels = acc_levels, geo_type = geo_type)
     }  
   }
 
@@ -144,7 +253,7 @@ searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", 
   #------TBC
   # ===*===
   
-  df <- sra_df
+  df <- geo_out
   
   
   return(df)
@@ -296,7 +405,7 @@ searchAnywhereGSE <- function(gse_query, geo_type){
 #' 
 #' Fulltext search in SRA
 #' 
-#' @param query Query passed to fts MATCH operator (cannot be a vector)
+#' @param sra_query Query passed to fts MATCH operator (cannot be a vector)
 #' @param library_strategy Character vector denoting library_strategy/ies of choice (OPTIONAL)
 #' @param sra_other_library_strategy A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided
 #' @param acc_levels Character vector denoting which accession levels will be searched. Choose from some/all of c("run", "experiment", "sample", "study")
@@ -318,7 +427,7 @@ searchAnywhereGSE <- function(gse_query, geo_type){
 #' 
 #' 
 #' 
-searchAnywhereSRA <- function(query, acc_levels = c("run", "experiment", "sample", "study"), sra_library_strategy=NULL, sra_other_library_strategy = c("OTHER", "NA", "NULL"),  ...){
+searchAnywhereSRA <- function(sra_query, acc_levels = c("run", "experiment", "sample", "study"), sra_library_strategy=NULL, sra_other_library_strategy = c("OTHER", "NA", "NULL"),  ...){
   
   sra_arg_check <- list(...)$sra_arg_check
   if(!is.null(sra_arg_check)){
@@ -332,7 +441,7 @@ searchAnywhereSRA <- function(query, acc_levels = c("run", "experiment", "sample
       print(as.list(match.call(def=sys.function(-1), call = sys.call(-1))))
       
       l <- list()
-      l$query <- query
+      l$sra_query <- sra_query
       l$sra_library_strategy <- sra_library_strategy
       l$sra_other_library_strategy <- sra_other_library_strategy
       l$acc_levels <- acc_levels
@@ -341,7 +450,7 @@ searchAnywhereSRA <- function(query, acc_levels = c("run", "experiment", "sample
       return(l)
       
       
-      print(paste0("query: ", query))
+      print(paste0("sra_query: ", sra_query))
       print(paste0("sra_library_strategy: ", sra_library_strategy))
       print(paste0("sra_other_library_strategy: ", sra_other_library_strategy))
       print(paste0("acc_levels: ", acc_levels))
@@ -368,7 +477,7 @@ searchAnywhereSRA <- function(query, acc_levels = c("run", "experiment", "sample
   database_name <- "sra_con"
   database_env <- ".GlobalEnv"
 
-  query_full <- paste0("SELECT * FROM sra_ft WHERE sra_ft MATCH '", query, "'")
+  query_full <- paste0("SELECT * FROM sra_ft WHERE sra_ft MATCH '", sra_query, "'")
   
   if (!is.null(sra_library_strategy)){
     
@@ -446,6 +555,12 @@ searchAnywhereSRA <- function(query, acc_levels = c("run", "experiment", "sample
 #' 
 #' 
 filterSRAQueryByAccessionLevel <- function(query, df, acc_levels){
+  
+  if (sum(unique(acc_levels) %in% c("study", "sample", "experiment", "run"))==4){
+    print("Nothing to filter - returning original df")
+    return(df)
+  }
+  
   # Select columns within df
   df_filt <- subsetSRAByAccessionLevel(df, acc_levels, add_run_accession = TRUE)
   

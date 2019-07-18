@@ -8,6 +8,14 @@ chExtractor <- function(df){
   #
   #
   print("Running chExtractor")
+  
+  
+  # Add a clause for tackling GSM_ prefix
+  gsm_replace <- FALSE
+  if ("GSM_characteristics_ch1" %in% colnames(df)){
+    gsm_replace <- TRUE
+    colnames(df)[colnames(df) %in% "GSM_characteristics_ch1"] <- "characteristics_ch1"
+  }
 
   columnVerifier(df, "characteristics_ch1")
   
@@ -55,6 +63,10 @@ chExtractor <- function(df){
   df <- cbind(df, df_geo_char[, (-1)]) #Combine extracted columns with geo df (except ch1_original column)
 
   #===============================================================================================
+  
+  if (gsm_replace){
+    colnames(df)[colnames(df) %in% "characteristics_ch1"] <- "GSM_characteristics_ch1"
+  }
 
   print("chExtractor completed")
   return(df)
