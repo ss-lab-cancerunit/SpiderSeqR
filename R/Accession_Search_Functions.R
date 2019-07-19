@@ -213,6 +213,9 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
   }
 
   accession_df <- unique(accession_df)
+  
+  # Rename SRA columns
+  accession_df <- renameSRAColumns(accession_df)
 
 
   print("searchSRAForAccession completed")

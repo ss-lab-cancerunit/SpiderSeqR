@@ -45,6 +45,9 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
 
   output_df <- naConverter(output_df)
   
+  
+  output_df <- renameOTHColumns(output_df)
+  
   .GlobalEnv$temp_output_df <- output_df
 
   if (file_output == TRUE){

@@ -33,8 +33,8 @@ outputGenerator <- function(df, ss=NULL, st){
   #
   # Creates the following files:
   # - TARGET - samples of interest with relevant inputs/controls (ChIP/RNA)
-  # - ALL - all samples within SRP (that belong to the library_strategy) - only in the case of ChIP/RNA
-  # - SECONDARY - samples that belong to secondary_library_strategy - only for ChIP with specified library_strategy
+  # - ALL - all samples within SRP (that belong to the SRA_library_strategy) - only in the case of ChIP/RNA
+  # - SECONDARY - samples that belong to SRA_secondary_library_strategy - only for ChIP with specified library_strategy
   #
   # All the files are made available as sample sheets (.csv and .Rda) and database extracts (.csv, .Rda)
   #
@@ -49,31 +49,36 @@ outputGenerator <- function(df, ss=NULL, st){
   #Using custom function for ordering to disregard the '_RP/_RS/_RX/_RR' prefixes
   df <- df[orderAccessions(order_columns),]
 
+
   #Converting tabs in characteristics_ch1 column
-  df$characteristics_ch1 <- unlist(lapply(df$characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
+  if (sum(grepl("GSM_characteristics_ch1", colnames(df)))==1){
+    df$GSM_characteristics_ch1 <- unlist(lapply(df$GSM_characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
+  } else {
+    df$characteristics_ch1 <- unlist(lapply(df$characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
+  }
 
-
-
+  
+  
   if (!is.null(ss)){
     saveRDS(ss, do.call(filenameGenerator, c(st, list(output="ss"), list(file_type="Rda"))))
   }
 
 
-  if (st$library_strategy =="ChIP-Seq"){
+  if (st$SRA_library_strategy =="ChIP-Seq"){
     #======
     #ChIP
     #======
-    target <- dplyr::filter(df, library_strategy == st$library_strategy & input %in% c("N", "input"))
-  } else if (st$library_strategy =="RNA-Seq"){
+    target <- dplyr::filter(df, SRA_library_strategy == st$SRA_library_strategy & OTH_input %in% c("N", "input"))
+  } else if (st$SRA_library_strategy =="RNA-Seq"){
     #======
     #RNA
     #======
-    target <- dplyr::filter(df, library_strategy == st$library_strategy & control %in% c("N", "control", "otherwise"))
+    target <- dplyr::filter(df, SRA_library_strategy == st$SRA_library_strategy & OTH_control %in% c("N", "control", "otherwise"))
   } else {
     #======
     #ELSE
     #======
-    target <- dplyr::filter(df, library_strategy == st$library_strategy)
+    target <- dplyr::filter(df, SRA_library_strategy == st$SRA_library_strategy)
   }
 
 
@@ -82,7 +87,7 @@ outputGenerator <- function(df, ss=NULL, st){
   #=========================
 
   #GENERATE TARGET SAMPLE SHEET
-  target_sample_sheet <- universalSampleSheetGenerator(df=target, library_strategy = st$library_strategy)
+  target_sample_sheet <- universalSampleSheetGenerator(df=target, SRA_library_strategy = st$SRA_library_strategy)
 
   #SAVE TARGET SAMPLE SHEET
   saveRDS(target_sample_sheet, do.call(filenameGenerator, c(st, list(output="tar_sm"), list(file_type="Rda"))))
@@ -95,14 +100,14 @@ outputGenerator <- function(df, ss=NULL, st){
   saveRDS(target_db_extract, do.call(filenameGenerator, c(st, list(output="tar_db"), list(file_type="Rda"))))
   cwt(target_db_extract, do.call(filenameGenerator, c(st, list(output="tar_db"), list(file_type="csv"))))
 
-  if (st$library_strategy %in% c("ChIP-Seq", "RNA-Seq")){
+  if (st$SRA_library_strategy %in% c("ChIP-Seq", "RNA-Seq")){
     #=========================
-    # 'ALL' sheet (all entries within SRP that are from the specified library_strategy)
+    # 'ALL' sheet (all entries within SRP that are from the specified SRA_library_strategy)
     #=========================
-    all <- dplyr::filter(df, library_strategy == st$library_strategy)
+    all <- dplyr::filter(df, SRA_library_strategy == st$SRA_library_strategy)
 
     #GENERATE ALL SAMPLE SHEET
-    all_sample_sheet <- universalSampleSheetGenerator(df=all, library_strategy = st$library_strategy)
+    all_sample_sheet <- universalSampleSheetGenerator(df=all, SRA_library_strategy = st$SRA_library_strategy)
 
     #SAVE ALL SAMPLE SHEET
     saveRDS(all_sample_sheet, do.call(filenameGenerator, c(st, list(output="all_sm"), list(file_type="Rda"))))
@@ -115,16 +120,16 @@ outputGenerator <- function(df, ss=NULL, st){
     saveRDS(all_db_extract, do.call(filenameGenerator, c(st, list(output="all_db"), list(file_type="Rda"))))
     cwt(all_db_extract, do.call(filenameGenerator, c(st, list(output="all_db"), list(file_type="csv"))))
 
-    if (st$library_strategy == "ChIP-Seq" & !is.null(st$secondary_library_strategy)){
+    if (st$SRA_library_strategy == "ChIP-Seq" & !is.null(st$SRA_secondary_library_strategy)){
       #=========================
-      # 'SECONDARY' sheet (all entries within SRP that are from the secondary_library_strategy)
+      # 'SECONDARY' sheet (all entries within SRP that are from the SRA_secondary_library_strategy)
       #    ------ONLY AVAILABLE FOR CHIP------
       #=========================
 
-      secondary <- dplyr::filter(df, library_strategy == st$secondary_library_strategy)
+      secondary <- dplyr::filter(df, SRA_library_strategy == st$SRA_secondary_library_strategy)
 
       #GENERATE SECONDARY SAMPLE SHEET
-      secondary_sample_sheet <- universalSampleSheetGenerator(df=secondary, library_strategy = st$secondary_library_strategy)
+      secondary_sample_sheet <- universalSampleSheetGenerator(df=secondary, SRA_library_strategy = st$SRA_secondary_library_strategy)
 
       #SAVE SECONDARY SAMPLE SHEET
       saveRDS(secondary_sample_sheet, do.call(filenameGenerator, c(st, list(output="2ry_sm"), list(file_type="Rda"))))
@@ -150,33 +155,33 @@ outputGenerator <- function(df, ss=NULL, st){
 #============================================================================
 
 #Developed in outputGenerator.R
-filenameGenerator <- function(library_strategy, gene=NULL, antibody=NULL, cell_type=NULL, treatment=NULL, species=NULL, platform=NULL, secondary_library_strategy=NULL, output, file_type){ #Same arguments as testf, as well as output and file_type
+filenameGenerator <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_type=NULL, treatment=NULL, species=NULL, platform=NULL, SRA_secondary_library_strategy=NULL, output, file_type){ #Same arguments as testf, as well as output and file_type
 
   print("Running filenameGenerator")
 
-  argument_list <- c("library_strategy", "gene", "antibody", "cell_type", "treatment", "species", "platform", "secondary_library_strategy", "output") #file_type will be handled separately
+  argument_list <- c("SRA_library_strategy", "gene", "antibody", "cell_type", "treatment", "species", "platform", "SRA_secondary_library_strategy", "output") #file_type will be handled separately
 
-  #Shorten library_strategy names whenever appropriate
+  #Shorten SRA_library_strategy names whenever appropriate
   ls_substitute_list <- list()
   ls_substitute_list[[1]] <- c("RNA-Seq", "ChIP-Seq") #Original names
   ls_substitute_list[[2]] <- c("RNA", "ChIP") #New names
 
   for (s in seq_along(ls_substitute_list[[1]])){
-    if (library_strategy == ls_substitute_list[[1]][s]){
-      library_strategy <- ls_substitute_list[[2]][s]
+    if (SRA_library_strategy == ls_substitute_list[[1]][s]){
+      SRA_library_strategy <- ls_substitute_list[[2]][s]
     }
   }
 
-  #Shorten secondary_library_strategy names
+  #Shorten SRA_secondary_library_strategy names
   for (s in seq_along(ls_substitute_list[[1]])){
-    for (l in seq_along(secondary_library_strategy)){
-      if (secondary_library_strategy[l] == ls_substitute_list[[1]][s]){
-        secondary_library_strategy <- ls_substitute_list[[2]][s]
+    for (l in seq_along(SRA_secondary_library_strategy)){
+      if (SRA_secondary_library_strategy[l] == ls_substitute_list[[1]][s]){
+        SRA_secondary_library_strategy <- ls_substitute_list[[2]][s]
       }
     }
   }
   #Add '2' prefix
-  secondary_library_strategy <- paste0("2", secondary_library_strategy)
+  SRA_secondary_library_strategy <- paste0("2", SRA_secondary_library_strategy)
 
 
   name <- character()
@@ -249,7 +254,12 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
   #df <- df[orderAccessions(order_columns),]
 
   #Converting tabs in characteristics_ch1 column
-  df$characteristics_ch1 <- unlist(lapply(df$characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
+  if (sum(grepl("GSM_characteristics_ch1", colnames(df)))==1){
+    df$GSM_characteristics_ch1 <- unlist(lapply(df$GSM_characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
+  } else {
+    df$characteristics_ch1 <- unlist(lapply(df$characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
+  }
+  
 
 
   if (!is.null(ss)){
@@ -264,31 +274,31 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
   df_sample_sheet <- universalSampleSheetGenerator(df, "OTHER")
 
   #SAVE SAMPLE SHEET
-  saveRDS(df_sample_sheet, filenameGenerator_acc(library_strategy = "ALL", accession = accession, output = "sm", file_type = "Rda"))
-  cwt(df_sample_sheet, filenameGenerator_acc(library_strategy = "ALL", accession = accession, output = "sm", file_type = "csv"))
+  saveRDS(df_sample_sheet, filenameGenerator_acc(SRA_library_strategy = "ALL", accession = accession, output = "sm", file_type = "Rda"))
+  cwt(df_sample_sheet, filenameGenerator_acc(SRA_library_strategy = "ALL", accession = accession, output = "sm", file_type = "csv"))
 
   #GENERATE DB EXTRACT
   df_db_extract <- dbExtractGenerator(df)
 
   #SAVE DB EXTRACT
-  saveRDS(df_db_extract, filenameGenerator_acc(library_strategy = "ALL", accession = accession, output = "db", file_type = "Rda"))
-  cwt(df_db_extract, filenameGenerator_acc(library_strategy = "ALL", accession = accession, output = "db", file_type = "csv"))
+  saveRDS(df_db_extract, filenameGenerator_acc(SRA_library_strategy = "ALL", accession = accession, output = "db", file_type = "Rda"))
+  cwt(df_db_extract, filenameGenerator_acc(SRA_library_strategy = "ALL", accession = accession, output = "db", file_type = "csv"))
   #============================================================================
 
 
 
 
   #============================================================================
-  # Filter by library_strategy
+  # Filter by SRA_library_strategy
   #============================================================================
   #FILTER CHIP-SEQ DATA
-  df_chip <- dplyr::filter(df, library_strategy == "ChIP-Seq")
+  df_chip <- dplyr::filter(df, SRA_library_strategy == "ChIP-Seq")
 
   #FILTER RNA-SEQ DATA
-  df_rna <- dplyr::filter(df, library_strategy == "RNA-Seq")
+  df_rna <- dplyr::filter(df, SRA_library_strategy == "RNA-Seq")
 
   #FILTER OTHER DATA
-  df_other <- dplyr::filter(df, !(library_strategy %in% c("ChIP-Seq", "RNA-Seq")) )
+  df_other <- dplyr::filter(df, !(SRA_library_strategy %in% c("ChIP-Seq", "RNA-Seq")) )
   #============================================================================
 
 
@@ -303,15 +313,15 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
     df_chip_sample_sheet <- universalSampleSheetGenerator(df_chip, "ChIP-Seq")
 
     #SAVE SAMPLE SHEET
-    saveRDS(df_chip_sample_sheet, filenameGenerator_acc(library_strategy = "ChIP-Seq", accession = accession, output = "sm", file_type = "Rda"))
-    cwt(df_chip_sample_sheet, filenameGenerator_acc(library_strategy = "ChIP-Seq", accession = accession, output = "sm", file_type = "csv"))
+    saveRDS(df_chip_sample_sheet, filenameGenerator_acc(SRA_library_strategy = "ChIP-Seq", accession = accession, output = "sm", file_type = "Rda"))
+    cwt(df_chip_sample_sheet, filenameGenerator_acc(SRA_library_strategy = "ChIP-Seq", accession = accession, output = "sm", file_type = "csv"))
 
     #GENERATE DB EXTRACT
     df_chip_db_extract <- dbExtractGenerator(df_chip)
 
     #SAVE DB EXTRACT
-    saveRDS(df_chip_db_extract, filenameGenerator_acc(library_strategy = "ChIP-Seq", accession = accession, output = "db", file_type = "Rda"))
-    cwt(df_chip_db_extract, filenameGenerator_acc(library_strategy = "ChIP-Seq", accession = accession, output = "db", file_type = "csv"))
+    saveRDS(df_chip_db_extract, filenameGenerator_acc(SRA_library_strategy = "ChIP-Seq", accession = accession, output = "db", file_type = "Rda"))
+    cwt(df_chip_db_extract, filenameGenerator_acc(SRA_library_strategy = "ChIP-Seq", accession = accession, output = "db", file_type = "csv"))
 
   }
 
@@ -331,15 +341,15 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
     df_rna_sample_sheet <- universalSampleSheetGenerator(df_rna, "RNA-Seq")
 
     #SAVE SAMPLE SHEET
-    saveRDS(df_rna_sample_sheet, filenameGenerator_acc(library_strategy = "RNA-Seq", accession = accession, output = "sm", file_type = "Rda"))
-    cwt(df_rna_sample_sheet, filenameGenerator_acc(library_strategy = "RNA-Seq", accession = accession, output = "sm", file_type = "csv"))
+    saveRDS(df_rna_sample_sheet, filenameGenerator_acc(SRA_library_strategy = "RNA-Seq", accession = accession, output = "sm", file_type = "Rda"))
+    cwt(df_rna_sample_sheet, filenameGenerator_acc(SRA_library_strategy = "RNA-Seq", accession = accession, output = "sm", file_type = "csv"))
 
     #GENERATE DB EXTRACT
     df_rna_db_extract <- dbExtractGenerator(df_rna)
 
     #SAVE DB EXTRACT
-    saveRDS(df_rna_db_extract, filenameGenerator_acc(library_strategy = "RNA-Seq", accession = accession, output = "db", file_type = "Rda"))
-    cwt(df_rna_db_extract, filenameGenerator_acc(library_strategy = "RNA-Seq", accession = accession, output = "db", file_type = "csv"))
+    saveRDS(df_rna_db_extract, filenameGenerator_acc(SRA_library_strategy = "RNA-Seq", accession = accession, output = "db", file_type = "Rda"))
+    cwt(df_rna_db_extract, filenameGenerator_acc(SRA_library_strategy = "RNA-Seq", accession = accession, output = "db", file_type = "csv"))
 
   }
 
@@ -357,15 +367,15 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
     df_other_sample_sheet <- universalSampleSheetGenerator(df_other, "OTHER")
 
     #SAVE SAMPLE SHEET
-    saveRDS(df_other_sample_sheet, filenameGenerator_acc(library_strategy = "OTHER", accession = accession, output = "sm", file_type = "Rda"))
-    cwt(df_other_sample_sheet, filenameGenerator_acc(library_strategy = "OTHER", accession = accession, output = "sm", file_type = "csv"))
+    saveRDS(df_other_sample_sheet, filenameGenerator_acc(SRA_library_strategy = "OTHER", accession = accession, output = "sm", file_type = "Rda"))
+    cwt(df_other_sample_sheet, filenameGenerator_acc(SRA_library_strategy = "OTHER", accession = accession, output = "sm", file_type = "csv"))
 
     #GENERATE DB EXTRACT
     df_other_db_extract <- dbExtractGenerator(df_other)
 
     #SAVE DB EXTRACT
-    saveRDS(df_other_db_extract, filenameGenerator_acc(library_strategy = "OTHER", accession = accession, output = "db", file_type = "Rda"))
-    cwt(df_other_db_extract, filenameGenerator_acc(library_strategy = "OTHER", accession = accession, output = "db", file_type = "csv"))
+    saveRDS(df_other_db_extract, filenameGenerator_acc(SRA_library_strategy = "OTHER", accession = accession, output = "db", file_type = "Rda"))
+    cwt(df_other_db_extract, filenameGenerator_acc(SRA_library_strategy = "OTHER", accession = accession, output = "db", file_type = "csv"))
 
   }
 
@@ -394,14 +404,14 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
 # - order (accession before library strategy)
 # - number of letters allowed (12 instead of 8)
 
-filenameGenerator_acc <- function(library_strategy, accession, output, file_type){
+filenameGenerator_acc <- function(SRA_library_strategy, accession, output, file_type){
 
   print("Running filenameGenerator_acc")
 
-  argument_list <- c("accession", "library_strategy", "output") #file_type will be handled separately
+  argument_list <- c("accession", "SRA_library_strategy", "output") #file_type will be handled separately
 
-  #Shorten the library_strategy
-  library_strategy <- manageLibraryStrategy(library_strategy, input = "can", output = "short", mismatch.ignore = TRUE)
+  #Shorten the SRA_library_strategy
+  SRA_library_strategy <- manageLibraryStrategy(SRA_library_strategy, input = "can", output = "short", mismatch.ignore = TRUE)
 
   #Combine together the arguments and truncate if necessary
   name <- character()
@@ -615,14 +625,14 @@ checkCondition <- function(condition, x, message){
 # universalSampleSheetGenerator()
 #============================================================================
 #Developed in sampleSheetGenerator.R
-universalSampleSheetGenerator <- function(df, library_strategy){
-  # Selects correct sample sheet generating function, depending on the library_strategy
+universalSampleSheetGenerator <- function(df, SRA_library_strategy){
+  # Selects correct sample sheet generating function, depending on the SRA_library_strategy
   # ===*=== Consider having a list of acceptable strategies and testing if input is valid
   print("Running universalSampleSheetGenerator")
 
-  if (library_strategy == "ChIP-Seq"){
+  if (SRA_library_strategy == "ChIP-Seq"){
     sample_sheet <- chipSampleSheetGenerator(df)
-  } else if (library_strategy == "RNA-Seq"){
+  } else if (SRA_library_strategy == "RNA-Seq"){
     sample_sheet <- rnaSampleSheetGenerator(df)
   } else {
     #If library strategy IS NOT chip or rna
@@ -645,12 +655,12 @@ chipSampleSheetGenerator <- function(df){
   #List of required columns
   required_columns <- c("run_accession",
                         "study_accession",
-                        "sa_tissue",
-                        "experiment_title",
-                        "lane",
-                        "mer",
-                        "input",
-                        "pairedEnd")
+                        "OTH_sa_tissue",
+                        "SRA_experiment_title",
+                        "OTH_lane",
+                        "OTH_mer",
+                        "OTH_input",
+                        "OTH_pairedEnd")
 
   #Check if required columns exist within the data frame
   columnVerifier(df, required_columns)
@@ -662,14 +672,14 @@ chipSampleSheetGenerator <- function(df){
   sample_sheet$fileNamePE <- ""
   sample_sheet$experiment <- df[ , c("study_accession")]
   #sample_sheet$experiment <- df[ , c("series_id")] #Previously used column
-  sample_sheet$tissue <- df[ , c("sa_tissue")]
+  sample_sheet$tissue <- df[ , c("OTH_sa_tissue")]
   #sample_sheet$tissue <- df[ , c("source_name_ch1")] #Another option
-  sample_sheet$condition <- df[, c("experiment_title")]
+  sample_sheet$condition <- df[, c("SRA_experiment_title")]
   sample_sheet$replicate <- ""
-  sample_sheet$lane <- df[ , c("lane")]
-  sample_sheet$merge <- df[ , c("mer")]
-  sample_sheet$input <- df[ , c("input")]
-  sample_sheet$pairedEnd <- df[ , c("pairedEnd")]
+  sample_sheet$lane <- df[ , c("OTH_lane")]
+  sample_sheet$merge <- df[ , c("OTH_mer")]
+  sample_sheet$input <- df[ , c("OTH_input")]
+  sample_sheet$pairedEnd <- df[ , c("OTH_pairedEnd")]
   sample_sheet$macsGroup <- ""
   sample_sheet$phredScore <- ""
   sample_sheet$adapter <- ""
@@ -697,10 +707,10 @@ rnaSampleSheetGenerator <- function(df){
   #List of required columns
   required_columns <- c("run_accession",
                         "study_accession",
-                        "experiment_title",
-                        "lane",
-                        "mer",
-                        "pairedEnd")
+                        "SRA_experiment_title",
+                        "OTH_lane",
+                        "OTH_mer",
+                        "OTH_pairedEnd")
 
   #Check if required columns exist within the data frame
   columnVerifier(df, required_columns)
@@ -714,12 +724,12 @@ rnaSampleSheetGenerator <- function(df){
   #sample_sheet$experiment <- df[ , c("series_id")] #Previously used column
 
   #sample_sheet$tissue <- df[ , c("source_name_ch1")] #Another option
-  sample_sheet$condition <- df[, c("experiment_title")]
+  sample_sheet$condition <- df[, c("SRA_experiment_title")]
   sample_sheet$replicate <- ""
-  sample_sheet$lane <- df[ , c("lane")]
-  sample_sheet$merge <- df[ , c("mer")]
+  sample_sheet$lane <- df[ , c("OTH_lane")]
+  sample_sheet$merge <- df[ , c("OTH_mer")]
 
-  sample_sheet$pairedEnd <- df[ , c("pairedEnd")]
+  sample_sheet$pairedEnd <- df[ , c("OTH_pairedEnd")]
 
   sample_sheet$phredScore <- ""
   sample_sheet$adapter <- ""
@@ -749,10 +759,10 @@ otherSampleSheetGenerator <- function(df){
   #List of required columns
   required_columns <- c("run_accession",
                         "study_accession",
-                        "experiment_title",
-                        "lane",
-                        "mer",
-                        "pairedEnd")
+                        "SRA_experiment_title",
+                        "OTH_lane",
+                        "OTH_mer",
+                        "OTH_pairedEnd")
 
   #Check if required columns exist within the data frame
   columnVerifier(df, required_columns)
@@ -766,12 +776,12 @@ otherSampleSheetGenerator <- function(df){
   #sample_sheet$experiment <- df[ , c("series_id")] #Previously used column
 
   #sample_sheet$tissue <- df[ , c("source_name_ch1")] #Another option
-  sample_sheet$condition <- df[, c("experiment_title")]
+  sample_sheet$condition <- df[, c("SRA_experiment_title")]
   sample_sheet$replicate <- ""
-  sample_sheet$lane <- df[ , c("lane")]
-  sample_sheet$merge <- df[ , c("mer")]
+  sample_sheet$lane <- df[ , c("OTH_lane")]
+  sample_sheet$merge <- df[ , c("OTH_mer")]
 
-  sample_sheet$pairedEnd <- df[ , c("pairedEnd")]
+  sample_sheet$pairedEnd <- df[ , c("OTH_pairedEnd")]
 
   sample_sheet$phredScore <- ""
   sample_sheet$adapter <- ""
@@ -796,33 +806,69 @@ otherSampleSheetGenerator <- function(df){
 #============================================================================
 dbExtractGenerator <- function(df){
   print("Running dbExtractGenerator")
-
+  
   #Select columns to be extracted ===*=== Probably more needed!!!
-  df_columns <- c("run_accession",
-                  "experiment_accession",
-                  "sample_accession",
-                  "study_accession",
-                  "gsm", #sampletogsm ===*===
-                  "series_id",
-                  "library_strategy",
-                  "platform",
-                  "library_layout",
-                  "pairedEnd",
-                  "taxon_id",
-                  "sample_name",
-                  "experiment_title",
-                  "experiment_name",
-                  "sample_attribute",
-                  "characteristics_ch1",
-                  "sa_tissue",
-                  "ch1_tissue",
-                  "sa_antibody",
-                  "ch1_antibody",
-                  "sa_gene",
-                  "ch1_gene",
-                  "sa_treatment",
-                  "ch1_treatment"
-  )
+  # Different names depending on GSM_
+  if (sum(grepl("^GSM_.+$", colnames(df)))>=1){
+    
+    df_columns <- c("run_accession",
+                    "experiment_accession",
+                    "sample_accession",
+                    "study_accession",
+                    "gsm", #sampletogsm ===*===
+                    "series_id",
+                    "SRA_library_strategy",
+                    "SRA_platform",
+                    "SRA_library_layout",
+                    "OTH_pairedEnd",
+                    "SRA_taxon_id",
+                    "SRA_sample_name",
+                    "SRA_experiment_title",
+                    "SRA_experiment_name",
+                    "SRA_sample_attribute",
+                    "GSM_characteristics_ch1",
+                    "OTH_sa_tissue",
+                    "OTH_ch1_tissue",
+                    "OTH_sa_antibody",
+                    "OTH_ch1_antibody",
+                    "OTH_sa_gene",
+                    "OTH_ch1_gene",
+                    "OTH_sa_treatment",
+                    "OTH_ch1_treatment"
+    )
+    
+  } else {
+    # No GSM_ # TBD ==*===
+    message("Old format df_columns")
+    df_columns <- c("run_accession",
+                    "experiment_accession",
+                    "sample_accession",
+                    "study_accession",
+                    "gsm", #sampletogsm ===*===
+                    "series_id",
+                    "library_strategy",
+                    "platform",
+                    "library_layout",
+                    "pairedEnd",
+                    "taxon_id",
+                    "sample_name",
+                    "experiment_title",
+                    "experiment_name",
+                    "sample_attribute",
+                    "characteristics_ch1",
+                    "sa_tissue",
+                    "ch1_tissue",
+                    "sa_antibody",
+                    "ch1_antibody",
+                    "sa_gene",
+                    "ch1_gene",
+                    "sa_treatment",
+                    "ch1_treatment"
+    )
+  }
+
+  #print(colnames(df))
+
 
   #Select new column names
   db_extract_columns <- df_columns

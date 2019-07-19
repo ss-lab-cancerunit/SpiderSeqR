@@ -52,7 +52,11 @@
 
 #----------------------------------------------------------------------------
 #Developed in searchForTerm5.R
-searchSRA <- function(library_strategy, gene, antibody, cell_type, treatment, species, platform){
+#' 
+#' 
+#' 
+#' @keywords internal
+searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment, species, platform){
   print("Running searchSRA")
 
   #------------------------------------------------
@@ -66,6 +70,8 @@ searchSRA <- function(library_strategy, gene, antibody, cell_type, treatment, sp
   #sra_columns <- c("experiment_name", "run_attribute", "experiment_accession", "experiment_url_link", "experiment_title", "library_strategy", "library_layout", "sample_alias", "taxon_id", "library_construction_protocol", "run_accession", "study_accession", "run_alias", "experiment_alias", "sample_name", "sample_attribute", "experiment_attribute")
   #sra_columns <- c("experiment_title")
   sra_columns <- "*"
+  #------------------------------------------------
+  library_strategy <- SRA_library_strategy
   #------------------------------------------------
 
 
@@ -450,6 +456,9 @@ searchSRA <- function(library_strategy, gene, antibody, cell_type, treatment, sp
   output_indices <- gene_indices & antibody_indices & cell_type_indices & treatment_indices & species_indices & library_strategy_indices & platform_indices
 
   output_list <- output_list[output_indices,] #Only leave the matching rows
+  
+  # Rename columns
+  #output_list <- renameSRAColumns(output_list)
 
   if (dim(output_list)[1]==0) {
     stop("No results passed the verification phase")
@@ -678,6 +687,15 @@ withOut <- function(names, vector){
 gsmExtractor <- function(output_list, sampleColumn = TRUE){
   print("Running gsmExtractor")
   #Find indices of rows which contain GSMs
+  
+  # Rename SRA_experiment_title
+  rename_experiment_title <- FALSE
+  if (sum(grepl("SRA_experiment_title", colnames(output_list)))==1){
+    rename_experiment_title <- TRUE
+    colnames(output_list)[grepl("SRA_experiment_title", colnames(output_list))] <- "experiment_title"
+  }
+  
+  
   gsm_indices <- grep("^GSM\\d\\d\\d+: ", output_list$experiment_title)
   #gsm_indices <- grep("^GSM\\d\\d\\d+", output_list$experiment_title) #Safer option, but not strictly necessary, because GSM is always followed by ": ".
 
@@ -693,6 +711,13 @@ gsmExtractor <- function(output_list, sampleColumn = TRUE){
 
   #Remove the GSMs from experiment_title column
   output_list$experiment_title[gsm_indices] <- gsub("^GSM\\d\\d\\d+: ", "", output_list$experiment_title[gsm_indices])
+
+
+  # Rename experiment_title back to SRA_experiment_title
+  if (rename_experiment_title){
+    colnames(output_list)[grepl("experiment_title", colnames(output_list))] <- "SRA_experiment_title"
+  }
+  
   print("gsmExtractor completed")
   return(output_list)
 }
@@ -723,6 +748,10 @@ searchForSRPChildren <- function(srp_list, srp_columns){
     srp_entry <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), srp_query)
     srp_all <- rbind(srp_all, srp_entry)
   }
+  
+  # Rename SRA columns
+  #srp_all <- renameSRAColumns(srp_all)
+  
   print("searchForSRPChildren completed")
   return(srp_all)
 }
@@ -1544,6 +1573,14 @@ parQuery <- function(db_con, query, par_list){
 #Developed in pairedEndConverter.R
 pairedEndConverter <- function(df){
   print("Running pairedEndConverter")
+  
+  # Rename col
+  rename_col <- FALSE
+  if (sum(grepl("SRA_library_layout", colnames(df)))==1){
+    rename_col <- TRUE
+    colnames(df)[grepl("SRA_library_layout", colnames(df))] <- "library_layout"
+  }
+  
   columnVerifier(df, "library_layout")
 
   #Locate the library_layout column
@@ -1562,6 +1599,11 @@ pairedEndConverter <- function(df){
   df$pairedEnd <- NA
   df$pairedEnd[paired_indices] <- "true"
   df$pairedEnd[!paired_indices] <- "false"
+  
+  
+  if (rename_col){
+    colnames(df)[grepl("library_layout", colnames(df))] <- "SRA_library_layout"
+  }
 
   print("pairedEndConverter completed")
   return(df)
@@ -1930,4 +1972,125 @@ renameGSMColumns <- function(df){
 #----------------------------------------------------------------------------
 
 
+
+#----------------------------------------------------------------------------
+# renameSRAColumns
+#----------------------------------------------------------------------------
+#'
+#' Rename df columns derived from sra table to 'SRA_'
+#' 
+#' @param df Data frame
+#' @return Data frame with modified column names
+renameSRAColumns <- function(df){
+  
+  database_name <- "sra_con"
+  database_env <- ".GlobalEnv"
+  
+  if (!is.data.frame(df)){
+    stop("df is not a data frame")
+  }
+  
+  sra_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "sra")
+  sra_columns <- sra_columns[!sra_columns %in% c("run_accession", "experiment_accession", "sample_accession", "study_accession", "submission_accession")] # Exclude accession names
+  
+  
+  sra_id <- (colnames(df) %in% sra_columns)
+  
+  
+  colnames(df)[sra_id] <- paste0("SRA_", colnames(df)[sra_id])
+  
+  return(df)
+  
+}
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+
+
+#----------------------------------------------------------------------------
+# renameOTHColumns
+#----------------------------------------------------------------------------
+#'
+#' Rename non-SRA/GEO columns to 'OTH_'
+#' 
+#' @param df Data frame
+#' @return Data frame with modified column names
+#' 
+renameOTHColumns <- function(df){
+  
+  if (!is.data.frame(df)){
+    stop("df is not a data frame")
+  }
+  
+  oth_columns <- c("input", "control", 
+                   "sa_tissue", "sa_antibody", "sa_gene", "sa_treatment", "sa_remainder", 
+                   "ch1_tissue", "ch1_antibody", "ch1_gene", "ch1_treatment", "ch1_remainder",
+                   "lane", "mer", "pairedEnd", "n")
+  
+  oth_id <- (colnames(df) %in% oth_columns)
+  
+  
+  colnames(df)[oth_id] <- paste0("OTH_", colnames(df)[oth_id])
+  
+  return(df)
+  
+}
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+
+
+
+#----------------------------------------------------------------------------
+# checkValidColumns
+#----------------------------------------------------------------------------
+#' Check if column names of df are within allowed set
+checkValidColumns <- function(df){
+  
+  # Database connections ####
+  sra_database_name <- "sra_con"
+  geo_database_name <- "geo_con"
+  database_env <- ".GlobalEnv"
+  
+  # Columns that are not prefixed ####
+  sra_acc <- c("run_accession", "experiment_accession", "sample_accession", "study_accession", "submission_accession")
+  geo_acc <- c("gsm", "series_id")
+  
+  # List of other columns ####
+  oth_columns <- c("input", "control", 
+                   "sa_tissue", "sa_antibody", "sa_gene", "sa_treatment", "sa_remainder", 
+                   "ch1_tissue", "ch1_antibody", "ch1_gene", "ch1_treatment", "ch1_remainder",
+                   "lane", "mer", "pairedEnd", "n")
+  oth_columns <- paste0("OTH_", oth_columns)
+  
+  add_columns <- c("gsm_check")
+  
+  # Create lists of db columns ####
+  sra_columns_no_pref <- DBI::dbListFields(get(sra_database_name, envir = get(database_env)), "sra")
+  gsm_columns_no_pref <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gsm")
+  gse_columns_no_pref <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gse")
+  
+  sra_columns <- paste0("SRA_", sra_columns_no_pref[!sra_columns_no_pref %in% sra_acc])
+  sra_columns <- c(sra_acc, sra_columns) # NOTE: order not preserved
+  
+  gsm_columns <- paste0("GSM_", gsm_columns_no_pref[!gsm_columns_no_pref %in% geo_acc])
+  gsm_columns <- c(geo_acc, gsm_columns) # NOTE: order not preserved
+  
+  gse_columns <- paste0("GSE_", gse_columns_no_pref[!gse_columns_no_pref %in% geo_acc])
+  gse_columns <- c(geo_acc, gse_columns) # NOTE: order not preserved
+  
+  
+  
+  allowed_columns <- c(sra_columns, gsm_columns, gse_columns, oth_columns, add_columns)
+  
+  if (sum(colnames(df) %in% allowed_columns)==length(colnames(df))){
+    message("All columns have valid names")
+  } else {
+    wrong_columns <- colnames(df)[!colnames(df) %in% allowed_columns]
+    stop(paste0("Some columns are not allowed: ", paste0(wrong_columns, collapse = ", ")))
+  }
+  
+  
+}
+
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 

@@ -21,6 +21,13 @@ saExtractor <- function(df){
 
   print("Running saExtractor")
   
+  # Rename SRA_sample_attribute
+  rename_col <- FALSE
+  if (sum(grepl("SRA_sample_attribute", colnames(df)))==1){
+    rename_col <- TRUE
+    colnames(df)[grepl("SRA_sample_attribute", colnames(df))] <- "sample_attribute"
+  }
+  
   columnVerifier(df, "sample_attribute")
   
   if (sum(!is.na(df$sample_attribute)) ==0 ){ #Return unchanged df if no not-NA elements in df
@@ -29,6 +36,9 @@ saExtractor <- function(df){
     df$sa_antibody <- NA
     df$sa_gene <- NA
     df$sa_treatment <- NA
+    if (rename_col==TRUE){
+      colnames(df)[grepl("sample_attribute", colnames(df))] <- "SRA_sample_attribute"
+    }
     warning("No not-NA sample attributes available")
     print("saExtractor completed")
     return(df)
@@ -73,6 +83,14 @@ saExtractor <- function(df){
 
   colnames(df_sra_attr) <- c("sa_original", "sa_remainder", "sa_tissue", "sa_antibody", "sa_gene", "sa_treatment")
   df <- cbind(df, df_sra_attr[,(-1)]) #Combine extracted columns with df (except attr_original column)
+  
+  
+
+  
+  if (rename_col==TRUE){
+    colnames(df)[grepl("sample_attribute", colnames(df))] <- "SRA_sample_attribute"
+  }
+  
   #============================================================================
 
   print("saExtractor completed")

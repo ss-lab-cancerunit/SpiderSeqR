@@ -23,6 +23,9 @@ chExtractor <- function(df){
   
   if (sum(!is.na(df$characteristics_ch1))==0){
     df[, geo_char_columns[-1]] <- NA #Create new columns, except ch1_original
+    if (gsm_replace){
+      colnames(df)[colnames(df) %in% "characteristics_ch1"] <- "GSM_characteristics_ch1"
+    }
     warning("No not-NA sample attributes available")
     print("chExtractor completed")
     return(df)

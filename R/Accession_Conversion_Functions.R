@@ -78,6 +78,7 @@ searchForAccessionAcrossDBs <- function(acc_vector, sra_columns, geo_columns, gs
         sql_sra_columns <- sra_columns #Otherwise keep all of them intact
       }
       sra_df <- stats::setNames(data.frame(matrix(ncol = length(sql_sra_columns), nrow = 0)), sql_sra_columns)
+      sra_df <- renameSRAColumns(sra_df)
     }
     
     #saveRDS(sra_df, "sra_df.Rda")
@@ -146,6 +147,7 @@ searchForAccessionAcrossDBs <- function(acc_vector, sra_columns, geo_columns, gs
         sql_geo_columns <- geo_columns #Otherwise keep all of them intact
       }
       geo_df <- stats::setNames(data.frame(matrix(ncol = length(sql_geo_columns), nrow = 0)), sql_geo_columns)
+      geo_df <- renameGSMColumns(geo_df)
     }
     
 
@@ -266,6 +268,7 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, geo_columns, 
         sql_sra_columns <- sra_columns #Otherwise keep all of them intact
       }
       sra_df <- stats::setNames(data.frame(matrix(ncol = length(sql_sra_columns), nrow = 0)), sql_sra_columns)
+      sra_df <- renameSRAColumns(sra_df)
     }
     
     #saveRDS(sra_df, "sra_df.Rda")
@@ -340,6 +343,7 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, geo_columns, 
         sql_geo_columns <- geo_columns #Otherwise keep all of them intact
       }
       geo_df <- stats::setNames(data.frame(matrix(ncol = length(sql_geo_columns), nrow = 0)), sql_geo_columns)
+      geo_df <- renameGSMColumns(geo_df)
     }
     
     
