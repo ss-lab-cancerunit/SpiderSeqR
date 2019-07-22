@@ -2,13 +2,20 @@
 % Please edit documentation in R/Helper_Functions.R
 \name{searchSRA}
 \alias{searchSRA}
-\title{Test' to visualise the effects:
-Test' to visualise the effects:}
+\title{An internal function for searchForTerm}
 \usage{
-searchSRA(library_strategy, gene, antibody, cell_type, treatment, species,
-  platform)
+searchSRA(SRA_library_strategy, gene, antibody, cell_type, treatment,
+  species, platform)
+}
+\arguments{
+\item{SRA_library_strategy, gene, antibody, cell_type, treatment, species, platform}{Character vectors with information to search within SRA}
 }
 \description{
-Test' to visualise the effects:
-Test' to visualise the effects:
+An internal function for searchForTerm
 }
+\keyword{Test'}
+\keyword{effects:}
+\keyword{internal}
+\keyword{the}
+\keyword{to}
+\keyword{visualise}

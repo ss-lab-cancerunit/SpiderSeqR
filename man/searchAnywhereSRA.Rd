@@ -4,18 +4,18 @@
 \alias{searchAnywhereSRA}
 \title{Fulltext search in SRA}
 \usage{
-searchAnywhereSRA(query, acc_levels = c("run", "experiment", "sample",
-  "study"), sra_library_strategy = NULL,
-  sra_other_library_strategy = c("OTHER", "NA", "NULL"), ...)
+searchAnywhereSRA(SRA_query, acc_levels = c("run", "experiment",
+  "sample", "study"), SRA_library_strategy = NULL,
+  SRA_other_library_strategy = c("OTHER", "NA", "NULL"), ...)
 }
 \arguments{
-\item{query}{Query passed to fts MATCH operator}
+\item{SRA_query}{Query passed to fts MATCH operator (cannot be a vector)}
 
 \item{acc_levels}{Character vector denoting which accession levels will be searched. Choose from some/all of c("run", "experiment", "sample", "study")}
 
-\item{sra_other_library_strategy}{A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided}
+\item{SRA_library_strategy}{Character vector denoting library_strategy/ies of choice (OPTIONAL)}
 
-\item{library_strategy}{Character vector denoting library_strategy/ies of choice (OPTIONAL)}
+\item{SRA_other_library_strategy}{A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided}
 }
 \description{
 Fulltext search in SRA
@@ -30,7 +30,7 @@ searchAnywhereSRA("stat3 taxon_id: 9606")
 # stat3 chip-seq (including unclassified library strategies)
 searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq")
 # stat3 chip-seq not including unclassified library strategies
-searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq", sra_other_library_strategy = FALSE) 
+searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq", SRA_other_library_strategy = FALSE) 
 
 #stat3 ignoring matches at study level
 searchAnywhereSRA("stat3", acc_levels = c("run", "experiment", "sample")) 

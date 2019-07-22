@@ -4,26 +4,66 @@
 \alias{searchAnywhere}
 \title{Search Anywhere within SRA and GEO databases (under construction!)}
 \usage{
-searchAnywhere(query_both, category_both = NULL, acc_levels = c("run",
+searchAnywhere(query_all, category_both = NULL, acc_levels = c("run",
   "experiment", "sample", "study", "gsm", "gse"),
-  sra_library_strategy = NULL, sra_other_library_strategy = c("OTHER",
-  "NA", "NULL"), geo_type = NULL, sra_query, geo_query, ...)
+  SRA_library_strategy = NULL, SRA_other_library_strategy = c("OTHER",
+  "NA", "NULL"), GEO_type = NULL, SRA_query, GEO_query, GSM_query,
+  GSE_query, ...)
 }
 \arguments{
-\item{query_both}{Search term for both SRA and GEO}
+\item{query_all}{Search term for both SRA and GEO (gse and gsm tables)}
 
 \item{acc_levels}{Accession levels at which the search is conducted}
 
-\item{sra_query}{Search term for SRA only}
+\item{SRA_query}{Search term for SRA only}
 
-\item{geo_query}{Search term for GEO only}
+\item{GEO_query}{Search term for GEO only}
+
+\item{GSM_query}{Search term for gsm table only (GEO)}
+
+\item{GSE_query}{Search term for gse table only (GEO)}
 }
 \description{
 Search Anywhere within SRA and GEO databases (under construction!)
 }
+\section{Delete some things below}{
+
+TO BE DELETED ===*====
+}
+
 \section{Argument requirements}{
 
-Either query_both or \strong{both} sra_query and geo_query need to be provided (this is to facilitate column-specific search in the databases; if you wish to search within specific columns, provide sra_query and geo_query with appropriate column names)
+Either query_all or \strong{both} SRA_query and GEO_query need to be provided (this is to facilitate column-specific search in the databases; if you wish to search within specific columns, provide SRA_query and GEO_query with appropriate column names)
+}
+
+\section{Query arguments}{
+
+
+Query arguments include query_both, SRA_query, GEO_query, GSM_query and GSE_query.
+In the simplest case, it is recommended to just use query_both, which will apply to all the searches across databases. However, for user in need of more fine-tuning, other query arguements can be used (e.g. when you wish to search within specific columns of each database table; this is mostly appropriate for use in fts search).
+Only the highest level query arguments will be considered. Hence the following combinations of arguments are accepted (any extra query arguments will be ignored): 
+\itemize{
+    \item query_both
+    \item SRA_query and GEO_query
+    \item SRA_query and GSM_query and GSE_query
+
+}
+}
+
+\section{Category_both, SRA_library_strategy and GEO_type}{
+
+
+SRA and GEO have distinct ways of specifying the type of their data (such as e.g. RNA-Seq, ChIP-Seq or microarray expression experiments). SRA stores that information as *library_strategy*, GEO records *types*. For users' convenience, a data frame with the conversion between the commmonest *library_strategies* and *types* is provided in \code{SRA_GEO_Category_Conversion} (for more details, please examine \code{SRA_GEO_Category_Conversion} or its documentation, \code{?SRA_GEO_Category_Conversion}). Hence, it is possible to specify *category*, which refers to either one or both SRA and GEO (some categories exist within both SRA and GEO, some only in one of the databases; e.g. only GEO stores microarray data).
+
+Similarly to query arguments, the highest level argument will be taken into account and if lower-level arguments exist, they will be ignored. Hence, the user can provide the following combinations of arguments:
+\itemize{
+    \item NONE of category_both, SRA_library_strategy and GEO_type
+    \item category_both ONLY
+    \item SRA_library_strategy AND GEO_type
+    \item SRA_library_strategy ONLY*
+    \item GEO_type ONLY* 
+}
+* If only one of the SRA_library_strategy and GEO_type is provided, no search will be undertaken in the database corresponding to the missing argument. The same is the case if the supplied category_both refers only to one of the databases (e.g. search in SRA only if category_both = "DNA NGS" (DNA sequencing))
 }
 
 \section{Accession levels}{
@@ -32,7 +72,7 @@ Each accession level is associated with its own set of information. Sometimes th
 
 Restricting accession levels, e.g.  
 
-\code{searchAnywhere(query_both = "p53", acc_levels = c("run", "experiment", "sample", "gsm"))}  
+\code{searchAnywhere(query_all = "p53", acc_levels = c("run", "experiment", "sample", "gsm"))}  
 
 will help avoid including these cases. However, always consider using a broader search and comparing the results to the more refined one.
 
@@ -57,5 +97,6 @@ searchAnywhere("tp53 OR p53") #Can list synonyms
 
 
 searchAnywhere ("p53", acc_levels = c("gsm", "gse")) #Only search in GEO
+
 
 }

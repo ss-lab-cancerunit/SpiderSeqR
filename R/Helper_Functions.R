@@ -52,8 +52,11 @@
 
 #----------------------------------------------------------------------------
 #Developed in searchForTerm5.R
+
 #' 
+#' An internal function for searchForTerm
 #' 
+#' @param SRA_library_strategy,gene,antibody,cell_type,treatment,species,platform Character vectors with information to search within SRA
 #' 
 #' @keywords internal
 searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment, species, platform){
@@ -2042,8 +2045,46 @@ renameOTHColumns <- function(df){
 #----------------------------------------------------------------------------
 # checkValidColumns
 #----------------------------------------------------------------------------
+#' 
 #' Check if column names of df are within allowed set
+#' 
+#' @param df Data frame to be checked
+#' @return Nothing - give an error or a warning
+#' 
+#' @keywords internal
 checkValidColumns <- function(df){
+  
+  if (!class(df) %in% "data.frame"){
+    stop("Argument is not a data frame")
+  }
+  
+  # Get a vector with allowed columns
+  allowed_columns <- as.character(unlist(listValidColumns()))
+  
+  if (sum(colnames(df) %in% allowed_columns)==length(colnames(df))){
+    message("All columns have valid names")
+  } else {
+    wrong_columns <- colnames(df)[!colnames(df) %in% allowed_columns]
+    stop(paste0("Some columns are not allowed: ", paste0(wrong_columns, collapse = ", ")))
+  }
+}
+
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+
+
+
+
+#----------------------------------------------------------------------------
+# listValidColumns
+#----------------------------------------------------------------------------
+#' List valid columns within the data frames
+#' 
+#' @return A list with column names grouped into categories
+#' 
+#' @keywords internal
+#' 
+listValidColumns <- function(){
   
   # Database connections ####
   sra_database_name <- "sra_con"
@@ -2064,33 +2105,22 @@ checkValidColumns <- function(df){
   add_columns <- c("gsm_check")
   
   # Create lists of db columns ####
-  sra_columns_no_pref <- DBI::dbListFields(get(sra_database_name, envir = get(database_env)), "sra")
-  gsm_columns_no_pref <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gsm")
-  gse_columns_no_pref <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gse")
+  sra_columns <- DBI::dbListFields(get(sra_database_name, envir = get(database_env)), "sra")
+  gsm_columns <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gsm")
+  gse_columns <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gse")
   
-  sra_columns <- paste0("SRA_", sra_columns_no_pref[!sra_columns_no_pref %in% sra_acc])
-  sra_columns <- c(sra_acc, sra_columns) # NOTE: order not preserved
+  sra_columns[!sra_columns %in% sra_acc] <- paste0("SRA_", sra_columns[!sra_columns %in% sra_acc])
+  #sra_columns <- c(sra_acc, sra_columns) # NOTE: order not preserved
   
-  gsm_columns <- paste0("GSM_", gsm_columns_no_pref[!gsm_columns_no_pref %in% geo_acc])
-  gsm_columns <- c(geo_acc, gsm_columns) # NOTE: order not preserved
+  gsm_columns[!gsm_columns %in% geo_acc] <- paste0("GSM_", gsm_columns[!gsm_columns %in% geo_acc])
+  #gsm_columns <- c(geo_acc, gsm_columns) # NOTE: order not preserved
   
-  gse_columns <- paste0("GSE_", gse_columns_no_pref[!gse_columns_no_pref %in% geo_acc])
-  gse_columns <- c(geo_acc, gse_columns) # NOTE: order not preserved
+  gse_columns[!gse_columns %in% geo_acc] <- paste0("GSE_", gse_columns[!gse_columns %in% geo_acc])
+  #gse_columns <- c(geo_acc, gse_columns) # NOTE: order not preserved
   
-  
-  
-  allowed_columns <- c(sra_columns, gsm_columns, gse_columns, oth_columns, add_columns)
-  
-  if (sum(colnames(df) %in% allowed_columns)==length(colnames(df))){
-    message("All columns have valid names")
-  } else {
-    wrong_columns <- colnames(df)[!colnames(df) %in% allowed_columns]
-    stop(paste0("Some columns are not allowed: ", paste0(wrong_columns, collapse = ", ")))
-  }
-  
+  db_columns <- list(sra= sra_columns, gsm = gsm_columns, gse = gse_columns, other = oth_columns, added = add_columns)
+  return(db_columns)
   
 }
-
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
-

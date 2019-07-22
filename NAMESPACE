@@ -2,6 +2,7 @@
 
 export(convertAccession)
 export(getDatabaseInformation)
+export(orderAccessions)
 export(searchForTerm)
 export(startSpideR)
 importFrom(dplyr,"%>%")

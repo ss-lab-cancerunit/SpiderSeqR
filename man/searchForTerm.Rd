@@ -4,12 +4,12 @@
 \alias{searchForTerm}
 \title{Search for samples matching criteria of interest}
 \usage{
-searchForTerm(library_strategy, gene = NULL, antibody = NULL,
+searchForTerm(SRA_library_strategy, gene = NULL, antibody = NULL,
   cell_type = NULL, treatment = NULL, species = NULL,
-  platform = NULL, secondary_library_strategy = NULL)
+  platform = NULL, SRA_secondary_library_strategy = NULL)
 }
 \arguments{
-\item{library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one library_strategy is allowed in a single query. To get a list of available library strategies, run \code{ getDatabaseInformation()}}
+\item{SRA_library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one SRA_library_strategy is allowed in a single query. To get a list of available library strategies, run \code{ getDatabaseInformation()}}
 
 \item{gene}{A character vector with genes of interest (it is recommended to provide a few synonyms)}
 
@@ -23,7 +23,7 @@ searchForTerm(library_strategy, gene = NULL, antibody = NULL,
 
 \item{platform}{A character vector with sequencing platforms}
 
-\item{secondary_library_strategy}{Additional experimental method of interest filtered from the studies featured in search results}
+\item{SRA_secondary_library_strategy}{Additional experimental method of interest filtered from the studies featured in search results}
 }
 \value{
 Nothing. Creates a range of files with the query information and search results.
@@ -33,9 +33,9 @@ Nothing. Creates a range of files with the query information and search results.
 }
 \section{Argument requirements}{
 
-\strong{REQUIRED}: library_strategy AND at least one of: gene, antibody, cell_type or treatment
+\strong{REQUIRED}: SRA_library_strategy AND at least one of: gene, antibody, cell_type or treatment
 
-\strong{OPTIONAL}: species, platform, secondary_library_strategy
+\strong{OPTIONAL}: species, platform, SRA_secondary_library_strategy
 }
 
 \section{Further information}{
@@ -46,10 +46,10 @@ For further information (especially on the output files) please refer to the pac
 \examples{
 
 #Simple search
-searchForTerm(library_strategy = "RNA-Seq", gene = c("p53", "tp53"), species = "9606") 
+searchForTerm(SRA_library_strategy = "RNA-Seq", gene = c("p53", "tp53"), species = "9606") 
 
 #Search with parameters stored in a list
-st <- list(library_strategy="ChIP-Seq", gene="STAT1", antibody="STAT1")
+st <- list(SRA_library_strategy="ChIP-Seq", gene="STAT1", antibody="STAT1")
 do.call(searchForTerm, st)
 
 

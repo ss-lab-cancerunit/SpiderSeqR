@@ -17,7 +17,14 @@ Integer vector with order of indices
 \description{
 \code{orderAccessions} orders character vectors or lists according to numbers, disregarding any lettrs.
 }
+\examples{
+\dontrun{
+# Order rows in df according to multiple accession types
+order_columns <- list(df$study_accession, df$sample_accession, df$experiment_accession, df$run_accession, df$gsm)
+df <- df[orderAccessions(order_columns), ]
+}
+
+}
 \seealso{
 \code{\link[base]{order}}
 }
-\keyword{internal}

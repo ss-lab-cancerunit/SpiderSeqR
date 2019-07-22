@@ -456,9 +456,16 @@ filenameGenerator_acc <- function(SRA_library_strategy, accession, output, file_
 #' @param na.last For controlling the treatment of NAs (see \code{\link[base]{order}})
 #' @return Integer vector with order of indices
 #' 
+#' @examples 
+#' \dontrun{
+#' # Order rows in df according to multiple accession types
+#' order_columns <- list(df$study_accession, df$sample_accession, df$experiment_accession, df$run_accession, df$gsm)
+#' df <- df[orderAccessions(order_columns), ]
+#' }
+#' 
 #' @seealso \code{\link[base]{order}}
 #' 
-#' @keywords internal
+#' @export
 #' 
 #' 
 orderAccessions <- function(x, na.last = TRUE){
