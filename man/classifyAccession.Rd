@@ -4,10 +4,12 @@
 \alias{classifyAccession}
 \title{Classify accessions}
 \usage{
-classifyAccession(x)
+classifyAccession(x, na.ignore = FALSE)
 }
 \arguments{
 \item{x}{Vector of accessions}
+
+\item{na.ignore}{Logical indicating whether NAs are ignored}
 }
 \value{
 Accession class (error if input does not match any)

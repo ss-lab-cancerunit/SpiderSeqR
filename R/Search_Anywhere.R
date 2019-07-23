@@ -80,7 +80,7 @@
 #'     \item Search for rare types of experiments ('library_strategy: HiC'; 'hic library_strategy: OTHER')
 #' }
 #' 
-searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", "experiment", "sample", "study", "gsm", "gse"), SRA_library_strategy=NULL, SRA_other_library_strategy = c("OTHER", "NA", "NULL"), GEO_type=NULL, SRA_query, GEO_query, GSM_query, GSE_query, ...){
+searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", "experiment", "sample", "gsm"), SRA_library_strategy=NULL, SRA_other_library_strategy = c("OTHER", "NA", "NULL"), GEO_type=NULL, SRA_query, GEO_query, GSM_query, GSE_query, ...){
   
   
   # Query arguments ####
@@ -219,18 +219,34 @@ searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", 
     print("Search SRA")
     sra_df <- searchAnywhereSRA(SRA_query = SRA_query, acc_levels = acc_levels, SRA_library_strategy = SRA_library_strategy, SRA_other_library_strategy = SRA_other_library_strategy)
     sra_out <- searchForAccessionAcrossDBsDF(sra_df$run_accession, "*", "*", "*", sra_df)
+    sra_out <- unifyDFFormat(sra_out)
     
-    
+  } else {
+    sra_out <- data.frame() # Create an empty data frame for rbind
   }
   
   if (sum(acc_levels %in% c("gse", "gsm"))>0){
     print("Search GEO")
     geo_df <- searchAnywhereGEO(GSM_query = GSM_query, GSE_query = GSE_query, acc_levels = acc_levels, GEO_type = GEO_type)
     geo_out <- searchForAccessionAcrossDBsDF(geo_df$gsm, "*", "*", "*", geo_df)
+    geo_out <- unifyDFFormat(geo_out)
+  } else {
+    geo_out <- data.frame() # Create an empty data frame for rbind
   }
   
   
+  .GlobalEnv$temp_anywhere_sra_out <- sra_out
+  .GlobalEnv$temp_anywhere_geo_out <- geo_out
+  
+  # Combine results from GEO and SRA ####
+  df_out <- rbind(sra_out, geo_out)
+  df_out <- unifyDFFormat(df_out)
+  
+  
+  
+  #---------------------------------------------------
   # TBD ####
+  #---------------------------------------------------
   # Search in SRA if any of the acc_levels are from SRA
   # ===*===
   if (sum(acc_levels %in% c("run", "experiment", "sample", "study"))>0){
@@ -247,16 +263,18 @@ searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", 
       #geo_df <- searchAnywhereGEO(GSM_query = GSM_query, GSE_query = GSE_query, acc_levels = acc_levels, GEO_type = GEO_type)
     }  
   }
-
+  #---------------------------------------------------
+  #---------------------------------------------------
+  
   
   
   #------TBC
   # ===*===
   
-  df <- geo_out
   
   
-  return(df)
+  
+  return(df_out)
 }
 
 
@@ -632,10 +650,10 @@ convertCategoriesToLibraryStrategyType <- function(x){
   
   # devtools::check()
   DB <- NULL
-  SRA_GEO_Category_Conversion <- NULL
   
-  utils::data("SRA_GEO_Category_Conversion", envir = environment())
-  df <- SRA_GEO_Category_Conversion # Retrieve category conversion data frame
+  
+  #utils::data("SRA_GEO_Category_Conversion", envir = environment())
+  df <- SpideR::SRA_GEO_Category_Conversion # Retrieve category conversion data frame
   
   # Make matching case insensitive
   x <- tolower(x)

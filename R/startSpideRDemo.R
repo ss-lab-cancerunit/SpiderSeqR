@@ -15,16 +15,12 @@ startSpideRDemo <- function(){
   
   database_env <- ".GlobalEnv"
   
-  # devtools::check()
-  gsm_demo <- NULL
-  gse_demo <- NULL
-  srr_demo <- NULL
-  sra_demo <- NULL
-  
-  utils::data("gsm_demo", envir = environment())
-  utils::data("gse_demo", envir = environment())
-  utils::data("srr_demo", envir = environment())
-  utils::data("sra_demo", envir = environment())
+
+  # TBD (not necessary)
+  #utils::data("gsm_demo", envir = environment())
+  #utils::data("gse_demo", envir = environment())
+  #utils::data("srr_demo", envir = environment())
+  #utils::data("sra_demo", envir = environment())
   #print(head(gsm_demo))
   
 
@@ -41,10 +37,10 @@ startSpideRDemo <- function(){
   
   
   
-  DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), name='gsm', value=gsm_demo)
-  DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), name='gse', value=gse_demo)
-  DBI::dbWriteTable(conn=get("srr_gsm", envir = get(database_env)), name='srr_gsm', value=srr_demo)
-  DBI::dbWriteTable(conn=get("sra_con", envir = get(database_env)), name='sra', value=sra_demo)
+  DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), name='gsm', value=SpideR::gsm_demo)
+  DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), name='gse', value=SpideR::gse_demo)
+  DBI::dbWriteTable(conn=get("srr_gsm", envir = get(database_env)), name='srr_gsm', value=SpideR::srr_demo)
+  DBI::dbWriteTable(conn=get("sra_con", envir = get(database_env)), name='sra', value=SpideR::sra_demo)
   createFtsTable("sra_con", "sra", "sra_ft")
   
 }

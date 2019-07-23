@@ -21,6 +21,7 @@
 #' Classify accessions
 #'
 #' @param x Vector of accessions
+#' @param na.ignore Logical indicating whether NAs are ignored
 #' @return Accession class (error if input does not match any)
 #' 
 #' @examples 
@@ -43,7 +44,7 @@
 #' 
 #' @keywords internal
 #'  
-classifyAccession <- function(x){
+classifyAccession <- function(x, na.ignore = FALSE){
   
   accession_regexp <- list(c("[DES]RP"),
                            c("[DES]RS"),
@@ -66,6 +67,10 @@ classifyAccession <- function(x){
     stop("Accession vector must have length > 0")
   }
 
+  if(na.ignore){
+    x <- x[!is.na(x)]
+  }
+  
   accession_class <- NA
 
   for (a in seq_along(accession_regexp)){

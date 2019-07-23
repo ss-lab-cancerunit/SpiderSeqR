@@ -26,6 +26,8 @@ getDatabaseInformation <- function(){
   sra_database_name <- "sra_con"
   geo_database_name <- "geo_con"
   
+  col_desc_table_info <- "NOTE: the following data frame is a convenient way of accessing the column description tables from databases of SRAdb and GEOmetadb packages. Currently GEO provides much better documented descriptions, whereas SRA column descriptions are only partially complete. Please note that SpideR only utilises information from gsm and gse tables of GEO and sra table for GEO (which includes collated information from most of the listed tables, i.e. run, experiment, sample, study, submission; however, some columns are renamed in sra and not all of the columns from the original accession-level tables are used in the sra table)."
+  
   
   print("What kind of database information are you interested in?")
   menu_options <- utils::menu(c("SRA: Available library_strategy types (and their counts)", #1
@@ -41,6 +43,8 @@ getDatabaseInformation <- function(){
                          "GEO: Random sample of the GSM database (size 20)", #11
                          "GEO: Random sample of the GSE database (size 20)", #12
                          "GEO: Number of studies per study type", #13
+                         "SRA: Column descriptions", #14
+                         "GEO: Column descriptions", #15
                          "None (exit)"))
   
   
@@ -119,9 +123,54 @@ getDatabaseInformation <- function(){
     
   } else if (menu_options == 14){
     
+    print(col_desc_table_info)
+    df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)),"SELECT * FROM col_desc")
+    return(df)
+ 
+    
+  } else if (menu_options == 15){
+    
+    print(col_desc_table_info)
+    df <- DBI::dbGetQuery(get(geo_database_name, envir = get(database_env)),"SELECT * FROM geodb_column_desc")
+    return(df)
+    
+  } else if (menu_options == 16){
+    
     print("Nothing to investigate")
     return(NULL)
     
   }
   
+}
+
+
+
+
+
+#' Get Descriptions of Columns within Databases
+#' 
+#' @return Data frame with column descriptions
+#' 
+#' This is a function for convenience of accessing column description tables for databases from SRAdb and GEOmetadb packages.
+#' Currently GEO provides much better documented descriptions, whereas SRA column descriptions are only partially complete. Please note that SpideR only utilises information from gsm and gse tables of GEO and sra table for GEO (which includes collated information from most of the listed tables, i.e. run, experiment, sample, study, submission).
+#' 
+#' 
+#' Currently a duplicate of functionality from \code{getDatabaseInformation()}
+#'
+getColumnDescriptions <- function(){
+  
+  database_env <- ".GlobalEnv"
+  sra_database_name <- "sra_con"
+  geo_database_name <- "geo_con"
+  
+  print("Which database are you interested in?")
+  db_choices <- utils::menu(c("SRA database", "GEO database"))
+  if (db_choices == 1){
+    df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)),"SELECT * FROM col_desc")
+    return(df)
+  } else if (db_choices ==2){
+    df <- DBI::dbGetQuery(get(geo_database_name, envir = get(database_env)),"SELECT * FROM geodb_column_desc")
+    return(df)
+  }
+
 }

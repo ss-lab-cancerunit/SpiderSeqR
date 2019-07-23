@@ -5,10 +5,9 @@
 \title{Search Anywhere within SRA and GEO databases (under construction!)}
 \usage{
 searchAnywhere(query_all, category_both = NULL, acc_levels = c("run",
-  "experiment", "sample", "study", "gsm", "gse"),
-  SRA_library_strategy = NULL, SRA_other_library_strategy = c("OTHER",
-  "NA", "NULL"), GEO_type = NULL, SRA_query, GEO_query, GSM_query,
-  GSE_query, ...)
+  "experiment", "sample", "gsm"), SRA_library_strategy = NULL,
+  SRA_other_library_strategy = c("OTHER", "NA", "NULL"),
+  GEO_type = NULL, SRA_query, GEO_query, GSM_query, GSE_query, ...)
 }
 \arguments{
 \item{query_all}{Search term for both SRA and GEO (gse and gsm tables)}

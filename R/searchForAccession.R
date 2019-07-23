@@ -14,6 +14,7 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
 
   x <- unique(acc_vector)
   x <- x[orderAccessions(x)]
+  x <- x[!is.na(x)]
 
   accession_class <- classifyAccession(x)
 
