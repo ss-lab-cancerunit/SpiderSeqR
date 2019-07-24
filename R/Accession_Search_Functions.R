@@ -71,7 +71,7 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
   print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
 
   if (search_count!=length(acc_vector)){
-    warning("Some accessions were not found in the database")
+    warning("Some accessions were not found in the GEO database")
   }
 
   df <- unique(df)
@@ -131,7 +131,7 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
   print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
 
   if (search_count!=length(acc_vector)){
-    warning("Some accessions were not found in the database")
+    warning("Some accessions were not found in the GEO database")
   }
 
   df <- unique(df)
@@ -209,7 +209,7 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
   #print(length(x))
 
   if (search_count!=length(x)){
-    warning("Some accessions were not found in the database")
+    warning("Some accessions were not found in the SRA database")
   }
 
   accession_df <- unique(accession_df)
@@ -271,7 +271,7 @@ searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm"
   print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
 
   if (search_count!=length(acc_vector)){
-    warning("Some accessions were not found in the database")
+    warning("Some accessions were not found in the SRR_GSM database. You may wish to re-check for SRA-GEO correspondence manually")
   }
 
   accession_df <- unique(accession_df)
@@ -333,6 +333,35 @@ listGSMFields <- function(){
   
   y <- DBI::dbListFields(get(database_name, envir = get(database_env)), geo_table)
   
+  return(y)
+}
+
+#------------------------------------------------------
+#------------------------------------------------------
+
+
+
+#------------------------------------------------------
+#------------------------------------------------------
+#' List all column names of the GSE table
+#' @param omit_gse Logical indicating whether to omit 'gse' column name from the output
+#' @return Character vector containing column names of GSE table (except gse)
+#' 
+#' 
+#' @examples 
+#' listGSEFields()
+#'  
+#' @keywords internal
+#' 
+listGSEFields <- function(omit_gse = TRUE){
+  database_name <- "geo_con"
+  database_env <- ".GlobalEnv"
+  geo_table <- "gse"
+  
+  y <- DBI::dbListFields(get(database_name, envir = get(database_env)), geo_table)
+  if (omit_gse){
+    y <- y[!y %in% "gse"]
+  }
   return(y)
 }
 

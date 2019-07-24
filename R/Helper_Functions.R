@@ -1983,6 +1983,42 @@ renameGSMColumns <- function(df){
 
 
 
+
+
+#----------------------------------------------------------------------------
+# renameGSEColumns
+#----------------------------------------------------------------------------
+#'
+#' Rename df columns derived from gse table to 'GSE_'
+#' 
+#' @param df Data frame
+#' @return Data frame with modified column names
+renameGSEColumns <- function(df){
+  
+  database_name <- "geo_con"
+  database_env <- ".GlobalEnv"
+  
+  if (!is.data.frame(df)){
+    stop("df is not a data frame")
+  }
+  
+  gse_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "gse")
+  gse_columns <- gse_columns[!gse_columns %in% c("gsm", "series_id", "gse")] # Exclude gsm and series_id
+  
+  
+  gse_id <- (colnames(df) %in% gse_columns)
+  
+  
+  colnames(df)[gse_id] <- paste0("GSE_", colnames(df)[gse_id])
+  
+  return(df)
+}
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+
+
+
+
 #----------------------------------------------------------------------------
 # renameSRAColumns
 #----------------------------------------------------------------------------
@@ -2043,6 +2079,43 @@ renameOTHColumns <- function(df){
   
   return(df)
   
+}
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+
+
+
+
+#----------------------------------------------------------------------------
+# generateEmptyDF
+#----------------------------------------------------------------------------
+#' Generate empty df with columns corresponding to database columns
+#' @param tables Character vector with tables from which the columns
+#' @return Data frame with columns corresponding to database columns (with names prepended with appropriate prefix). Format corresponds to that of searchForAccessionAcrossDBsDF
+#' 
+#' 
+#' @keywords internal
+generateEmptyDF <- function(tables = c("sra", "gsm", "gse", "added")){
+  df_columns <- character()
+  
+  if ("sra" %in% tables){
+    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$sra)))
+  }
+  
+  if ("gsm" %in% tables){
+    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$gsm)))
+  }
+  
+  if ("gse" %in% tables){
+    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$gse)))
+  }
+  
+  if ("added" %in% tables){
+    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$added)))
+  }
+
+  df <- stats::setNames(data.frame(matrix(ncol = length(df_columns), nrow = 0)), df_columns)
+  return(df)
 }
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------

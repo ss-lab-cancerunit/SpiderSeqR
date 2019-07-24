@@ -29,13 +29,13 @@
 #' 
 #' @param df Data frame with series_id column containing GSEs; gsm column is also required for join purposes
 #' @param gse_columns Character vector with names of GSE columns to be appended
-#' @return Data frame with appended pubmed_id column
+#' @return Data frame with appended gse columns (they will be named with a prepended 'GSE_')
 #' 
 #' 
 #' 
 #' @examples
-#' appendGSEColumns(df, "pubmed_id")
-#' appendGSEColumns(df, "*")
+#' appendGSEColumns(df, "pubmed_id") # Append only pubmed_id column
+#' appendGSEColumns(df, "*") # Append all available columns from gse
 #' 
 #' 
 #' @details 
@@ -52,6 +52,8 @@ appendGSEColumns <- function(df, gse_columns){
   
   database_name <- "geo_con"
   database_env <- ".GlobalEnv"
+  
+  
   
   # Checks and housekeeping (arguments) ####
   if (missing(gse_columns)){
@@ -83,10 +85,32 @@ appendGSEColumns <- function(df, gse_columns){
     stop("All specified columns must be in gse table")
   }
   
+ 
+  
   # If series_id is not there, append it
   if (!("gse" %in% gse_columns)){
     gse_columns <- c("gse", gse_columns)
   }
+
+  # Create a vector with final gse_columns for checking
+  final_gse_columns <- gse_columns[!gse_columns %in% "gse"]
+  final_gse_columns <- paste0("GSE_", final_gse_columns)
+  
+  
+  # If gse_columns already present, stop
+  if (sum(final_gse_columns %in% colnames(df)) == length(final_gse_columns)){
+    stop("All GSE columns already exist within the data frame")
+  }
+  
+  # If some gse_columns already present, give warning
+  if (sum(final_gse_columns %in% colnames(df)) > 0){
+    warning("Some GSE columns already exist within the data frame")
+  }
+  
+
+  
+  
+
   
   # Collapse column list to comma separated string for SQLite
   gse_columns_sql <- paste0(gse_columns, sep = ", ", collapse = "")
@@ -100,10 +124,19 @@ appendGSEColumns <- function(df, gse_columns){
   gse_list <- unique(df_ids_long$series_id)
   gse_list <- gse_list[grepl("^GSE\\d\\d\\d+$", gse_list)]
   
+  #print("THIS IS THE GSE LIST ===================")
+  #print(gse_list)
+  
   # Check whether at least one valid GSE is present
   if (length(gse_list)==0){
+    #print(gse_columns)
     warning("No valid GSEs present")
-    df_out <- df[gse_columns] <- NA
+    gse_columns <- gse_columns[!gse_columns %in% "gse"] # Don't include gsm
+    df_columns <- stats::setNames(data.frame(matrix(ncol = length(gse_columns), nrow = dim(df)[1])), gse_columns) # Matrix gets filled with NAs
+
+    df_out <- cbind(df, df_columns)
+    df_out <- renameGSEColumns(df_out)
+    #df_out[gse_columns] <- NA # Didn't work
     return(df_out)
   }
   
@@ -125,7 +158,8 @@ appendGSEColumns <- function(df, gse_columns){
   }
   
   # Rename columns
-  colnames(gse_df)[colnames(gse_df)!="series_id"] <- paste0("GSE_", colnames(gse_df)[colnames(gse_df)!="series_id"])
+  #colnames(gse_df)[colnames(gse_df)!="series_id"] <- paste0("GSE_", colnames(gse_df)[colnames(gse_df)!="series_id"])
+  gse_df <- renameGSEColumns(gse_df)
   
   # Join (and collapse) gse_df and df_ids_long dfs ####
   
@@ -169,10 +203,10 @@ appendGSEColumns <- function(df, gse_columns){
   
   
   
-  # Replace ";;" with "," for series_id and pubmed_id (if exists)
+  # Replace ";;" with "," for series_id and GSE_pubmed_id (if exists)
   df_ids_long$series_id <- gsub(collapse_str, ",", df_ids_long$series_id)
-  if (sum(grepl("^pubmed_id$", colnames(df_ids_long)))>0) {
-    df_ids_long$pubmed_id <- gsub(collapse_str, ",", df_ids_long$pubmed_id)
+  if (sum(grepl("^GSE_pubmed_id$", colnames(df_ids_long)))>0) {
+    df_ids_long$GSE_pubmed_id <- gsub(collapse_str, ",", df_ids_long$GSE_pubmed_id)
   }
   
   # Join with the original df ####

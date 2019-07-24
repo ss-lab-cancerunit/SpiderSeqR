@@ -86,8 +86,8 @@ orderDFAccessions <- function(df, acc_order = c("study", "sample", "experiment",
   # Access like: acc_cols[["study"]]
   for (i in seq_along(acc_order)){
     col_ind[i] <- which(colnames(df) %in% acc_cols[[acc_order[i]]])
-    print(col_ind[i])
-    print(acc_cols[[acc_order[i]]])
+    #print(col_ind[i])
+    #print(acc_cols[[acc_order[i]]])
     if (length(col_ind[i])>1){
       stop("Multiple matching columns")
     }
@@ -97,7 +97,7 @@ orderDFAccessions <- function(df, acc_order = c("study", "sample", "experiment",
   for (a in seq_along(col_ind)){
     order_columns <- c(order_columns, list(df[, col_ind[a]]))
   }
-  print(order_columns)
+  #print(order_columns)
   
   df <- df[orderAccessions(order_columns, na.last = TRUE), ]
   
@@ -188,6 +188,9 @@ listValidColumns <- function(){
   sra_columns <- DBI::dbListFields(get(sra_database_name, envir = get(database_env)), "sra")
   gsm_columns <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gsm")
   gse_columns <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gse")
+  
+  sra_columns <- sra_columns[!sra_columns %in% "run_ID"] # Remove run_ID column
+  gse_columns <- gse_columns[!gse_columns %in% "gse"] # Remove gse column
   
   sra_columns[!sra_columns %in% sra_acc] <- paste0("SRA_", sra_columns[!sra_columns %in% sra_acc])
   #sra_columns <- c(sra_acc, sra_columns) # NOTE: order not preserved

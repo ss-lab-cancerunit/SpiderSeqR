@@ -3,8 +3,9 @@
 #' Search Anywhere within SRA and GEO databases (under construction!)
 #' 
 #' @param query_all Search term for both SRA and GEO (gse and gsm tables)
-#' @param category_both
+#' 
 #' @param acc_levels Accession levels at which the search is conducted
+#' @param category_both
 #' @param SRA_library_strategy
 #' @param SRA_other_library_strategy
 #' @param GEO_type
@@ -21,7 +22,7 @@
 #' searchAnywhere("tp53 OR p53") #Can list synonyms
 #' 
 #' 
-#' searchAnywhere ("p53", acc_levels = c("gsm", "gse")) #Only search in GEO
+#' searchAnywhere ("p53", acc_levels = c("gsm", "gse")) #Only search for entries that occur in GEO
 #' 
 #' 
 #' @section Delete some things below:
@@ -42,6 +43,19 @@
 #'     \item SRA_query and GSM_query and GSE_query
 #' 
 #' }
+#' 
+#' @section Accession levels:
+#' Each accession level is associated with its own set of information. Sometimes the information is replicated across levels, sometimes it is unique to the level. Only information associated with the specified accession levels will be subject of the search. For example, it is common for study abstracts to mention a lot of gene names or proteins that were not a direct object of the study; by searching everywhere studies with a mere mention of a gene will be included. 
+#' 
+#' Restricting accession levels, e.g.  
+#' 
+#' \code{searchAnywhere(query_all = "p53", acc_levels = c("run", "experiment", "sample", "gsm"))}  
+#' 
+#' will help avoid including these cases. However, always consider using a broader search and comparing the results to the more refined one.
+#' 
+#' Another use of accession levels is to restrict search to only one database. To do so, only list accession levels specific to one database: SRA (run, experiment, sample, study) or GEO (gsm, gse).
+#' 
+#' 
 #' @section Category_both, SRA_library_strategy and GEO_type:
 #' 
 #' SRA and GEO have distinct ways of specifying the type of their data (such as e.g. RNA-Seq, ChIP-Seq or microarray expression experiments). SRA stores that information as *library_strategy*, GEO records *types*. For users' convenience, a data frame with the conversion between the commmonest *library_strategies* and *types* is provided in \code{SRA_GEO_Category_Conversion} (for more details, please examine \code{SRA_GEO_Category_Conversion} or its documentation, \code{?SRA_GEO_Category_Conversion}). Hence, it is possible to specify *category*, which refers to either one or both SRA and GEO (some categories exist within both SRA and GEO, some only in one of the databases; e.g. only GEO stores microarray data).
@@ -59,17 +73,6 @@
 #' 
 #' 
 #' 
-#' @section Accession levels:
-#' Each accession level is associated with its own set of information. Sometimes the information is replicated across levels, sometimes it is unique to the level. Only information associated with the specified accession levels will be subject of the search. For example, it is common for study abstracts to mention a lot of gene names or proteins that were not a direct object of the study; by searching everywhere studies with a mere mention of a gene will be included. 
-#' 
-#' Restricting accession levels, e.g.  
-#' 
-#' \code{searchAnywhere(query_all = "p53", acc_levels = c("run", "experiment", "sample", "gsm"))}  
-#' 
-#' will help avoid including these cases. However, always consider using a broader search and comparing the results to the more refined one.
-#' 
-#' Another use of accession levels is to restrict search to only one database. To do so, only list accession levels specific to one database: SRA (run, experiment, sample, study) or GEO (gsm, gse).
-#' 
 #' 
 #' @section Examples of usage:
 #' 
@@ -80,7 +83,7 @@
 #'     \item Search for rare types of experiments ('library_strategy: HiC'; 'hic library_strategy: OTHER')
 #' }
 #' 
-searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", "experiment", "sample", "gsm"), SRA_library_strategy=NULL, SRA_other_library_strategy = c("OTHER", "NA", "NULL"), GEO_type=NULL, SRA_query, GEO_query, GSM_query, GSE_query, ...){
+searchAnywhere <- function(query_all, acc_levels = c("run", "experiment", "sample", "gsm"), category_both=NULL, SRA_library_strategy=NULL, SRA_other_library_strategy = c("OTHER", "NA", "NULL"), GEO_type=NULL, SRA_query, GEO_query, GSM_query, GSE_query, ...){
   
   
   # Query arguments ####
@@ -214,22 +217,41 @@ searchAnywhere <- function(query_all, category_both=NULL, acc_levels = c("run", 
   #  searchAnywhereSRA(SRA_query, SRA_library_strategy, SRA_other_library_strategy, acc_levels = acc_levels, sra_arg_check)
   #}
   
-  
+  # Search within SRA ####
   if (sum(acc_levels %in% c("run", "experiment", "sample", "study"))>0){
     print("Search SRA")
     sra_df <- searchAnywhereSRA(SRA_query = SRA_query, acc_levels = acc_levels, SRA_library_strategy = SRA_library_strategy, SRA_other_library_strategy = SRA_other_library_strategy)
-    sra_out <- searchForAccessionAcrossDBsDF(sra_df$run_accession, "*", "*", "*", sra_df)
+    .GlobalEnv$temp_anywhere_sra_df <- sra_df
+    
+    if (dim(sra_df)[1]!=0){
+      sra_out <- searchForAccessionAcrossDBsDF(sra_df$run_accession, "*", "*", "*", sra_df)
+    } else {
+      sra_out <- generateEmptyDF() # Warning already generated by SRA
+    }
+    
+    .GlobalEnv$temp_anywhere_sra_out_sfa <- sra_out
     sra_out <- unifyDFFormat(sra_out)
+    .GlobalEnv$temp_anywhere_sra_out_udf <- sra_out
     
   } else {
     sra_out <- data.frame() # Create an empty data frame for rbind
   }
   
+  # Search within GEO ####
   if (sum(acc_levels %in% c("gse", "gsm"))>0){
     print("Search GEO")
     geo_df <- searchAnywhereGEO(GSM_query = GSM_query, GSE_query = GSE_query, acc_levels = acc_levels, GEO_type = GEO_type)
-    geo_out <- searchForAccessionAcrossDBsDF(geo_df$gsm, "*", "*", "*", geo_df)
+    .GlobalEnv$temp_anywhere_geo_df <- geo_df
+    
+    if (dim(geo_df)[1]!=0){
+      geo_out <- searchForAccessionAcrossDBsDF(geo_df$gsm, "*", "*", "*", geo_df)
+    } else {
+      geo_out <- generateEmptyDF() # Warning already generated by GSM, GSE
+    }
+
+    .GlobalEnv$temp_anywhere_geo_out_sfa <- geo_out
     geo_out <- unifyDFFormat(geo_out)
+    .GlobalEnv$temp_anywhere_geo_out_udf <- geo_out
   } else {
     geo_out <- data.frame() # Create an empty data frame for rbind
   }
@@ -345,6 +367,16 @@ searchAnywhereGSM <- function(GSM_query, GEO_type){ # No acc_levels needed in th
     #df <- 1 # To be added ===*===
   }
   
+  
+  if (dim(df)[1]==0){
+    warning("No results found in GSM. Try refining your search terms or acc_levels", call. = FALSE)
+  }
+  
+  
+
+  df <- renameGSMColumns(df)
+  .GlobalEnv$temp_df_diag <- df
+  
   # Append gse columns ####
   df <- appendGSEColumns(df, "*")
   
@@ -403,7 +435,13 @@ searchAnywhereGSE <- function(GSE_query, GEO_type){
   
   
   # Search across GEO for GSEs ####
-  df <- searchGEOForGSE(df$gse, "*", "*")
+  if (dim(df)[1]!=0){
+    df <- searchGEOForGSE(df$gse, "*", "*")
+  } else {
+    warning("No results found in GSE. Try refining your search terms or acc_levels", call. = FALSE)
+    df <- generateEmptyDF(c("gsm", "gse"))
+  }
+
   
 
   return(df)
@@ -445,6 +483,7 @@ searchAnywhereGSE <- function(GSE_query, GEO_type){
 #' 
 #' 
 #' 
+#searchAnywhereSRA <- function(SRA_query, acc_levels, SRA_library_strategy=NULL, SRA_other_library_strategy = c("OTHER", "NA", "NULL"),  ...){
 searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sample", "study"), SRA_library_strategy=NULL, SRA_other_library_strategy = c("OTHER", "NA", "NULL"),  ...){
   
   sra_arg_check <- list(...)$sra_arg_check
@@ -544,9 +583,19 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
   
   df <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query_full)
   
+
+  
+
+  
   .GlobalEnv$temp_searchAnywhereSRA <- df
   
   df <- filterSRAQueryByAccessionLevel(SRA_query, df, acc_levels)
+  
+  df <- renameSRAColumns(df) # Must come after filtering, otherwise it would not work
+  
+  if (dim(df)[1]==0){
+    warning("No results found in SRA. Try refining your search terms or acc_levels", call. = FALSE)
+  }
   
   return(df)
   #------TBC
@@ -574,6 +623,7 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
 #' 
 filterSRAQueryByAccessionLevel <- function(query, df, acc_levels){
   
+  print(acc_levels)
   if (sum(unique(acc_levels) %in% c("study", "sample", "experiment", "run"))==4){
     print("Nothing to filter - returning original df")
     return(df)
@@ -598,6 +648,7 @@ filterSRAQueryByAccessionLevel <- function(query, df, acc_levels){
   
   out_runs <- DBI::dbGetQuery(.GlobalEnv$filter_con, query)$run_accession
   
+  DBI::dbDisconnect(filter_con)
   file.remove(filter_db_file)
   rm(filter_con, envir = .GlobalEnv)
   
