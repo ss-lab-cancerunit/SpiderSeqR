@@ -6,7 +6,7 @@
 \title{DEMO extract from srr_gsm table (from custom sqlite database)}
 \format{An object of class \code{data.frame} with 47 rows and 6 columns.}
 \usage{
-srr_demo
+data(srr_demo)
 }
 \description{
 A data frame created as a DEMO for srr_gsm table from custom sqlite database which stores conversions between SRA and GEO (for samples which exist in both databases). Samples include those study accessions/series that exist within SRA's \code{sra_demo} and GEO data frames (\code{gse_demo}, \code{gsm_demo}).

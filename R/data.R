@@ -15,7 +15,8 @@
 #' }
 #' 
 #' 
-#'
+#' @docType data
+#' @usage data(SRA_GEO_Category_Conversion)
 #'
 "SRA_GEO_Category_Conversion"
 
@@ -38,6 +39,8 @@
 #'  
 #' }
 #' 
+#' @docType data
+#' @usage data(sra_demo)
 #'
 "sra_demo"
 
@@ -45,6 +48,9 @@
 #' DEMO extract from srr_gsm table (from custom sqlite database)
 #' 
 #' A data frame created as a DEMO for srr_gsm table from custom sqlite database which stores conversions between SRA and GEO (for samples which exist in both databases). Samples include those study accessions/series that exist within SRA's \code{sra_demo} and GEO data frames (\code{gse_demo}, \code{gsm_demo}).
+#' 
+#' @docType data
+#' @usage data(srr_demo)
 #' 
 "srr_demo"
 
@@ -67,7 +73,8 @@
 #'  \item GSE80767
 #'  
 #' }
-#' 
+#' @docType data
+#' @usage data(gse_demo)
 "gse_demo"
 
 
@@ -89,5 +96,7 @@
 #'  \item GSE80767
 #'  
 #' }
+#'@docType data
+#' @usage data(gsm_demo)
 "gsm_demo"
 

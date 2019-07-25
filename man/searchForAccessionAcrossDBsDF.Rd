@@ -20,7 +20,7 @@ searchForAccessionAcrossDBsDF(acc_vector, sra_columns, geo_columns,
 A data frame with the results of the query
 }
 \description{
-\code{searchForAccessionAcrossDBs} classifies accessions, searches for them in their original database (SRA or GEO), then, if conversion is possible, searches for corresponding accessions in the other database (SRA or GEO). If no conversion is possible, the columns from the corresponding database are returned empty (NAs).
+\code{searchForAccessionAcrossDBsDF} classifies accessions, searches for them in their original database (SRA or GEO), then, if conversion is possible, searches for corresponding accessions in the other database (SRA or GEO). If no conversion is possible, the columns from the corresponding database are returned empty (NAs).
 }
 \section{Using df argument}{
 

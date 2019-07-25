@@ -6,7 +6,7 @@
 \title{DEMO extract from gsm table (from sqlite file of GEOmetadb package)}
 \format{An object of class \code{data.frame} with 111 rows and 32 columns.}
 \usage{
-gsm_demo
+data(gsm_demo)
 }
 \description{
 Series included in the data frame:

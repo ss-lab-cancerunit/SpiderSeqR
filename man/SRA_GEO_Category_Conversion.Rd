@@ -6,7 +6,7 @@
 \title{SRA - GEO Category Conversion Table}
 \format{An object of class \code{data.frame} with 41 rows and 3 columns.}
 \usage{
-SRA_GEO_Category_Conversion
+data(SRA_GEO_Category_Conversion)
 }
 \description{
 A manually curated set of conversions between SRA library_strategy and GEO (study) type. These categories can be used for convenience of searching for terms using SpideR functions.
