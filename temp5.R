@@ -7,6 +7,7 @@
 #' Search chunk by chunk
 #' 
 #' 
+#' NOTE: MOVED TO ACCESSION SEARCH FUNCTIONS
 database_name <- "geo_con"
 table_name <- "gsm"
 #acc_vector <- temp_geo_df$gsm
@@ -17,9 +18,12 @@ col_names <- listGSMFields() # Will have to provide a clause for * outside of th
 
 acc_vector <- temp_random1$run_accession
 acc_vector <- temp_random1$series_id
+
 acc_vector <- acc_vector[!is.na(acc_vector)]
 
 acc_vector <- getGSECounts(temp_random1)$gses
+
+
 # Arguments
 #------------------------
 batchedAccSearch(acc_vector, "geo_con", "gsm", col_names, 10)
@@ -69,6 +73,7 @@ batchedAccSearch <- function(acc_vector, database_name, table_name, col_names, c
   # Query construction and search ####
   
   if (acc_class %in% "series_id"){
+    
     # GSE - special treatment (acc_vector elements used twice) ####
     for (a in seq_along(acc_vector_split)){ # For each batch
       
@@ -79,8 +84,8 @@ batchedAccSearch <- function(acc_vector, database_name, table_name, col_names, c
       query_el <- substr(query_el, 1, nchar(query_el)-end_char)
       query <- paste0(query_beg, query_el, " )")
       print(query)
-      #chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
-      #df <- rbind(df, chunk)
+      chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+      df <- rbind(df, chunk)
     }
     
   } else if (acc_class %in% c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm")){
@@ -95,8 +100,8 @@ batchedAccSearch <- function(acc_vector, database_name, table_name, col_names, c
       query_el <- substr(query_el, 1, nchar(query_el)-end_char)
       query <- paste0(query_beg, query_el, " )")
       print(query)
-      #chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
-      #df <- rbind(df, chunk)
+      chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+      df <- rbind(df, chunk)
     }
   }
   
