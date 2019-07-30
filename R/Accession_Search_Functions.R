@@ -43,10 +43,19 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
     acc_vector <- "nth"
   }
   
+  # Make sure that series_id and gsm are among the output columns
+  if (!("series_id" %in% geo_columns) | !("gsm" %in% geo_columns)){
+    if (!(length(geo_columns) == 1 & geo_columns[1] == "*")){
+      geo_columns <- c("gsm", "series_id", geo_columns)
+      geo_columns <- unique(geo_columns)
+      warning("Added gsm and series_id columns to facilitate merging with gse table")
+    }
+  }
   
-  geo_columns <- paste0(geo_columns, collapse = ", ")
+  
+  #geo_columns <- paste0(geo_columns, collapse = ", ") # This is dealt with by batchedAccSearch()
   search_count <- 0
-  df <- data.frame()
+  #df <- data.frame()
   
   #Search for GSMs
   df <- batchedAccSearch(acc_vector = acc_vector, database_name = database_name, table_name = "gsm", col_names = geo_columns)
@@ -81,70 +90,6 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
 
 #------------------------------------------------------
 #------------------------------------------------------
-simpleSearchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
-#searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
-  print("Running searchGEOForGSM")
-  
-  database_name <- "geo_con"
-  database_env <- ".GlobalEnv"
-
-  #Remove duplicates and order
-  acc_vector <- unique(acc_vector)
-  acc_vector <- acc_vector[orderAccessions(acc_vector)]
-
-  #Stop if list is not valid (i.e. non-gsm entries)
-  if (classifyAccession(acc_vector)!="gsm"){
-    stop("Only GSMs are allowed")
-  }
-
-  #Make sure that the query will not be empty
-  if (length(acc_vector)==0){
-    acc_vector <- "nth"
-  }
-
-  geo_columns <- paste0(geo_columns, collapse = ", ")
-  search_count <- 0
-  df <- data.frame()
-
-  #Search for GSMs
-  for (a in seq_along(acc_vector)){
-    query <- paste0("SELECT ", geo_columns, " FROM gsm WHERE gsm = '", acc_vector[a], "'")
-    print(query)
-    chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
-    search_count <- search_count + as.integer(dim(chunk)[1]>=1)
-    df <- rbind(df, chunk)
-  }
-  
-  # Rename GSM columns
-  df <- renameGSMColumns(df)
-
-  #print(colnames(chunk))
-  #if (dim(df)[1]==0){
-  #  df <- chunk
-  #}
-  
-  df <- appendGSEColumns(df, gse_columns)
-
-  print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
-
-  if (search_count!=length(acc_vector)){
-    warning("Some accessions were not found in the GEO database")
-  }
-
-  df <- unique(df)
-
-
-  print("searchGEOForGSM completed")
-
-  return(df)
-}
-#------------------------------------------------------
-#------------------------------------------------------
-
-
-
-#------------------------------------------------------
-#------------------------------------------------------
 searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
   print("Running searchGEOForGSE")
   
@@ -165,9 +110,19 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
     acc_vector <- "nth"
   }
   
-  geo_columns <- paste0(geo_columns, collapse = ", ")
+  # Make sure that series_id and gsm are among the output columns
+  if (!("series_id" %in% geo_columns) | !("gsm" %in% geo_columns)){
+    if (!(length(geo_columns) == 1 & geo_columns[1] == "*")){
+      geo_columns <- c("gsm", "series_id", geo_columns)
+      geo_columns <- unique(geo_columns)
+      warning("Added gsm and series_id columns to facilitate merging with gse table")
+    }
+  }
+  
+  
+  #geo_columns <- paste0(geo_columns, collapse = ", ") # This is dealt with by batchedAccSearch()
   search_count <- 0
-  df <- data.frame()
+  #df <- data.frame()
   
   #Search for GSEs
   df <- batchedAccSearch(acc_vector = acc_vector, database_name = database_name, table_name = "gsm", col_names = geo_columns)
@@ -191,67 +146,6 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
   return(df)
   
   
-}
-#------------------------------------------------------
-#------------------------------------------------------
-
-
-
-#------------------------------------------------------
-#------------------------------------------------------
-simpleSearchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
-#searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
-  print("Running searchGEOForGSE")
-  
-  database_name <- "geo_con"
-  database_env <- ".GlobalEnv"
-  
-  #Remove duplicates and order
-  acc_vector <- unique(acc_vector)
-  acc_vector <- acc_vector[orderAccessions(acc_vector)]
-
-  #Stop if list is not valid (i.e. non-gsm entries)
-  if (classifyAccession(acc_vector)!="series_id"){
-    stop("Only GSEs are allowed")
-  }
-
-  #Make sure that the query will not be empty
-  if (length(acc_vector)==0){
-    acc_vector <- "nth"
-  }
-
-  geo_columns <- paste0(geo_columns, collapse = ", ")
-  search_count <- 0
-  df <- data.frame()
-
-  #Search for GSMs
-  for (a in seq_along(acc_vector)){
-    query <- paste0("SELECT ", geo_columns, " FROM gsm WHERE series_id LIKE '%", acc_vector[a], "' OR series_id LIKE '%", acc_vector[a], ",%'")
-    print(query)
-    chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
-    search_count <- search_count + as.integer(dim(chunk)[1]>=1)
-    df <- rbind(df, chunk)
-  }
-  
-  # Rename GSM columns
-  df <- renameGSMColumns(df)
-  
-  df <- appendGSEColumns(df, gse_columns)
-
-
-  print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
-
-  if (search_count!=length(acc_vector)){
-    warning("Some accessions were not found in the GEO database")
-  }
-
-  df <- unique(df)
-
-  print("searchGEOForGSE completed")
-
-  return(df)
-
-
 }
 #------------------------------------------------------
 #------------------------------------------------------
@@ -285,7 +179,7 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
   #sra_columns <- c("experiment_title")
   #sra_columns <- "*"
 
-  sra_columns <- paste(sra_columns, collapse = ", ")
+  #sra_columns <- paste(sra_columns, collapse = ", ") # This is dealt with by batchedAccSearch()
 
   #------------------------------------------------
 
@@ -298,44 +192,38 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
   }
 
   accession_class <- classifyAccession(x)
-  search_count <- 0
-  accession_df <- data.frame()
-
-  if (accession_class %in% c("study_accession", "sample_accession", "experiment_accession", "run_accession")){
-
-    query_beg <- paste0("SELECT ", sra_columns, " FROM ", sra_table, " WHERE ", accession_class, " = '")
-
-    for (a in seq_along(x)){
-      query <- paste0(query_beg, x[a], "'")
-      print(query)
-      chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
-      search_count <- search_count + as.integer(dim(chunk)[1]>=1)
-      accession_df <- rbind(accession_df, chunk)
-    }
-  } else {
+  #search_count <- 0
+  #accession_df <- data.frame()
+  
+  if (!(accession_class %in% c("study_accession", "sample_accession", "experiment_accession", "run_accession"))){
     stop("Only SRA accessions are allowed")
-  }
+  } 
+  
+  # Search for SRA accessions
+  df <- batchedAccSearch(acc_vector = acc_vector, database_name = database_name, table_name = "sra", col_names = sra_columns)
+  
 
-  print(paste0("Found results for ", search_count, " out of ", length(x), " accession search terms"))
+  #print(paste0("Found results for ", search_count, " out of ", length(x), " accession search terms"))
   #print(search_count)
   #print(length(x))
 
-  if (search_count!=length(x)){
-    warning("Some accessions were not found in the SRA database")
-  }
+  #if (search_count!=length(x)){
+  #  warning("Some accessions were not found in the SRA database")
+  #}
 
-  accession_df <- unique(accession_df)
+  df <- unique(df)
   
   # Rename SRA columns
-  accession_df <- renameSRAColumns(accession_df)
+  df <- renameSRAColumns(df)
 
 
   print("searchSRAForAccession completed")
 
-  return(accession_df)
+  return(df)
 }
 #------------------------------------------------------
 #------------------------------------------------------
+
 
 
 #------------------------------------------------------
@@ -369,29 +257,33 @@ searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm"
   search_count <- 0
   accession_df <- data.frame()
 
-  query_beg <- paste0("SELECT ", srr_gsm_columns, " FROM srr_gsm WHERE ", accession_class, " = '")
+  
+  df <- batchedAccSearch(acc_vector = acc_vector, database_name = "srr_gsm", table_name = "srr_gsm", col_names = srr_gsm_columns)
+  
+  
+  #query_beg <- paste0("SELECT ", srr_gsm_columns, " FROM srr_gsm WHERE ", accession_class, " = '")
 
-  for (a in seq_along(acc_vector)){
-    query <- paste0(query_beg, acc_vector[a], "'")
-    print(query)
-    chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
-    search_count <- search_count + as.integer(dim(chunk)[1]>=1)
-    accession_df <- rbind(accession_df, chunk)
-  }
+  #for (a in seq_along(acc_vector)){
+  #  query <- paste0(query_beg, acc_vector[a], "'")
+  #  print(query)
+  #  chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+  #  search_count <- search_count + as.integer(dim(chunk)[1]>=1)
+  #  accession_df <- rbind(accession_df, chunk)
+  #}
 
 
-  print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
+  #print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
 
-  if (search_count!=length(acc_vector)){
-    warning("Some accessions were not found in the SRR_GSM database. You may wish to re-check for SRA-GEO correspondence manually")
-  }
+  #if (search_count!=length(acc_vector)){
+  #  warning("Some accessions were not found in the SRR_GSM database. You may wish to re-check for SRA-GEO correspondence manually")
+  #}
 
-  accession_df <- unique(accession_df)
+  df <- unique(df)
 
 
   print("searchSRR_GSM completed")
 
-  return(accession_df)
+  return(df)
 
 }
 #------------------------------------------------------
@@ -484,7 +376,15 @@ listGSEFields <- function(omit_gse = TRUE){
 
 #------------------------------------------------------
 #------------------------------------------------------
-
+#' Make batched queries to databases
+#' 
+#' @param acc_vector A character vector with accessions to search for (must belong to the same type)
+#' @param database_name A character with the name of the database connection
+#' @param table_name A character with the name of the database table
+#' @param col_names A character vector with column names to be returned
+#' @param c_size Number of items to search for in a batch (sqlite has a limit of 999 parameters within a single query)
+#' @return Data frame with results of the query
+#' 
 batchedAccSearch <- function(acc_vector, database_name, table_name, col_names, c_size = 500){
   
   database_env <- ".GlobalEnv"
@@ -526,7 +426,29 @@ batchedAccSearch <- function(acc_vector, database_name, table_name, col_names, c
   # Beginning of the query
   query_beg <- paste0("SELECT ", col_names, " FROM ", table_name, " WHERE (")
   
+  
+  
   # Query construction and search ####
+  
+  # Special case for srr_gsm ####
+  if (database_name == "srr_gsm"){
+    
+    for (a in seq_along(acc_vector_split)){ # For each batch
+      
+      query_el <- character()
+      for (i in seq_along(acc_vector_split[[a]])){ # For each element in batch
+        query_el <- paste0(query_el, pre_el, acc_vector_split[[a]][i], post_el)
+      }
+      query_el <- substr(query_el, 1, nchar(query_el)-end_char)
+      query <- paste0(query_beg, query_el, " )")
+      print(query)
+      chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+      df <- rbind(df, chunk)
+    }
+    
+    return(df)
+  }
+  
   
   if (acc_class %in% "series_id"){
     

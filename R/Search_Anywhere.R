@@ -262,7 +262,7 @@ searchAnywhere <- function(query_all, acc_levels = c("run", "experiment", "sampl
   
   # Combine results from GEO and SRA ####
   df_out <- rbind(sra_out, geo_out)
-  df_out <- unifyDFFormat(df_out)
+  #df_out <- unifyDFFormat(df_out)
   
   
   
@@ -290,11 +290,31 @@ searchAnywhere <- function(query_all, acc_levels = c("run", "experiment", "sampl
   
   
   
-  #------TBC
-  # ===*===
+ 
+  # Process results and add unifying columns ####
   
   
+  df_out <- gsmExtractor(df_out, sampleColumn = FALSE) #Don't create sample column
   
+  df_out <- saExtractor(df_out)
+  df_out <- chExtractor(df_out)
+  
+  
+  #No input/controlDetector used
+  df_out$input <- NA
+  df_out$control <- NA
+  
+  df_out <- mergeDetector(df_out, do_nothing = TRUE)
+  
+  #No missingRunVerifier used
+  
+  df_out <- pairedEndConverter(df_out)
+  
+  df_out <- naConverter(df_out)
+  
+  df_out <- renameOTHColumns(df_out)
+  
+  df_out <- unifyDFFormat(df_out)
   
   return(df_out)
 }

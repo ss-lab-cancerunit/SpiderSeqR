@@ -1492,7 +1492,7 @@ dplyr::`%>%`
 
 #----------------------------------------------------------------------------
 #Developed in mergeDetector.R
-mergeDetector <- function(df){
+mergeDetector <- function(df, do_nothing = FALSE){
   # Args: df - data frame (MUST HAVE experiment_accession column)
   #                       ALSO: number of rows in df must correspond to number of SRRs
   # Returns: df - original df with added columns:
@@ -1504,9 +1504,18 @@ mergeDetector <- function(df){
 
   print("Running mergeDetector")
   
-  if (sum(!is.na(df$experiment_accession))==0){
+  if (do_nothing == TRUE){
+    df$n <- NA
     df$lane <- NA
     df$mer <- NA
+    print("mergeDetector completed")
+    return(df)
+  }
+  
+  if (sum(!is.na(df$experiment_accession))==0){
+    df$n <- NA
+    df$lane <- NA
+    df$mer <- NA #===*=== added later
     warning("No not-NA experiment_accesion elements")
     print("mergeDetector completed")
     return(df)

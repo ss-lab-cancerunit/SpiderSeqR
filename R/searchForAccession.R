@@ -49,6 +49,8 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
   
   output_df <- renameOTHColumns(output_df)
   
+  output_df <- unifyDFFormat(output_df) # Removes SRA_run_ID column, orders by accession
+  
   .GlobalEnv$temp_output_df <- output_df
 
   if (file_output == TRUE){
