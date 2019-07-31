@@ -929,6 +929,42 @@ columnSelector <- function(df, df_columns, out_columns){
 
 
 
+#============================================================================
+# selectColumns
+#============================================================================
+#' Select columns from a data frame
+#' 
+#' @param df Data frame
+#' @param cols Character vector with column names to be retained
+#' @return Original data frame containing only columns specified in cols
+#' 
+#' @export
+#' This is a universal function for extracting only columns of interest from a data frame. Related functions exist, with pre-defined sets of columns, see documentation for \code{\link{selectColumnsAccn}} ===*===
+#' 
+#' 
+#' 
+selectColumns <- function(df, cols){
+  df <- columnSelector(df = df, df_columns = cols, out_columns = cols)
+  return(df)
+}
+
+#============================================================================
+
+
+
+
+selectColumnsAccn <- function(df){
+  cols <- c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id")
+  df <- columnSelector(df, df_columns = cols, out_columns = cols)
+  return(df)
+}
+
+
+
+
+
+
+
 
 
 #============================================================================

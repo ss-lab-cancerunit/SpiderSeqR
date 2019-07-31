@@ -178,6 +178,9 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
   }
 
   print("SQL query completed")
+  
+  message(paste0("Found ", dim(output_list)[1], " results")) #===*===
+  .GlobalEnv$spider_output_list_sra_unfiltered <- output_list
 
   #------------------------------------------------
   #------------------------------------------------
@@ -463,6 +466,9 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
   # Rename columns
   #output_list <- renameSRAColumns(output_list)
 
+  message(paste0(dim(output_list)[1], " results passed verification phase")) # ===*===
+  .GlobalEnv$spider_output_list_sra_filtered <- output_list
+  
   if (dim(output_list)[1]==0) {
     stop("No results passed the verification phase")
   }

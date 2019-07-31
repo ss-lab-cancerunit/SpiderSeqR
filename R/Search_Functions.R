@@ -358,6 +358,11 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
   #============================================================================
   # Rename SRA and OTH columns, check if all valid
   #============================================================================
+  #print(colnames(spider_combined))
+  if ("run_ID" %in% colnames(spider_combined)){
+    spider_combined <- spider_combined[, -grep("run_ID", colnames(spider_combined))]
+  }
+  
   spider_combined <- renameSRAColumns(spider_combined)
   spider_combined <- renameOTHColumns(spider_combined)
   checkValidColumns(spider_combined)
