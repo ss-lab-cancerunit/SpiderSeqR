@@ -20,6 +20,8 @@
 #' @param species A character vector with taxonomy IDs (e.g. "9606" for human)
 #' @param platform A character vector with sequencing platforms
 #' @param SRA_secondary_library_strategy Additional experimental method of interest filtered from the studies featured in search results
+#' @param return_all A logical indicating what results should be returned. FALSE means that only samples matching criteria of interest will be returned (and their putative inputs/controls for RNA-Seq or ChIP-Seq). TRUE means that the whole SRPs will be returned(containing matching samples, but also all the other samples within an SRP). Defaults to TRUE
+#' 
 #' 
 #' @return Nothing. Creates a range of files with the query information and search results.
 #' 
@@ -45,7 +47,7 @@
 #' @export
 #
 #NEW searchForTerm FUNCTION (in progress) - WILL BE COMPLETED IN INDEV3.R
-searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_type=NULL, treatment=NULL, species=NULL, platform=NULL, SRA_secondary_library_strategy=NULL){
+searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_type=NULL, treatment=NULL, species=NULL, platform=NULL, SRA_secondary_library_strategy=NULL, return_all = TRUE){
   #Function for searching
   #Inputs: search terms
   #REQUIRED: SRA_library_strategy AND at least one of gene, antibody, cell_type or treatment
@@ -215,10 +217,10 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
     sample_list$input <- NA
   }
 
-  if (st$SRA_library_strategy == "RNA-Seq"){
-    sample_list$control <- "N"
-  } else {
+  if (st$SRA_library_strategy == "ChIP-Seq"){
     sample_list$control <- NA
+  } else {
+    sample_list$control <- "N" # Add 'N' for all non-ChIP library strategies (including RNA-Seq) 
   }
   #============================================================================
 
@@ -314,11 +316,15 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
   #Inputs
   gsm_db_name <- "geo_con"
   database_env <- ".GlobalEnv"
-  gsm_columns <- c("gsm", "series_id", "gpl", "title", "source_name_ch1", "organism_ch1", "characteristics_ch1")
+  #gsm_columns <- c("gsm", "series_id", "gpl", "title", "source_name_ch1", "organism_ch1", "characteristics_ch1")
+  gsm_columns <- "*"
 
+  
+  
   #gse_columns <- c("title", "pubmed_id")
-  gse_columns <- c("pubmed_id")
-
+  #gse_columns <- c("pubmed_id")
+  gse_columns <- "*"
+  
 
   #gsm_list <- test12[1:10, 2]
   #gsm_list <- c("GSM2342088")
@@ -358,9 +364,9 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
   #============================================================================
   # Rename SRA and OTH columns, check if all valid
   #============================================================================
-  #print(colnames(spider_combined))
-  if ("run_ID" %in% colnames(spider_combined)){
-    spider_combined <- spider_combined[, -grep("run_ID", colnames(spider_combined))]
+  #print(colnames(spider_combined)) #===*===
+  if ("sra_ID" %in% colnames(spider_combined)){
+    spider_combined <- spider_combined[, -grep("sra_ID", colnames(spider_combined))]
   }
   
   spider_combined <- renameSRAColumns(spider_combined)
@@ -375,6 +381,29 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
 
   outputGenerator(spider_combined, spider_superseries, st = st)
   #============================================================================
+  
+  if (return_all == FALSE){
+    
+    
+    if (st$SRA_library_strategy =="ChIP-Seq"){
+      #======
+      #ChIP
+      #======
+      spider_combined <- dplyr::filter(spider_combined, SRA_library_strategy == st$SRA_library_strategy & OTH_input %in% c("N", "input"))
+    } else if (st$SRA_library_strategy =="RNA-Seq"){
+      #======
+      #RNA
+      #======
+      spider_combined <- dplyr::filter(spider_combined, SRA_library_strategy == st$SRA_library_strategy & OTH_control %in% c("N", "control", "otherwise"))
+    } else {
+      #======
+      #ELSE
+      #======
+      spider_combined <- dplyr::filter(spider_combined, SRA_library_strategy == st$SRA_library_strategy & OTH_control %in% c("N"))
+    }
+    
+    
+  }
 
   return(spider_combined)
 

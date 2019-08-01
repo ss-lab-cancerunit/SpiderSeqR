@@ -15,5 +15,5 @@ selectColumns(df, cols)
 Original data frame containing only columns specified in cols
 }
 \description{
-Select columns from a data frame
+This is a universal function for extracting only columns of interest from a data frame. Related functions exist, with pre-defined sets of columns, see documentation for \code{\link{selectColumnsAccn}} ===*===
 }

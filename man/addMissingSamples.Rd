@@ -13,9 +13,7 @@ addMissingSamples(df, values = c(1, 0))
 }
 \value{
 Data frame with added missing rows from the same GSE/SRP. It will also contain an additional column to indicate whether the row was originally present or not
-
-This function is intended to facilitate workflow with the results of \code{searchAnywhere()} function. The main motivation is to provide missing samples that did not match the query criteria, but might be useful when searching for controls
 }
 \description{
-Add missing samples from GSEs and SRPs within a data frame
+This function is intended to facilitate workflow with the results of \code{searchAnywhere()} function. The main motivation is to provide missing samples that did not match the query criteria, but might be useful when searching for controls
 }

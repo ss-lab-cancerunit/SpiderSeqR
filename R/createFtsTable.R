@@ -33,14 +33,20 @@
 
 #----------------------------------------------------
 
+
+
 #' Create a new table in a dabase to enable fulltext search (FTS)
 #' 
 #' @param database_name Name of database connection
 #' @param table_name Name of the table to duplicate as FTS table
 #' @param new_table_name Name of the new FTS table
-#' @return Nothing (update the relevant .sqlite file)
+#' @return Nothing. Update the relevant database (stored in memory or in a '*.sqlite' file)
 #' 
+#' @description 
 #' Creates a new virtual (fts) table with exact same columns as the original table, populates it with the contents of original table and optimises the table.
+#' 
+#' 
+#' @keywords internal
 #' 
 createFtsTable <- function(database_name, table_name, new_table_name){
   
@@ -75,6 +81,7 @@ createFtsTable <- function(database_name, table_name, new_table_name){
   optimisation_query <- paste0( "INSERT INTO ", new_table_name, "(", new_table_name, ")", " VALUES('optimize')")
   rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), optimisation_query)
   DBI::dbClearResult(rs)
+  
 }
 
 

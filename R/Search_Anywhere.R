@@ -317,6 +317,7 @@ searchAnywhere <- function(query_all, acc_levels = c("run", "experiment", "sampl
   df_out <- unifyDFFormat(df_out)
   
   return(df_out)
+  
 }
 
 
@@ -625,10 +626,6 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
 
 
 
-
-
-
-
 #' Filter df according to query matches only within accession levels of interest
 #' 
 #' Performs fts search on the data frame according to the query, only searching in the columns corresponding to specified accession levels of interest
@@ -649,60 +646,11 @@ filterSRAQueryByAccessionLevel <- function(query, df, acc_levels){
     return(df)
   }
   
-  # Select columns within df
-  df_filt <- subsetSRAByAccessionLevel(df, acc_levels, add_run_accession = TRUE)
+  df_out <- filterByTerm(df = df, query = query, filter_columns = findSRAAccessionLevelColumnNames(acc_levels = acc_levels))
   
+  return(df_out)
   
-  # Create db
-  filter_db_file <- "filter_db.sqlite"
-  
-  if (file.exists(filter_db_file)) file.remove(filter_db_file)
-  
-  .GlobalEnv$filter_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = filter_db_file)
-  DBI::dbWriteTable(conn = filter_con, name="filt_sra", value = df_filt)
-  
-  
-  # Create fts table of the db
-  createFtsTable("filter_con", "filt_sra", "filt_sra_ft")
-  query <- paste0("SELECT run_accession FROM filt_sra_ft WHERE filt_sra_ft MATCH '", query, "'")
-  
-  out_runs <- DBI::dbGetQuery(.GlobalEnv$filter_con, query)$run_accession
-  
-  DBI::dbDisconnect(filter_con)
-  file.remove(filter_db_file)
-  rm(filter_con, envir = .GlobalEnv)
-  
-  df <- df %>% dplyr::filter(run_accession %in% out_runs)
-  
-  return(df)
 }
-
-
-
-
-
-#' Subset (by column) of a df based on SRA accession levels of interest
-#' 
-#' @param df Data frame to be subset
-#' @param acc_levels Accession levels of interest
-#' @return Data frame only with columns corresponding to accession levels of interest
-#'
-#'
-#'
-subsetSRAByAccessionLevel <- function(df, acc_levels, add_run_accession = TRUE){
-  
-  sel_cols <- findSRAAccessionLevelColumnNames(acc_levels, add_run_accession = add_run_accession)
-  col_ind <- NULL
-  
-  for (i in seq_along(sel_cols)){
-    x <- grep(paste0("^", sel_cols[i], "$"), colnames(df))
-    col_ind <- c(col_ind, x)
-  }
-  
-  return(df[,col_ind])
-}
-
-
 
 
 
@@ -837,6 +785,7 @@ findSRAAccessionLevelColumnNames <- function(acc_levels = c("run", "experiment",
   if (is.null(sel_cols)) stop("Provide at least one accession level to search within")
   
   return(sel_cols)
+  
 }
 
 

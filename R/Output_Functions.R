@@ -39,6 +39,8 @@ outputGenerator <- function(df, ss=NULL, st){
   # All the files are made available as sample sheets (.csv and .Rda) and database extracts (.csv, .Rda)
   #
   print("Running outputGenerator")
+  
+  spiderSet <- list(internal = TRUE, extract_columns = listColumnSets()$Overview) # ENV ===*===
 
   #ORDER BY SRP, then SRS,  then SRX, then SRR
   order_columns <- list(df$study_accession,
@@ -78,7 +80,7 @@ outputGenerator <- function(df, ss=NULL, st){
     #======
     #ELSE
     #======
-    target <- dplyr::filter(df, SRA_library_strategy == st$SRA_library_strategy)
+    target <- dplyr::filter(df, SRA_library_strategy == st$SRA_library_strategy & OTH_control %in% c("N"))
   }
 
 
@@ -86,12 +88,15 @@ outputGenerator <- function(df, ss=NULL, st){
   # 'TARGET' sheet (all samples and inputs/controls, as appropriate)
   #=========================
 
-  #GENERATE TARGET SAMPLE SHEET
-  target_sample_sheet <- universalSampleSheetGenerator(df=target, SRA_library_strategy = st$SRA_library_strategy)
-
-  #SAVE TARGET SAMPLE SHEET
-  saveRDS(target_sample_sheet, do.call(filenameGenerator, c(st, list(output="tar_sm"), list(file_type="Rda"))))
-  cwt(target_sample_sheet, do.call(filenameGenerator, c(st, list(output="tar_sm"), list(file_type="csv"))))
+  if (spiderSet$internal == TRUE){
+    #GENERATE TARGET SAMPLE SHEET
+    target_sample_sheet <- universalSampleSheetGenerator(df=target, SRA_library_strategy = st$SRA_library_strategy)
+    
+    #SAVE TARGET SAMPLE SHEET
+    saveRDS(target_sample_sheet, do.call(filenameGenerator, c(st, list(output="tar_sm"), list(file_type="Rda"))))
+    cwt(target_sample_sheet, do.call(filenameGenerator, c(st, list(output="tar_sm"), list(file_type="csv"))))
+    
+  }
 
   #GENERATE TARGET DB EXTRACT
   target_db_extract <- dbExtractGenerator(target)
@@ -106,12 +111,15 @@ outputGenerator <- function(df, ss=NULL, st){
     #=========================
     all <- dplyr::filter(df, SRA_library_strategy == st$SRA_library_strategy)
 
-    #GENERATE ALL SAMPLE SHEET
-    all_sample_sheet <- universalSampleSheetGenerator(df=all, SRA_library_strategy = st$SRA_library_strategy)
+    if (spiderSet$internal == TRUE){
+      #GENERATE ALL SAMPLE SHEET
+      all_sample_sheet <- universalSampleSheetGenerator(df=all, SRA_library_strategy = st$SRA_library_strategy)
+      
+      #SAVE ALL SAMPLE SHEET
+      saveRDS(all_sample_sheet, do.call(filenameGenerator, c(st, list(output="all_sm"), list(file_type="Rda"))))
+      cwt(all_sample_sheet, do.call(filenameGenerator, c(st, list(output="all_sm"), list(file_type="csv"))))
+    }
 
-    #SAVE ALL SAMPLE SHEET
-    saveRDS(all_sample_sheet, do.call(filenameGenerator, c(st, list(output="all_sm"), list(file_type="Rda"))))
-    cwt(all_sample_sheet, do.call(filenameGenerator, c(st, list(output="all_sm"), list(file_type="csv"))))
 
     #GENERATE ALL DB EXTRACT
     all_db_extract <- dbExtractGenerator(all)
@@ -128,12 +136,16 @@ outputGenerator <- function(df, ss=NULL, st){
 
       secondary <- dplyr::filter(df, SRA_library_strategy == st$SRA_secondary_library_strategy)
 
-      #GENERATE SECONDARY SAMPLE SHEET
-      secondary_sample_sheet <- universalSampleSheetGenerator(df=secondary, SRA_library_strategy = st$SRA_secondary_library_strategy)
-
-      #SAVE SECONDARY SAMPLE SHEET
-      saveRDS(secondary_sample_sheet, do.call(filenameGenerator, c(st, list(output="2ry_sm"), list(file_type="Rda"))))
-      cwt(secondary_sample_sheet, do.call(filenameGenerator, c(st, list(output="2ry_sm"), list(file_type="csv"))))
+      if (spiderSet$internal == TRUE){
+        
+        #GENERATE SECONDARY SAMPLE SHEET
+        secondary_sample_sheet <- universalSampleSheetGenerator(df=secondary, SRA_library_strategy = st$SRA_secondary_library_strategy)
+        
+        #SAVE SECONDARY SAMPLE SHEET
+        saveRDS(secondary_sample_sheet, do.call(filenameGenerator, c(st, list(output="2ry_sm"), list(file_type="Rda"))))
+        cwt(secondary_sample_sheet, do.call(filenameGenerator, c(st, list(output="2ry_sm"), list(file_type="csv"))))
+      
+      }  
 
       #GENERATE SECONDARY DB EXTRACT
       secondary_db_extract <- dbExtractGenerator(secondary)
@@ -142,6 +154,29 @@ outputGenerator <- function(df, ss=NULL, st){
       saveRDS(secondary_db_extract, do.call(filenameGenerator, c(st, list(output="2ry_db"), list(file_type="Rda"))))
       cwt(secondary_db_extract, do.call(filenameGenerator, c(st, list(output="2ry_db"), list(file_type="csv"))))
     }
+  } else {
+    #=========================
+    # 'ALL' sheet (all entries within SRP FULL STOP!)
+    #=========================
+    all <- df # No filtering for library_strategy
+    
+    if (spiderSet$internal == TRUE){
+      #GENERATE ALL SAMPLE SHEET
+      all_sample_sheet <- universalSampleSheetGenerator(df=all, SRA_library_strategy = st$SRA_library_strategy)
+      
+      #SAVE ALL SAMPLE SHEET
+      saveRDS(all_sample_sheet, do.call(filenameGenerator, c(st, list(output="all_sm"), list(file_type="Rda"))))
+      cwt(all_sample_sheet, do.call(filenameGenerator, c(st, list(output="all_sm"), list(file_type="csv"))))
+    }
+    
+    
+    #GENERATE ALL DB EXTRACT
+    all_db_extract <- dbExtractGenerator(all)
+    
+    #SAVE ALL DB EXTRACT
+    saveRDS(all_db_extract, do.call(filenameGenerator, c(st, list(output="all_db"), list(file_type="Rda"))))
+    cwt(all_db_extract, do.call(filenameGenerator, c(st, list(output="all_db"), list(file_type="csv"))))
+    
   }
   print("outputGenerator completed")
 }
@@ -930,38 +965,108 @@ columnSelector <- function(df, df_columns, out_columns){
 
 
 #============================================================================
-# selectColumns
+# Column Sets and Selection ####
+# Functions around columnSelector()
 #============================================================================
+
 #' Select columns from a data frame
 #' 
 #' @param df Data frame
 #' @param cols Character vector with column names to be retained
 #' @return Original data frame containing only columns specified in cols
 #' 
-#' @export
+#' @description 
 #' This is a universal function for extracting only columns of interest from a data frame. Related functions exist, with pre-defined sets of columns, see documentation for \code{\link{selectColumnsAccn}} ===*===
 #' 
 #' 
-#' 
+#' @export
 selectColumns <- function(df, cols){
   df <- columnSelector(df = df, df_columns = cols, out_columns = cols)
   return(df)
 }
 
-#============================================================================
+
+
+#' Sets of column names for use in display or filtering
+#' 
+#' @return List of character vectors with column names
+#' 
+#' @description 
+#' List of sets of column names for use when subsetting results data frame. 
+#' 
+#' To access a list of all available columns, please see \code{listValidColumns()}.
+#' 
+#' @examples 
+#' listColumnSets() # List all
+#' listColumnSets()$Overview # Access the 'Overview' set of column names
+#' listColumnSets()$Accession # Access the 'Accession' set of column names
+#' 
+#' @section Available sets:
+#' 
+#' \itemize{
+#'     \item Accession - accession ids only (SRA and GEO)
+#'     \item Overview - a subjective selection of most important columns (from SRA and GEO) for getting an overview of the samples
+#' }
+#' 
+#' @section Applications:
+#' 
+#' The sets can be used for any purpose, though they have been created with display and filtering applications in mind. Here are recommended uses:
+#' 
+#' \itemize{
+#'     \item Display: Accession, Overview
+#'     \item Filtering: ===*=== (in progress)
+#'     
+#' }
+#' 
+#' @export
+#' 
+listColumnSets <- function(){
+  column_set <- list(
+    Accession = c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id"),
+    Overview = c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id", # Accn
+                "SRA_library_strategy", "SRA_platform", "SRA_library_layout", "SRA_taxon_id",
+                "SRA_sample_name", "SRA_experiment_title", "SRA_experiment_name", "GSM_title", "SRA_sample_attribute", "GSM_characteristics_ch1", "GSM_source_name_ch1")
+    )
+  return(column_set)
+}
 
 
 
-
-selectColumnsAccn <- function(df){
-  cols <- c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id")
+#' Select columns with accession information
+#' 
+#' @param df Data frame
+#' @return Original data frame containing only columns with accession information
+#' 
+#' @description 
+#' This is a shortcut function for \code{selectColumns(df, cols = listColumnSets()$Accession)}
+#' 
+#' @export
+#' 
+selectColumnsAccession <- function(df){
+  cols <- listColumnSets()$Accession
   df <- columnSelector(df, df_columns = cols, out_columns = cols)
   return(df)
 }
 
 
+#' Select columns with overview of sample information
+#' 
+#' @param df Data frame
+#' @return Original data frame containing only selected columns (most relevant for getting an overview about the samples)
+#' 
+#' @description 
+#' This is a shortcut function for \code{selectColumns(df, cols = listColumnSets()$Overview)}
+#' 
+#' @export
+#' 
+selectColumnsOverview <- function(df){
+  cols <- listColumnSets()$Overview
+  df <- columnSelector(df, df_columns = cols, out_columns = cols)
+  return(df)
+}
 
-
+#============================================================================
+#============================================================================
 
 
 

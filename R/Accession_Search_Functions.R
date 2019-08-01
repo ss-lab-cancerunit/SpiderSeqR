@@ -229,8 +229,8 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
 #------------------------------------------------------
 #------------------------------------------------------
 #simpleSearchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
-searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
-
+#searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
+searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm")){
   print("Running searchSRR_GSM")
   
   database_name <- "srr_gsm"
@@ -384,6 +384,8 @@ listGSEFields <- function(omit_gse = TRUE){
 #' @param col_names A character vector with column names to be returned
 #' @param c_size Number of items to search for in a batch (sqlite has a limit of 999 parameters within a single query)
 #' @return Data frame with results of the query
+#' 
+#' @keywords internal
 #' 
 batchedAccSearch <- function(acc_vector, database_name, table_name, col_names, c_size = 500){
   

@@ -6,6 +6,7 @@
 #' @param values A vector (length 2) indicating what will be the values assigned to the original df rows and to added rows respectively
 #' @return Data frame with added missing rows from the same GSE/SRP. It will also contain an additional column to indicate whether the row was originally present or not
 #' 
+#' @description 
 #' This function is intended to facilitate workflow with the results of \code{searchAnywhere()} function. The main motivation is to provide missing samples that did not match the query criteria, but might be useful when searching for controls 
 #' 
 addMissingSamples <- function(df, values = c(1,0)){
@@ -52,7 +53,7 @@ addMissingSamples <- function(df, values = c(1,0)){
     gse_df <- unifyDFFormat(gse_df)
     gse_df$OTH_sample <- values[2]
     gse_df <- dplyr::anti_join(gse_df, df, by = colnames(df)) # Remove rows that are already present
-    gse_df <- gse_Df[, colnames(df)] # Select only corresponding columns
+    gse_df <- gse_df[, colnames(df)] # Select only corresponding columns
     
     df <- rbind(df, gse_df)
   }

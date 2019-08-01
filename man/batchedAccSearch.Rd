@@ -24,3 +24,4 @@ Data frame with results of the query
 \description{
 Make batched queries to databases
 }
+\keyword{internal}

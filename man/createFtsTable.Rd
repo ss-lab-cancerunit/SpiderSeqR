@@ -14,10 +14,9 @@ createFtsTable(database_name, table_name, new_table_name)
 \item{new_table_name}{Name of the new FTS table}
 }
 \value{
-Nothing (update the relevant .sqlite file)
-
-Creates a new virtual (fts) table with exact same columns as the original table, populates it with the contents of original table and optimises the table.
+Nothing. Update the relevant database (stored in memory or in a '*.sqlite' file)
 }
 \description{
-Create a new table in a dabase to enable fulltext search (FTS)
+Creates a new virtual (fts) table with exact same columns as the original table, populates it with the contents of original table and optimises the table.
 }
+\keyword{internal}

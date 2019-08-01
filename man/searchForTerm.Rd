@@ -6,7 +6,8 @@
 \usage{
 searchForTerm(SRA_library_strategy, gene = NULL, antibody = NULL,
   cell_type = NULL, treatment = NULL, species = NULL,
-  platform = NULL, SRA_secondary_library_strategy = NULL)
+  platform = NULL, SRA_secondary_library_strategy = NULL,
+  return_all = TRUE)
 }
 \arguments{
 \item{SRA_library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one SRA_library_strategy is allowed in a single query. To get a list of available library strategies, run \code{ getDatabaseInformation()}}
@@ -24,6 +25,8 @@ searchForTerm(SRA_library_strategy, gene = NULL, antibody = NULL,
 \item{platform}{A character vector with sequencing platforms}
 
 \item{SRA_secondary_library_strategy}{Additional experimental method of interest filtered from the studies featured in search results}
+
+\item{return_all}{A logical indicating what results should be returned. FALSE means that only samples matching criteria of interest will be returned (and their putative inputs/controls for RNA-Seq or ChIP-Seq). TRUE means that the whole SRPs will be returned(containing matching samples, but also all the other samples within an SRP). Defaults to TRUE}
 }
 \value{
 Nothing. Creates a range of files with the query information and search results.

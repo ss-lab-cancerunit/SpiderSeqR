@@ -4,7 +4,7 @@
 \alias{generateEmptyDF}
 \title{Generate empty df with columns corresponding to database columns}
 \usage{
-generateEmptyDF(tables = c("sra", "gsm", "gse", "added"))
+generateEmptyDF(tables = c("sra", "gsm", "gse", "other"))
 }
 \arguments{
 \item{tables}{Character vector with tables from which the columns}

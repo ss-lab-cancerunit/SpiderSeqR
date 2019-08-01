@@ -27,13 +27,13 @@ unifyDFFormat <- function(df){
   valid_columns <- listValidColumns()
   
 
-  sra_ind <- which(colnames(df) %in% valid_columns$sra[!valid_columns$sra=="SRA_sra_ID"]) # Exclude SRA_sra_ID (not present in sra_ft)
-  gsm_ind <- which(colnames(df) %in% valid_columns$gsm)
-  gse_ind <- which(colnames(df) %in% valid_columns$gse)
-  other_ind <- which(colnames(df) %in% valid_columns$other)
-  added_ind <- which(colnames(df) %in% valid_columns$added)
+  sra_ind <- which(colnames(df) %in% valid_columns$SRA[!valid_columns$SRA=="SRA_sra_ID"]) # Exclude SRA_sra_ID (not present in sra_ft)
+  gsm_ind <- which(colnames(df) %in% valid_columns$GSM)
+  gse_ind <- which(colnames(df) %in% valid_columns$GSE)
+  other_ind <- which(colnames(df) %in% valid_columns$Other)
+
   
-  df <- df[, c(sra_ind, gsm_ind, gse_ind, other_ind, added_ind)]
+  df <- df[, c(sra_ind, gsm_ind, gse_ind, other_ind)]
   
   # Remove duplicates
   df <- unique(df)
@@ -47,7 +47,7 @@ unifyDFFormat <- function(df){
                     "SRA_study_ID", "SRA_sample_ID", "SRA_experiment_ID", "SRA_submission_ID",
                     "SRA_number_of_levels", "SRA_taxon_id", 
                     "GSM_data_row_count", "GSM_channel_count", "GSM_ID",
-                    "gsm_check", 
+                    #"gsm_check", 
                     "OTH_n", "OTH_lane")
   
   for (i in 1:dim(df)[2]){
@@ -166,7 +166,6 @@ checkValidColumns <- function(df){
 
 
 
-
 #----------------------------------------------------------------------------
 # listValidColumns
 #----------------------------------------------------------------------------
@@ -174,7 +173,24 @@ checkValidColumns <- function(df){
 #' 
 #' @return A list with column names grouped into categories
 #' 
-#' @keywords internal
+#' @examples 
+#' listValidColumns() # List all columns
+#' listValidColumns()$SRA # List columns from sra table
+#' listValidColumns()$GSM # List columns from gsm table
+#' listValidColumns()$GSE # List columns from gse table
+#' listValidColumns()$Other # List other columns
+#' 
+#' @section Column Categories:
+#' The following categories are available:
+#' \itemize{
+#'     \item SRA - columns from the sra table (SRA database) with added 'SRA_' prefix
+#'     \item GSM - columns from the gsm table (GEO database) with added 'GSM_' prefix
+#'     \item GSE - columns from the gse table (GSE database) with added 'GSE_' prefix
+#'     \item Other - other columns (created within the pacakge) with added 'OTH_' prefix
+#' }
+#' 
+#' 
+#' @export
 #' 
 listValidColumns <- function(){
   
@@ -194,14 +210,15 @@ listValidColumns <- function(){
                    "lane", "mer", "pairedEnd", "n")
   oth_columns <- paste0("OTH_", oth_columns)
   
-  add_columns <- c("gsm_check")
+
   
   # Create lists of db columns ####
   sra_columns <- DBI::dbListFields(get(sra_database_name, envir = get(database_env)), "sra")
   gsm_columns <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gsm")
   gse_columns <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gse")
   
-  sra_columns <- sra_columns[!sra_columns %in% "run_ID"] # Remove run_ID column
+  sra_columns <- sra_columns[!sra_columns %in% "sra_ID"] # Remove sra_ID
+  #sra_columns <- sra_columns[!sra_columns %in% "run_ID"] # Remove run_ID column ===*===
   gse_columns <- gse_columns[!gse_columns %in% "gse"] # Remove gse column
   
   sra_columns[!sra_columns %in% sra_acc] <- paste0("SRA_", sra_columns[!sra_columns %in% sra_acc])
@@ -213,7 +230,7 @@ listValidColumns <- function(){
   gse_columns[!gse_columns %in% geo_acc] <- paste0("GSE_", gse_columns[!gse_columns %in% geo_acc])
   #gse_columns <- c(geo_acc, gse_columns) # NOTE: order not preserved
   
-  db_columns <- list(sra= sra_columns, gsm = gsm_columns, gse = gse_columns, other = oth_columns, added = add_columns)
+  db_columns <- list(SRA = sra_columns, GSM = gsm_columns, GSE = gse_columns, Other = oth_columns)
   return(db_columns)
   
 }

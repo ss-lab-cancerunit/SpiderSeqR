@@ -12,4 +12,22 @@ A list with column names grouped into categories
 \description{
 List valid columns within the data frames
 }
-\keyword{internal}
+\section{Column Categories}{
+
+The following categories are available:
+\itemize{
+    \item SRA - columns from the sra table (SRA database) with added 'SRA_' prefix
+    \item GSM - columns from the gsm table (GEO database) with added 'GSM_' prefix
+    \item GSE - columns from the gse table (GSE database) with added 'GSE_' prefix
+    \item Other - other columns (created within the pacakge) with added 'OTH_' prefix
+}
+}
+
+\examples{
+listValidColumns() # List all columns
+listValidColumns()$SRA # List columns from sra table
+listValidColumns()$GSM # List columns from gsm table
+listValidColumns()$GSE # List columns from gse table
+listValidColumns()$Other # List other columns
+
+}

@@ -1492,6 +1492,11 @@ dplyr::`%>%`
 
 #----------------------------------------------------------------------------
 
+#----------------------------------------------------------------------------
+#' @importFrom crayon %+%
+crayon::`%+%`
+
+#----------------------------------------------------------------------------
 
 
 
@@ -2110,23 +2115,23 @@ renameOTHColumns <- function(df){
 #' 
 #' 
 #' @keywords internal
-generateEmptyDF <- function(tables = c("sra", "gsm", "gse", "added")){
+generateEmptyDF <- function(tables = c("sra", "gsm", "gse", "other")){
   df_columns <- character()
   
   if ("sra" %in% tables){
-    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$sra)))
+    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$SRA)))
   }
   
   if ("gsm" %in% tables){
-    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$gsm)))
+    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$GSM)))
   }
   
   if ("gse" %in% tables){
-    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$gse)))
+    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$GSE)))
   }
   
-  if ("added" %in% tables){
-    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$added)))
+  if ("other" %in% tables){
+    df_columns <- c(df_columns, as.character(unlist(listValidColumns()$Other)))
   }
 
   df <- stats::setNames(data.frame(matrix(ncol = length(df_columns), nrow = 0)), df_columns)

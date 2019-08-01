@@ -22,6 +22,8 @@ Imports:
     DBI (>= 0.7),
     RSQLite (>= 2.0),
     tidyr,
+    crayon,
+    cli,
     SRAdb (>= 1.40),
     GEOmetadb (>= 1.40),
     utils,

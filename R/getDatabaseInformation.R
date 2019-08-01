@@ -26,10 +26,18 @@ getDatabaseInformation <- function(){
   sra_database_name <- "sra_con"
   geo_database_name <- "geo_con"
   
+  
+  
   col_desc_table_info <- "NOTE: the following data frame is a convenient way of accessing the column description tables from databases of SRAdb and GEOmetadb packages. Currently GEO provides much better documented descriptions, whereas SRA column descriptions are only partially complete. Please note that SpideR only utilises information from gsm and gse tables of GEO and sra table for GEO (which includes collated information from most of the listed tables, i.e. run, experiment, sample, study, submission; however, some columns are renamed in sra and not all of the columns from the original accession-level tables are used in the sra table)."
   
   
-  print("What kind of database information are you interested in?")
+  cat(crayon::magenta("\n" %+% crayon::bold("getDatabaseInformation:") %+% " summaries and handy extracts from the databases\n"))
+  cat(crayon::magenta("PLEASE NOTE: the order and content of the options below may change in the future.\n\n"))
+  
+  #cat(crayon::magenta("What kind of database information are you interested in?\n"))
+  
+  cat(cli::rule(col = "magenta", left = crayon::bold("What kind of database information are you interested in?")))
+
   menu_options <- utils::menu(c("SRA: Available library_strategy types (and their counts)", #1
                          "SRA: Available taxon_id's (and their counts)", #2
                          "GEO: Available source_name_ch1 (and their counts)", #3
@@ -136,8 +144,8 @@ getDatabaseInformation <- function(){
     
   } else if (menu_options == 16){
     
-    print("Nothing to investigate")
-    return(NULL)
+    cat(crayon::magenta("Nothing to investigate"))
+    invisible()
     
   }
   
