@@ -7,19 +7,23 @@ spiderEnv <- new.env()
 
 varInSpider <- function(){
   assign("x", 1, spiderEnv)
+  print(spiderEnv)
 }
 
 setVar <- function(value){
   assign("x", value, spiderEnv)
+  print(spiderEnv)
 }
 
 getVar <- function(name){
+  print(spiderEnv)
   get(name, envir = spiderEnv)
 }
 
 
 printVar <- function(name){
   print(get("x", envir = spiderEnv, inherits = FALSE))
+  print(spiderEnv)
 }
 
 #> varInSpider()

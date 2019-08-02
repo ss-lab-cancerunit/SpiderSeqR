@@ -224,7 +224,7 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
   }
   #============================================================================
 
-  saveRDS(sample_list, "sample_list.Rda")
+  #saveRDS(sample_list, "sample_list.Rda")
 
 
 
@@ -308,7 +308,8 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
   #============================================================================
 
 
-
+  .GlobalEnv$spider_output_combined_no_geo <- spider_combined
+  
   #============================================================================
   # Search for entries in GEO
   #============================================================================
@@ -335,7 +336,37 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
   #-------------------------
 
   #spider_geo <- geoFinder(get(gsm_db_name, envir = get(database_env)), gsm_list = gsm_list, gsm_columns = gsm_columns, gse_columns = gse_columns)
-  spider_geo <- searchGEOForGSM(gsm_list, geo_columns = gsm_columns, gse_columns = gse_columns)
+  if (length(gsm_list)>0){
+    spider_geo <- searchGEOForGSM(gsm_list, geo_columns = gsm_columns, gse_columns = gse_columns)
+    
+    #============================================================================
+    # Extract characteristics_ch1 into separate columns
+    #============================================================================
+    spider_geo <- chExtractor(spider_geo)
+    #============================================================================
+    
+    #============================================================================
+    # Merge spider_comibined and spider_geo
+    #============================================================================
+    spider_combined <- merge(spider_combined, spider_geo, by.x = "gsm", by.y = "gsm", all.x = TRUE) # by.x sampletogsm ===*===
+    
+    #saveRDS(spider_combined, "spider_combined_prelim.Rda")
+    
+    spider_superseries <- superseriesVerifier(spider_combined$series_id) #Give info on superseries
+    #============================================================================
+    
+    
+  } else {
+    if (length(gsm_columns)==1 & gsm_columns[1] == "*" & length(gse_columns)==1 & gse_columns[1]== "*"){
+      columns_to_add <- as.character(unlist(listValidColumns()[c("GSM", "GSE")]))
+      spider_combined[, columns_to_add] <- NA
+      spider_combined <- chExtractor(spider_combined)
+      spider_superseries <- NULL
+    } else {
+      stop("No results in GEO. No appropriate ways to deal with this") # ===*===
+    }
+  }
+  
   #.GlobalEnv$temp_spider_geo <- spider_geo
   
 
@@ -343,22 +374,9 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
 
 
 
-  #============================================================================
-  # Extract characteristics_ch1 into separate columns
-  #============================================================================
-  spider_geo <- chExtractor(spider_geo)
-  #============================================================================
 
 
-  #============================================================================
-  # Merge spider_comibined and spider_geo
-  #============================================================================
-  spider_combined <- merge(spider_combined, spider_geo, by.x = "gsm", by.y = "gsm", all.x = TRUE) # by.x sampletogsm ===*===
 
-  #saveRDS(spider_combined, "spider_combined_prelim.Rda")
-
-  spider_superseries <- superseriesVerifier(spider_combined$series_id) #Give info on superseries
-  #============================================================================
 
 
   #============================================================================
