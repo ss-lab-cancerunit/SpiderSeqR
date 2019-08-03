@@ -288,6 +288,7 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
   df <- df[orderAccessions(order_columns),]
   #df <- df[orderAccessions(order_columns),]
 
+  
   #Converting tabs in characteristics_ch1 column
   if (sum(grepl("GSM_characteristics_ch1", colnames(df)))==1){
     df$GSM_characteristics_ch1 <- unlist(lapply(df$GSM_characteristics_ch1, function(x) gsub(";\t", " \\|\\| ", x)))
@@ -849,67 +850,17 @@ otherSampleSheetGenerator <- function(df){
 dbExtractGenerator <- function(df){
   print("Running dbExtractGenerator")
   
-  #Select columns to be extracted ===*=== Probably more needed!!!
-  # Different names depending on GSM_
-  if (sum(grepl("^GSM_.+$", colnames(df)))>=1){
-    
-    df_columns <- c("run_accession",
-                    "experiment_accession",
-                    "sample_accession",
-                    "study_accession",
-                    "gsm", #sampletogsm ===*===
-                    "series_id",
-                    "SRA_library_strategy",
-                    "SRA_platform",
-                    "SRA_library_layout",
-                    "OTH_pairedEnd",
-                    "SRA_taxon_id",
-                    "SRA_sample_name",
-                    "SRA_experiment_title",
-                    "SRA_experiment_name",
-                    "SRA_sample_attribute",
-                    "GSM_characteristics_ch1",
-                    "OTH_sa_tissue",
-                    "OTH_ch1_tissue",
-                    "OTH_sa_antibody",
-                    "OTH_ch1_antibody",
-                    "OTH_sa_gene",
-                    "OTH_ch1_gene",
-                    "OTH_sa_treatment",
-                    "OTH_ch1_treatment"
-    )
-    
-  } else {
-    # No GSM_ # TBD ==*===
-    message("Old format df_columns")
-    df_columns <- c("run_accession",
-                    "experiment_accession",
-                    "sample_accession",
-                    "study_accession",
-                    "gsm", #sampletogsm ===*===
-                    "series_id",
-                    "library_strategy",
-                    "platform",
-                    "library_layout",
-                    "pairedEnd",
-                    "taxon_id",
-                    "sample_name",
-                    "experiment_title",
-                    "experiment_name",
-                    "sample_attribute",
-                    "characteristics_ch1",
-                    "sa_tissue",
-                    "ch1_tissue",
-                    "sa_antibody",
-                    "ch1_antibody",
-                    "sa_gene",
-                    "ch1_gene",
-                    "sa_treatment",
-                    "ch1_treatment"
-    )
+  
+  if (is.null(getSpideROption("output_columns"))){  # output_columns is null - default setting
+    internal_pre <- getSpideROption("internal")
+    setSpideROption("internal", TRUE)
+    df_columns <- listColumnSets()$dbExtract
+    setSpideROption("internal", internal_pre)
+  } else { # output_columns user-defined
+    df_columns <- getSpideROption("output_columns")
   }
-
-  #print(colnames(df))
+  
+  
 
 
   #Select new column names
@@ -1000,12 +951,14 @@ selectColumns <- function(df, cols){
 #' listColumnSets() # List all
 #' listColumnSets()$Overview # Access the 'Overview' set of column names
 #' listColumnSets()$Accession # Access the 'Accession' set of column names
+#' names(listColumnSets()) # Get names of the available sets
 #' 
 #' @section Available sets:
 #' 
 #' \itemize{
 #'     \item Accession - accession ids only (SRA and GEO)
 #'     \item Overview - a subjective selection of most important columns (from SRA and GEO) for getting an overview of the samples
+#'     \item Overview2 - columns from Overview with added columns of extracted information from SRA_sample_attribute and GSM_characteristics_ch1 columns
 #' }
 #' 
 #' @section Applications:
@@ -1013,7 +966,7 @@ selectColumns <- function(df, cols){
 #' The sets can be used for any purpose, though they have been created with display and filtering applications in mind. Here are recommended uses:
 #' 
 #' \itemize{
-#'     \item Display: Accession, Overview
+#'     \item Display: Accession, Overview, Overview2
 #'     \item Filtering: ===*=== (in progress)
 #'     
 #' }
@@ -1025,8 +978,55 @@ listColumnSets <- function(){
     Accession = c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id"),
     Overview = c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id", # Accn
                 "SRA_library_strategy", "SRA_platform", "SRA_library_layout", "SRA_taxon_id",
-                "SRA_sample_name", "SRA_experiment_title", "SRA_experiment_name", "GSM_title", "SRA_sample_attribute", "GSM_characteristics_ch1", "GSM_source_name_ch1")
-    )
+                "SRA_sample_name", "SRA_experiment_title", "SRA_experiment_name", "GSM_title", "SRA_sample_attribute", "GSM_characteristics_ch1", "GSM_source_name_ch1"),
+    Overview2 = c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "series_id", # Accn
+                  "SRA_library_strategy", "SRA_platform", "SRA_library_layout", "SRA_taxon_id",
+                  "SRA_sample_name", "SRA_experiment_title", "SRA_experiment_name", "GSM_title", "SRA_sample_attribute", "GSM_characteristics_ch1", "GSM_source_name_ch1",       
+                  "OTH_sa_tissue",
+                  "OTH_ch1_tissue",
+                  "OTH_sa_antibody",
+                  "OTH_ch1_antibody",
+                  "OTH_sa_gene",
+                  "OTH_ch1_gene",
+                  "OTH_sa_treatment",
+                  "OTH_ch1_treatment")
+  )
+  
+  
+  # For internal use:
+  if (getSpideROption("internal")==TRUE){
+    
+    column_set[[length(column_set)+1]] <- c("run_accession",
+                                                        "experiment_accession",
+                                                        "sample_accession",
+                                                        "study_accession",
+                                                        "gsm", #sampletogsm ===*===
+                                                        "series_id",
+                                                        "SRA_library_strategy",
+                                                        "SRA_platform",
+                                                        "SRA_library_layout",
+                                                        "OTH_pairedEnd",
+                                                        "SRA_taxon_id",
+                                                        "SRA_sample_name",
+                                                        "SRA_experiment_title",
+                                                        "SRA_experiment_name",
+                                                        "SRA_sample_attribute",
+                                                        "GSM_characteristics_ch1",
+                                                        "OTH_sa_tissue",
+                                                        "OTH_ch1_tissue",
+                                                        "OTH_sa_antibody",
+                                                        "OTH_ch1_antibody",
+                                                        "OTH_sa_gene",
+                                                        "OTH_ch1_gene",
+                                                        "OTH_sa_treatment",
+                                                        "OTH_ch1_treatment"
+    ) 
+    
+    names(column_set)[length(names(column_set))] <- "dbExtract"
+
+  }
+    
+    
   return(column_set)
 }
 
