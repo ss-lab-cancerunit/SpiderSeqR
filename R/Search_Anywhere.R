@@ -219,7 +219,7 @@ searchAnywhere <- function(query_all, acc_levels = c("run", "experiment", "sampl
   
   # Search within SRA ####
   if (sum(acc_levels %in% c("run", "experiment", "sample", "study"))>0){
-    print("Search SRA")
+    mm("Search SRA", "adverse")
     sra_df <- searchAnywhereSRA(SRA_query = SRA_query, acc_levels = acc_levels, SRA_library_strategy = SRA_library_strategy, SRA_other_library_strategy = SRA_other_library_strategy)
     .GlobalEnv$temp_anywhere_sra_df <- sra_df
     
@@ -239,7 +239,7 @@ searchAnywhere <- function(query_all, acc_levels = c("run", "experiment", "sampl
   
   # Search within GEO ####
   if (sum(acc_levels %in% c("gse", "gsm"))>0){
-    print("Search GEO")
+    mm("Search GEO", "adverse")
     geo_df <- searchAnywhereGEO(GSM_query = GSM_query, GSE_query = GSE_query, acc_levels = acc_levels, GEO_type = GEO_type)
     .GlobalEnv$temp_anywhere_geo_df <- geo_df
     
@@ -380,7 +380,7 @@ searchAnywhereGSM <- function(GSM_query, GEO_type){ # No acc_levels needed in th
     }
     full_query <- substr(full_query, 1, nchar(full_query)-4)
     full_query <- paste0(full_query, " )") # final bracket
-    print(full_query)
+    mm(full_query, "query")
     df <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), full_query)
   } else {
     # Fts search ####
@@ -437,7 +437,7 @@ searchAnywhereGSE <- function(GSE_query, GEO_type){
     }
     full_query <- substr(full_query, 1, nchar(full_query)-4)
     full_query <- paste0(full_query, " )") # final bracket
-    print(full_query)
+    mm(full_query, "query")
     df <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), full_query)
   } else {
     # Fts search ####
@@ -528,11 +528,11 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
       return(l)
       
       
-      print(paste0("SRA_query: ", SRA_query))
-      print(paste0("SRA_library_strategy: ", SRA_library_strategy))
-      print(paste0("SRA_other_library_strategy: ", SRA_other_library_strategy))
-      print(paste0("acc_levels: ", acc_levels))
-      print(paste0("other: ", unlist(list(...))))
+      mm(paste0("SRA_query: ", SRA_query), "search")
+      mm(paste0("SRA_library_strategy: ", SRA_library_strategy), "search")
+      mm(paste0("SRA_other_library_strategy: ", SRA_other_library_strategy), "search")
+      mm(paste0("acc_levels: ", acc_levels), "search")
+      mm(paste0("other: ", unlist(list(...))), "search")
       
       #return(as.list(match.call(expand.dots = TRUE)))
       
@@ -579,7 +579,7 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
       
       ls_query <- paste0(ls_query, ols_query)
       
-      print(ls_query)
+      mm(ls_query, "query")
       
     }
     
@@ -588,7 +588,7 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
     
   }
   
-  print(query_full)
+  mm(query_full, "query")
   
   
 
@@ -640,9 +640,9 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
 #' 
 filterSRAQueryByAccessionLevel <- function(query, df, acc_levels){
   
-  print(acc_levels)
+  mm(paste0("Filtering for the following acc_levels: ", paste0(acc_levels, collapse = ", ")), "search")
   if (sum(unique(acc_levels) %in% c("study", "sample", "experiment", "run"))==4){
-    print("Nothing to filter - returning original df")
+    mm("Nothing to filter - returning original df", "adverse")
     return(df)
   }
   

@@ -90,7 +90,7 @@
 startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_expiry){
   ori_wd <- getwd()
   setwd(dir)
-  print(paste0("Location of database files: ", getwd()))
+  mm(paste0("Location of database files: ", getwd()), "search")
 
   
   #Setup:
@@ -144,10 +144,10 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   #==========================================================
   
   
-  print("Expiry dates for databases (number of days since file creation date):")
-  print(paste0("SRA: ", sra_expiry, " days"))
-  print(paste0("GEO: ", geo_expiry, " days"))
-  print(paste0("SRR_GSM: ", srr_gsm_expiry, " days"))
+  mm("Expiry dates for databases (number of days since file creation date):", "search")
+  mm(paste0("SRA: ", sra_expiry, " days"), "search")
+  mm(paste0("GEO: ", geo_expiry, " days"), "search")
+  mm(paste0("SRR_GSM: ", srr_gsm_expiry, " days"), "search")
   
   
   #==========================================================
@@ -157,12 +157,12 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   # NO SRA FILE
   if(!file.exists(sra_file)){ # NO FILE
     
-    print(paste0("The file ", sra_file, " was not found in the current working directory"))
-    print("Would you like to download the file now?")
+    mm(paste0("The file ", sra_file, " was not found in the current working directory"), "search")
+    mm("Would you like to download the file now?", "search")
     
     sra_menu <- utils::menu(c("yes", "no"))
     if (sra_menu == 1){
-      print("Downloading the file")
+      mm("Downloading the file", "search")
       sra_file <<- SRAdb::getSRAdbFile()
     } else {
       stop(paste0(sra_file, " file is necessary for the functioning of the package"))
@@ -173,21 +173,21 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   # OLD SRA FILE
   if(file.exists(sra_file) & (difftime(Sys.Date(), file.info(sra_file)$mtime, units = "days") > sra_expiry) ){ # OLD FILE
     
-    print(paste0("The file ", sra_file, " is out of date"))
-    print(paste0("Last modified: ", file.info(sra_file)$mtime))
-    print("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?")
+    mm(paste0("The file ", sra_file, " is out of date"), "search")
+    mm(paste0("Last modified: ", file.info(sra_file)$mtime), "search")
+    mm("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?", "search")
     
     sra_menu <- utils::menu(c("yes", "no"))
     if (sra_menu == 1){
-      print("Downloading the file")
+      mm("Downloading the file", "search")
       sra_file <<- SRAdb::getSRAdbFile()
     } else {
       warning(paste0("Next time consider downloading a new version of ", sra_file, " file"))
     }
     
   } else if(file.exists(sra_file)) {
-    print(paste0("The file ", sra_file, " is up to date"))
-    print(paste0("Last modified: ", file.info(sra_file)$mtime))
+    mm(paste0("The file ", sra_file, " is up to date"), "search")
+    mm(paste0("Last modified: ", file.info(sra_file)$mtime), "search")
   }
   
   
@@ -206,12 +206,12 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   if(!file.exists(geo_file)){ # NO FILE
     
     
-    print(paste0("The file ", geo_file, " was not found in the current working directory"))
-    print("Would you like to download the file right now?")
+    mm(paste0("The file ", geo_file, " was not found in the current working directory"), "search")
+    mm("Would you like to download the file right now?", "search")
     
     geo_menu <- utils::menu(c("yes", "no"))
     if (geo_menu == 1){
-      print("Downloading the file")
+      mm("Downloading the file", "search")
       geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
     } else {
       stop(paste0(geo_file, " file is necessary for the functioning of the package"))
@@ -222,21 +222,21 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   # OLD GEO FILE
   if(file.exists(geo_file) & (difftime(Sys.Date(), file.info(geo_file)$mtime, units = "days") > geo_expiry) ){ # OLD FILE
     
-    print(paste0("The file ", geo_file, " is out of date"))
-    print(paste0("Last modified: ", file.info(geo_file)$mtime))
-    print("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?")
+    mm(paste0("The file ", geo_file, " is out of date"), "search")
+    mm(paste0("Last modified: ", file.info(geo_file)$mtime), "search")
+    mm("Would you like to download a new version of the file right now? (this is recommended, though not necessary)?", "search")
     
     geo_menu <- utils::menu(c("yes", "no"))
     if (geo_menu == 1){
-      print("Downloading the file")
+      mm("Downloading the file", "search")
       geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
     } else {
       warning(paste0("Next time consider downloading a new version of ", geo_file, " file"))
     }
     
   } else if(file.exists(geo_file)) {
-    print(paste0("The file ", geo_file, " is up to date"))
-    print(paste0("Last modified: ", file.info(geo_file)$mtime))
+    mm(paste0("The file ", geo_file, " is up to date"), "search")
+    mm(paste0("Last modified: ", file.info(geo_file)$mtime), "search")
   }
   
   #==========================================================
@@ -253,7 +253,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   if (!(file.exists(sra_file) & file.exists(geo_file))){
     warning("Something went wrong. Some database files might be missing. Consider loading the package again.")
   } else {
-    print("Both db files are present (remember not to remove them!). Proceeding to the final step (custom database creation).")
+    mm("Both db files are present (remember not to remove them!). Proceeding to the final step (custom database creation).", "search")
   }
   #==========================================================
   
@@ -265,10 +265,10 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   
   if (!file.exists(srr_gsm_file)){ # NO FILE
     
-    print("Would you like to create a cutstom database for converting between GEO and SRA? This might take a little while, but it is necessary for the correct functioning of the package.")
+    mm("Would you like to create a cutstom database for converting between GEO and SRA? This might take a little while, but it is necessary for the correct functioning of the package.", "search")
     srr_gsm_menu <- utils::menu(c("yes", "no"))
     if (srr_gsm_menu == 1){ # WILLING TO CREATE DB
-      print("Database will be created shortly")
+      mm("Database will be created shortly", "search")
       db_needed <- TRUE
     } else { # DECLINED CREATION OF DB
       db_needed <- FALSE
@@ -278,17 +278,17 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   } else { # FILE PRESENT
     if (difftime(Sys.Date(), file.info(srr_gsm_file)$mtime, units = "days") < srr_gsm_expiry){ # FILE UP TO DATE
       db_needed <- FALSE
-      print("The custom database for converting between SRA and GEO is up to date")
-      print(paste0("Last modified: ", file.info(srr_gsm_file)$mtime))
+      mm("The custom database for converting between SRA and GEO is up to date", "search")
+      mm(paste0("Last modified: ", file.info(srr_gsm_file)$mtime), "search")
       
     } else { # OLD FILE
       
-      print(paste0("The file ", srr_gsm_file, " is out of date"))
-      print(paste0("Last modified: ", file.info(srr_gsm_file)$mtime))
-      print("Would you like to create a new version of the file right now? (this is recommended, though not necessary)?")
+      mm(paste0("The file ", srr_gsm_file, " is out of date"), "search")
+      mm(paste0("Last modified: ", file.info(srr_gsm_file)$mtime), "search")
+      mm("Would you like to create a new version of the file right now? (this is recommended, though not necessary)?", "search")
       srr_gsm_menu <- utils::menu(c("yes", "no"))
       if (srr_gsm_menu == 1){ # WILLING TO CREATE DB
-        print("Database will be re-created shortly")
+        mm("Database will be re-created shortly", "search")
         db_needed <- TRUE
       } else { # DECLINED CREATION OF DB
         db_needed <- FALSE
@@ -305,7 +305,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   # Create custom database ####
   #==========================================================
   if (db_needed){
-    print("Creating the custom database")
+    mm("Creating the custom database", "search")
     
     #==========================================================
     #SRR_GSM
@@ -379,7 +379,7 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
       chunk <- chunk[,c("run_accession", "experiment_accession", "sample_accession", "study_accession", "gsm", "gsm_check")]
       
       #Get the number of entries with GSM content
-      print(sum(run_gsm_indices | exp_gsm_indices))
+      mm(sum(run_gsm_indices | exp_gsm_indices), "search")
       
       db_df <- rbind(db_df, chunk)
       
@@ -426,18 +426,18 @@ startSpideR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_gsm_
   .GlobalEnv$geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
   .GlobalEnv$srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), dbname = srr_gsm_file)
   
-  print("==========================================================")
-  print(paste0("Further info on ", sra_file, " database:"))
-  print("==========================================================")
-  print(DBI::dbGetQuery(get("geo_con", envir = get(".GlobalEnv")), "SELECT * FROM metaInfo"))
+  mm("==========================================================", "search")
+  mm(paste0("Further info on ", sra_file, " database:"), "search")
+  mm("==========================================================", "search")
+  mm(DBI::dbGetQuery(get("geo_con", envir = get(".GlobalEnv")), "SELECT * FROM metaInfo"), "search")
   
-  print("==========================================================")
-  print(paste0("Further info on ", geo_file, " database:"))
-  print("==========================================================")
-  print(DBI::dbGetQuery(get("sra_con", envir = get(".GlobalEnv")), "SELECT * FROM metaInfo"))
+  mm("==========================================================", "search")
+  mm(paste0("Further info on ", geo_file, " database:"), "search")
+  mm("==========================================================", "search")
+  mm(DBI::dbGetQuery(get("sra_con", envir = get(".GlobalEnv")), "SELECT * FROM metaInfo"), "search")
   
-  print("==========================================================")
-  print("Welcome to SpideR")
+  mm("==========================================================", "search")
+  mm("Welcome to SpideR", "search")
   
   
   setwd(ori_wd)

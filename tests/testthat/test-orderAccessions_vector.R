@@ -1,3 +1,5 @@
+setSpideROption("quiet", TRUE)
+
 
 context("orderAccessions (vectors)")
 

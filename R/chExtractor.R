@@ -7,7 +7,7 @@ chExtractor <- function(df){
   # This function is a wrapper around universalExtractor with key words specific for characteristics_ch1 field
   #
   #
-  print("Running chExtractor")
+  mm("Running chExtractor", "fn")
   
   
   # Add a clause for tackling GSM_ prefix
@@ -27,7 +27,7 @@ chExtractor <- function(df){
       colnames(df)[colnames(df) %in% "characteristics_ch1"] <- "GSM_characteristics_ch1"
     }
     warning("No not-NA sample attributes available")
-    print("chExtractor completed")
+    mm("chExtractor completed", "fn")
     return(df)
   }
 
@@ -71,7 +71,7 @@ chExtractor <- function(df){
     colnames(df)[colnames(df) %in% "characteristics_ch1"] <- "GSM_characteristics_ch1"
   }
 
-  print("chExtractor completed")
+  mm("chExtractor completed", "fn")
   return(df)
 }
 

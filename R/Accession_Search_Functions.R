@@ -24,7 +24,7 @@
 #------------------------------------------------------
 #------------------------------------------------------
 searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
-  print("Running searchGEOForGSM")
+  mm("Running searchGEOForGSM", "fn")
   
   database_name <- "geo_con"
   database_env <- ".GlobalEnv"
@@ -80,7 +80,7 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
   df <- unique(df)
   
   
-  print("searchGEOForGSM completed")
+  mm("searchGEOForGSM completed", "fn")
   
   return(df)
 }
@@ -91,7 +91,7 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
 #------------------------------------------------------
 #------------------------------------------------------
 searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
-  print("Running searchGEOForGSE")
+  mm("Running searchGEOForGSE", "fn")
   
   database_name <- "geo_con"
   database_env <- ".GlobalEnv"
@@ -141,7 +141,7 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
   
   df <- unique(df)
   
-  print("searchGEOForGSE completed")
+  mm("searchGEOForGSE completed", "fn")
   
   return(df)
   
@@ -164,7 +164,7 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
   #
 
 
-  print("Running searchSRAForAccession")
+  mm("Running searchSRAForAccession", "fn")
 
   #------------------------------------------------
   #------------------------------------------------
@@ -217,7 +217,7 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
   df <- renameSRAColumns(df)
 
 
-  print("searchSRAForAccession completed")
+  mm("searchSRAForAccession completed", "fn")
 
   return(df)
 }
@@ -231,7 +231,7 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
 #simpleSearchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
 #searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
 searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm")){
-  print("Running searchSRR_GSM")
+  mm("Running searchSRR_GSM", "fn")
   
   database_name <- "srr_gsm"
   database_env <- ".GlobalEnv"
@@ -281,7 +281,7 @@ searchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm"
   df <- unique(df)
 
 
-  print("searchSRR_GSM completed")
+  mm("searchSRR_GSM completed", "fn")
 
   return(df)
 
@@ -443,7 +443,7 @@ batchedAccSearch <- function(acc_vector, database_name, table_name, col_names, c
       }
       query_el <- substr(query_el, 1, nchar(query_el)-end_char)
       query <- paste0(query_beg, query_el, " )")
-      print(query)
+      mm(query, "query")
       chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
       df <- rbind(df, chunk)
     }
@@ -463,7 +463,7 @@ batchedAccSearch <- function(acc_vector, database_name, table_name, col_names, c
       }
       query_el <- substr(query_el, 1, nchar(query_el)-end_char)
       query <- paste0(query_beg, query_el, " )")
-      print(query)
+      mm(query, "query")
       chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
       df <- rbind(df, chunk)
     }
@@ -479,7 +479,7 @@ batchedAccSearch <- function(acc_vector, database_name, table_name, col_names, c
       }
       query_el <- substr(query_el, 1, nchar(query_el)-end_char)
       query <- paste0(query_beg, query_el, " )")
-      print(query)
+      mm(query, "query")
       chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
       df <- rbind(df, chunk)
     }

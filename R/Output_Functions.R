@@ -38,7 +38,7 @@ outputGenerator <- function(df, ss=NULL, st){
   #
   # All the files are made available as sample sheets (.csv and .Rda) and database extracts (.csv, .Rda)
   #
-  print("Running outputGenerator")
+  mm("Running outputGenerator", "fn")
   
   spiderSet <- list(internal = TRUE, extract_columns = listColumnSets()$Overview) # ENV ===*===
 
@@ -178,7 +178,7 @@ outputGenerator <- function(df, ss=NULL, st){
     cwt(all_db_extract, do.call(filenameGenerator, c(st, list(output="all_db"), list(file_type="csv"))))
     
   }
-  print("outputGenerator completed")
+  mm("outputGenerator completed", "fn")
 }
 #============================================================================
 
@@ -192,7 +192,7 @@ outputGenerator <- function(df, ss=NULL, st){
 #Developed in outputGenerator.R
 filenameGenerator <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_type=NULL, treatment=NULL, species=NULL, platform=NULL, SRA_secondary_library_strategy=NULL, output, file_type){ #Same arguments as testf, as well as output and file_type
 
-  print("Running filenameGenerator")
+  mm("Running filenameGenerator", "fn")
 
   argument_list <- c("SRA_library_strategy", "gene", "antibody", "cell_type", "treatment", "species", "platform", "SRA_secondary_library_strategy", "output") #file_type will be handled separately
 
@@ -241,7 +241,7 @@ filenameGenerator <- function(SRA_library_strategy, gene=NULL, antibody=NULL, ce
   name <- substr(name, 2, (nchar(name)))
   name <- paste0(name, ".", file_type) #file_type added separately at the end
 
-  print("filenameGenerator completed")
+  mm("filenameGenerator completed", "fn")
   return(name)
 
 }
@@ -276,7 +276,7 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
   # All the files are made available as sample sheets (.csv and .Rda) and database extracts (.csv, .Rda)
   #
 
-  print("Running outputGenerator_acc")
+  mm("Running outputGenerator_acc", "fn")
 
   #ORDER BY SRP, then SRS,  then SRX, then SRR
   order_columns <- list(df$study_accession,
@@ -423,7 +423,7 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
 
 
 
-  print("outputGenerator_acc completed")
+  mm("outputGenerator_acc completed", "fn")
 }
 #============================================================================
 
@@ -442,7 +442,7 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
 
 filenameGenerator_acc <- function(SRA_library_strategy, accession, output, file_type){
 
-  print("Running filenameGenerator_acc")
+  mm("Running filenameGenerator_acc", "fn")
 
   argument_list <- c("accession", "SRA_library_strategy", "output") #file_type will be handled separately
 
@@ -469,7 +469,7 @@ filenameGenerator_acc <- function(SRA_library_strategy, accession, output, file_
   name <- substr(name, 2, (nchar(name)))
   name <- paste0(name, ".", file_type) #file_type added separately at the end
 
-  print("filenameGenerator_acc completed")
+  mm("filenameGenerator_acc completed", "fn")
   return(name)
 
 }
@@ -516,7 +516,7 @@ orderAccessions <- function(x, na.last = TRUE){
   # - for non-comma entries: remove alpha
   # - sort by numeric
   
-  print("Running orderAccessions")
+  mm("Running orderAccessions", "fn")
   
   if (is.list(x)){ #Input is a list
     
@@ -617,7 +617,7 @@ orderAccessions <- function(x, na.last = TRUE){
     
   }
   
-  print("orderAccessions completed")
+  mm("orderAccessions completed", "fn")
   
   return(ord)
   
@@ -671,7 +671,7 @@ checkCondition <- function(condition, x, message){
 universalSampleSheetGenerator <- function(df, SRA_library_strategy){
   # Selects correct sample sheet generating function, depending on the SRA_library_strategy
   # ===*=== Consider having a list of acceptable strategies and testing if input is valid
-  print("Running universalSampleSheetGenerator")
+  mm("Running universalSampleSheetGenerator", "fn")
 
   if (SRA_library_strategy == "ChIP-Seq"){
     sample_sheet <- chipSampleSheetGenerator(df)
@@ -681,7 +681,7 @@ universalSampleSheetGenerator <- function(df, SRA_library_strategy){
     #If library strategy IS NOT chip or rna
     sample_sheet <- otherSampleSheetGenerator(df)
   }
-  print("universalSampleSheetGenerator completed")
+  mm("universalSampleSheetGenerator completed", "fn")
   return(sample_sheet)
 }
 #============================================================================
@@ -693,7 +693,7 @@ universalSampleSheetGenerator <- function(df, SRA_library_strategy){
 chipSampleSheetGenerator <- function(df){
   # Arg: df from which sample sheet will be generated
   # Returns: sample_sheet (format compatible with the pipeline)
-  print("Running chipSampleSheetGenerator")
+  mm("Running chipSampleSheetGenerator", "fn")
 
   #List of required columns
   required_columns <- c("run_accession",
@@ -730,7 +730,7 @@ chipSampleSheetGenerator <- function(df){
   sample_sheet$adapterPE <- ""
   sample_sheet$trimQualityPE <- ""
 
-  print("chipSampleSheetGenerator completed")
+  mm("chipSampleSheetGenerator completed", "fn")
   return(sample_sheet)
 }
 #============================================================================
@@ -745,7 +745,7 @@ rnaSampleSheetGenerator <- function(df){
   # Returns: sample_sheet (format compatible with the pipeline)
 
   # In comparison to ChIP: does not have tissue, input and macsGroup columns
-  print("Running rnaSampleSheetGenerator")
+  mm("Running rnaSampleSheetGenerator", "fn")
 
   #List of required columns
   required_columns <- c("run_accession",
@@ -780,7 +780,7 @@ rnaSampleSheetGenerator <- function(df){
   sample_sheet$adapterPE <- ""
   sample_sheet$trimQualityPE <- ""
 
-  print("rnaSampleSheetGenerator completed")
+  mm("rnaSampleSheetGenerator completed", "fn")
   return(sample_sheet)
 }
 #============================================================================
@@ -797,7 +797,7 @@ otherSampleSheetGenerator <- function(df){
   # Currently same as rnaSampleSheetGenerator
   # In comparison to ChIP: does not have tissue, input and macsGroup columns
 
-  print("Running otherSampleSheetGenerator")
+  mm("Running otherSampleSheetGenerator", "fn")
 
   #List of required columns
   required_columns <- c("run_accession",
@@ -832,7 +832,7 @@ otherSampleSheetGenerator <- function(df){
   sample_sheet$adapterPE <- ""
   sample_sheet$trimQualityPE <- ""
 
-  print("otherSampleSheetGenerator completed")
+  mm("otherSampleSheetGenerator completed", "fn")
   return(sample_sheet)
 }
 #============================================================================
@@ -848,7 +848,7 @@ otherSampleSheetGenerator <- function(df){
 #Developed in dbExtractGenerator.R
 #============================================================================
 dbExtractGenerator <- function(df){
-  print("Running dbExtractGenerator")
+  mm("Running dbExtractGenerator", "fn")
   
   
   if (is.null(getSpideROption("output_columns"))){  # output_columns is null - default setting
@@ -873,7 +873,7 @@ dbExtractGenerator <- function(df){
   #Create an extract
   db_extract <- columnSelector(df, df_columns = df_columns, out_columns = db_extract_columns)
 
-  print("dbExtractGenerator completed")
+  mm("dbExtractGenerator completed", "fn")
   return(db_extract)
 
 }
@@ -890,7 +890,7 @@ dbExtractGenerator <- function(df){
 #Developed in dbExtractGenerator.R
 columnSelector <- function(df, df_columns, out_columns){
 
-  print("Running columnSelector")
+  mm("Running columnSelector", "fn")
 
   columnVerifier(df, df_columns) #Check if all specified columns exist within the df
 
@@ -907,7 +907,7 @@ columnSelector <- function(df, df_columns, out_columns){
   }
 
   out <- out[,-1]
-  print("columnSelector completed")
+  mm("columnSelector completed", "fn")
   return(out)
 }
 

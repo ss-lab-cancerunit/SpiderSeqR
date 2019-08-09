@@ -131,14 +131,14 @@ getDatabaseInformation <- function(){
     
   } else if (menu_options == 14){
     
-    print(col_desc_table_info)
+    cat(crayon::magenta(col_desc_table_info))
     df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)),"SELECT * FROM col_desc")
     return(df)
  
     
   } else if (menu_options == 15){
     
-    print(col_desc_table_info)
+    cat(crayon::magenta(col_desc_table_info))
     df <- DBI::dbGetQuery(get(geo_database_name, envir = get(database_env)),"SELECT * FROM geodb_column_desc")
     return(df)
     
@@ -171,7 +171,7 @@ getColumnDescriptions <- function(){
   sra_database_name <- "sra_con"
   geo_database_name <- "geo_con"
   
-  print("Which database are you interested in?")
+  mm("Which database are you interested in?", "search")
   db_choices <- utils::menu(c("SRA database", "GEO database"))
   if (db_choices == 1){
     df <- DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)),"SELECT * FROM col_desc")

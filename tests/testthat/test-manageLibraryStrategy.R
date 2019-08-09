@@ -1,7 +1,10 @@
 
+setSpideROption("quiet", TRUE)
+
 
 #manageLibraryStrategy("RNA", input = "syn", output = "can", mismatch.ignore = FALSE)
 #manageLibraryStrategy("RNA", input = "syn", output = "can", mismatch.ignore = TRUE)
+
 
 
 test_that("Incorrect conversions are not allowed", {

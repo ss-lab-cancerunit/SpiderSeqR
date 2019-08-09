@@ -47,7 +47,7 @@
 #' 
 appendGSEColumns <- function(df, gse_columns){
   
-  print("Running appendGSEColumns")
+  mm("Running appendGSEColumns", "fn")
   
   
   database_name <- "geo_con"
@@ -216,7 +216,7 @@ appendGSEColumns <- function(df, gse_columns){
   df_out <- as.data.frame(df_out)
   .GlobalEnv$temp_df_out <- df_out
   
-  print("appendGSEColumns completed")
+  mm("appendGSEColumns completed", "fn")
   return(df_out)
   
   

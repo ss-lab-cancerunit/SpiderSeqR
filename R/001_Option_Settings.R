@@ -14,6 +14,7 @@ spideREnv <- new.env()
 local({
   assign("file_output", TRUE)
   assign("output_columns", NULL) # Amend
+  assign("quiet", FALSE)
   assign("internal", FALSE)
   }, spideREnv)
 
@@ -33,6 +34,7 @@ local({
 #' \itemize{
 #'     \item file_output - Logical - If TRUE, the search functions will produce file outputs. If FALSE, no files will be created. Defaults to TRUE
 #'    \item output_columns - Character vector - A set of columns to be used for generating file outputs. Defaults to one of the \code{listColumnSets()}.
+#'    \item quiet - Whether any messages should be printed in the console
 #' }
 #' 
 #' @examples 

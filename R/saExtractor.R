@@ -19,7 +19,7 @@ saExtractor <- function(df){
   #===*=== Make a better choice
 
 
-  print("Running saExtractor")
+  mm("Running saExtractor", "fn")
   
   # Rename SRA_sample_attribute
   rename_col <- FALSE
@@ -40,7 +40,7 @@ saExtractor <- function(df){
       colnames(df)[grepl("sample_attribute", colnames(df))] <- "SRA_sample_attribute"
     }
     warning("No not-NA sample attributes available")
-    print("saExtractor completed")
+    mm("saExtractor completed", "fn")
     return(df)
   }
   
@@ -93,7 +93,7 @@ saExtractor <- function(df){
   
   #============================================================================
 
-  print("saExtractor completed")
+  mm("saExtractor completed", "fn")
   return(df)
 
 }

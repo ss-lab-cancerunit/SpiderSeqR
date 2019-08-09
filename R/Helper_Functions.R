@@ -60,7 +60,7 @@
 #' 
 #' @keywords internal
 searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment, species, platform){
-  print("Running searchSRA")
+  mm("Running searchSRA", "fn")
 
   #------------------------------------------------
   #------------------------------------------------
@@ -144,7 +144,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
   #OBTAIN THE DF VIA SQL QUERY
   #------------------------------------------------
   #------------------------------------------------
-  print("Creating an SQL query")
+  mm("Creating an SQL query", "fn")
 
   #COLLAPSE COLUMNS
   sra_columns <- paste(sra_columns, collapse = ", ")
@@ -166,7 +166,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
   }
   query <-substr(query, 1, (nchar(query)-4)) #Remove the final "AND "
   query <- paste0(query, "") #Can add a parenthesis here if necessary
-  print(query)
+  mm(query, "query")
 
 
   #GET THE QUERY
@@ -177,7 +177,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     stop("No results found for input symbols, check symbols/synonyms entered or whether such entries exist on ncbi.")
   }
 
-  print("SQL query completed")
+  mm("SQL query completed", "fn")
   
   message(paste0("Found ", dim(output_list)[1], " results")) #===*===
   .GlobalEnv$spider_output_list_sra_unfiltered <- output_list
@@ -188,7 +188,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
   #------------------------------------------------
   #------------------------------------------------
 
-  print("Begining verification of the data frame")
+  mm("Begining verification of the data frame", "fn")
 
   #------------------------------------------------
   # NOTES ON REGEXP:
@@ -253,10 +253,10 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
 
     #Search within other fields (if there were no matches to categories)
     gene_indices[!cat_gene_indices] <- conditionVerifier2(output_list[!cat_gene_indices, ], gene, withOut("sample_attribute", gene_fields), "(^|[^A-Za-z])") #Noletter prefix as a separate input
-    print(paste0(sum(gene_indices), " out of ", dim(output_list)[1], " initial entries comply with the gene criteria"))
+    mm(paste0(sum(gene_indices), " out of ", dim(output_list)[1], " initial entries comply with the gene criteria"), "res")
   } else {
     gene_indices <- rep(TRUE, nrow(output_list))
-    print("No genes specified. Returned all TRUE")
+    mm("No genes specified. Returned all TRUE", "adverse")
   }
 
 
@@ -350,10 +350,10 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
 
     #Search within other fields (if there were no matches to categories)
     antibody_indices[!cat_antibody_indices] <- conditionVerifier2(output_list[!cat_antibody_indices, ], antibody, withOut("sample_attribute", antibody_fields), "(^|[^A-Za-z])") #Noletter prefix as a separate input
-    print(paste0(sum(antibody_indices), " out of ", dim(output_list)[1], " initial entries comply with the antibody criteria"))
+    mm(paste0(sum(antibody_indices), " out of ", dim(output_list)[1], " initial entries comply with the antibody criteria"), "res")
   } else {
     antibody_indices <- rep(TRUE, nrow(output_list))
-    print("No antibodies specified. Returned all TRUE")
+    mm("No antibodies specified. Returned all TRUE", "adverse")
   }
 
   #------------------------------------------------
@@ -381,7 +381,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
   #------------------------------------------------
   cell_type_indices <- conditionVerifier2(output_list, cell_type, cell_type_fields) #There is a very extensive list of categories with tissue information
   #Conditional search will not be used for now
-  print(paste0(sum(cell_type_indices), " out of ", dim(output_list)[1], " initial entries comply with the cell type criteria"))
+  mm(paste0(sum(cell_type_indices), " out of ", dim(output_list)[1], " initial entries comply with the cell type criteria"), "res")
 
   #------------------------------------------------
   #TREATMENT
@@ -421,10 +421,10 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
 
     #Search within other fields (if there were no matches to categories)
     treatment_indices[!cat_treatment_indices] <- conditionVerifier2(output_list[!cat_treatment_indices, ], treatment, treatment_fields) #Noletter prefix as a separate input
-    print(paste0(sum(treatment_indices), " out of ", dim(output_list)[1], " initial entries comply with the treatment criteria"))
+    mm(paste0(sum(treatment_indices), " out of ", dim(output_list)[1], " initial entries comply with the treatment criteria"), "res")
   } else {
     treatment_indices <- rep(TRUE, nrow(output_list))
-    print("No treatment specified. Returned all TRUE")
+    mm("No treatment specified. Returned all TRUE", "adverse")
   }
 
   #------------------------------------------------
@@ -437,20 +437,20 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
   #SPECIES
   #------------------------------------------------
   species_indices <- conditionVerifier2(output_list, species, "taxon_id")
-  print(paste0(sum(species_indices), " out of ", dim(output_list)[1], " initial entries comply with the species criteria"))
+  mm(paste0(sum(species_indices), " out of ", dim(output_list)[1], " initial entries comply with the species criteria"), "res")
 
   #------------------------------------------------
   #LIBRARY_STRATEGY
   #------------------------------------------------
   library_strategy_indices <- conditionVerifier2(output_list, library_strategy, "library_strategy")
-  print(paste0(sum(library_strategy_indices), " out of ", dim(output_list)[1], " initial entries comply with the library strategy criteria"))
+  mm(paste0(sum(library_strategy_indices), " out of ", dim(output_list)[1], " initial entries comply with the library strategy criteria"), "res")
 
 
   #------------------------------------------------
   #PLATFORM
   #------------------------------------------------
   platform_indices <- conditionVerifier2(output_list, platform, "platform")
-  print(paste0(sum(platform_indices), " out of ", dim(output_list)[1], " initial entries comply with the platform criteria"))
+  mm(paste0(sum(platform_indices), " out of ", dim(output_list)[1], " initial entries comply with the platform criteria"), "res")
 
 
   #------------------------------------------------
@@ -472,9 +472,9 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
   if (dim(output_list)[1]==0) {
     stop("No results passed the verification phase")
   }
-  print("Number of entries returned:")
-  print(dim(output_list)[[1]])
-  print("searchSRA completed")
+  mm("Number of entries returned:", "res")
+  mm(dim(output_list)[[1]], "res")
+  mm("searchSRA completed", "fn")
   return(output_list)
 
 }
@@ -500,7 +500,7 @@ conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
   #
   # Returns: logical vector (same length as df) with TRUE indicating matches to the conditions
   #
-  print("Running conditionVerifier2")
+  mm("Running conditionVerifier2", "fn")
 
   if (missing(prefixes)){
     prefixes <- rep("", length(columns))
@@ -549,7 +549,7 @@ conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
           for (s in seq_along(suffixes[[c]])){
 
             keywords_regexp <- paste0(prefixes[[c]][p], keywords[k], suffixes[[c]][s])
-            print(paste(keywords_regexp, "IN", colnames(df)[columns_index]))
+            mm(paste(keywords_regexp, "IN", colnames(df)[columns_index]), "query")
             #print(colnames(df)[columns_index])
             #print(keywords_regexp)
             row_matches <- row_matches | grepl(keywords_regexp, df[,columns_index], ignore.case = TRUE, perl = TRUE)
@@ -562,7 +562,7 @@ conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
     row_matches <- rep(TRUE, nrow(df))
     warning("No keywords specified. All TRUE returned")
   }
-  print("conditionVerifier2 completed")
+  mm("conditionVerifier2 completed", "fn")
 
   return(row_matches)
 
@@ -581,7 +581,7 @@ conditionVerifier <- function(df, keywords, columns, prefixes, suffixes){
   #
   # Returns: logical vector (same length as df) with TRUE indicating matches to the conditions
   #
-  print("Running conditionVerifier")
+  mm("Running conditionVerifier", "fn")
 
   if (missing(prefixes)){
     prefixes <- rep("", length(columns))
@@ -618,7 +618,7 @@ conditionVerifier <- function(df, keywords, columns, prefixes, suffixes){
           for (s in seq_along(suffixes[[c]])){
 
             keywords_regexp <- paste0(prefixes[[c]][p], keywords[k], suffixes[[c]][s])
-            print(keywords_regexp)
+            mm(keywords_regexp, "query")
             row_matches <- row_matches | grepl(keywords_regexp, df[,columns_index], ignore.case = TRUE)
           }
         }
@@ -631,7 +631,7 @@ conditionVerifier <- function(df, keywords, columns, prefixes, suffixes){
   }
 
   return(row_matches)
-  print("conditionVerifier completed")
+  mm("conditionVerifier completed", "fn")
 }
 #------------------------------------------------
 
@@ -653,7 +653,7 @@ queryWriter <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
   #if (is.na(sql_after)){
   #  sql_after <- "%'"
   #}
-  print("Running queryWriter")
+  mm("Running queryWriter", "fn")
 
   query <- character()
   for (t in term){
@@ -662,7 +662,7 @@ queryWriter <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
     }
   }
   query <- substr(query, 1, nchar(query)-3) #Remove the last "OR" (which is redundant)
-  print("queryWriter completed")
+  mm("queryWriter completed", "fn")
   return(query)
 }
 #------------------------------------------------
@@ -671,7 +671,7 @@ queryWriter <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
 #------------------------------------------------
 
 withOut <- function(names, vector){
-  print("Running withOut")
+  mm("Running withOut", "fn")
   names <- unique(names)
   for (n in seq_along(names)){
     ind <- grep(names[n], vector)
@@ -679,7 +679,7 @@ withOut <- function(names, vector){
       vector <- vector[-ind]
     }
   }
-  print("withOut completed")
+  mm("withOut completed", "fn")
   return(vector)
 }
 
@@ -694,7 +694,7 @@ withOut <- function(names, vector){
 #Developed in gsmExtractor.R which also contains previous versions of the function
 #New version of gsmExtractor - based on gsub tagging system
 gsmExtractor <- function(output_list, sampleColumn = TRUE){
-  print("Running gsmExtractor")
+  mm("Running gsmExtractor", "fn")
   #Find indices of rows which contain GSMs
   
   # Rename SRA_experiment_title
@@ -727,7 +727,7 @@ gsmExtractor <- function(output_list, sampleColumn = TRUE){
     colnames(output_list)[grepl("experiment_title", colnames(output_list))] <- "SRA_experiment_title"
   }
   
-  print("gsmExtractor completed")
+  mm("gsmExtractor completed", "fn")
   return(output_list)
 }
 #----------------------------------------------------------------------------
@@ -744,7 +744,7 @@ searchForSRPChildren <- function(srp_list, srp_columns){
   #(This is equivalent to finding all SRRs belonging to a given SRP)
   #- Extract relevant columns from the sra table
   # ===*=== COMPARE PERFORMANCE AGAINST PARAMETRISED QUERY
-  print("Running searchForSRPChildren")
+  mm("Running searchForSRPChildren", "fn")
   
   database_name <- "sra_con"
   database_env <- ".GlobalEnv"
@@ -761,7 +761,7 @@ searchForSRPChildren <- function(srp_list, srp_columns){
   # Rename SRA columns
   #srp_all <- renameSRAColumns(srp_all)
   
-  print("searchForSRPChildren completed")
+  mm("searchForSRPChildren completed", "fn")
   return(srp_all)
 }
 #----------------------------------------------------------------------------
@@ -781,7 +781,7 @@ rbindUniqueCols <- function(x, y, disregard_columns){
   #            (obtained by ignoring disregard_columns)
   #
   #
-  print("Running rbindUniqueCols")
+  mm("Running rbindUniqueCols", "fn")
 
   if (!setequal(colnames(x), colnames(y))){
     stop("Column names need to match between the two data frames")
@@ -850,7 +850,7 @@ rbindUniqueCols <- function(x, y, disregard_columns){
 
   xy <- rbind(x, y[indices, ])
   rownames(xy) <- NULL
-  print("rbindUniqueCols completed")
+  mm("rbindUniqueCols completed", "fn")
 
   return(xy)
 }
@@ -1038,7 +1038,7 @@ inputDetector <- function(df){
   #          function(df, column_list)
   #-------------------------------
 
-  print("Running inputDetector")
+  mm("Running inputDetector", "fn")
 
 
   #==============================================================
@@ -1120,7 +1120,7 @@ inputDetector <- function(df){
   for (v in seq_along(var_columns)){
     if (class(get(var_columns[v])) == "list" | class(get(var_names[v])) == "list"){
       if (length(get(var_columns[v])) != length(get(var_names[v]))){
-        print(paste0("The following columns and names differ in length: ", paste(get(var_columns[v]), collapse = ", "), " and ", paste(get(var_names[v]), collapse = ", ")))
+        mm(paste0("The following columns and names differ in length: ", paste(get(var_columns[v]), collapse = ", "), " and ", paste(get(var_names[v]), collapse = ", ")), "adverse")
         warning("Columns and names differ in length")
       }
     }
@@ -1240,7 +1240,7 @@ inputDetector <- function(df){
   cond2 <- necessary_indices & (!detected$cond1) & otherwise_indices
   df$input[cond2] <- "input"
   #-------------------------------
-  print("inputDetector completed")
+  mm("inputDetector completed", "fn")
 
   return(df)
 
@@ -1257,7 +1257,7 @@ columnVerifier <- function(df, column_list){
   #         Methods which actually check the indices might be more flexible (e.g. case insensitive)
   #
 
-  print("Runing columnVerifier")
+  mm("Runing columnVerifier", "fn")
   
   # Check that df is a data frame
   if (!"data.frame" %in% class(df)){
@@ -1272,12 +1272,12 @@ columnVerifier <- function(df, column_list){
 
   if (length(setdiff(column_list, df_cols)) != 0){
     warning("Not all specified columns can be found in the data frame")
-    print(paste0("The following columns are missing from the data frame: ", paste(setdiff(column_list, df_cols), collapse = ",") ))
+    mm(paste0("The following columns are missing from the data frame: ", paste(setdiff(column_list, df_cols), collapse = ",") ), "adverse")
   } else {
-    print("All specified columns are within the data frame")
-    print(paste(column_list, collapse = ", "))
+    mm("All specified columns are within the data frame", "adverse")
+    mm(paste(column_list, collapse = ", "), "adverse")
   }
-  print("columnVerifier completed")
+  mm("columnVerifier completed", "fn")
 }
 
 #----------------------------------------------------------------------------
@@ -1300,7 +1300,7 @@ controlDetector <- function(df){
   #                    NECESSARY conditions are still required for labelling
   #
 
-  print("Running controlDetector")
+  mm("Running controlDetector", "fn")
 
 
   #---------------------------------------------------------------
@@ -1479,7 +1479,7 @@ controlDetector <- function(df){
 
   #----------------------------------------------------------------------------
 
-  print("controlDetector completed")
+  mm("controlDetector completed", "fn")
   return(df)
 }
 #----------------------------------------------------------------------------
@@ -1513,13 +1513,13 @@ mergeDetector <- function(df, do_nothing = FALSE){
   #                          "" - no merging required
   #                          SRX... - merge runs with corresponding SRXs
 
-  print("Running mergeDetector")
+  mm("Running mergeDetector", "fn")
   
   if (do_nothing == TRUE){
     df$n <- NA
     df$lane <- NA
     df$mer <- NA
-    print("mergeDetector completed")
+    mm("mergeDetector completed", "fn")
     return(df)
   }
   
@@ -1528,7 +1528,7 @@ mergeDetector <- function(df, do_nothing = FALSE){
     df$lane <- NA
     df$mer <- NA #===*=== added later
     warning("No not-NA experiment_accesion elements")
-    print("mergeDetector completed")
+    mm("mergeDetector completed", "fn")
     return(df)
   }
 
@@ -1539,7 +1539,7 @@ mergeDetector <- function(df, do_nothing = FALSE){
     dplyr::mutate(mer = dplyr::case_when(n >= 2 ~ experiment_accession, #Label with SRX when multiple SRRs exist in SRX
                            n < 2 ~ "")) #Leave empty if only one SRR in SRX
   df <- as.data.frame(df)
-  print("mergeDetector completed")
+  mm("mergeDetector completed", "fn")
   return(df)
 }
 #----------------------------------------------------------------------------
@@ -1552,12 +1552,12 @@ missingRunVerifier <- function(srr_list_in){
   #  Args: list of SRRs
   #  Returns: printed notice on whether the SRXs to which the SRRs belong also have any other SRRs
   # ===*=== Double check if all the entries are identical...
-  print("Running missingRunVerifier")
+  mm("Running missingRunVerifier", "fn")
   
   database_name <- "sra_con"
   database_env <- ".GlobalEnv"
 
-  print("CHECKING FOR MISSING RUNS")
+  mm("CHECKING FOR MISSING RUNS", "fn")
 
   srr_list_in <- unique(srr_list_in[order(srr_list_in)])
 
@@ -1573,25 +1573,25 @@ missingRunVerifier <- function(srr_list_in){
   if (!setequal(srr_list_in, srr_list_out)) {
     #if (length(intersect(srr_list_out, srr_list_in)) != length(srr_list_out)) {
     missing <- paste(setdiff(srr_list_out, srr_list_in), collapse = ", ")
-    print("The list does not include all the runs")
-    print(paste0("Missing runs: ", missing))
+    mm("The list does not include all the runs", "adverse")
+    mm(paste0("Missing runs: ", missing), "adverse")
     #warning("The list does not include all the runs") #Warning does not work for some reason
   } else { #===*=== Maybe another criterion...?
-    print("There are no missing runs within the selected experiment accessions")
+    mm("There are no missing runs within the selected experiment accessions", "adverse")
   }
-  print("missingRunVerifier completed")
+  mm("missingRunVerifier completed", "fn")
 }
 
 #================================================
 
 #Needed for missingRunVerifier()
 parQuery <- function(db_con, query, par_list){
-  print("Running parQuery")
+  mm("Running parQuery", "fn")
   res <- DBI::dbSendQuery(db_con, query)
   DBI::dbBind(res, param = list(par_list))
   df <- DBI::dbFetch(res)
   DBI::dbClearResult(res)
-  print("parQuery completed")
+  mm("parQuery completed", "fn")
   return(df)
 }
 #----------------------------------------------------------------------------
@@ -1602,7 +1602,7 @@ parQuery <- function(db_con, query, par_list){
 #----------------------------------------------------------------------------
 #Developed in pairedEndConverter.R
 pairedEndConverter <- function(df){
-  print("Running pairedEndConverter")
+ mm("Running pairedEndConverter", "fn")
   
   # Rename col
   rename_col <- FALSE
@@ -1622,7 +1622,7 @@ pairedEndConverter <- function(df){
   paired_indices <- grepl("PAIRED", df$library_layout)
   #unpaired_indices <- grepl("SINGLE", df$library_layout)
 
-  print(paste0("Found ", sum(paired_indices), " runs with paired ends"))
+  mm(paste0("Found ", sum(paired_indices), " runs with paired ends"), "res")
   #print(sum(paired_indices))
   #print(sum(unpaired_indices))
 
@@ -1635,7 +1635,7 @@ pairedEndConverter <- function(df){
     colnames(df)[grepl("library_layout", colnames(df))] <- "SRA_library_layout"
   }
 
-  print("pairedEndConverter completed")
+  mm("pairedEndConverter completed", "fn")
   return(df)
 }
 #----------------------------------------------------------------------------
@@ -1656,7 +1656,7 @@ pairedEndConverter <- function(df){
 #' 
 #' @keywords internal
 geoFinder <- function(db_con, gsm_list, gsm_columns, gse_columns){
-  print("Running geoFinder")
+  mm("Running geoFinder", "fn")
 
   #-------------------------
   #Constructing a query
@@ -1686,7 +1686,7 @@ geoFinder <- function(db_con, gsm_list, gsm_columns, gse_columns){
   #===*=== Addressed by column name...
   #MOVED OUTSIDE OF THIS FUNCTION
   #gsm_df <- cbind(gsm_df, characteristicsExtractor(gsm_df$characteristics_ch1))
-  print("geoFinder completed")
+  mm("geoFinder completed", "fn")
 
   return(gsm_df)
 }
@@ -1700,23 +1700,23 @@ geoFinder <- function(db_con, gsm_list, gsm_columns, gse_columns){
 #----------------------------------------------------------------------------
 #Developed in superseriesVerifier.R
 superseriesVerifier <- function(gse_list){
-  print("Running superseriesVerifier")
+  mm("Running superseriesVerifier", "fn")
   #  Args: list of GSEs (as appear in the GEO db)
   #  Prints the number of samples with multiple GSEs
   #  Prints the list of GSEs that co-occur with other GSEs (i.e. some of them might be superseries)
 
-  print("CHECKING FOR PRESENCE OF SUPERSERIES")
+  mm("CHECKING FOR PRESENCE OF SUPERSERIES", "fn")
 
   #Grepl GSE..., GSE... (...)
   ss_match <- grepl("^GSE\\d\\d\\d+,GSE\\d\\d\\d+.*$", gse_list)
-  print(paste0(sum(ss_match), " out of ", length(gse_list), " entries belong to more than one GSE (some of them might be superseries)"))
+  mm(paste0(sum(ss_match), " out of ", length(gse_list), " entries belong to more than one GSE (some of them might be superseries)"), "res")
 
   if (sum(ss_match)>0){
     #Get a list of GSEs that co-occur with other GSEs (i.e. GSEs from samples which have more than one GSEs)
     ss_list <- unlist(strsplit(unique(gse_list[ss_match]), split=","))
     ss_list <- unique(ss_list[order(ss_list)])
     if (length(ss_list)!=0){
-      print(paste0("Consider carrying out superseries search on the following GSEs: ", paste(ss_list, collapse = ", ")))
+      mm(paste0("Consider carrying out superseries search on the following GSEs: ", paste(ss_list, collapse = ", ")), "adverse")
     }
     return(ss_list)
 
@@ -1724,7 +1724,7 @@ superseriesVerifier <- function(gse_list){
     return(NULL)
   }
 
-  print("superseriesVerifier completed")
+  mm("superseriesVerifier completed", "fn")
 }
 #----------------------------------------------------------------------------
 
@@ -1793,7 +1793,7 @@ superseriesVerifier <- function(gse_list){
 #' 
 manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore = FALSE){
   
-  print("Running manageLibraryStrategy")
+  mm("Running manageLibraryStrategy", "fn")
   
   
   
@@ -1870,12 +1870,12 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
     y <- list(Canonical_Forms = can,
               Short_Forms = short, 
               Currently_Accepted_Synonyms = syn)
-    print("manageLibraryStrategy completed")
+    mm("manageLibraryStrategy completed", "fn")
     return(y)
     
   } else if (task == "check_can"){ #Special track for task == "check_can"
     y <- x %in% can
-    print("manageLibraryStrategy completed")
+    mm("manageLibraryStrategy completed", "fn")
     return(y)
   }
   
@@ -1892,7 +1892,7 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
   #CONVERSION: can->short
   if (input == "can" & output == "short"){
     
-    print("CONVERSION: can -> short")
+    mm("CONVERSION: can -> short", "query")
     
     ind <- grep(paste0("^", x, "$"), can)
     
@@ -1919,7 +1919,7 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
   #CONVERSION: syn->can
   if (input == "syn" & output == "can"){
     
-    print("CONVERSION: syn -> can")
+    mm("CONVERSION: syn -> can", "query")
     
     ind <- rep(list(integer(0)),15)
     res_num <- 0
@@ -1957,7 +1957,7 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
 
   
   
-  print("manageLibraryStrategy completed")
+  mm("manageLibraryStrategy completed", "fn")
   
   return(y)
   

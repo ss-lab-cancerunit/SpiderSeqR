@@ -87,7 +87,7 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
   library_warning_message <- "Library strategy does not belong to the recommended options. If you do not get satisfying results, please run manageLibraryStrategy for further information" 
   
   
-  print(manageLibraryStrategy(SRA_secondary_library_strategy, task="check_can"))
+  #print(manageLibraryStrategy(SRA_secondary_library_strategy, task="check_can"))
   
   
   if( !manageLibraryStrategy(SRA_library_strategy, task="check_can") ){
@@ -166,15 +166,15 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
   }
 
   #PRINT SEARCH CONDITIONS SUMMARY
-  print("SEARCH CONDITIONS SUMMARY")
-  print(paste0("Selected gene: ", paste(gene, collapse = " OR ")))
-  print(paste0("Selected antibody: ", paste(antibody, collapse = " OR ")))
-  print(paste0("Selected cell type: ", paste(cell_type, collapse = " OR ")))
-  print(paste0("Selected treatment: ", paste(treatment, collapse = " OR ")))
-  print(paste0("Selected species: ", paste(species, collapse = " OR ")))
-  print(paste0("Selected SRA_library_strategy: ", paste(SRA_library_strategy, collapse = " OR ")))
-  print(paste0("Selected platform: ", paste(platform, collapse = " OR ")))
-  print(paste0("Selected SRA_secondary_library_strategy: ", paste(SRA_secondary_library_strategy, collapse = " OR ")))
+  mm("SEARCH CONDITIONS SUMMARY", "search")
+  mm(paste0("Selected gene: ", paste(gene, collapse = " OR ")), "search")
+  mm(paste0("Selected antibody: ", paste(antibody, collapse = " OR ")), "search")
+  mm(paste0("Selected cell type: ", paste(cell_type, collapse = " OR ")), "search")
+  mm(paste0("Selected treatment: ", paste(treatment, collapse = " OR ")), "search")
+  mm(paste0("Selected species: ", paste(species, collapse = " OR ")), "search")
+  mm(paste0("Selected SRA_library_strategy: ", paste(SRA_library_strategy, collapse = " OR ")), "search")
+  mm(paste0("Selected platform: ", paste(platform, collapse = " OR ")), "search")
+  mm(paste0("Selected SRA_secondary_library_strategy: ", paste(SRA_secondary_library_strategy, collapse = " OR ")), "search")
 
 
   #============================================================================
