@@ -20,6 +20,7 @@ To access a list of all available columns, please see \code{listValidColumns()}.
 \itemize{
     \item Accession - accession ids only (SRA and GEO)
     \item Overview - a subjective selection of most important columns (from SRA and GEO) for getting an overview of the samples
+    \item Overview2 - columns from Overview with added columns of extracted information from SRA_sample_attribute and GSM_characteristics_ch1 columns
 }
 }
 
@@ -29,7 +30,7 @@ To access a list of all available columns, please see \code{listValidColumns()}.
 The sets can be used for any purpose, though they have been created with display and filtering applications in mind. Here are recommended uses:
 
 \itemize{
-    \item Display: Accession, Overview
+    \item Display: Accession, Overview, Overview2
     \item Filtering: ===*=== (in progress)
     
 }
@@ -39,5 +40,6 @@ The sets can be used for any purpose, though they have been created with display
 listColumnSets() # List all
 listColumnSets()$Overview # Access the 'Overview' set of column names
 listColumnSets()$Accession # Access the 'Accession' set of column names
+names(listColumnSets()) # Get names of the available sets
 
 }
