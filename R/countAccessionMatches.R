@@ -22,6 +22,9 @@ countAccessionMatches <- function(acc_vector, df, output = "logical"){
   acc_vector <- acc_vector[acc_vector!=""]
   acc_vector <- unique(acc_vector)
   
+  # Need to add a clause about GSEs ===*===
+  
+  
   # Get acc_class
   acc_class <- classifyAccession(acc_vector)
   
