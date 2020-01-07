@@ -11,6 +11,8 @@ findSRAAccessionLevelColumnNames(acc_levels = c("run", "experiment",
 \item{acc_levels}{Accession levels}
 
 \item{add_run_accession}{Logical indicating whether to add run_accession column name}
+
+\item{table_name}{A character with table name}
 }
 \value{
 Vector with column names

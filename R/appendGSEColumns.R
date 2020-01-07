@@ -31,11 +31,9 @@
 #' @param gse_columns Character vector with names of GSE columns to be appended
 #' @return Data frame with appended gse columns (they will be named with a prepended 'GSE_')
 #' 
-#' 
-#' 
 #' @examples
-#' appendGSEColumns(df, "pubmed_id") # Append only pubmed_id column
-#' appendGSEColumns(df, "*") # Append all available columns from gse
+#' # appendGSEColumns(df, "pubmed_id") # Append only pubmed_id column
+#' # appendGSEColumns(df, "*") # Append all available columns from gse
 #' 
 #' 
 #' @details 
@@ -48,11 +46,12 @@
 appendGSEColumns <- function(df, gse_columns){
   
   mm("Running appendGSEColumns", "fn")
+  gsm <- NULL
+  series_id <- NULL
   
   
   database_name <- "geo_con"
   database_env <- ".GlobalEnv"
-  
   
   
   # Checks and housekeeping (arguments) ####
@@ -85,7 +84,6 @@ appendGSEColumns <- function(df, gse_columns){
     stop("All specified columns must be in gse table")
   }
   
- 
   
   # If series_id is not there, append it
   if (!("gse" %in% gse_columns)){
@@ -107,10 +105,6 @@ appendGSEColumns <- function(df, gse_columns){
     warning("Some GSE columns already exist within the data frame")
   }
   
-
-  
-  
-
   
   # Collapse column list to comma separated string for SQLite
   gse_columns_sql <- paste0(gse_columns, sep = ", ", collapse = "")
@@ -218,6 +212,5 @@ appendGSEColumns <- function(df, gse_columns){
   
   mm("appendGSEColumns completed", "fn")
   return(df_out)
-  
   
 }

@@ -27,3 +27,8 @@ Currently, it includes:
 }
 }
 
+\examples{
+getDatabaseInformation()
+
+
+}

@@ -1,7 +1,19 @@
 
 #searchForAccession - under construction (20171207)
 
-
+#' Search for Accessions
+#' 
+#' @param acc_vector A character vector with accession numbers (of one type only)
+#' @param file_output A logical indicating whether file output should be produced
+#' @return A data frame (and file outputs, as appropriate) with matches to accession numbers
+#' 
+#' 
+#' @examples 
+#' startSpideRDemo()
+#' df <- searchForAccession("SRP026280")
+#' 
+#' @export
+#' 
 searchForAccession <- function(acc_vector, file_output = TRUE){
   #
   # IN PROGRESS - to find omitted processing steps, see SpideR_ToDo.Rmd

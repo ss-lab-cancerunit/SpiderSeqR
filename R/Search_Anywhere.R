@@ -5,14 +5,15 @@
 #' @param query_all Search term for both SRA and GEO (gse and gsm tables)
 #' 
 #' @param acc_levels Accession levels at which the search is conducted
-#' @param category_both
-#' @param SRA_library_strategy
-#' @param SRA_other_library_strategy
-#' @param GEO_type
+#' @param category_both A character with category for SRA library strategy and GEO type
+#' @param SRA_library_strategy A character with SRA library strategy
+#' @param SRA_other_library_strategy A logical whether to include unclassified entries
+#' @param GEO_type A character with GEO type
 #' @param SRA_query Search term for SRA only
 #' @param GEO_query Search term for GEO only
 #' @param GSM_query Search term for gsm table only (GEO)
 #' @param GSE_query Search term for gse table only (GEO)
+#' @param ... Other options
 #' 
 #' 
 #' 
@@ -486,6 +487,7 @@ searchAnywhereGSE <- function(GSE_query, GEO_type){
 #' @param SRA_library_strategy Character vector denoting library_strategy/ies of choice (OPTIONAL)
 #' @param SRA_other_library_strategy A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided
 #' @param acc_levels Character vector denoting which accession levels will be searched. Choose from some/all of c("run", "experiment", "sample", "study")
+#' @param ... Other options
 #' 
 #' @examples 
 #' # stat3
@@ -516,7 +518,7 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
       # Previously
       
       #print(as.list(match.call(expand.dots = TRUE)))
-      print(as.list(match.call(def=sys.function(-1), call = sys.call(-1))))
+      print(as.list(match.call(definition = sys.function(-1), call = sys.call(-1))))
       
       l <- list()
       l$SRA_query <- SRA_query
@@ -721,6 +723,7 @@ convertCategoriesToLibraryStrategyType <- function(x){
 #' 
 #' @param acc_levels Accession levels
 #' @param add_run_accession Logical indicating whether to add run_accession column name
+#' @param table_name A character with table name
 #' @return Vector with column names
 #' 
 #' @examples 

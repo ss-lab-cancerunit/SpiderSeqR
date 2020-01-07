@@ -40,6 +40,11 @@ outputGenerator <- function(df, ss=NULL, st){
   #
   mm("Running outputGenerator", "fn")
   
+  SRA_library_strategy <- NULL
+  OTH_input <- NULL
+  OTH_control <- NULL
+  
+  
   spiderSet <- list(internal = TRUE, extract_columns = listColumnSets()$Overview) # ENV ===*===
 
   #ORDER BY SRP, then SRS,  then SRX, then SRR
@@ -277,6 +282,8 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
   #
 
   mm("Running outputGenerator_acc", "fn")
+  
+  SRA_library_strategy <- NULL
 
   #ORDER BY SRP, then SRS,  then SRX, then SRR
   order_columns <- list(df$study_accession,
@@ -298,9 +305,10 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
   
 
 
-  if (!is.null(ss)){
-    saveRDS(ss, do.call(filenameGenerator, c(st, list(output="ss"), list(file_type="Rda"))))
-  }
+  # Consider saving ss ===*===
+  #if (!is.null(ss)){
+  #  saveRDS(ss, do.call(filenameGenerator, c(st, list(output="ss"), list(file_type="Rda"))))
+  #}
 
 
   #============================================================================
@@ -492,12 +500,13 @@ filenameGenerator_acc <- function(SRA_library_strategy, accession, output, file_
 #' @param na.last For controlling the treatment of NAs (see \code{\link[base]{order}})
 #' @return Integer vector with order of indices
 #' 
-#' @examples 
-#' \dontrun{
-#' # Order rows in df according to multiple accession types
-#' order_columns <- list(df$study_accession, df$sample_accession, df$experiment_accession, df$run_accession, df$gsm)
+#' @examples
+#' startSpideRDemo()
+#' df <- searchForAccession("SRP026280") 
+#' order_columns <- list(df$study_accession, df$sample_accession, 
+#'     df$experiment_accession, df$run_accession, df$gsm)
 #' df <- df[orderAccessions(order_columns), ]
-#' }
+#' 
 #' 
 #' @seealso \code{\link[base]{order}}
 #' 
@@ -927,7 +936,7 @@ columnSelector <- function(df, df_columns, out_columns){
 #' @return Original data frame containing only columns specified in cols
 #' 
 #' @description 
-#' This is a universal function for extracting only columns of interest from a data frame. Related functions exist, with pre-defined sets of columns, see documentation for \code{\link{selectColumnsAccn}} ===*===
+#' This is a universal function for extracting only columns of interest from a data frame. Related functions exist, with pre-defined sets of columns, see documentation for \code{\link{selectColumnsAccession}} and \code{\link{selectColumnsOverview}}. 
 #' 
 #' 
 #' @export

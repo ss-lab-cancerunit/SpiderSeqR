@@ -46,7 +46,7 @@ local({
 setSpideROption <- local({function(name, value){
   
   if (name == "output_columns"){
-    if (!all(value %in% as.characterunlist(listValidColumns()))){
+    if (!all(value %in% as.character(unlist(listValidColumns())))){
       stop("Output columns must be within the set from listValidColumns()")
     }
   }

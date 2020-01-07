@@ -16,6 +16,8 @@ searchAnywhereSRA(SRA_query, acc_levels = c("run", "experiment",
 \item{SRA_library_strategy}{Character vector denoting library_strategy/ies of choice (OPTIONAL)}
 
 \item{SRA_other_library_strategy}{A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided}
+
+\item{...}{Other options}
 }
 \description{
 Fulltext search in SRA

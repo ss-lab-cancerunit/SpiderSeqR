@@ -831,7 +831,7 @@ rbindUniqueCols <- function(x, y, disregard_columns){
   #This was a bug!
   #indices <- (!duplicated(rbind(y_only_relevant, x_only_relevant)) )[-(1:nrow(x))]
 
-  indices <- (!duplicated(rbind(x_only_relevant, y_only_relevant)) )[-(1:nrow(x))]
+  indices <- (!duplicated(rbind(x_only_relevant, y_only_relevant)) )[-seq(1, nrow(x))]
 
   #DOES NOT WORK IF ONLY A SINGLE COLUMN REMAINS
   #indices <- (!duplicated(rbind(x[ , -(x_dc_indices)], y[ , -(y_dc_indices)])) )[-(1:nrow(x))]
@@ -1118,7 +1118,7 @@ inputDetector <- function(df){
   var_names <- c("necessary_names", "antibody_names", "match_names", "otherwise_names")
 
   for (v in seq_along(var_columns)){
-    if (class(get(var_columns[v])) == "list" | class(get(var_names[v])) == "list"){
+    if (methods::is(get(var_columns[v]), "list") | methods::is(get(var_names[v]), "list")){
       if (length(get(var_columns[v])) != length(get(var_names[v]))){
         mm(paste0("The following columns and names differ in length: ", paste(get(var_columns[v]), collapse = ", "), " and ", paste(get(var_names[v]), collapse = ", ")), "adverse")
         warning("Columns and names differ in length")
@@ -1266,7 +1266,7 @@ columnVerifier <- function(df, column_list){
   
   
   df_cols <- colnames(df)
-  if (class(column_list)=="list"){
+  if (methods::is(column_list, "list")){
     column_list <- unlist(column_list)
   }
 
@@ -1531,6 +1531,9 @@ mergeDetector <- function(df, do_nothing = FALSE){
     mm("mergeDetector completed", "fn")
     return(df)
   }
+  
+  n <- NULL
+  experiment_accession <- NULL
 
   df <- df %>%
     dplyr::add_count(experiment_accession) %>% #Count SRRx within SRX
@@ -1543,6 +1546,7 @@ mergeDetector <- function(df, do_nothing = FALSE){
   return(df)
 }
 #----------------------------------------------------------------------------
+
 
 
 #----------------------------------------------------------------------------

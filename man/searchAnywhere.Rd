@@ -14,6 +14,14 @@ searchAnywhere(query_all, acc_levels = c("run", "experiment", "sample",
 
 \item{acc_levels}{Accession levels at which the search is conducted}
 
+\item{category_both}{A character with category for SRA library strategy and GEO type}
+
+\item{SRA_library_strategy}{A character with SRA library strategy}
+
+\item{SRA_other_library_strategy}{A logical whether to include unclassified entries}
+
+\item{GEO_type}{A character with GEO type}
+
 \item{SRA_query}{Search term for SRA only}
 
 \item{GEO_query}{Search term for GEO only}
@@ -21,6 +29,8 @@ searchAnywhere(query_all, acc_levels = c("run", "experiment", "sample",
 \item{GSM_query}{Search term for gsm table only (GEO)}
 
 \item{GSE_query}{Search term for gse table only (GEO)}
+
+\item{...}{Other options}
 }
 \description{
 Search Anywhere within SRA and GEO databases (under construction!)

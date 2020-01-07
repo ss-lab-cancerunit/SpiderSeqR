@@ -54,6 +54,9 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
   #OPTIONAL: species, platform, SRA_secondary_library_strategy
 
   
+  OTH_input <- NULL
+  OTH_control <- NULL
+  
   #============================================================================
   # Checking arguments
   #============================================================================

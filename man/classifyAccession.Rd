@@ -32,8 +32,8 @@ Classify accessions
 }
 
 \examples{
-classifyAccession("GSM11111")
-classifyAccession(c("GSM11111", "GSE2222")) #Will throw error
+# classifyAccession("GSM11111")
+# classifyAccession(c("GSM11111", "GSE2222")) #Will throw error
 
 
 

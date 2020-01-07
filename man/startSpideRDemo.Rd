@@ -10,10 +10,10 @@ startSpideRDemo()
 Nothing. Create relevant connections in the Global Environment
 }
 \description{
-This is a minimalist version of \code{\link{startSpideR()}} function for use in package documentation examples and testing. It uses small extracts from the relevant databases to set up database files, just as \code{\link{startSpideR()}} would do. However, in contrast to \code{\link{startSpideR()}}, no files are created, because the database extracts are stored in memory.
+This is a minimalist version of \code{\link{startSpideR()}} function for use in package documentation examples and testing. It uses small extracts from the relevant databases to set up database files, just as \code{\link{startSpideR()}} would do. However, in contrast to \code{\link{startSpideR}}, no files are created, because the database extracts are stored in memory.
 }
 \details{
-To examine the data frames, which form the content of the databases, use them directly or search for extra documentation on these data files (\code{\link{?sra_demo}}, \code{\link{?srr_demo}}, \code{\link{?gse_demo}}, \code{\link{?gsm_demo)}}.
+To examine the data frames, which form the content of the databases, use them directly or search for extra documentation on these data files (\code{\link{sra_demo}}, \code{\link{srr_demo}}, \code{\link{gse_demo}}, \code{\link{gsm_demo}}.
 }
 \examples{
 startSpideRDemo() # The function does not take any arguments

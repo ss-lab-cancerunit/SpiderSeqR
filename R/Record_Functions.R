@@ -34,13 +34,26 @@ parameterRecordGenerator <- function(st, file, fun_name){
 
 
 callRecordGenerator <- function(file){
-  c <- match.call(def = sys.function(-1), call = sys.call(-1))
+  c <- match.call(definition = sys.function(-1), call = sys.call(-1))
   saveRDS(c, file = file)
 }
 
 
-
-reproduceResults <- function(file){
+#' Rerun SpideR query
+#' 
+#' @param file Query record generated at the time of query
+#' @return Rerun the query
+#' 
+#' @description 
+#' This function allows for repeating the same query without the need to re-type the parameters over and over again. The main application of this function is to update results after the database files have been updated (i.e. to check whether there are any more results than last time the query was run).
+#' 
+#' @examples 
+#' # rerunSpideR(file_name)
+#' 
+#' @export
+#' 
+#' 
+rerunSpideR <- function(file){
 
   ext_Rda <- grepl("*.Rda$", file)
   ext_tab <- grepl("*.tab$", file)
@@ -58,7 +71,7 @@ reproduceResults <- function(file){
     x <- readRDS(file)
 
     #Using output of callRecordGenerator
-    if (class(x)=="call"){
+    if (methods::is(x, "call")){
       eval(x)
     }
   }

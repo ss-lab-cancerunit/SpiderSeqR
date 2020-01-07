@@ -1,18 +1,18 @@
-#' SpideR: a tool for integration of Big Bio-Data
+#'SRAxGEOspideR: a tool for integration of SRA and GEO metadata
 #'
-#' SpideR integrates different sources of sequencing data and automates the search and retrieval of information.
+#' SpideR integrates two different sources of sequencing metadata and automates the search and retrieval of the information.
 #' 
 #' 
 #' 
 #' 
 #' 
-#' @section SpideR functions:
+#' @section SRAxGEOspideR functions:
 #' \itemize{
 #'   \item \code{\link{startSpideR}} - always run it before using SpideR
 #'   \item \code{\link{searchForTerm}} - search for experiments of interest
 #'   \item \code{\link{convertAccession}} - convert between accession types
 #'   \item \code{\link{searchForAccession}} - search for specific experiments (output similar to that of \code{\link{searchForTerm}})
-#'   \item \code{\link{reproduceResults}} (name to be changed) - run the queries again
+#'   \item \code{\link{rerunSpideR}} - run the queries again
 #'   \item \code{\link{getDatabaseInformation}} - get basic information on databases (interactive function)
 #' }
 #' 

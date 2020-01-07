@@ -13,14 +13,16 @@ filterByTerm(df, query, filter_columns = NULL)
 
 \item{filter_columns}{Character vector with column names}
 }
+\value{
+A data frame subset according to query conditions
+}
 \description{
 Filter a data frame using full-text search within the data frame. If filter_columns are not specified, search will be performed within the whole data frame. If filter_columns are provided, search will only be limited to these columns.
 Full-text search works akin to searching within web search engines like Google. You can find out more about it here: https://www.sqlite.org/fts3.html (fts3 is used for consistency with fts search within the SRAdb database).
 }
 \examples{
-\dontrun{
-    filterByTerm(df, "p53") # Filter by 'p53' anywhere within df
-    filterByTerm(df, "p53", "SRA_sample_attribute") # Filter by 'p53' within SRA_sample_attribute column
-}
+startSpideRDemo()
+df <- searchForAccession("SRP026280")
+df <- filterByTerm(df, "TRIMKD") # Filter by 'TRIMKD' anywhere within df
 
 }

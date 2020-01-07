@@ -1,4 +1,4 @@
-# SpideR
+# Spider-seqR
 
 
 ## Overview

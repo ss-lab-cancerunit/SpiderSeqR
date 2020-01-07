@@ -25,8 +25,8 @@
 #' @return Accession class (error if input does not match any)
 #' 
 #' @examples 
-#' classifyAccession("GSM11111")
-#' classifyAccession(c("GSM11111", "GSE2222")) #Will throw error
+#' # classifyAccession("GSM11111")
+#' # classifyAccession(c("GSM11111", "GSE2222")) #Will throw error
 #' 
 #' 
 #' 

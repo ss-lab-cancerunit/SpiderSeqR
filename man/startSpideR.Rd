@@ -94,4 +94,8 @@ startSpideR(dir = getwd(), sra_expiry = 365)
 
 
 
+startSpideR(getwd()) # Provide the location where the database files are
+
+
+
 }

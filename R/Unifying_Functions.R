@@ -50,7 +50,7 @@ unifyDFFormat <- function(df){
                     #"gsm_check", 
                     "OTH_n", "OTH_lane")
   
-  for (i in 1:dim(df)[2]){
+  for (i in seq(1, dim(df)[2])){
     #if (!colnames(df)[i] %in% numeric_cols){
     #  df[ , i] <- as.character(df[, i])
     #} else {

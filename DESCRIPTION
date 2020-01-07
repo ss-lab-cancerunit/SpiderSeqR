@@ -1,11 +1,9 @@
-Package: SpideR
+Package: SRAxGEOspideR
 Version: 0.1.0
 Title: A Tool for Integration of Big Bio Data
-Authors@R: c(person("A.", "Sozanska", role = c("aut", "cre"), email = "as2382@cam.ac.uk"), person("C.", "Fletcher", role = "aut"))
-Author: Anna Sozanska [aut, cre], Charlie Fletcher [aut]
-Maintainer: Anna Sozanska <as2382@cam.ac.uk>
+Authors@R: c(person("A.", "Sozanska", role = c("aut", "cre"), email = "as2382@cam.ac.uk"), person("C.", "Fletcher", role = "aut"),person("S.", "Samarajiwa", role = "aut", email = "ss861@cam.ac.uk"))
 Description: Integration of sequencing metadata from SRA and GEO for automatic search information retrieval.
-License: What license is it under?
+License: Artistic-2.0
 Encoding: UTF-8
 LazyData: true
 Suggests: 
@@ -15,12 +13,13 @@ Suggests:
 VignetteBuilder: knitr
 biocViews: Infrastructure, Sequencing, Microarray
 Depends:
-    R (>= 3.4)
+    R (>= 3.6)
 Imports:
     plyr (>= 1.8),
     dplyr (>= 0.7),
     DBI (>= 0.7),
     RSQLite (>= 2.0),
+    methods,
     tidyr,
     crayon,
     cli,

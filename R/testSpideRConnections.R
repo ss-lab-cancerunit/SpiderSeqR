@@ -31,7 +31,7 @@ testSpideRConnections <- function(){
 testEmbed <- function(){
   database_name <- "sra_con"
   database_env <- ".GlobalEnv"
-  return(testcon(get(database_name, envir = get(database_env))))
+  return(testCon(get(database_name, envir = get(database_env))))
 }
 
 testCon <- function(db_con){

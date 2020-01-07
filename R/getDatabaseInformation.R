@@ -19,6 +19,10 @@
 #'   \item (more in progress... ===*===)
 #' }
 #' 
+#' @examples 
+#' getDatabaseInformation()
+#' 
+#' 
 #' @export
 getDatabaseInformation <- function(){
   

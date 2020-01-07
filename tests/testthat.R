@@ -1,4 +1,4 @@
 library(testthat)
-library(SpideR)
+library(SRAxGEOspideR)
 
-test_check("SpideR")
+test_check("SRAxGEOspideR")

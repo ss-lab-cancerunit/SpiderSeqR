@@ -60,7 +60,7 @@ addMissingSamples <- function(df, values = c(1,0)){
 
   
   col_number <- dim(df)[2]
-  df <- df[ ,c(col_number, 1:col_number-1)] # Put the added column as the first
+  df <- df[ ,c(col_number, seq(1, col_number-1))] # Put the added column as the first
   
   return(df)
   

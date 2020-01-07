@@ -84,6 +84,9 @@
 #' 
 #' @return Nothing. If necessary, it may download/create database files. Sets up database connections in the global environment.
 #' 
+#' @examples 
+#' startSpideR(getwd()) # Provide the location where the database files are
+#' 
 #'
 #'
 #' @export
