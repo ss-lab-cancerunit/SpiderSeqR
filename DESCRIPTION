@@ -1,4 +1,4 @@
-Package: SRAxGEOspideR
+Package: SpiderSeqR
 Version: 0.1.0
 Title: A Tool for Integration of Big Bio Data
 Authors@R: c(person("A.", "Sozanska", role = c("aut", "cre"), email = "as2382@cam.ac.uk"), person("C.", "Fletcher", role = "aut"),person("S.", "Samarajiwa", role = "aut", email = "ss861@cam.ac.uk"))

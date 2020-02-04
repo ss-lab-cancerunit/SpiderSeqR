@@ -1,3 +1,3 @@
 checkDataHandling <- function(){
-  print(SRAxGEOspideR::SRA_GEO_Category_Conversion)
+  print(SpiderSeqR::SRA_GEO_Category_Conversion)
 }

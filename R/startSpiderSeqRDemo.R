@@ -1,19 +1,19 @@
 
-#' Prepare the environment to run SpideR DEMO
+#' Prepare the environment to run SpiderSeqR DEMO
 #' 
 #'
-#' This is a minimalist version of \code{\link{startSpideR()}} function for use in package documentation examples and testing. It uses small extracts from the relevant databases to set up database files, just as \code{\link{startSpideR()}} would do. However, in contrast to \code{\link{startSpideR}}, no files are created, because the database extracts are stored in memory.
+#' This is a minimalist version of \code{\link{startSpiderSeqR()}} function for use in package documentation examples and testing. It uses small extracts from the relevant databases to set up database files, just as \code{\link{startSpiderSeqR()}} would do. However, in contrast to \code{\link{startSpiderSeqR}}, no files are created, because the database extracts are stored in memory.
 #' 
 #' To examine the data frames, which form the content of the databases, use them directly or search for extra documentation on these data files (\code{\link{sra_demo}}, \code{\link{srr_demo}}, \code{\link{gse_demo}}, \code{\link{gsm_demo}}.
 #' 
 #' @return Nothing. Create relevant connections in the Global Environment
 #' 
 #' @examples 
-#' startSpideRDemo() # The function does not take any arguments
+#' startSpiderSeqRDemo() # The function does not take any arguments
 #' 
 #' @export
 #' 
-startSpideRDemo <- function(){
+startSpiderSeqRDemo <- function(){
   
   database_env <- ".GlobalEnv"
   
@@ -39,10 +39,10 @@ startSpideRDemo <- function(){
   
   
   
-  DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), name='gsm', value=SRAxGEOspideR::gsm_demo)
-  DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), name='gse', value=SRAxGEOspideR::gse_demo)
-  DBI::dbWriteTable(conn=get("srr_gsm", envir = get(database_env)), name='srr_gsm', value=SRAxGEOspideR::srr_demo)
-  DBI::dbWriteTable(conn=get("sra_con", envir = get(database_env)), name='sra', value=SRAxGEOspideR::sra_demo)
+  DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), name='gsm', value=SpiderSeqR::gsm_demo)
+  DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), name='gse', value=SpiderSeqR::gse_demo)
+  DBI::dbWriteTable(conn=get("srr_gsm", envir = get(database_env)), name='srr_gsm', value=SpiderSeqR::srr_demo)
+  DBI::dbWriteTable(conn=get("sra_con", envir = get(database_env)), name='sra', value=SpiderSeqR::sra_demo)
   createFtsTable("sra_con", "sra", "sra_ft")
   
 }
