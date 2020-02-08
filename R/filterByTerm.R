@@ -13,7 +13,7 @@
 #' Full-text search works akin to searching within web search engines like Google. You can find out more about it here: https://www.sqlite.org/fts3.html (fts3 is used for consistency with fts search within the SRAdb database).
 #' 
 #' @examples 
-#' startSpideRDemo()
+#' startSpiderSeqRDemo()
 #' df <- searchForAccession("SRP026280")
 #' df <- filterByTerm(df, "TRIMKD") # Filter by 'TRIMKD' anywhere within df
 #' 

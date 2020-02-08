@@ -9,7 +9,7 @@
 data(SRA_GEO_Category_Conversion)
 }
 \description{
-A manually curated set of conversions between SRA library_strategy and GEO (study) type. These categories can be used for convenience of searching for terms using SpideR functions.
+A manually curated set of conversions between SRA library_strategy and GEO (study) type. These categories can be used for convenience of searching for terms using SpiderSeqR functions.
 }
 \details{
 The categories were created with the following principles in mind:

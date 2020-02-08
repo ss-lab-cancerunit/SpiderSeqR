@@ -39,7 +39,7 @@ callRecordGenerator <- function(file){
 }
 
 
-#' Rerun SpideR query
+#' Rerun SpiderSeqR query
 #' 
 #' @param file Query record generated at the time of query
 #' @return Rerun the query
@@ -48,12 +48,13 @@ callRecordGenerator <- function(file){
 #' This function allows for repeating the same query without the need to re-type the parameters over and over again. The main application of this function is to update results after the database files have been updated (i.e. to check whether there are any more results than last time the query was run).
 #' 
 #' @examples 
-#' # rerunSpideR(file_name)
+#' # rerunSpiderSeqR(file_name)
 #' 
 #' @export
 #' 
 #' 
-rerunSpideR <- function(file){
+
+rerunSpiderSeqR <- function(file){
 
   ext_Rda <- grepl("*.Rda$", file)
   ext_tab <- grepl("*.tab$", file)

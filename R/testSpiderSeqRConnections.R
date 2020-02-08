@@ -1,9 +1,9 @@
 
-# Function for testing connections which will be used by SpideR
+# Function for testing connections which will be used by SpiderSeqR
 # Returns counts of total entries within the databases
 
 
-testSpideRConnections <- function(){
+testSpiderSeqRConnections <- function(){
   
   #DBI::dbGetQuery(.GlobalEnv$srr_gsm, "SELECT count(*) FROM srr_gsm")
   

@@ -6,8 +6,9 @@
 # Setup ####
 
 devtools::load_all()
-startSpideR(getwd())
+startSpiderSeqR(getwd())
 library(DBI)
+
 
 
 

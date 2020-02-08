@@ -1,12 +1,12 @@
 
-q <- getSpideROption("quiet")
+q <- getSpiderSeqROption("quiet")
 
 setup({
   print(q)
-  setSpideROption("quiet", TRUE)
+  setSpiderSeqROption("quiet", TRUE)
 })
 
 teardown({
   print(q)
-  setSpideROption("quiet", q)
+  setSpiderSeqROption("quiet", q)
 })

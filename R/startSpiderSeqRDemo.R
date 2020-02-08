@@ -1,8 +1,8 @@
 
-#' Prepare the environment to run SpiderSeqR DEMO
+#' Prepare the environment to run SpiderSeqR in DEMO mode
 #' 
 #'
-#' This is a minimalist version of \code{\link{startSpiderSeqR()}} function for use in package documentation examples and testing. It uses small extracts from the relevant databases to set up database files, just as \code{\link{startSpiderSeqR()}} would do. However, in contrast to \code{\link{startSpiderSeqR}}, no files are created, because the database extracts are stored in memory.
+#' This is a minimalist version of \code{\link{startSpiderSeqR()}} function for use as a package DEMO and in the package documentation examples and testing. It uses small extracts from the relevant databases to set up database files, just as \code{\link{startSpiderSeqR()}} would do. However, in contrast to \code{\link{startSpiderSeqR}}, no files are created, because the database extracts are stored in memory.
 #' 
 #' To examine the data frames, which form the content of the databases, use them directly or search for extra documentation on these data files (\code{\link{sra_demo}}, \code{\link{srr_demo}}, \code{\link{gse_demo}}, \code{\link{gsm_demo}}.
 #' 

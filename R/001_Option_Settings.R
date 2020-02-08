@@ -1,14 +1,14 @@
-# Default settings for SpideR options
+# Default settings for SpiderSeqR options
 
 
 #' Environment with default values of the package options
 #' 
 #' @description 
 #' Environment for storing values determining certain aspects of package functioning.
-#' To view the current value, please use \code{getSpideROption()}, to alter the current value, please use \code{setSpideROption()}.
+#' To view the current value, please use \code{getSpiderSeqROption()}, to alter the current value, please use \code{setSpiderSeqROption()}.
 #' 
 #' 
-spideREnv <- new.env()
+SpiderSeqREnv <- new.env()
 
 
 local({
@@ -16,7 +16,7 @@ local({
   assign("output_columns", NULL) # Amend
   assign("quiet", FALSE)
   assign("internal", FALSE)
-  }, spideREnv)
+  }, SpiderSeqREnv)
 
 
 
@@ -38,12 +38,12 @@ local({
 #' }
 #' 
 #' @examples 
-#' setSpideROption("file_output", FALSE)
-#' setSpideROption("output_columns", c("run_accession", "gsm"))
-#' setSpideROption("output_columns", listColumnSets()$Accession)
+#' setSpiderSeqROption("file_output", FALSE)
+#' setSpiderSeqROption("output_columns", c("run_accession", "gsm"))
+#' setSpiderSeqROption("output_columns", listColumnSets()$Accession)
 #' 
 #' @export
-setSpideROption <- local({function(name, value){
+setSpiderSeqROption <- local({function(name, value){
   
   if (name == "output_columns"){
     if (!all(value %in% as.character(unlist(listValidColumns())))){
@@ -58,7 +58,7 @@ setSpideROption <- local({function(name, value){
   }
   
   assign(name, value = value, envir = parent.env(environment()))
-}}, spideREnv)
+}}, SpiderSeqREnv)
 
 
 
@@ -68,13 +68,13 @@ setSpideROption <- local({function(name, value){
 #' @return Value of the variable
 #' 
 #' @examples 
-#' getSpideROption("file_output")
+#' getSpiderSeqROption("file_output")
 #' 
 #' @export
 #' 
-getSpideROption <- local({function(name){
+getSpiderSeqROption <- local({function(name){
   get(name)
-}}, spideREnv)
+}}, SpiderSeqREnv)
 
 #-----
 

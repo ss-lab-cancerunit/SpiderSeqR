@@ -18,7 +18,7 @@ Integer vector with order of indices
 \code{orderAccessions} orders character vectors or lists according to numbers, disregarding any lettrs.
 }
 \examples{
-startSpideRDemo()
+startSpiderSeqRDemo()
 df <- searchForAccession("SRP026280") 
 order_columns <- list(df$study_accession, df$sample_accession, 
     df$experiment_accession, df$run_accession, df$gsm)

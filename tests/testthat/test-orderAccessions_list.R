@@ -1,4 +1,4 @@
-setSpideROption("quiet", TRUE)
+setSpiderSeqROption("quiet", TRUE)
 
 
 context("orderAccessions (lists)")

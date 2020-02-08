@@ -1,8 +1,8 @@
 ---
-title: "Quick_SpideR"
+title: "Quick_SpiderSeqR"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Quick_SpideR}
+  %\VignetteIndexEntry{Quick_SpiderSeqR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---

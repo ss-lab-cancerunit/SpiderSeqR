@@ -1,7 +1,7 @@
 
 #Output_Functions.R
 
-#Stores functions necessary for output generation (with the exception of spider-wide functions like columnVerifier)
+#Stores functions necessary for output generation (with the exception of SpiderSeqR-wide functions like columnVerifier)
 
 #- outputGenerator() - main function
 #- filenameGenerator() - for generating file names
@@ -501,7 +501,7 @@ filenameGenerator_acc <- function(SRA_library_strategy, accession, output, file_
 #' @return Integer vector with order of indices
 #' 
 #' @examples
-#' startSpideRDemo()
+#' startSpiderSeqRDemo()
 #' df <- searchForAccession("SRP026280") 
 #' order_columns <- list(df$study_accession, df$sample_accession, 
 #'     df$experiment_accession, df$run_accession, df$gsm)
@@ -860,13 +860,13 @@ dbExtractGenerator <- function(df){
   mm("Running dbExtractGenerator", "fn")
   
   
-  if (is.null(getSpideROption("output_columns"))){  # output_columns is null - default setting
-    internal_pre <- getSpideROption("internal")
-    setSpideROption("internal", TRUE)
+  if (is.null(getSpiderSeqROption("output_columns"))){  # output_columns is null - default setting
+    internal_pre <- getSpiderSeqROption("internal")
+    setSpiderSeqROption("internal", TRUE)
     df_columns <- listColumnSets()$dbExtract
-    setSpideROption("internal", internal_pre)
+    setSpiderSeqROption("internal", internal_pre)
   } else { # output_columns user-defined
-    df_columns <- getSpideROption("output_columns")
+    df_columns <- getSpiderSeqROption("output_columns")
   }
   
   
@@ -1003,7 +1003,7 @@ listColumnSets <- function(){
   
   
   # For internal use:
-  if (getSpideROption("internal")==TRUE){
+  if (getSpiderSeqROption("internal")==TRUE){
     
     column_set[[length(column_set)+1]] <- c("run_accession",
                                                         "experiment_accession",

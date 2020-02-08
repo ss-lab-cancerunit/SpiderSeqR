@@ -1,5 +1,5 @@
 
-setSpideROption("quiet", TRUE)
+setSpiderSeqROption("quiet", TRUE)
 
 
 #manageLibraryStrategy("RNA", input = "syn", output = "can", mismatch.ignore = FALSE)

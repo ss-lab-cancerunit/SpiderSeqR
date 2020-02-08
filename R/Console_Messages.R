@@ -10,7 +10,7 @@ mm <- function(string, type){
   type <- match.arg(type, type_list, several.ok = FALSE)
   
   
-  if(!getSpideROption("quiet")){
+  if(!getSpiderSeqROption("quiet")){
     print(string)
   }
 }

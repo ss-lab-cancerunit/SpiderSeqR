@@ -18,7 +18,7 @@ A data frame (and file outputs, as appropriate) with matches to accession number
 Search for Accessions
 }
 \examples{
-startSpideRDemo()
+startSpiderSeqRDemo()
 df <- searchForAccession("SRP026280")
 
 }

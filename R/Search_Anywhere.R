@@ -674,7 +674,7 @@ convertCategoriesToLibraryStrategyType <- function(x){
   
   
   #utils::data("SRA_GEO_Category_Conversion", envir = environment())
-  df <- SpideR::SRA_GEO_Category_Conversion # Retrieve category conversion data frame
+  df <- SpiderSeqR::SRA_GEO_Category_Conversion # Retrieve category conversion data frame
   
   # Make matching case insensitive
   x <- tolower(x)

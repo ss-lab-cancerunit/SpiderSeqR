@@ -9,7 +9,7 @@
 #' 
 #' 
 #' @examples 
-#' startSpideRDemo()
+#' startSpiderSeqRDemo()
 #' df <- searchForAccession("SRP026280")
 #' 
 #' @export

@@ -32,7 +32,7 @@ getDatabaseInformation <- function(){
   
   
   
-  col_desc_table_info <- "NOTE: the following data frame is a convenient way of accessing the column description tables from databases of SRAdb and GEOmetadb packages. Currently GEO provides much better documented descriptions, whereas SRA column descriptions are only partially complete. Please note that SpideR only utilises information from gsm and gse tables of GEO and sra table for GEO (which includes collated information from most of the listed tables, i.e. run, experiment, sample, study, submission; however, some columns are renamed in sra and not all of the columns from the original accession-level tables are used in the sra table)."
+  col_desc_table_info <- "NOTE: the following data frame is a convenient way of accessing the column description tables from databases of SRAdb and GEOmetadb packages. Currently GEO provides much better documented descriptions, whereas SRA column descriptions are only partially complete. Please note that SpiderSeqR only utilises information from gsm and gse tables of GEO and sra table for GEO (which includes collated information from most of the listed tables, i.e. run, experiment, sample, study, submission; however, some columns are renamed in sra and not all of the columns from the original accession-level tables are used in the sra table)."
   
   
   cat(crayon::magenta("\n" %+% crayon::bold("getDatabaseInformation:") %+% " summaries and handy extracts from the databases\n"))
@@ -164,7 +164,7 @@ getDatabaseInformation <- function(){
 #' @return Data frame with column descriptions
 #' 
 #' This is a function for convenience of accessing column description tables for databases from SRAdb and GEOmetadb packages.
-#' Currently GEO provides much better documented descriptions, whereas SRA column descriptions are only partially complete. Please note that SpideR only utilises information from gsm and gse tables of GEO and sra table for GEO (which includes collated information from most of the listed tables, i.e. run, experiment, sample, study, submission).
+#' Currently GEO provides much better documented descriptions, whereas SRA column descriptions are only partially complete. Please note that SpiderSeqR only utilises information from gsm and gse tables of GEO and sra table for GEO (which includes collated information from most of the listed tables, i.e. run, experiment, sample, study, submission).
 #' 
 #' 
 #' Currently a duplicate of functionality from \code{getDatabaseInformation()}
