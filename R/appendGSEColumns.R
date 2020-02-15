@@ -56,12 +56,14 @@ appendGSEColumns <- function(df, gse_columns){
   
   # Checks and housekeeping (arguments) ####
   if (missing(gse_columns)){
-    warning("No gse_columns provided")
+    message("No gse_columns provided")
+    #warning("No gse_columns provided")
     return(df)
   }
   
   if (is.null(gse_columns)){
-    warning("No gse_columns provided")
+    message("No gse_columns provided")
+    #warning("No gse_columns provided")
     return(df)
   }
   

@@ -263,7 +263,8 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, geo_columns, 
     #...
     
     #SRA data frame
-    if(length(srr_gsm_df$run_accession)!=0){ # Only search SRA if there is viable GEO/SRA conversion
+    if(sum(grepl("SRR\\d\\d\\d+", srr_gsm_df$run_accession)>0)){
+    #if(length(srr_gsm_df$run_accession)!=0){ # Only search SRA if there is viable GEO/SRA conversion
       sra_df <- searchSRAForAccession(srr_gsm_df$run_accession, sra_columns)
     } else { # Generate an empty data frame if no results in SRR_GSM
       if (length(sra_columns) == 1 & sra_columns[1] == "*"){
@@ -338,7 +339,8 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, geo_columns, 
     
     
     #GEO data frame
-    if(length(srr_gsm_df$gsm)!=0){ # Only search GEO if there is viable SRA/GEO conversion
+    if (sum(grepl("GSM\\d\\d\\d+", srr_gsm_df$gsm)>0)){
+    #if(length(srr_gsm_df$gsm)!=0){ # Only search GEO if there is viable SRA/GEO conversion
       geo_df <- searchGEOForGSM(srr_gsm_df$gsm, geo_columns, gse_columns)
     } else { # Generate an empty data frame if no results in SRR_GSM
       
@@ -351,16 +353,26 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, geo_columns, 
       df_gsm <- stats::setNames(data.frame(matrix(ncol = length(df_gsm_columns), nrow = 0)), df_gsm_columns)
       df_gsm <- renameGSMColumns(df_gsm)
       
-      # GSE
-      if (length(gse_columns) == 1 & gse_columns[1] == "*"){
-        df_gse_columns <- listGSEFields() # Set sql_geo_columns to the list of all
-      } else {
-        df_gse_columns <- gse_columns # Otherwise keep all of them intact
-      }
-      df_gse <- stats::setNames(data.frame(matrix(ncol = length(df_gse_columns), nrow = 0)), df_gse_columns)
-      df_gse <- renameGSEColumns(df_gse)
       
-      geo_df <- cbind(df_gsm, df_gse)
+      # GSE
+      
+      if (is.null(gse_columns)){
+        geo_df <- df_gsm
+      } else {
+        
+        if (length(gse_columns) == 1 & gse_columns[1] == "*"){
+          df_gse_columns <- listGSEFields() # Set sql_geo_columns to the list of all
+        } else {
+          df_gse_columns <- gse_columns # Otherwise keep all of them intact
+        }
+        df_gse <- stats::setNames(data.frame(matrix(ncol = length(df_gse_columns), nrow = 0)), df_gse_columns)
+        df_gse <- renameGSEColumns(df_gse)
+        
+        geo_df <- cbind(df_gsm, df_gse)
+        
+      }
+      
+      
 
     }
     
@@ -486,8 +498,11 @@ convertAccession <- function(acc_vector){
   geo_columns <- c("gsm", "series_id")
   #srr_gsm_columns <- c("gsm", "gsm_check", "run_accession") # Not needed (searchSRR_GSM has defaults)
   sra_columns <- c("run_accession", "experiment_accession", "sample_accession", "study_accession")
+  
+  output_df <- suppressMessages(searchForAccessionAcrossDBsDF(acc_vector, geo_columns = geo_columns, sra_columns = sra_columns, gse_columns = NULL))
+  # Suppress messages to prevent the message from appendGSEColumns about no columns being needed
 
-  output_df <- searchForAccessionAcrossDBsDF(acc_vector, geo_columns = geo_columns, sra_columns = sra_columns, gse_columns = NULL)
+  #output_df <- searchForAccessionAcrossDBsDF(acc_vector, geo_columns = geo_columns, sra_columns = sra_columns, gse_columns = NULL)
   # NOTE: if gse_columns include ath else, add it to extracted columns below
   
   # Reorder columns (order always the same, regardless of accession type)
@@ -504,6 +519,9 @@ convertAccession <- function(acc_vector){
                         output_df$gsm)
   
   output_df <- output_df[orderAccessions(order_columns), ]
+  
+  
+  output_df <- unifyDFFormat(output_df)
   
   return(output_df)
 
