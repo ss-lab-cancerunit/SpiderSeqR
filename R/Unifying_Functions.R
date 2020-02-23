@@ -60,6 +60,7 @@ unifyDFFormat <- function(df){
     df[, i] <- as.character(df[,i])
 
   }
+  row.names(df) <- NULL
   
   return(df)
 }
