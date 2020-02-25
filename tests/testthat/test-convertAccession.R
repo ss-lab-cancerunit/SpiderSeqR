@@ -1,5 +1,4 @@
-
-context("convertAccession")
+context("Accession Conversion")
 
 #' Testing conversion between databases
 #' Things to be verified
@@ -12,24 +11,11 @@ context("convertAccession")
 
 
 
+
 # Setup ####
 
 n_tests <- 5
-demo <- TRUE
 
-#n_tests <- 1
-#demo <- FALSE # only commutative atm
-
-
-if (demo){
-  setSpiderSeqROption("quiet", TRUE)
-  startSpiderSeqRDemo()
-} else {
-  ori_wd <- getwd()
-  startSpiderSeqR("C:/DD/Projects/SpideRs/SpiderSeqR-Auxillaries/Database_Files", general_expiry = 100000)
-  setwd(ori_wd)
-  setSpiderSeqROption("quiet", TRUE)
-}
 
 
 
@@ -109,160 +95,23 @@ randomGEO <- function(x = c("gsm", "gse"), n = 1, max_gsms = 100){
 
 
 
+
 # Commutative ####
 
 
-
-
-# SRA first
-
-i <- 0
-while (i < n_tests){ # Test up to n times
+test_that("Commutative conversion SRA -> GEO", {
   
-  # Get random SRP
-  if (demo){
+  i <- 0
+  while (i < get("n_tests", env = parent.env(environment()))){
     x <- sample(unique(sra_demo$study_accession), 1)
-  } else {
-    x <- randomSRA("study_accession", 1)
-  }
-  
-  
-  sra_input <- convertAccession(x)
-  
-  if (sum(grepl("GSM\\d\\d\\d+", sra_input$gsm))>0){
-    i <- i + 1
-    geo_input <- convertAccession(sra_input$gsm)
-    test_that("Commutative conversion SRA -> GEO", {
-      expect_identical(sra_input, geo_input)
-    })
-  }
-  
-}
-
-
-
-
-# GEO first
-
-i <- 0
-while (i < n_tests){ # Test up to n times
-  
-  if (demo){
-    #x <- sample(unique(gse_demo$gse), 1)
-    x <- sample(unique(unlist(strsplit(gsm_demo$series_id, split = ","))), 1)
-  } else {
-    x <- randomGEO("gse", 1)
-  }
-  
-  
-  
-  geo_input <- convertAccession(x)
-  
-  if (sum(grepl("SRR\\d\\d\\d+", geo_input$run_accession))>0){
-    i <- i + 1
-    sra_input <- convertAccession(geo_input$run_accession)
-    test_that("Commutative conversion GEO -> SRA", {
-      expect_identical(geo_input, sra_input)
-      
-    })
-  }
-}
-
-
-
-
-
-# Associative ####
-
-# SRA first
-
-for (i in 1:n_tests){
-  x <- sample(unique(sra_demo$study_accession), 3)
-  
-  x1 <- convertAccession(x[1])
-  x2 <- convertAccession(x[2])
-  x3 <- convertAccession(x[3])
-  
-  x_123 <- rbind(x1, x2, x3)
-  
-  x_123 <- unifyDFFormat(x_123)
-  
-  x_all <- convertAccession(x)
-  
-  
-  test_that("Associative SRA -> GEO", {
-    expect_identical(x_123, x_all)
-  })
-}
-
-
-
-# GEO first
-
-for (i in 1:n_tests){
-  x <- sample(unique(gse_demo$gse), 3)
-  
-  x1 <- convertAccession(x[1])
-  x2 <- convertAccession(x[2])
-  x3 <- convertAccession(x[3])
-  
-  x_123 <- rbind(x1, x2, x3)
-  
-  x_123 <- unifyDFFormat(x_123)
-  
-  x_all <- convertAccession(x)
-  
-  
-  test_that("Associative GEO -> SRA", {
-    expect_identical(x_123, x_all)
-  })
-}
-
-
-
-
-
-
-# Count check ####
-
-# SRA (study_accession ONLY)
-
-
-for (i in 1:n_tests){
-  x <- sample(sra_demo$study_accession, 1)
-  
-  x_count <- as.numeric(DBI::dbGetQuery(sra_con, paste0("SELECT count(DISTINCT run_accession) FROM sra WHERE study_accession = '", x, "'")))
-  
-  x_conv <- convertAccession(x)
-  
-  test_that("Equal count SRA", {
-    expect_equal(x_count, length(unique(x_conv$run_accession)))
     
-  })
-  
-}
+    sra_input <- convertAccession(x)
+    
+    if (sum(grepl("GSM\\d\\d\\d+", sra_input$gsm))>0){
+      i <- i + 1
+      geo_input <- convertAccession(sra_input$gsm)
+      expect_identical(sra_input, geo_input)
+    }
+  }
 
-
-
-
-# GEO (series_id ONLY)
-
-
-for (i in 1:n_tests){
-  x <- sample(gse_demo$gse, 1)
-  
-  x_count <- as.numeric(DBI::dbGetQuery(geo_con, paste0("SELECT count(DISTINCT gsm) FROM gsm WHERE series_id LIKE '%", x, ",%' OR series_id LIKE '%", x, "'")))
-  
-  x_conv <- convertAccession(x)
-  test_that("Equal count GEO", {
-    expect_equal(x_count, length(unique(x_conv$gsm)))
-  })
-}
-
-
-
-
-
-
-
-
+})
