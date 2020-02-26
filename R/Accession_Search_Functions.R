@@ -48,7 +48,7 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
     if (!(length(geo_columns) == 1 & geo_columns[1] == "*")){
       geo_columns <- c("gsm", "series_id", geo_columns)
       geo_columns <- unique(geo_columns)
-      warning("Added gsm and series_id columns to facilitate merging with gse table")
+      message("Added gsm and series_id columns to facilitate merging with gse table")
     }
   }
   
@@ -115,7 +115,7 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
     if (!(length(geo_columns) == 1 & geo_columns[1] == "*")){
       geo_columns <- c("gsm", "series_id", geo_columns)
       geo_columns <- unique(geo_columns)
-      warning("Added gsm and series_id columns to facilitate merging with gse table")
+      message("Added gsm and series_id columns to facilitate merging with gse table")
     }
   }
   
