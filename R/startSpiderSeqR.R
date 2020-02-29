@@ -429,6 +429,8 @@ startSpiderSeqR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_
   .GlobalEnv$geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
   .GlobalEnv$srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), dbname = srr_gsm_file)
   
+  setwd(ori_wd)
+  
   mm("==========================================================", "search")
   mm(paste0("Further info on ", sra_file, " database:"), "search")
   mm("==========================================================", "search")
@@ -443,6 +445,6 @@ startSpiderSeqR <- function(dir, general_expiry=90, sra_expiry, geo_expiry, srr_
   mm("Welcome to SpiderSeqR", "search")
   
   
-  setwd(ori_wd)
+  
   
 }
