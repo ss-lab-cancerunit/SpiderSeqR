@@ -4,7 +4,7 @@
 #searchForAccessionAcrossDBsDF - initial accessionConverter with more function arguments (i.e. table columns for sra and geo)
 # 
 #CHANGED
-#convertAccession (previously accessionConverter) - a wrapper around searchForAccessionAcrossDBs
+#convertAccession (previously accessionConverter) - a wrapper around searchForAccessionAcrossDBsDF
 #Converts a list of accessions (of one type) into all possible accessions within SRA and GEO
 
 
@@ -13,14 +13,15 @@
 
 
 #'
-#'  Search for accession across databases
+#'  Search for accession across databases (DEPRECATED)
 #' 
 #' \code{searchForAccessionAcrossDBs} classifies accessions, searches for them in their original database (SRA or GEO), then, if conversion is possible, searches for corresponding accessions in the other database (SRA or GEO). If no conversion is possible, the columns from the corresponding database are returned empty (NAs).
 #' 
 #' 
 #' @param acc_vector A vector of accessions \strong{(all must belong to the same type)}
 #' @param sra_columns A character vector with names of the columns to be returned from SRA
-#' @param geo_columns A character vector with names of the columns to be returned from GEO
+#' @param geo_columns A character vector with names of the columns to be returned from GEO (GSM)
+#' @param gse_columns A character vector with names of the columns to be returned from GEO (GSE)
 #' @return A data frame with the results of the query
 #' 
 #' @examples
@@ -205,7 +206,9 @@ searchForAccessionAcrossDBs <- function(acc_vector, sra_columns, geo_columns, gs
 #' @return A data frame with the results of the query
 #' 
 #' @examples
-#' #searchForAccessionAcrossDBsDF("GSE45530", "*", "*", "*") # df argument is optional
+#' # Setup SpiderSeqR environment first (please use non-demo version)
+#' startSpiderSeqRDemo()
+#' searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") # df argument is optional
 #' 
 #' # If using named arguments, it is not necessary to provide columns from the original df
 #' searchForAccessionAcrossDBsDF(acc_vector = df$gsm, sra_columns = "*", df = df) 
@@ -423,18 +426,20 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, geo_columns, 
 #' @return A data frame with conversion between all accession types
 #' @examples
 #' 
-#' convertAccession(c("SRP010068", "SRP020088"))
+#' # Setup SpiderSeqR environment first (please use non-demo version)
+#' startSpiderSeqRDemo()
 #' 
-#' convertAccession("GSE1") # Only in GEO. Takes a while because GSE1... is ubiquitous
-#' convertAccession(c("GSE1", "GSE45530")) # Mixed GEO/SRA. Takes a while because GSE1... is ubiquitous
+#' convertAccession("SRP134708")
 #' 
-#' convertAccession("ERP016268") # Only in SRA
-#' convertAccession(c("ERP016268", "SRP020088")) # Mixed SRA/GEO
+#' # Note that DRP, ERP and SRP are of the same accession type (study level)
+#' convertAccession(c("DRP003157", "SRP061795"))
+#' 
+#' convertAccession("SRR3707942")
+#' 
+#' convertAccession("GSM2027840")
 #' 
 #' 
-#' 
-#' 
-#' 
+#'  
 #' @section Accepted Accession Types:
 #' \code{convertAccession} accepts any of the 4 SRA or 2 GEO accession types (see section \emph{'Background Information on Accession Types')}. 
 #' \code{convertAccession} accepts only one accession type at a time. 
@@ -463,7 +468,7 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, geo_columns, 
 #' }
 #' 
 #' NOTE: because the SRR_GSM.sqlite database is machine-generated, there is some risk that it might not include some conversions in case they have been recorded in the database in a non-standard way. If in doubt, it is worth checking the accession page online.
-#' However, users should be aware that the overlap between SRA and GEO is only about 20% (at the time of writing), so most entries will not have corresponding accession numbers in the other database
+#' However, users should be aware that the overlap between SRA and GEO is only about 20\% (at the time of writing), so most entries will not have corresponding accession numbers in the other database
 #' 
 #' 
 #' 
@@ -474,10 +479,10 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, geo_columns, 
 #' 
 #' \strong{SRA}
 #' \enumerate{
-#'     \item SRP(/DRP/ERP) - project_accession
-#'     \item SRS(/DRS/ERS) - sample_accession
-#'     \item SRX(/DRX/ERX) - experiment_accession
-#'     \item SRR(/DRR/ERR) - run_accession
+#'     \item SRP or DRP or ERP - project_accession
+#'     \item SRS or DRS or ERS - sample_accession
+#'     \item SRX or DRX or ERX - experiment_accession
+#'     \item SRR or DRR or ERR - run_accession
 #' }
 #' 
 #' NOTE: depending on the location of the database (NCBI, EBI or DDBJ), these accessions might begin with a different letter (S, E or D), so the accession levels can be either SRP/SRX/SRS/SRR or ERP/ERX/ERS/ERR or DRP/DRX/DRS/ERR. Accessions beginning with 'S' are by far the most common.

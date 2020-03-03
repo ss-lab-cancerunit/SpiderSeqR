@@ -57,15 +57,22 @@ filterByTerm <- function(df, query, filter_columns=NULL){
 
   df_subset <- df[, col_ind]
 
+  print(class(df_subset))
+  #print(df_subset)
+  .GlobalEnv$temp_df_subset <- df_subset
   
   # Create db
-  filter_db_file <- "filter_db.sqlite"
+  ##filter_db_file <- "filter_db.sqlite"
   
-  if (file.exists(filter_db_file)) file.remove(filter_db_file)
+  ##if (file.exists(filter_db_file)) file.remove(filter_db_file)
+  
+  #----if (dim(df)[1] ==0) stop("Empty data frame")
+  #----df <- as.data.frame(df)
   
   
-  .GlobalEnv$filter_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = filter_db_file)
-  DBI::dbWriteTable(conn = filter_con, name="df", value = df_subset)
+  ##.GlobalEnv$filter_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = filter_db_file)
+  .GlobalEnv$filter_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = ":memory:")
+  RSQLite::dbWriteTable(conn = filter_con, name="df", value = df_subset, field.types = NULL, row.names = FALSE, append = TRUE)
   
   # Create fts table of the db
   createFtsTable("filter_con", "df", "df_ft")
@@ -74,7 +81,7 @@ filterByTerm <- function(df, query, filter_columns=NULL){
   filt_ord <- DBI::dbGetQuery(.GlobalEnv$filter_con, query)$ord # This will be a df
   
   DBI::dbDisconnect(filter_con)
-  file.remove(filter_db_file)
+  ##file.remove(filter_db_file)
   rm(filter_con, envir = .GlobalEnv)
   
   df <- df %>% dplyr::filter(ord %in% filt_ord)

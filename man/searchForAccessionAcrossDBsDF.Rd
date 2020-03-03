@@ -28,7 +28,9 @@ When data frame argument is provided, corresponding columns (sra_columns for SRA
 }
 
 \examples{
-#searchForAccessionAcrossDBsDF("GSE45530", "*", "*", "*") # df argument is optional
+# Setup SpiderSeqR environment first (please use non-demo version)
+startSpiderSeqRDemo()
+searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") # df argument is optional
 
 # If using named arguments, it is not necessary to provide columns from the original df
 searchForAccessionAcrossDBsDF(acc_vector = df$gsm, sra_columns = "*", df = df) 

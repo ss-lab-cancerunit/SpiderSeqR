@@ -2,7 +2,7 @@
 % Please edit documentation in R/Accession_Conversion_Functions.R
 \name{searchForAccessionAcrossDBs}
 \alias{searchForAccessionAcrossDBs}
-\title{Search for accession across databases}
+\title{Search for accession across databases (DEPRECATED)}
 \usage{
 searchForAccessionAcrossDBs(acc_vector, sra_columns, geo_columns,
   gse_columns)
@@ -12,7 +12,9 @@ searchForAccessionAcrossDBs(acc_vector, sra_columns, geo_columns,
 
 \item{sra_columns}{A character vector with names of the columns to be returned from SRA}
 
-\item{geo_columns}{A character vector with names of the columns to be returned from GEO}
+\item{geo_columns}{A character vector with names of the columns to be returned from GEO (GSM)}
+
+\item{gse_columns}{A character vector with names of the columns to be returned from GEO (GSE)}
 }
 \value{
 A data frame with the results of the query
