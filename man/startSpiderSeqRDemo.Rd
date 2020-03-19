@@ -10,7 +10,7 @@ startSpiderSeqRDemo()
 Nothing. Create relevant connections in the Global Environment
 }
 \description{
-This is a minimalist version of \code{\link{startSpiderSeqR()}} function for use as a package DEMO and in the package documentation examples and testing. It uses small extracts from the relevant databases to set up database files, just as \code{\link{startSpiderSeqR()}} would do. However, in contrast to \code{\link{startSpiderSeqR}}, no files are created, because the database extracts are stored in memory.
+This is a minimalist version of \code{\link{startSpiderSeqR}} function for use as a package DEMO and in the package documentation examples and testing. It uses small extracts from the relevant databases to set up database files, just as \code{\link{startSpiderSeqR}} would do. However, in contrast to \code{\link{startSpiderSeqR}}, no files are created, because the database extracts are stored in memory.
 }
 \details{
 To examine the data frames, which form the content of the databases, use them directly or search for extra documentation on these data files (\code{\link{sra_demo}}, \code{\link{srr_demo}}, \code{\link{gse_demo}}, \code{\link{gsm_demo}}.
@@ -19,3 +19,7 @@ To examine the data frames, which form the content of the databases, use them di
 startSpiderSeqRDemo() # The function does not take any arguments
 
 }
+\seealso{
+Other SpiderSeqR setup functions: \code{\link{startSpiderSeqR}}
+}
+\concept{SpiderSeqR setup functions}

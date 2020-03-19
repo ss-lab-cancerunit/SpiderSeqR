@@ -12,11 +12,11 @@ SpiderSeqREnv <- new.env()
 
 
 local({
-  assign("file_output", TRUE)
-  assign("output_columns", NULL) # Amend
-  assign("quiet", FALSE)
-  assign("internal", FALSE)
-  }, SpiderSeqREnv)
+    assign("file_output", TRUE)
+    assign("output_columns", NULL) # Amend
+    assign("quiet", FALSE)
+    assign("internal", FALSE)
+}, SpiderSeqREnv)
 
 
 
@@ -44,20 +44,20 @@ local({
 #' 
 #' @export
 setSpiderSeqROption <- local({function(name, value){
-  
-  if (name == "output_columns"){
-    if (!all(value %in% as.character(unlist(listValidColumns())))){
-      stop("Output columns must be within the set from listValidColumns()")
+    
+    if (name == "output_columns"){
+        if (!all(value %in% as.character(unlist(listValidColumns())))){
+            stop("Output columns must be within the set from listValidColumns()")
+        }
     }
-  }
-  
-  if (name == "file_output"){
-    if (!value %in% c(TRUE, FALSE) ){
-      stop("File output needs to be logical")
+    
+    if (name == "file_output"){
+        if (!value %in% c(TRUE, FALSE) ){
+            stop("File output needs to be logical")
+        }
     }
-  }
-  
-  assign(name, value = value, envir = parent.env(environment()))
+    
+    assign(name, value = value, envir = parent.env(environment()))
 }}, SpiderSeqREnv)
 
 
@@ -73,7 +73,7 @@ setSpiderSeqROption <- local({function(name, value){
 #' @export
 #' 
 getSpiderSeqROption <- local({function(name){
-  get(name)
+    get(name)
 }}, SpiderSeqREnv)
 
 #-----

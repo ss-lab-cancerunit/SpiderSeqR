@@ -4,17 +4,17 @@
 
 
 testSpiderSeqRConnections <- function(){
-  
-  #DBI::dbGetQuery(.GlobalEnv$srr_gsm, "SELECT count(*) FROM srr_gsm")
-  
-  print(paste0("Entries in sra_con (SRR): ", as.numeric(DBI::dbGetQuery(get("sra_con", envir = .GlobalEnv), "SELECT count(*) FROM sra"))))
-  
-  print(paste0("Entries in geo_con (GSM): ", as.numeric(DBI::dbGetQuery(get("geo_con", envir = .GlobalEnv), "SELECT count(*) FROM gsm"))))
-  
-  print(paste0("Entries in geo_con (GSE): ", as.numeric(DBI::dbGetQuery(get("geo_con", envir = .GlobalEnv), "SELECT count(*) FROM gse"))))
-  
-  print(paste0("Entries in srr_gsm (SRR/GSM): ", as.numeric(DBI::dbGetQuery(get("srr_gsm", envir = .GlobalEnv), "SELECT count(*) FROM srr_gsm"))))
-  
+    
+    #DBI::dbGetQuery(.GlobalEnv$srr_gsm, "SELECT count(*) FROM srr_gsm")
+    
+    print(paste0("Entries in sra_con (SRR): ", as.numeric(DBI::dbGetQuery(get("sra_con", envir = .GlobalEnv), "SELECT count(*) FROM sra"))))
+    
+    print(paste0("Entries in geo_con (GSM): ", as.numeric(DBI::dbGetQuery(get("geo_con", envir = .GlobalEnv), "SELECT count(*) FROM gsm"))))
+    
+    print(paste0("Entries in geo_con (GSE): ", as.numeric(DBI::dbGetQuery(get("geo_con", envir = .GlobalEnv), "SELECT count(*) FROM gse"))))
+    
+    print(paste0("Entries in srr_gsm (SRR/GSM): ", as.numeric(DBI::dbGetQuery(get("srr_gsm", envir = .GlobalEnv), "SELECT count(*) FROM srr_gsm"))))
+    
 }
 
 
@@ -29,11 +29,11 @@ testSpiderSeqRConnections <- function(){
 # Checking whether embedding connections works
 
 testEmbed <- function(){
-  database_name <- "sra_con"
-  database_env <- ".GlobalEnv"
-  return(testCon(get(database_name, envir = get(database_env))))
+    database_name <- "sra_con"
+    database_env <- ".GlobalEnv"
+    return(testCon(get(database_name, envir = get(database_env))))
 }
 
 testCon <- function(db_con){
-  as.numeric(DBI::dbGetQuery(db_con, "SELECT count(*) FROM sra"))
+    as.numeric(DBI::dbGetQuery(db_con, "SELECT count(*) FROM sra"))
 }

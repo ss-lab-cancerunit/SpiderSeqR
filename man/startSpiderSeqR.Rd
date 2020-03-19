@@ -99,3 +99,7 @@ startSpiderSeqR(getwd()) # Provide the location where the database files are
 
 
 }
+\seealso{
+Other SpiderSeqR setup functions: \code{\link{startSpiderSeqRDemo}}
+}
+\concept{SpiderSeqR setup functions}

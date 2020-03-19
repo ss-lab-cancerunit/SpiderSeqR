@@ -49,39 +49,39 @@
 #' @keywords internal
 #' 
 createFtsTable <- function(database_name, table_name, new_table_name){
-  
-  table_list <- DBI::dbListTables(get(database_name, envir = .GlobalEnv))
-  if (new_table_name %in% table_list) stop("The table already exists")
-  
-  
-  # Create table
-  column_names <- DBI::dbListFields(get(database_name, envir = .GlobalEnv), table_name)
-  column_names <- paste0(column_names, collapse = "", sep = ", ")
-  column_names <- substr(column_names, 1, nchar(column_names)-2)
-  
-  # NOTE: fts4 used previously, but SRAdb uses fts3
-  creation_query <- paste0("CREATE VIRTUAL TABLE ", new_table_name, " USING fts3 (", column_names, ")")
-  mm(creation_query, "query")
-  rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), creation_query)
-  DBI::dbClearResult(rs)
-  
-  mm("Number of entries to be copied:", "prog")
-  mm(as.numeric(DBI::dbGetQuery(get(database_name, envir = .GlobalEnv), paste0("SELECT count(*) FROM ", table_name))), "prog")
-  
-  # Insert contents into table
-  insertion_query <- paste0("INSERT INTO ", new_table_name, " SELECT * FROM ", table_name)
-  mm(insertion_query, "query")
-  rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), insertion_query)
-  DBI::dbClearResult(rs)
-  
-  mm("Number of entries in new table:", "prog")
-  mm(as.numeric(DBI::dbGetQuery(get(database_name, envir = .GlobalEnv), paste0("SELECT count(*) FROM ", new_table_name))), "prog")
-  
-  # Optimise the database
-  optimisation_query <- paste0( "INSERT INTO ", new_table_name, "(", new_table_name, ")", " VALUES('optimize')")
-  rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), optimisation_query)
-  DBI::dbClearResult(rs)
-  
+    
+    table_list <- DBI::dbListTables(get(database_name, envir = .GlobalEnv))
+    if (new_table_name %in% table_list) stop("The table already exists")
+    
+    
+    # Create table
+    column_names <- DBI::dbListFields(get(database_name, envir = .GlobalEnv), table_name)
+    column_names <- paste0(column_names, collapse = "", sep = ", ")
+    column_names <- substr(column_names, 1, nchar(column_names)-2)
+    
+    # NOTE: fts4 used previously, but SRAdb uses fts3
+    creation_query <- paste0("CREATE VIRTUAL TABLE ", new_table_name, " USING fts3 (", column_names, ")")
+    mm(creation_query, "query")
+    rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), creation_query)
+    DBI::dbClearResult(rs)
+    
+    mm("Number of entries to be copied:", "prog")
+    mm(as.numeric(DBI::dbGetQuery(get(database_name, envir = .GlobalEnv), paste0("SELECT count(*) FROM ", table_name))), "prog")
+    
+    # Insert contents into table
+    insertion_query <- paste0("INSERT INTO ", new_table_name, " SELECT * FROM ", table_name)
+    mm(insertion_query, "query")
+    rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), insertion_query)
+    DBI::dbClearResult(rs)
+    
+    mm("Number of entries in new table:", "prog")
+    mm(as.numeric(DBI::dbGetQuery(get(database_name, envir = .GlobalEnv), paste0("SELECT count(*) FROM ", new_table_name))), "prog")
+    
+    # Optimise the database
+    optimisation_query <- paste0( "INSERT INTO ", new_table_name, "(", new_table_name, ")", " VALUES('optimize')")
+    rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), optimisation_query)
+    DBI::dbClearResult(rs)
+    
 }
 
 

@@ -17,3 +17,8 @@ Data frame with added missing rows from the same GSE/SRP. It will also contain a
 \description{
 This function is intended to facilitate workflow with the results of \code{searchAnywhere()} function. The main motivation is to provide missing samples that did not match the query criteria, but might be useful when searching for controls
 }
+\examples{
+
+
+}
+\concept{SpiderSeqR workflow functions}

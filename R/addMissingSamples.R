@@ -5,65 +5,71 @@
 #' @param df Data frame (must be in searchForAccession or searchAnywhere output format)
 #' @param values A vector (length 2) indicating what will be the values assigned to the original df rows and to added rows respectively
 #' @return Data frame with added missing rows from the same GSE/SRP. It will also contain an additional column to indicate whether the row was originally present or not
+#' @family SpiderSeqR workflow functions
 #' 
 #' @description 
 #' This function is intended to facilitate workflow with the results of \code{searchAnywhere()} function. The main motivation is to provide missing samples that did not match the query criteria, but might be useful when searching for controls 
 #' 
+#' @examples 
+#' 
+#' 
+#' @export
+#' 
 addMissingSamples <- function(df, values = c(1,0)){
-  
-  # General logic:
-  # Check format - whether it adheres to all the column names etc
-  # Add column to original df - OTH_Ori
-  # Search for accession SRP
-  # Bind
-  # Split, unlist and unique GSEs
-  # Search for accession GSEs
-  # Bind 
-  
-
-  checkValidColumns(df) # Check that column names are within allowed set
-  
-  if ( (!"study_accession" %in% colnames(df)) | (!"series_id" %in% colnames(df))){
-    stop("Missing required columns: study_accession and/or series_id")
-  }
-  
-  df$OTH_sample <- values[1] # Decide on the column name ===*===
-  
-  print(dim(df))
-  
-  srps <- unique(df$study_accession)
-  srps <- srps[!is.na(srps)] # Remove NAs
-  
-  if (length(srps)>0){
-    srp_df <- searchForAccession(srps)
-    srp_df <- unifyDFFormat(srp_df)
-    srp_df$OTH_sample <- values[2]
-    srp_df <- dplyr::anti_join(srp_df, df, by = colnames(df)) # Remove rows that are already present
-    srp_df <- srp_df[, colnames(df)] # Select only corresponding columns
     
-    df <- rbind(df, srp_df)
-  }
-  
-  
-  gses <- unique(unlist(strsplit(df$series_id, split = ",")))
-  gses <- gses[!is.na(gses)] # Remove NAs
-  
-  if (length(gses)>0){
-    gse_df <- searchForAccession(gses)
-    gse_df <- unifyDFFormat(gse_df)
-    gse_df$OTH_sample <- values[2]
-    gse_df <- dplyr::anti_join(gse_df, df, by = colnames(df)) # Remove rows that are already present
-    gse_df <- gse_df[, colnames(df)] # Select only corresponding columns
+    # General logic:
+    # Check format - whether it adheres to all the column names etc
+    # Add column to original df - OTH_Ori
+    # Search for accession SRP
+    # Bind
+    # Split, unlist and unique GSEs
+    # Search for accession GSEs
+    # Bind 
     
-    df <- rbind(df, gse_df)
-  }
-
-  
-  col_number <- dim(df)[2]
-  df <- df[ ,c(col_number, seq(1, col_number-1))] # Put the added column as the first
-  
-  return(df)
-  
+    
+    checkValidColumns(df) # Check that column names are within allowed set
+    
+    if ( (!"study_accession" %in% colnames(df)) | (!"series_id" %in% colnames(df))){
+        stop("Missing required columns: study_accession and/or series_id")
+    }
+    
+    df$OTH_sample <- values[1] # Decide on the column name ===*===
+    
+    print(dim(df))
+    
+    srps <- unique(df$study_accession)
+    srps <- srps[!is.na(srps)] # Remove NAs
+    
+    if (length(srps)>0){
+        srp_df <- searchForAccession(srps, file_output = FALSE)
+        srp_df <- unifyDFFormat(srp_df)
+        srp_df$OTH_sample <- values[2]
+        srp_df <- dplyr::anti_join(srp_df, df, by = colnames(df)) # Remove rows that are already present
+        srp_df <- srp_df[, colnames(df)] # Select only corresponding columns
+        
+        df <- rbind(df, srp_df)
+    }
+    
+    
+    gses <- unique(unlist(strsplit(df$series_id, split = ",")))
+    gses <- gses[!is.na(gses)] # Remove NAs
+    
+    if (length(gses)>0){
+        gse_df <- searchForAccession(gses)
+        gse_df <- unifyDFFormat(gse_df)
+        gse_df$OTH_sample <- values[2]
+        gse_df <- dplyr::anti_join(gse_df, df, by = colnames(df)) # Remove rows that are already present
+        gse_df <- gse_df[, colnames(df)] # Select only corresponding columns
+        
+        df <- rbind(df, gse_df)
+    }
+    
+    
+    col_number <- dim(df)[2]
+    df <- df[ ,c(col_number, seq(1, col_number-1))] # Put the added column as the first
+    
+    return(df)
+    
 }
 
 

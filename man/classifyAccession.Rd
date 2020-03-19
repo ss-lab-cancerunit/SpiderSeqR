@@ -20,20 +20,21 @@ Classify accessions
 \section{Supported accession classes}{
 
 \itemize{
-   \item [DES]RP - study_accession
-   \item [DES]RS - sample_accession
-   \item [DES]RX - experiment_accession
-   \item [DES]RR - run_accession
+   \item [D|E|S]RP - study_accession
+   \item [D|E|S]RS - sample_accession
+   \item [D|E|S]RX - experiment_accession
+   \item [D|E|S]RR - run_accession
    \item GSE - series_id
    \item GSM - gsm
 }
 
-\strong{NOTE:} Input vector needs to contain accessions belonging to only one type at any given time, otherwise the function will generate an error.
+\strong{NOTE:} Input vector needs to contain accessions belonging to only 
+one type at any given time, otherwise the function will generate an error.
 }
 
 \examples{
-# classifyAccession("GSM11111")
-# classifyAccession(c("GSM11111", "GSE2222")) #Will throw error
+classifyAccession("GSM11111")
+# classifyAccession(c("GSM11111", "GSE2222")) # Will throw error
 
 
 

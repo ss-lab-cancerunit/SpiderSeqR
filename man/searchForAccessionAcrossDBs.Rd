@@ -23,8 +23,9 @@ A data frame with the results of the query
 \code{searchForAccessionAcrossDBs} classifies accessions, searches for them in their original database (SRA or GEO), then, if conversion is possible, searches for corresponding accessions in the other database (SRA or GEO). If no conversion is possible, the columns from the corresponding database are returned empty (NAs).
 }
 \examples{
-#searchForAccessionAcrossDBs("GSE45530")
-#searchForAccessionAcrossDBs("GSE45530", "*", "*", "*")
+startSpiderSeqRDemo()
+searchForAccessionAcrossDBs("SRP134708")
+searchForAccessionAcrossDBs("SRP134708", "*", "*", "*")
 
 }
 \keyword{internal}
