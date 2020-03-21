@@ -7,7 +7,8 @@
 listGSEFields(omit_gse = TRUE)
 }
 \arguments{
-\item{omit_gse}{Logical indicating whether to omit 'gse' column name from the output}
+\item{omit_gse}{Logical indicating whether 
+to omit 'gse' column name from the output}
 }
 \value{
 Character vector containing column names of GSE table (except gse)

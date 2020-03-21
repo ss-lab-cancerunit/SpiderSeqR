@@ -8,11 +8,14 @@ searchForAccessionAcrossDBsDF(acc_vector, sra_columns, geo_columns,
   gse_columns, df)
 }
 \arguments{
-\item{acc_vector}{A vector of accessions \strong{(all must belong to the same type)}}
+\item{acc_vector}{A vector of accessions 
+\strong{(all must belong to the same type)}}
 
-\item{sra_columns}{A character vector with names of the columns to be returned from SRA}
+\item{sra_columns}{A character vector with names of the columns 
+to be returned from SRA}
 
-\item{geo_columns}{A character vector with names of the columns to be returned from GEO}
+\item{geo_columns}{A character vector with names of the columns 
+to be returned from GEO}
 
 \item{df}{(OPTIONAL) a data frame to be used as either SRA or GEO data frame}
 }
@@ -20,20 +23,30 @@ searchForAccessionAcrossDBsDF(acc_vector, sra_columns, geo_columns,
 A data frame with the results of the query
 }
 \description{
-\code{searchForAccessionAcrossDBsDF} classifies accessions, searches for them in their original database (SRA or GEO), then, if conversion is possible, searches for corresponding accessions in the other database (SRA or GEO). If no conversion is possible, the columns from the corresponding database are returned empty (NAs).
+\code{searchForAccessionAcrossDBsDF} classifies accessions, 
+searches for them in their original database (SRA or GEO), 
+then, if conversion is possible, searches for corresponding accessions 
+in the other database (SRA or GEO). If no conversion is possible, 
+the columns from the corresponding database are returned empty (NAs).
 }
 \section{Using df argument}{
 
-When data frame argument is provided, corresponding columns (sra_columns for SRA or geo_columns and gse_columns for GEO) will be disregarded (and are not necessary to provide, but only if using named arguments). Accession vector is only used to classify the input data frame.
+When data frame argument is provided, corresponding columns 
+(sra_columns for SRA or geo_columns and gse_columns for GEO) 
+will be disregarded (and are not necessary to provide, 
+but only if using named arguments). 
+Accession vector is only used to classify the input data frame.
 }
 
 \examples{
 # Setup SpiderSeqR environment first (please use non-demo version)
 startSpiderSeqRDemo()
-searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") # df argument is optional
+searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") 
+# df argument is optional
 
-# If using named arguments, it is not necessary to provide columns from the original df
-searchForAccessionAcrossDBsDF(acc_vector = df$gsm, sra_columns = "*", df = df) 
+# If using named arguments, 
+# it is not necessary to provide columns from the original df
+searchForAccessionAcrossDBsDF(acc_vector = df$gsm, sra_columns="*", df=df) 
 
 }
 \keyword{internal}

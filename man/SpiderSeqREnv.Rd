@@ -9,7 +9,9 @@
 SpiderSeqREnv
 }
 \description{
-Environment for storing values determining certain aspects of package functioning.
-To view the current value, please use \code{getSpiderSeqROption()}, to alter the current value, please use \code{setSpiderSeqROption()}.
+Environment for storing values determining certain aspects 
+of package functioning.
+To view the current value, please use \code{getSpiderSeqROption()}, 
+to alter the current value, please use \code{setSpiderSeqROption()}.
 }
 \keyword{datasets}

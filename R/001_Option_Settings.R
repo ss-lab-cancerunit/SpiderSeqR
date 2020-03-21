@@ -4,8 +4,10 @@
 #' Environment with default values of the package options
 #' 
 #' @description 
-#' Environment for storing values determining certain aspects of package functioning.
-#' To view the current value, please use \code{getSpiderSeqROption()}, to alter the current value, please use \code{setSpiderSeqROption()}.
+#' Environment for storing values determining certain aspects 
+#' of package functioning.
+#' To view the current value, please use \code{getSpiderSeqROption()}, 
+#' to alter the current value, please use \code{setSpiderSeqROption()}.
 #' 
 #' 
 SpiderSeqREnv <- new.env()
@@ -32,8 +34,11 @@ local({
 #' 
 #' @section Available options:
 #' \itemize{
-#'     \item file_output - Logical - If TRUE, the search functions will produce file outputs. If FALSE, no files will be created. Defaults to TRUE
-#'    \item output_columns - Character vector - A set of columns to be used for generating file outputs. Defaults to one of the \code{listColumnSets()}.
+#'     \item file_output - Logical - If TRUE, the search functions will produce 
+#'     file outputs. If FALSE, no files will be created. Defaults to TRUE
+#'    \item output_columns - Character vector - A set of columns to be used 
+#'    for generating file outputs. 
+#'    Defaults to one of the \code{listColumnSets()}.
 #'    \item quiet - Whether any messages should be printed in the console
 #' }
 #' 

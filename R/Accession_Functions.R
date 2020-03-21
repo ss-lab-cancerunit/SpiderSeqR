@@ -2,24 +2,27 @@
 # Functions related to searching for accessions
 #
 # Currently includes:
-# [- searchForAccession - main function that returns df from SRA - REMOVED (20171207) - building proper version]
-# - classifyAccession - given an accession vector, classifies it into correct class or returns an error if not all elements are matched to the same class
-# - vConditionVerifier - grepl'es on the input vector according to any of the regular expressions (an OR operation)
+# [- searchForAccession - main function that returns df from SRA 
+# REMOVED (20171207) - building separate version]
+#
+# - classifyAccession - given an accession vector, classifies it 
+# into correct class or returns an error if not all elements are matched 
+# to the same class
+# 
+# - vConditionVerifier - grepl'es on the input vector according to any 
+# of the regular expressions (an OR operation)
 
 
 
 
-#USAGE
-#searchForAccession(spider_combined$run_accession[c(1,5,22,35)])
 
-#searchForAccession("GSM522267")
 
 
 #----------------------------------------------------------------------------
 
 
 #' Classify accessions
-#'
+#' 
 #' @param x Vector of accessions
 #' @param na.ignore Logical indicating whether NAs are ignored
 #' @return Accession class (error if input does not match any)
@@ -54,7 +57,8 @@ classifyAccession <- function(x, na.ignore = FALSE){
                                 c("GSE"),
                                 c("GSM"))
     
-    accession_regexp <- paste0("^", accession_regexp, "\\d+$") # Only allow perfect matches to accession numbers
+    # Only allow perfect matches to accession numbers
+    accession_regexp <- paste0("^", accession_regexp, "\\d+$") 
     
     accession_name <- c("study_accession",
                         "sample_accession",
@@ -80,7 +84,8 @@ classifyAccession <- function(x, na.ignore = FALSE){
     }
     
     if (is.na(accession_class)){
-        stop("Input needs to completely match only one of the accession classes")
+        t1<-"Input needs to completely match only one of the accession classes"
+        stop(t1)
     }
     return(accession_class)
 }
@@ -96,9 +101,14 @@ classifyAccession <- function(x, na.ignore = FALSE){
 #'
 #' @param regexpr_vector Vector with regular expressions (to be used by grepl)
 #' @param x Character string to be checked for matches to regular expressions
-#' @return A logical vector with TRUE at positions where there was a match to at least one of the reqular expressions (OR operation)
+#' @return A logical vector with TRUE at positions where there was 
+#' a match to at least one of the reqular expressions (OR operation)
+#' 
+#' @examples 
+#' vConditionVerifier("^m$", c("m", "mm", "cm", "M"))
 #' 
 #' @keywords internal
+#' 
 #' 
 vConditionVerifier <- function(regexpr_vector, x){
     rv <- regexpr_vector
@@ -107,6 +117,7 @@ vConditionVerifier <- function(regexpr_vector, x){
     for (r in seq_along(rv)){
         out <- grepl(rv[r], x) | out
     }
+    
     return(out)
     
 }

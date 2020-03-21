@@ -12,9 +12,14 @@ vConditionVerifier(regexpr_vector, x)
 \item{x}{Character string to be checked for matches to regular expressions}
 }
 \value{
-A logical vector with TRUE at positions where there was a match to at least one of the reqular expressions (OR operation)
+A logical vector with TRUE at positions where there was 
+a match to at least one of the reqular expressions (OR operation)
 }
 \description{
 Verify matches to regular expressions
+}
+\examples{
+vConditionVerifier("^m$", c("m", "mm", "cm", "M"))
+
 }
 \keyword{internal}

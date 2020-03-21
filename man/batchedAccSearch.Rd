@@ -8,7 +8,8 @@ batchedAccSearch(acc_vector, database_name, table_name, col_names,
   c_size = 500)
 }
 \arguments{
-\item{acc_vector}{A character vector with accessions to search for (must belong to the same type)}
+\item{acc_vector}{A character vector with accessions to search for 
+(must belong to the same type)}
 
 \item{database_name}{A character with the name of the database connection}
 
@@ -16,12 +17,18 @@ batchedAccSearch(acc_vector, database_name, table_name, col_names,
 
 \item{col_names}{A character vector with column names to be returned}
 
-\item{c_size}{Number of items to search for in a batch (sqlite has a limit of 999 parameters within a single query)}
+\item{c_size}{Number of items to search for in a batch 
+(sqlite has a limit of 999 parameters within a single query)}
 }
 \value{
 Data frame with results of the query
 }
 \description{
 Make batched queries to databases
+}
+\examples{
+startSpiderSeqRDemo()
+batchedAccSearch(rep("SRR6823646", 10), "sra_con", "sra", "*", c_size = 1)
+
 }
 \keyword{internal}
