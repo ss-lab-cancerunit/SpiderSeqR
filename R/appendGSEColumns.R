@@ -86,7 +86,7 @@ appendGSEColumns <- function(df, gse_columns){
     }
     
     all_gse_columns <- DBI::dbListFields(get(database_name, 
-                                             envir = get(database_env)), "gse")
+                                            envir = get(database_env)), "gse")
     
     # Change * to full column list
     if (length(gse_columns) == 1 & gse_columns[1] == "*"){
@@ -147,7 +147,7 @@ appendGSEColumns <- function(df, gse_columns){
         # Matrix gets filled with NAs
         df_columns <- 
             stats::setNames(data.frame(matrix(ncol = length(gse_columns), 
-                                              nrow = dim(df)[1])), gse_columns) 
+                                            nrow = dim(df)[1])), gse_columns) 
         
         df_out <- cbind(df, df_columns)
         df_out <- renameGSEColumns(df_out)
@@ -163,7 +163,7 @@ appendGSEColumns <- function(df, gse_columns){
         query <- paste0("SELECT ", gse_columns_sql, 
                         " FROM gse WHERE gse = '", gse_list[s], "'")
         chunk <- DBI::dbGetQuery(get(database_name, 
-                                     envir = get(database_env)), query)
+                                    envir = get(database_env)), query)
         gse_df <- rbind(gse_df, chunk)
     }
     
@@ -186,9 +186,10 @@ appendGSEColumns <- function(df, gse_columns){
     
     collapsible_columns <- colnames(df_ids_long)
     collapsible_columns <- collapsible_columns[!grepl("gsm", 
-                                                      collapsible_columns)]
+                                                    collapsible_columns)]
+    
     # collapsible_columns <- collapsible_columns[!grepl("series_id", 
-    #                                                  collapsible_columns)]
+    #                                                collapsible_columns)]
     
     
     collapse_str <- ";;"
@@ -202,17 +203,17 @@ appendGSEColumns <- function(df, gse_columns){
         #                collapsible_columns[c], "), collapse = '\\\\\\\\' )" )
         
         x[c] <- paste0(collapsible_columns[c], " = paste(unique(", 
-                       collapsible_columns[c], "), collapse = collapse_str )" )
+                    collapsible_columns[c], "), collapse = collapse_str )" )
     }
     
     collapse_expression <- paste0(x, collapse = "", sep = ", ")
     collapse_expression <- substr(collapse_expression, 1, 
-                                  nchar(collapse_expression)-2)
+                                    nchar(collapse_expression)-2)
     
     
     collapse_expression <- 
         paste0("df_ids_long %>% dplyr::group_by(gsm) %>% dplyr::summarise(", 
-               collapse_expression, ") %>%dplyr::ungroup()")
+                collapse_expression, ") %>%dplyr::ungroup()")
     
     # Perform above (stitched) commands
     df_ids_long <- eval(parse(text = collapse_expression)) 
@@ -237,12 +238,12 @@ appendGSEColumns <- function(df, gse_columns){
     df_ids_long$series_id <- gsub(collapse_str, ",", df_ids_long$series_id)
     if (sum(grepl("^GSE_pubmed_id$", colnames(df_ids_long)))>0) {
         df_ids_long$GSE_pubmed_id <- gsub(collapse_str, ",", 
-                                          df_ids_long$GSE_pubmed_id)
+                                            df_ids_long$GSE_pubmed_id)
     }
     
     # Join with the original df ####
     df_out <- df %>% dplyr::left_join(df_ids_long, 
-                                      by = c("gsm", "series_id"))
+                                        by = c("gsm", "series_id"))
     
     ## This order is better for display purposes
     # df_out <- df_ids_long %>% dplyr::left_join(df, 

@@ -9,8 +9,14 @@ getColumnDescriptions()
 \value{
 Data frame with column descriptions
 
-This is a function for convenience of accessing column description tables for databases from SRAdb and GEOmetadb packages.
-Currently GEO provides much better documented descriptions, whereas SRA column descriptions are only partially complete. Please note that SpiderSeqR only utilises information from gsm and gse tables of GEO and sra table for GEO (which includes collated information from most of the listed tables, i.e. run, experiment, sample, study, submission).
+This is a function for convenience of accessing column description tables 
+for databases from SRAdb and GEOmetadb packages.
+Currently GEO provides much better documented descriptions, 
+whereas SRA column descriptions are only partially complete. 
+Please note that SpiderSeqR only utilises information 
+from gsm and gse tables of GEO and sra table for GEO 
+(which includes collated information from most of the listed tables, 
+i.e. run, experiment, sample, study, submission).
 
 
 Currently a duplicate of functionality from \code{getDatabaseInformation()}

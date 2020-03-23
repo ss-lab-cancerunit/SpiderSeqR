@@ -22,6 +22,8 @@ Study accessions included in the data frame
 }
 }
 \details{
-A data frame created as a DEMO for sra table from sqlite file of SRAdb package. Contains a few arbitrarily chosen complete study accessions.
+A data frame created as a DEMO for sra table from sqlite file 
+of SRAdb package. 
+Contains a few arbitrarily chosen complete study accessions.
 }
 \keyword{datasets}

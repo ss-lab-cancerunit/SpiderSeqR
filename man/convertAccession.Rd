@@ -143,7 +143,9 @@ convertAccession(c("DRP003157", "SRP061795"))
  
 }
 \seealso{
-Other SpiderSeqR workflow functions: \code{\link{addMissingSamples}}
+Other SpiderSeqR workflow functions: \code{\link{addMissingSamples}},
+  \code{\link{filterByTermByAccessionLevel}},
+  \code{\link{filterByTerm}}
 }
 \concept{SpiderSeqR main functions}
 \concept{SpiderSeqR workflow functions}

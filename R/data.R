@@ -3,14 +3,20 @@
 #' SRA - GEO Category Conversion Table
 #' 
 #' 
-#' A manually curated set of conversions between SRA library_strategy and GEO (study) type. These categories can be used for convenience of searching for terms using SpiderSeqR functions. 
+#' A manually curated set of conversions between SRA library_strategy 
+#' and GEO (study) type. 
+#' These categories can be used for convenience of searching for terms 
+#' using SpiderSeqR functions. 
 #' 
 #' The categories were created with the following principles in mind:
 #' \itemize{
 #'     \item Only the most common library_strategy and type elements are used
-#'     \item Corresponding library_strategy and type elements are matched whenever possible (but note that some have no equivalents)
-#'     \item Microarray and Next Generation Sequencing methods are assigned to separate categories, ending with MA and NGS respectively
-#'     \item Methods investigating similar molecular aspect are grouped together (e.g. different methods for investigating methylation)
+#'     \item Corresponding library_strategy and type elements are matched 
+#'     whenever possible (but note that some have no equivalents)
+#'     \item Microarray and Next Generation Sequencing methods are assigned 
+#'     to separate categories, ending with MA and NGS respectively
+#'     \item Methods investigating similar molecular aspect are grouped 
+#'     together (e.g. different methods for investigating methylation)
 #'     
 #' }
 #' 
@@ -24,7 +30,9 @@
 
 #' DEMO extract from sra table (from sqlite file of SRAdb package)
 #' 
-#' A data frame created as a DEMO for sra table from sqlite file of SRAdb package. Contains a few arbitrarily chosen complete study accessions.
+#' A data frame created as a DEMO for sra table from sqlite file 
+#' of SRAdb package. 
+#' Contains a few arbitrarily chosen complete study accessions.
 #' 
 #' @description 
 #' Study accessions included in the data frame
@@ -47,7 +55,12 @@
 
 #' DEMO extract from srr_gsm table (from custom sqlite database)
 #' 
-#' A data frame created as a DEMO for srr_gsm table from custom sqlite database which stores conversions between SRA and GEO (for samples which exist in both databases). Samples include those study accessions/series that exist within SRA's \code{sra_demo} and GEO data frames (\code{gse_demo}, \code{gsm_demo}).
+#' A data frame created as a DEMO for srr_gsm table from custom sqlite database
+#'  which stores conversions between SRA and GEO 
+#'  (for samples which exist in both databases). 
+#'  Samples include those study accessions/series that exist 
+#'  within SRA's \code{sra_demo} 
+#'  and GEO data frames (\code{gse_demo}, \code{gsm_demo}).
 #' 
 #' @docType data
 #' @usage data(srr_demo)
@@ -58,7 +71,10 @@
 #' DEMO extract from gse table (from sqlite file of GEOmetadb package)
 #' 
 #' 
-#' A data frame created as a DEMO for gse table from sqlite file of GEOmetadb package. Contains a few arbitrarily chosen complete series (including superseries and subseries when appropriate).
+#' A data frame created as a DEMO for gse table 
+#' from sqlite file of GEOmetadb package. 
+#' Contains a few arbitrarily chosen complete series 
+#' (including superseries and subseries when appropriate).
 #' 
 #' @description 
 #' Series included in the data frame:
@@ -81,7 +97,10 @@
 
 #' DEMO extract from gsm table (from sqlite file of GEOmetadb package)
 #' 
-#' A data frame created as a DEMO for gsm table from sqlite file of GEOmetadb package. Contains all samples from a few arbitrarily chosen series (including superseries and subseries when appropriate).
+#' A data frame created as a DEMO for gsm table 
+#' from sqlite file of GEOmetadb package. 
+#' Contains all samples from a few arbitrarily chosen series 
+#' (including superseries and subseries when appropriate).
 #'  
 #' @description 
 #' Series included in the data frame:

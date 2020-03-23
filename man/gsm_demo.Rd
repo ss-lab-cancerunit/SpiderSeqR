@@ -23,6 +23,9 @@ Series included in the data frame:
 }
 }
 \details{
-A data frame created as a DEMO for gsm table from sqlite file of GEOmetadb package. Contains all samples from a few arbitrarily chosen series (including superseries and subseries when appropriate).
+A data frame created as a DEMO for gsm table 
+from sqlite file of GEOmetadb package. 
+Contains all samples from a few arbitrarily chosen series 
+(including superseries and subseries when appropriate).
 }
 \keyword{datasets}

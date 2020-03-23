@@ -635,12 +635,23 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
 #' 
 #' @param query Query to be passed to MATCH operator (for fts)
 #' @param df Data frame to be filtered
-#' @param acc_levels Accession levels to search within
+#' @param acc_levels Accession levels to search within (choose from: run, experiment, sample, study; defaults to c("run", "experiment", "sample"))
 #' @return Filtered df (containing only rows matching query within specified accession levels)
 #' 
+#' @family SpiderSeqR workflow functions
+#' @family SpiderSeqR manipulation functions
 #' 
 #' 
-filterSRAQueryByAccessionLevel <- function(query, df, acc_levels){
+#' @export
+#' 
+filterByTermByAccessionLevel <- function(query, df, acc_levels = c("run", "experiment", "sample")){
+    
+    # =====================================================================================
+    warning("Only works for SRA") # ===*===
+    # =====================================================================================
+    
+    acc_possible <- c("run", "experiment", "sample", "study")
+    acc_levels <- match.arg(acc_levels, acc_possible, several.ok = TRUE)
     
     mm(paste0("Filtering for the following acc_levels: ", paste0(acc_levels, collapse = ", ")), "search")
     if (sum(unique(acc_levels) %in% c("study", "sample", "experiment", "run"))==4){

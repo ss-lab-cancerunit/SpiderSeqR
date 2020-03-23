@@ -32,8 +32,8 @@ chExtractor <- function(df){
     columnVerifier(df, "characteristics_ch1")
     
     geo_char_columns <- c("ch1_original", "ch1_remainder", 
-                          "ch1_tissue", "ch1_antibody", 
-                          "ch1_gene", "ch1_treatment")
+                            "ch1_tissue", "ch1_antibody", 
+                            "ch1_gene", "ch1_treatment")
     
     
     if (sum(!is.na(df$characteristics_ch1))==0){
@@ -73,7 +73,7 @@ chExtractor <- function(df){
     #========================================================================
     
     geo_char_keywords <- list(geo_tissue, 
-                              geo_antibody, geo_gene, geo_treatment)
+                                geo_antibody, geo_gene, geo_treatment)
     
     #========================================================================
     #========================================================================
@@ -86,8 +86,8 @@ chExtractor <- function(df){
     df_geo_char <- 
         plyr::ldply(df$characteristics_ch1, 
                     function(x) universalExtractor(x, geo_char_keywords, 
-                                                   geo_sep_split, 
-                                                   geo_sep_collapse))
+                                                    geo_sep_split, 
+                                                    geo_sep_collapse))
     
     colnames(df_geo_char) <- geo_char_columns
     

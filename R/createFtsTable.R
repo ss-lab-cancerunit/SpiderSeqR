@@ -28,22 +28,29 @@
 # 17:05 insertion finished (18 min)
 # 17:09 optimisation finished (22 min)
 # 17:59 sqlite result finished (72 min)
-# NOTE: Sys.time() above recorded finish time as 17:12, suggesting that display of SQLiteResult was not included in the calculation
+# NOTE: Sys.time() above recorded finish time as 17:12, 
+# suggesting that display of SQLiteResult was not included in the calculation
 # Size increased from 8.8 GB to 21.2 GB (from 8791856128 to 21158208512)
 
 #----------------------------------------------------
 
 
 
-#' Create a new table in a dabase to enable fulltext search (FTS)
+#' Create a new table in a dabase to enable fulltext search (fts)
 #' 
 #' @param database_name Name of database connection
-#' @param table_name Name of the table to duplicate as FTS table
-#' @param new_table_name Name of the new FTS table
-#' @return Nothing. Update the relevant database (stored in memory or in a '*.sqlite' file)
+#' @param table_name Name of the table to duplicate as fts table
+#' @param new_table_name Name of the new fts table
+#' @return Nothing. Update the relevant database 
+#' (stored in memory or in a '*.sqlite' file)
 #' 
 #' @description 
-#' Creates a new virtual (fts) table with exact same columns as the original table, populates it with the contents of original table and optimises the table.
+#' Creates a new virtual (fts) table with exact same columns 
+#' as the original table, populates it with the contents of original table 
+#' and optimises the table.
+#' 
+#' @examples 
+#' # createFtsTable("sra_con", "sra", "sra_new_ft")
 #' 
 #' 
 #' @keywords internal
@@ -55,31 +62,51 @@ createFtsTable <- function(database_name, table_name, new_table_name){
     
     
     # Create table
-    column_names <- DBI::dbListFields(get(database_name, envir = .GlobalEnv), table_name)
+    column_names <- DBI::dbListFields(get(database_name, envir = .GlobalEnv), 
+                                    table_name)
     column_names <- paste0(column_names, collapse = "", sep = ", ")
     column_names <- substr(column_names, 1, nchar(column_names)-2)
     
     # NOTE: fts4 used previously, but SRAdb uses fts3
-    creation_query <- paste0("CREATE VIRTUAL TABLE ", new_table_name, " USING fts3 (", column_names, ")")
+    creation_query <-paste0("CREATE VIRTUAL TABLE ", 
+                            new_table_name, " USING fts3 (", column_names, ")")
+    
     mm(creation_query, "query")
-    rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), creation_query)
+    rs <- DBI::dbSendQuery(get(database_name, 
+                                envir = .GlobalEnv), creation_query)
     DBI::dbClearResult(rs)
     
     mm("Number of entries to be copied:", "prog")
-    mm(as.numeric(DBI::dbGetQuery(get(database_name, envir = .GlobalEnv), paste0("SELECT count(*) FROM ", table_name))), "prog")
+    mm(as.numeric(DBI::dbGetQuery(get(database_name, 
+                                        envir = .GlobalEnv), 
+                                    paste0("SELECT count(*) FROM ", 
+                                        table_name))), "prog")
     
     # Insert contents into table
-    insertion_query <- paste0("INSERT INTO ", new_table_name, " SELECT * FROM ", table_name)
+    insertion_query <- paste0("INSERT INTO ", 
+                                new_table_name, 
+                                " SELECT * FROM ", 
+                                table_name)
+    
     mm(insertion_query, "query")
-    rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), insertion_query)
+    rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), 
+                            insertion_query)
     DBI::dbClearResult(rs)
     
     mm("Number of entries in new table:", "prog")
-    mm(as.numeric(DBI::dbGetQuery(get(database_name, envir = .GlobalEnv), paste0("SELECT count(*) FROM ", new_table_name))), "prog")
+    mm(as.numeric(DBI::dbGetQuery(get(database_name, 
+                                        envir = .GlobalEnv), 
+                                    paste0("SELECT count(*) FROM ", 
+                                        new_table_name))), "prog")
     
     # Optimise the database
-    optimisation_query <- paste0( "INSERT INTO ", new_table_name, "(", new_table_name, ")", " VALUES('optimize')")
-    rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), optimisation_query)
+    optimisation_query <- paste0( "INSERT INTO ", 
+                                new_table_name, 
+                                "(", new_table_name, ")", 
+                                " VALUES('optimize')")
+    
+    rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), 
+                        optimisation_query)
     DBI::dbClearResult(rs)
     
 }

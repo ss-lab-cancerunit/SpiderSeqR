@@ -14,9 +14,17 @@ createFtsTable(database_name, table_name, new_table_name)
 \item{new_table_name}{Name of the new FTS table}
 }
 \value{
-Nothing. Update the relevant database (stored in memory or in a '*.sqlite' file)
+Nothing. Update the relevant database 
+(stored in memory or in a '*.sqlite' file)
 }
 \description{
-Creates a new virtual (fts) table with exact same columns as the original table, populates it with the contents of original table and optimises the table.
+Creates a new virtual (fts) table with exact same columns 
+as the original table, populates it with the contents of original table 
+and optimises the table.
+}
+\examples{
+# createFtsTable("sra_con", "sra", "sra_new_ft")
+
+
 }
 \keyword{internal}

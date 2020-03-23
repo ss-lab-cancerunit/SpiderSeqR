@@ -66,7 +66,7 @@ countAccessionMatches <- function(acc_vector, df, output = "logical"){
         # Do not overflow the console output with lots of accessions
         if (length(missing_acc)<200){ 
             mm(paste0("Missing accessions: ", paste0(missing_acc, 
-                                                     collapse = ", ")), "res")
+                                                    collapse = ", ")), "res")
         }
     }
     

@@ -10,20 +10,24 @@ getDatabaseInformation()
 Data frame with requested information
 }
 \description{
-\code{getDatabaseInformation} allows users to get insights into the contents of certain parts of the databases. Run the function and select the menu option with the summary of interest.
+\code{getDatabaseInformation} allows users to get insights 
+into the contents of certain parts of the databases. 
+Run the function and select the menu option with the summary of interest.
 }
 \section{Available information}{
 
-In order to obtain the most up to date list of available information, run the function
-Currently, it includes:
+In order to obtain the most up to date list of available information, 
+please run the function
+Some of the information available includes:
 \itemize{
-  \item \emph{Library_strategy counts in SRA database} - a dataframe with all the library strategies featuring in SRA and their counts
+  \item \emph{Library_strategy counts in SRA database} - a dataframe 
+  with all the library strategies featuring in SRA and their counts
   \item \emph{taxon_id's and their counts}
   \item \emph{source_name_ch1 and their counts}
   \item \emph{label_ch and their counts}
   \item \emph{molecule_ch1 and their counts}
   \item \emph{Number of accessions} in the SRA and GEO databases
-  \item (more in progress... ===*===)
+  \item ...
 }
 }
 

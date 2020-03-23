@@ -52,7 +52,8 @@ setSpiderSeqROption <- local({function(name, value){
     
     if (name == "output_columns"){
         if (!all(value %in% as.character(unlist(listValidColumns())))){
-            stop("Output columns must be within the set from listValidColumns()")
+            stop(paste0("Output columns must be within ",
+            "the set from listValidColumns()"))
         }
     }
     

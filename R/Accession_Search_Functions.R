@@ -358,9 +358,9 @@ searchSRR_GSM <- function(acc_vector,
     
     
     df <- batchedAccSearch(acc_vector = acc_vector, 
-                           database_name = "srr_gsm", 
-                           table_name = "srr_gsm", 
-                           col_names = srr_gsm_columns)
+                            database_name = "srr_gsm", 
+                            table_name = "srr_gsm", 
+                            col_names = srr_gsm_columns)
     
     
     # query_beg <- paste0("SELECT ", srr_gsm_columns, 
@@ -417,7 +417,7 @@ listSRAFields <- function(){
     sra_table <- "sra"
     
     y <- DBI::dbListFields(get(database_name, 
-                               envir = get(database_env)), sra_table)
+                                envir = get(database_env)), sra_table)
     
     return(y)
 }
@@ -504,7 +504,7 @@ listGSEFields <- function(omit_gse = TRUE){
 #' @keywords internal
 #' 
 batchedAccSearch <- function(acc_vector, database_name, 
-                             table_name, col_names, c_size = 500){
+                                table_name, col_names, c_size = 500){
     
     database_env <- ".GlobalEnv"
     
@@ -565,14 +565,14 @@ batchedAccSearch <- function(acc_vector, database_name,
             for (i in seq_along(acc_vector_split[[a]])){ 
                 
                 query_el <- paste0(query_el, pre_el, 
-                                   acc_vector_split[[a]][i], post_el)
+                                    acc_vector_split[[a]][i], post_el)
             }
             
             query_el <- substr(query_el, 1, nchar(query_el)-end_char)
             query <- paste0(query_beg, query_el, " )")
             mm(query, "query")
             chunk <- DBI::dbGetQuery(get(database_name, 
-                                         envir = get(database_env)), query)
+                                            envir = get(database_env)), query)
             df <- rbind(df, chunk)
         }
         
@@ -591,15 +591,15 @@ batchedAccSearch <- function(acc_vector, database_name,
             # For each element in batch
             for (i in seq_along(acc_vector_split[[a]])){ 
                 query_el <- paste0(query_el, pre_el, 
-                                   acc_vector_split[[a]][i], mid_el, 
-                                   acc_vector_split[[a]][i], post_el)
+                                    acc_vector_split[[a]][i], mid_el, 
+                                    acc_vector_split[[a]][i], post_el)
             }
             
             query_el <- substr(query_el, 1, nchar(query_el)-end_char)
             query <- paste0(query_beg, query_el, " )")
             mm(query, "query")
             chunk <- DBI::dbGetQuery(get(database_name, 
-                                         envir = get(database_env)), query)
+                                            envir = get(database_env)), query)
             df <- rbind(df, chunk)
         }
         
@@ -614,14 +614,14 @@ batchedAccSearch <- function(acc_vector, database_name,
             # For each element in batch
             for (i in seq_along(acc_vector_split[[a]])){ 
                 query_el <- paste0(query_el, pre_el, 
-                                   acc_vector_split[[a]][i], post_el)
+                                    acc_vector_split[[a]][i], post_el)
             }
             
             query_el <- substr(query_el, 1, nchar(query_el)-end_char)
             query <- paste0(query_beg, query_el, " )")
             mm(query, "query")
             chunk <- DBI::dbGetQuery(get(database_name, 
-                                         envir = get(database_env)), query)
+                                            envir = get(database_env)), query)
             df <- rbind(df, chunk)
         }
     }

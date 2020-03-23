@@ -23,6 +23,9 @@ Series included in the data frame:
 }
 }
 \details{
-A data frame created as a DEMO for gse table from sqlite file of GEOmetadb package. Contains a few arbitrarily chosen complete series (including superseries and subseries when appropriate).
+A data frame created as a DEMO for gse table 
+from sqlite file of GEOmetadb package. 
+Contains a few arbitrarily chosen complete series 
+(including superseries and subseries when appropriate).
 }
 \keyword{datasets}
