@@ -295,7 +295,7 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
 #' \strong{(all must belong to the same type)}
 #' @return A data frame with conversion between all accession types
 #' @family SpiderSeqR workflow functions
-#' @family SpiderSeqR main functions
+#' @family SpiderSeqR core functions
 #' @examples
 #' 
 #' # Setup SpiderSeqR environment first (please use non-demo version)

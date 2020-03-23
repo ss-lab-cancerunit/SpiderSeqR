@@ -56,10 +56,14 @@
 #' 
 #' An internal function for searchForTerm
 #' 
-#' @param SRA_library_strategy,gene,antibody,cell_type,treatment,species,platform Character vectors with information to search within SRA
+#' @param SRA_library_strategy Character vector specifying experiment approach
+#' @param gene,antibody,cell_type,treatment,species,platform Character vectors 
+#' with information to search within SRA
+#' @return A data frame with results
 #' 
 #' @keywords internal
-searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment, species, platform){
+searchSRA <- function(SRA_library_strategy, gene, antibody, 
+                        cell_type, treatment, species, platform){
     mm("Running searchSRA", "fn")
     
     #------------------------------------------------
@@ -70,8 +74,16 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     database_name <- "sra_con"
     database_env <- ".GlobalEnv"
     sra_table <- "sra"
-    #sra_columns <- c("experiment_name", "run_attribute", "experiment_accession", "experiment_url_link", "experiment_title", "library_strategy", "library_layout", "sample_alias", "taxon_id", "library_construction_protocol", "run_accession", "study_accession", "run_alias", "experiment_alias", "sample_name", "sample_attribute", "experiment_attribute")
+    
+    # sra_columns <- c("experiment_name", "run_attribute", 
+    #                "experiment_accession", "experiment_url_link", 
+    #                "experiment_title", "library_strategy", "library_layout", 
+    #                "sample_alias", "taxon_id", 
+    #                "library_construction_protocol", "run_accession", 
+    #                "study_accession", "run_alias", "experiment_alias", 
+    #                "sample_name", "sample_attribute", "experiment_attribute")
     #sra_columns <- c("experiment_title")
+    
     sra_columns <- "*"
     #------------------------------------------------
     library_strategy <- SRA_library_strategy
@@ -79,9 +91,17 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     
     
     
-    #LIST OF SELECTED COLUMNS (usually contain informative text about the sample)
-    informative_fields <- c("run_alias", "experiment_name", "experiment_alias", "experiment_title", "sample_name", "library_name", "experiment_attribute", "sample_alias", "sample_attribute") #RESEARCHED (based on p53 and STAT1, doxorubicin) ===*=== Consider making more investigations
-    #===*=== Be careful with sample_attribute (exclude from df verification step)
+    #LIST OF SELECTED COLUMNS 
+    # (usually contain informative text about the sample)
+    informative_fields <- c("run_alias", "experiment_name", 
+                            "experiment_alias", "experiment_title", 
+                            "sample_name", "library_name", 
+                            "experiment_attribute", "sample_alias", 
+                            "sample_attribute") 
+    #RESEARCHED (based on p53 and STAT1, doxorubicin) 
+    # ===*=== Consider making more investigations
+    # ===*=== Be careful with sample_attribute 
+    # (exclude from df verification step)
     
     
     #------------------------------------------------
@@ -89,34 +109,59 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     #------------------------------------------------
     ##OPTION 1: Simple search
     #gene_fields <- c("run_accession", "sample_attribute")
-    #gene_prefixes <- list("[^a-z]*", c("antibody:([^\\|]*[^\\|a-z]+|\\s*)", "genotype:([^\\|]*[^\\|a-z]+|\\s*)"))
+    #gene_prefixes <- list("[^a-z]*", c("antibody:([^\\|]*[^\\|a-z]+|\\s*)", 
+    #                                   "genotype:([^\\|]*[^\\|a-z]+|\\s*)"))
     #gene_suffixes <- c("", "")
     
     #OPTION 2: Conditional search
-    cat_gene <- c("genotype", "ArrayExpress.Genotype", "genotype/variation", "target.gene", "genetic.background", "host.genotype", "Plant.genotype", "genetic.modification", "transgene", "gene.id", "myd88.genotype", "gene.perturbation.type", "genetic.condition", "cytogenetics", "concise.genotype.name", "genspecies.abbr", "melanoma.genetic.conditions", "marker.gene", "gene", "strain/genotype", "genotype/variation", "knockout", "knockdown", "hgn") #RESEARCHED (based on sa_categories)
-    gene_fields <- informative_fields #RESEARCHED (based on p53 and STAT1) ===*=== Consider making more investigations
-    #===*=== Be careful with sample_attribute (exclude from df verification step)
-    #SAME AS ANTIBODY_FIELDS
+    cat_gene <- c("genotype", "ArrayExpress.Genotype", 
+                  "genotype/variation", "target.gene", 
+                  "genetic.background", "host.genotype", "Plant.genotype", 
+                  "genetic.modification", "transgene", "gene.id", 
+                  "myd88.genotype", "gene.perturbation.type", 
+                  "genetic.condition", "cytogenetics", 
+                  "concise.genotype.name", "genspecies.abbr", 
+                  "melanoma.genetic.conditions", "marker.gene", "gene", 
+                  "strain/genotype", "genotype/variation", 
+                  "knockout", "knockdown", "hgn") 
+    #RESEARCHED (based on sa_categories)
+    
+    gene_fields <- informative_fields 
+    #RESEARCHED (based on p53 and STAT1) 
+    # ===*=== Consider making more investigations
+    # ===*=== Be careful with sample_attribute 
+    # (exclude from df verification step)
+    # SAME AS ANTIBODY_FIELDS
     
     
     
     #------------------------------------------------
-    #ANTIBODY
+    # ANTIBODY
     #------------------------------------------------
-    #NOTE:
-    #When using conditional search, sample_attribute will be included anyway, so unless want to search throughout non-specific categories, don't include it in antibody_fields
+    # NOTE:
+    # When using conditional search, sample_attribute will be included anyway, 
+    # so unless want to search throughout non-specific categories, 
+    # don't include it in antibody_fields
     
-    cat_antibody <- c("chip.antibody", "antibody", "ArrayExpress.Immunoprecipitate", "ip.antibody", "rip.antibody", "medip.antibody", "clip.antibody", "frip.antibody", "chip-seq.antibody") #RESEARCHED WELL
+    cat_antibody <- c("chip.antibody", "antibody", 
+                      "ArrayExpress.Immunoprecipitate", "ip.antibody", 
+                      "rip.antibody", "medip.antibody", "clip.antibody", 
+                      "frip.antibody", "chip-seq.antibody") #RESEARCHED WELL
     
-    antibody_fields <- informative_fields #RESEARCHED (based on p53 and STAT1) ===*=== Consider making more investigations
-    #===*=== Be careful with sample_attribute (exclude from df verification step)
+    antibody_fields <- informative_fields 
+    # RESEARCHED (based on p53 and STAT1)
+    # ===*=== Consider making more investigations
+    # ===*=== Be careful with sample_attribute 
+    # (exclude from df verification step)
     
     
-    #Not in use if conditional search employed
-    #antibody_prefixes <- rep("[^A-Za-z]*", length(antibody_fields)) #Amended to include capital letters as well
-    #antibody_prefixes <- list("[^a-z]", c("antibody:([^\\|]*[^\\|a-z]+|\\s*)", "immunoprecipitate:([^\\|]*[^\\|a-z]+|\\s*)"))
-    
-    #antibody_suffixes <- rep("", length(antibody_fields))
+    # Not in use if conditional search employed
+    # Amended to include capital letters as well
+    # antibody_prefixes <- rep("[^A-Za-z]*", length(antibody_fields)) 
+    # antibody_prefixes <- 
+    #    list("[^a-z]", c("antibody:([^\\|]*[^\\|a-z]+|\\s*)", 
+    #                     "immunoprecipitate:([^\\|]*[^\\|a-z]+|\\s*)"))
+    # antibody_suffixes <- rep("", length(antibody_fields))
     
     
     #------------------------------------------------
@@ -129,8 +174,14 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     #------------------------------------------------
     #TREATMENT
     #------------------------------------------------
-    cat_treatment <- c("treatment", "ArrayExpress.Treatment", "treated.with", "treatment.description", "drug.treatment", "treatment.protocol", "Vaccine.Treatment", "experimental.treatment", "diet.treatment", "treatment.group") #RESEARCHED
-    treatment_fields <- informative_fields #RESEARCHED (so far based on doxorubicin only) ===*===
+    cat_treatment <- c("treatment", "ArrayExpress.Treatment", 
+                        "treated.with", "treatment.description", 
+                        "drug.treatment", "treatment.protocol", 
+                        "Vaccine.Treatment", "experimental.treatment", 
+                        "diet.treatment", "treatment.group") #RESEARCHED
+    
+    treatment_fields <- informative_fields 
+    #RESEARCHED (so far based on doxorubicin only) ===*===
     
     
     
@@ -150,17 +201,23 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     sra_columns <- paste(sra_columns, collapse = ", ")
     
     #ENLIST ALL SEARCH TERMS AND FIELDS
-    search <- list(gene, antibody, cell_type, treatment, species, library_strategy, platform)
-    fields <- list(gene_fields, antibody_fields, cell_type_fields, treatment_fields, "taxon_id", "library_strategy", "platform")
+    search <- list(gene, antibody, cell_type, treatment, 
+                    species, library_strategy, platform)
+    fields <- list(gene_fields, antibody_fields, cell_type_fields, 
+                    treatment_fields, "taxon_id", 
+                    "library_strategy", "platform")
+    
     if (length(search)!=length(fields)){
         warning("Search terms and search fields differ in number")
     }
     
     #COMPOSE THE QUERY
-    query <- paste0("SELECT ", sra_columns, " FROM ", sra_table, " WHERE ", sep=" ")
+    query <- paste0("SELECT ", sra_columns, " FROM ", 
+                    sra_table, " WHERE ", sep=" ")
     for (s in seq_along(search)){
         if (length(search[[s]]!=0)){ #Only include non-empty search term types
-            query <- paste0(query, "(", queryWriter(search[[s]], fields[[s]]), " ) AND ")
+            query <- paste0(query, "(", 
+                            queryWriter(search[[s]], fields[[s]]), " ) AND ")
             #print(query)
         }
     }
@@ -170,11 +227,13 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     
     
     #GET THE QUERY
-    output_list <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+    output_list <- DBI::dbGetQuery(get(database_name, 
+                                        envir = get(database_env)), query)
     
     #STOP IF NO RESULTS
     if ( (dim(output_list)[1]) == 0 ) {
-        stop("No results found for input symbols, check symbols/synonyms entered or whether such entries exist on ncbi.")
+        stop(paste0("No results found for input symbols, check ",
+        "symbols/synonyms entered or whether such entries exist on ncbi."))
     }
     
     mm("SQL query completed", "fn")
@@ -201,18 +260,23 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     #   ([^\\|]*[^\\|a-z]+|\\s*)
     
     #REGEXP FOR SEARCHING:
-    #grep("(^|\\|\\| )chip.antibody:(|[^\\|:]*?[^A-Za-z])p53", "chip antibody: sth p53")
-    #Features: matches empty string or any string (as long, as it does not contain letters as the last element)
+    #grep("(^|\\|\\| )chip.antibody:(|[^\\|:]*?[^A-Za-z])p53", 
+    # "chip antibody: sth p53")
+    #Features: matches empty string or any string 
+    #(as long, as it does not contain letters as the last element)
     #E.g. MATCHES: chip_antibody:p53, chip_antibody: something, something-p53
     #     DOESN'T MATCH: chip_antibody:ap53, chip_antibody: somethingp53
     
     #VERSION 2:
-    #grep("(^|\\|\\| )chip.antibody:(|[^\\|:]*?[^A-Za-z\\|:])p53", "chip_antibody: :p53")
+    #grep("(^|\\|\\| )chip.antibody:(|[^\\|:]*?[^A-Za-z\\|:])p53", 
+    #"chip_antibody: :p53")
     #Features: prevents | and : from immediately preceding p53
     
     #VERSION 3:
-    #grep("(^|\\|\\| )chip.antibody:(|[^\\|]*?[^A-Za-z\\|])p53", "chip_antibody: p53")
-    #Features: removed : from prohibited characters (only | is prohibited and letters immediately preceding p53)
+    #grep("(^|\\|\\| )chip.antibody:(|[^\\|]*?[^A-Za-z\\|])p53", 
+    #"chip_antibody: p53")
+    #Features: removed : from prohibited characters 
+    #(only | is prohibited and letters immediately preceding p53)
     
     
     #Consider using a generic prefix where appropriate: [^a-z] ===*===
@@ -226,34 +290,50 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     
     #------------------------------------------------
     #simple search:
-    #gene_indices <- conditionVerifier(output_list, gene, gene_fields, gene_prefixes, gene_suffixes)
+    #gene_indices <- conditionVerifier(output_list, gene, 
+    #gene_fields, gene_prefixes, gene_suffixes)
     #------------------------------------------------
     
     #------------------------------------------------
     #Conditional search (based on antibody)
     
     #GENE - LOGIC:
-    #- if any of the gene categories exist within sample_attribute field, search within those
-    #- if none of the gene categories exist within sample_attribute field, search within gene_fields (except sample_attribute)
+    #- if any of the gene categories exist within sample_attribute field, 
+    # search within those
+    #- if none of the gene categories exist within sample_attribute field, 
+    #search within gene_fields (except sample_attribute)
     #NOTE: gene cannot be preceded by a letter (lowercase or uppercase)
     
     if (length(gene)!=0){
         #Find rows which contain categories in sample_attribute field
-        cat_gene_indices <- conditionVerifier2(output_list, cat_gene, "sample_attribute", "(^|\\|\\| )", ":" )
+        cat_gene_indices <- conditionVerifier2(output_list, cat_gene, 
+                                                "sample_attribute", 
+                                                "(^|\\|\\| )", ":" )
         
         #Initialise vector for rows with matches to gene query
         gene_indices <- rep(NA, nrow(output_list))
         
         #Wrap regular expression around categories
-        cat_gene_prefixes <- paste0("(^|\\|\\| )", cat_gene, ":(|[^\\|]*?[^A-Za-z\\|])") #Use a non-greedy quantifier and alternation
+        cat_gene_prefixes <- paste0("(^|\\|\\| )", cat_gene, 
+                                    ":(|[^\\|]*?[^A-Za-z\\|])") 
+        #Use a non-greedy quantifier and alternation
         
-        #Search within sample_attribute field (when matches to categories occur)
-        gene_indices[cat_gene_indices] <- conditionVerifier2(output_list[cat_gene_indices, ], gene, "sample_attribute", list(cat_gene_prefixes))
+        #Search within sample_attribute field 
+        #(when matches to categories occur)
+        gene_indices[cat_gene_indices] <- 
+            conditionVerifier2(output_list[cat_gene_indices, ], gene, 
+                                "sample_attribute", list(cat_gene_prefixes))
         
         
         #Search within other fields (if there were no matches to categories)
-        gene_indices[!cat_gene_indices] <- conditionVerifier2(output_list[!cat_gene_indices, ], gene, withOut("sample_attribute", gene_fields), "(^|[^A-Za-z])") #Noletter prefix as a separate input
-        mm(paste0(sum(gene_indices), " out of ", dim(output_list)[1], " initial entries comply with the gene criteria"), "res")
+        gene_indices[!cat_gene_indices] <- 
+            conditionVerifier2(output_list[!cat_gene_indices, ], 
+                            gene, withOut("sample_attribute", gene_fields), 
+                              "(^|[^A-Za-z])") 
+        #Noletter prefix as a separate input
+        
+        mm(paste0(sum(gene_indices), " out of ", dim(output_list)[1], 
+                    " initial entries comply with the gene criteria"), "res")
     } else {
         gene_indices <- rep(TRUE, nrow(output_list))
         mm("No genes specified. Returned all TRUE", "adverse")
@@ -266,14 +346,20 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     
     ##------------------------------------------------
     ##'Test' to visualise the effects:
-    #testg <- data.frame(output_list$sample_attribute, output_list$run_alias, output_list$experiment_title, output_list$experiment_alias, gene_indices)
+    #testg <- data.frame(output_list$sample_attribute, 
+    #output_list$run_alias, output_list$experiment_title, 
+    #output_list$experiment_alias, gene_indices)
     #testg$extract <- NA
     
     #gen_ind <- grep("(^|\\|\\| )genotype:", output_list$sample_attribute)
-    #testg$extract[gen_ind] <-  gsub("(^|^.*\\|\\| )(genotype:[^\\|:]+).*$", "\\2", output_list$sample_attribute[gen_ind])
+    #testg$extract[gen_ind] <-  gsub("(^|^.*\\|\\| )(genotype:[^\\|:]+).*$", 
+    #"\\2", output_list$sample_attribute[gen_ind])
     
-    #h_gen_ind <- grep("(^|\\|\\| )host.genotype:", output_list$sample_attribute)
-    #testg$extract[h_gen_ind] <-  gsub("(^|^.*\\|\\| )(host.genotype:[^\\|:]+).*$", "\\2", output_list$sample_attribute[h_gen_ind])
+    #h_gen_ind <- grep("(^|\\|\\| )host.genotype:", 
+    #output_list$sample_attribute)
+    #testg$extract[h_gen_ind] <-  
+    #gsub("(^|^.*\\|\\| )(host.genotype:[^\\|:]+).*$", 
+    #"\\2", output_list$sample_attribute[h_gen_ind])
     ##------------------------------------------------
     
     
@@ -286,21 +372,32 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     
     #------------------------------------------------
     #simple search:
-    #antibody_indices <- conditionVerifier(output_list, antibody, antibody_fields, antibody_prefixes, antibody_suffixes)
+    #antibody_indices <- conditionVerifier(output_list, antibody, 
+    #antibody_fields, antibody_prefixes, antibody_suffixes)
     #------------------------------------------------
     
     
     ##------------------------------------------------
-    #Conditional search (if any of the category synonyms exist, only search within them)
+    #Conditional search 
+    #(if any of the category synonyms exist, only search within them)
     #INITIAL VERSIONS
     
-    ##cat_antibody_indices <- conditionVerifier(output_list, list("antibody"), "sample_attribute", list(rep("(^|\\|\\| )", nrow(output_list))), list(rep(":", nrow(output_list))) ) #the size of prefixes/suffixes is unnecessary
+    ##cat_antibody_indices <- conditionVerifier(output_list, list("antibody"), 
+    #"sample_attribute", list(rep("(^|\\|\\| )", nrow(output_list))), 
+    #list(rep(":", nrow(output_list))) ) 
+    #the size of prefixes/suffixes is unnecessary
     
     ##Find rows which contain categories in sample_attribute field
     
-    ##cat_antibody_indices <- conditionVerifier(output_list, list("antibody", "chip antibody"), "sample_attribute", "(^|\\|\\| )", ":" ) #worked
-    ##cat_antibody_indices <- conditionVerifier(output_list, c("antibody", "chip antibody"), "sample_attribute", "(^|\\|\\| )", ":" ) #also worked
-    #cat_antibody_indices <- conditionVerifier(output_list, cat_antibody, "sample_attribute", "(^|\\|\\| )", ":" )
+    ##cat_antibody_indices <- conditionVerifier(output_list, 
+    #list("antibody", "chip antibody"), "sample_attribute", 
+    #"(^|\\|\\| )", ":" ) #worked
+    ##cat_antibody_indices <- conditionVerifier(output_list, 
+    #c("antibody", "chip antibody"), "sample_attribute", "(^|\\|\\| )", ":" ) 
+    #also worked
+    
+    #cat_antibody_indices <- conditionVerifier(output_list, 
+    #cat_antibody, "sample_attribute", "(^|\\|\\| )", ":" )
     
     ##Initialise vector for rows with matches to antibody query
     #antibody_indices <- rep(NA, nrow(output_list))
@@ -309,21 +406,38 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     
     ##OPTION 1: Search just for antibody
     #cat_antibody_prefixes <- paste0("(^|\\|\\| )", cat_antibody, ":[^\\|:]+")
-    #antibody_indices[cat_antibody_indices] <- conditionVerifier(output_list[cat_antibody_indices, ], antibody, "sample_attribute", list(cat_antibody_prefixes))
+    #antibody_indices[cat_antibody_indices] <- 
+    #conditionVerifier(output_list[cat_antibody_indices, ], antibody, 
+    #"sample_attribute", list(cat_antibody_prefixes))
     
-    #antibody_indices[!cat_antibody_indices] <- conditionVerifier(output_list[!cat_antibody_indices, ], antibody, antibody_fields, antibody_prefixes, antibody_suffixes)
+    #antibody_indices[!cat_antibody_indices] <- 
+    #conditionVerifier(output_list[!cat_antibody_indices, ], antibody, 
+    #antibody_fields, antibody_prefixes, antibody_suffixes)
     
     
     ##OPTION 2: Search for antibody not immediately preceded by any letters
-    #cat_antibody_prefixes <- paste0("(^|\\|\\| )", cat_antibody, ":[^\\|:]*?") #Use a non-greedy quantifier
+    #cat_antibody_prefixes <- paste0("(^|\\|\\| )", 
+    #cat_antibody, ":[^\\|:]*?") #Use a non-greedy quantifier
     #antibody_noletter <- paste0("(^|[^A-Za-z])", antibody)
     ##antibody_noletter <- antibody
-    #antibody_indices[cat_antibody_indices] <- conditionVerifier2(output_list[cat_antibody_indices, ], antibody_noletter, "sample_attribute", list(cat_antibody_prefixes))
+    #antibody_indices[cat_antibody_indices] <- 
+    #conditionVerifier2(output_list[cat_antibody_indices, ], 
+    #antibody_noletter, "sample_attribute", list(cat_antibody_prefixes))
     
-    ##antibody_indices[!cat_antibody_indices] <- conditionVerifier(output_list[!cat_antibody_indices, ], antibody_noletter, antibody_fields, antibody_prefixes, antibody_suffixes) #Deleting prefixes and suffixes since antibody_noletter already includes that information
+    ##antibody_indices[!cat_antibody_indices] <- 
+    #conditionVerifier(output_list[!cat_antibody_indices, ], 
+    #antibody_noletter, antibody_fields, antibody_prefixes, antibody_suffixes) 
+    #Deleting prefixes and suffixes since antibody_noletter 
+    #already includes that information
     
-    ##antibody_indices[!cat_antibody_indices] <- conditionVerifier2(output_list[!cat_antibody_indices, ], antibody_noletter, withOut("sample_attribute", antibody_fields)) #special variable used - antibody_noletter
-    #antibody_indices[!cat_antibody_indices] <- conditionVerifier2(output_list[!cat_antibody_indices, ], antibody, withOut("sample_attribute", antibody_fields), "(^|[^A-Za-z])") #Noletter prefix
+    ##antibody_indices[!cat_antibody_indices] <- 
+    #conditionVerifier2(output_list[!cat_antibody_indices, ], 
+    #antibody_noletter, withOut("sample_attribute", antibody_fields)) 
+    #special variable used - antibody_noletter
+    #antibody_indices[!cat_antibody_indices] <- 
+    #conditionVerifier2(output_list[!cat_antibody_indices, ], 
+    #antibody, withOut("sample_attribute", antibody_fields), "(^|[^A-Za-z])") 
+    #Noletter prefix
     ##------------------------------------------------
     
     
@@ -331,26 +445,42 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     #NEW VERSION (conditional search)
     
     #ANTIBODY - LOGIC:
-    #- if any of the antibody categories exist within sample_attribute field, search within those
-    #- if none of the antibody categories exist within sample_attribute field, search within antibody_fields (except sample_attribute)
+    #- if any of the antibody categories exist within sample_attribute field, 
+    #search within those
+    #- if none of the antibody categories exist within sample_attribute field, 
+    #search within antibody_fields (except sample_attribute)
     #NOTE: antibody cannot be preceded by a letter (lowercase or uppercase)
     
     if (length(antibody)!=0){
         #Find rows which contain categories in sample_attribute field
-        cat_antibody_indices <- conditionVerifier2(output_list, cat_antibody, "sample_attribute", "(^|\\|\\| )", ":" )
+        cat_antibody_indices <- conditionVerifier2(output_list, cat_antibody, 
+                                                "sample_attribute", 
+                                                "(^|\\|\\| )", ":" )
         
         #Initialise vector for rows with matches to antibody query
         antibody_indices <- rep(NA, nrow(output_list))
         
         #Wrap regular expression around categories
-        cat_antibody_prefixes <- paste0("(^|\\|\\| )", cat_antibody, ":(|[^\\|]*?[^A-Za-z\\|])") #Use a non-greedy quantifier
+        cat_antibody_prefixes <- paste0("(^|\\|\\| )", 
+                                        cat_antibody, 
+                                        ":(|[^\\|]*?[^A-Za-z\\|])") 
+        #Use a non-greedy quantifier
         
-        #Search within sample_attribute field (when matches to categories occur)
-        antibody_indices[cat_antibody_indices] <- conditionVerifier2(output_list[cat_antibody_indices, ], antibody, "sample_attribute", list(cat_antibody_prefixes))
+        #Search within sample_attribute field(when matches to categories occur)
+        antibody_indices[cat_antibody_indices] <- 
+            conditionVerifier2(output_list[cat_antibody_indices, ], antibody, 
+                            "sample_attribute", list(cat_antibody_prefixes))
         
         #Search within other fields (if there were no matches to categories)
-        antibody_indices[!cat_antibody_indices] <- conditionVerifier2(output_list[!cat_antibody_indices, ], antibody, withOut("sample_attribute", antibody_fields), "(^|[^A-Za-z])") #Noletter prefix as a separate input
-        mm(paste0(sum(antibody_indices), " out of ", dim(output_list)[1], " initial entries comply with the antibody criteria"), "res")
+        antibody_indices[!cat_antibody_indices] <- 
+            conditionVerifier2(output_list[!cat_antibody_indices, ], 
+                                antibody, withOut("sample_attribute", 
+                                                antibody_fields), 
+                                "(^|[^A-Za-z])") 
+        #Noletter prefix as a separate input
+        
+        mm(paste0(sum(antibody_indices), " out of ", dim(output_list)[1], 
+                  " initial entries comply with the antibody criteria"), "res")
     } else {
         antibody_indices <- rep(TRUE, nrow(output_list))
         mm("No antibodies specified. Returned all TRUE", "adverse")
@@ -362,14 +492,20 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     
     ##--------------------------------------------------------
     ##'Test' to visualise the effects:
-    #test2 <- data.frame(output_list$sample_attribute, output_list$run_alias, output_list$experiment_title, output_list$experiment_alias, antibody_indices)
+    #test2 <- data.frame(output_list$sample_attribute, 
+    #output_list$run_alias, output_list$experiment_title, 
+    #output_list$experiment_alias, antibody_indices)
     #test2$extract <- NA
     
     #ab_ind <- grep("(^|\\|\\| )antibody:", output_list$sample_attribute)
-    #test2$extract[ab_ind] <-  gsub("(^|^.*\\|\\| )(antibody:[^\\|:]+).*$", "\\2", output_list$sample_attribute[ab_ind])
+    #test2$extract[ab_ind] <-  gsub("(^|^.*\\|\\| )(antibody:[^\\|:]+).*$", 
+    #"\\2", output_list$sample_attribute[ab_ind])
     #
-    #ch_ab_ind <- grep("(^|\\|\\| )chip antibody:", output_list$sample_attribute)
-    #test2$extract[ch_ab_ind] <-  gsub("(^|^.*\\|\\| )(chip antibody:[^\\|:]+).*$", "\\2", output_list$sample_attribute[ch_ab_ind])
+    #ch_ab_ind <- grep("(^|\\|\\| )chip antibody:", 
+    #output_list$sample_attribute)
+    #test2$extract[ch_ab_ind] <-  
+    #gsub("(^|^.*\\|\\| )(chip antibody:[^\\|:]+).*$", "\\2", 
+    #output_list$sample_attribute[ch_ab_ind])
     ##--------------------------------------------------------
     
     
@@ -379,9 +515,13 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     #------------------------------------------------
     #CELL_TYPE
     #------------------------------------------------
-    cell_type_indices <- conditionVerifier2(output_list, cell_type, cell_type_fields) #There is a very extensive list of categories with tissue information
+    cell_type_indices <- conditionVerifier2(output_list, 
+                                            cell_type, cell_type_fields) 
+    #There is a very extensive list of categories with tissue information
+    
     #Conditional search will not be used for now
-    mm(paste0(sum(cell_type_indices), " out of ", dim(output_list)[1], " initial entries comply with the cell type criteria"), "res")
+    mm(paste0(sum(cell_type_indices), " out of ", dim(output_list)[1], 
+              " initial entries comply with the cell type criteria"), "res")
     
     #------------------------------------------------
     #TREATMENT
@@ -389,15 +529,18 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     
     ##------------------------------------------------
     ##Simple search
-    #treatment_indices <- conditionVerifier(output_list, treatment, treatment_fields)
+    #treatment_indices <- conditionVerifier(output_list, 
+    #treatment, treatment_fields)
     ##------------------------------------------------
     
     #------------------------------------------------
     #Conditional search (based on antibody)
     
     #TREATMENT - LOGIC:
-    #- if any of the treatment categories exist within sample_attribute field, search within those
-    #- if none of the treatment categories exist within sample_attribute field, search within treatment_fields (INCLUDING sample_attribute)
+    #- if any of the treatment categories exist within sample_attribute field, 
+    #search within those
+    #- if none of the treatment categories exist within sample_attribute field, 
+    #search within treatment_fields (INCLUDING sample_attribute)
     #NOTE: treatment CAN be preceded by a letter (lowercase or uppercase)
     
     #Treatment-specific changes:
@@ -408,20 +551,34 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     
     if (length(treatment)!=0){
         #Find rows which contain categories in sample_attribute field
-        cat_treatment_indices <- conditionVerifier2(output_list, cat_treatment, "sample_attribute", "(^|\\|\\| )", ":" )
+        cat_treatment_indices <- conditionVerifier2(output_list, cat_treatment,
+                                                    "sample_attribute", 
+                                                    "(^|\\|\\| )", ":" )
         
         #Initialise vector for rows with matches to treatment query
         treatment_indices <- rep(NA, nrow(output_list))
         
         #Wrap regular expression around categories
-        cat_treatment_prefixes <- paste0("(^|\\|\\| )", cat_treatment, ":(|[^\\|]*?)") #Use a non-greedy quantifier and alternation
+        cat_treatment_prefixes <- paste0("(^|\\|\\| )", 
+                                         cat_treatment, ":(|[^\\|]*?)") 
+        #Use a non-greedy quantifier and alternation
         
-        #Search within sample_attribute field (when matches to categories occur)
-        treatment_indices[cat_treatment_indices] <- conditionVerifier2(output_list[cat_treatment_indices, ], treatment, "sample_attribute", list(cat_treatment_prefixes))
+        
+        #Search within sample_attribute field 
+        #(when matches to categories occur)
+        treatment_indices[cat_treatment_indices] <- 
+            conditionVerifier2(output_list[cat_treatment_indices, ], 
+                                treatment, "sample_attribute", 
+                                list(cat_treatment_prefixes))
         
         #Search within other fields (if there were no matches to categories)
-        treatment_indices[!cat_treatment_indices] <- conditionVerifier2(output_list[!cat_treatment_indices, ], treatment, treatment_fields) #Noletter prefix as a separate input
-        mm(paste0(sum(treatment_indices), " out of ", dim(output_list)[1], " initial entries comply with the treatment criteria"), "res")
+        treatment_indices[!cat_treatment_indices] <- 
+            conditionVerifier2(output_list[!cat_treatment_indices, ], 
+                               treatment, treatment_fields) 
+        #Noletter prefix as a separate input
+        
+        mm(paste0(sum(treatment_indices), " out of ", dim(output_list)[1], 
+                " initial entries comply with the treatment criteria"), "res")
     } else {
         treatment_indices <- rep(TRUE, nrow(output_list))
         mm("No treatment specified. Returned all TRUE", "adverse")
@@ -436,21 +593,29 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     #------------------------------------------------
     #SPECIES
     #------------------------------------------------
-    species_indices <- conditionVerifier2(output_list, species, "taxon_id")
-    mm(paste0(sum(species_indices), " out of ", dim(output_list)[1], " initial entries comply with the species criteria"), "res")
+    species_indices <- conditionVerifier2(output_list, species, 
+                                            "taxon_id")
+    mm(paste0(sum(species_indices), " out of ", dim(output_list)[1], 
+                " initial entries comply with the species criteria"), "res")
     
     #------------------------------------------------
     #LIBRARY_STRATEGY
     #------------------------------------------------
-    library_strategy_indices <- conditionVerifier2(output_list, library_strategy, "library_strategy")
-    mm(paste0(sum(library_strategy_indices), " out of ", dim(output_list)[1], " initial entries comply with the library strategy criteria"), "res")
+    library_strategy_indices <- conditionVerifier2(output_list, 
+                                                library_strategy, 
+                                                "library_strategy")
+    
+    mm(paste0(sum(library_strategy_indices), " out of ", dim(output_list)[1], 
+                " initial entries comply with the library strategy criteria"), 
+        "res")
     
     
     #------------------------------------------------
     #PLATFORM
     #------------------------------------------------
     platform_indices <- conditionVerifier2(output_list, platform, "platform")
-    mm(paste0(sum(platform_indices), " out of ", dim(output_list)[1], " initial entries comply with the platform criteria"), "res")
+    mm(paste0(sum(platform_indices), " out of ", dim(output_list)[1], 
+                " initial entries comply with the platform criteria"), "res")
     
     
     #------------------------------------------------
@@ -459,14 +624,18 @@ searchSRA <- function(SRA_library_strategy, gene, antibody, cell_type, treatment
     #------------------------------------------------
     #------------------------------------------------
     
-    output_indices <- gene_indices & antibody_indices & cell_type_indices & treatment_indices & species_indices & library_strategy_indices & platform_indices
+    output_indices <- gene_indices & antibody_indices & 
+        cell_type_indices & treatment_indices & species_indices & 
+        library_strategy_indices & platform_indices
     
     output_list <- output_list[output_indices,] #Only leave the matching rows
     
     # Rename columns
     #output_list <- renameSRAColumns(output_list)
     
-    message(paste0(dim(output_list)[1], " results passed verification phase")) # ===*===
+    message(paste0(dim(output_list)[1], 
+                   " results passed verification phase")) # ===*===
+    
     .GlobalEnv$spider_output_list_sra_filtered <- output_list
     
     if (dim(output_list)[1]==0) {
