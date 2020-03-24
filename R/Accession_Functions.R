@@ -9,7 +9,7 @@
 # into correct class or returns an error if not all elements are matched 
 # to the same class
 # 
-# - vConditionVerifier - grepl'es on the input vector according to any 
+# - verifySimpleConditions - grepl'es on the input vector according to any 
 # of the regular expressions (an OR operation)
 
 
@@ -79,7 +79,7 @@ classifyAccession <- function(x, na.ignore = FALSE){
     accession_class <- NA
     
     for (a in seq_along(accession_regexp)){
-        if (sum(vConditionVerifier(accession_regexp[[a]], x))==length(x))
+        if (sum(verifySimpleConditions(accession_regexp[[a]], x))==length(x))
             accession_class <- accession_name[a]
     }
     
@@ -104,13 +104,18 @@ classifyAccession <- function(x, na.ignore = FALSE){
 #' @return A logical vector with TRUE at positions where there was 
 #' a match to at least one of the reqular expressions (OR operation)
 #' 
+#' @description  A wrapper around grepl function (with default settings) 
+#' performing an OR operation for matches of all the elements 
+#' of the regexpr_vector elements (i.e. matching to one element is sufficient
+#' for the value to be set to TRUE for that position)
+#' 
 #' @examples 
-#' vConditionVerifier("^m$", c("m", "mm", "cm", "M"))
+#' verifySimpleConditions("^m$", c("m", "mm", "cm", "M"))
 #' 
 #' @keywords internal
 #' 
 #' 
-vConditionVerifier <- function(regexpr_vector, x){
+verifySimpleConditions <- function(regexpr_vector, x){
     rv <- regexpr_vector
     
     out <- rep(FALSE, length(x))

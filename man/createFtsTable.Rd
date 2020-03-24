@@ -2,16 +2,16 @@
 % Please edit documentation in R/createFtsTable.R
 \name{createFtsTable}
 \alias{createFtsTable}
-\title{Create a new table in a dabase to enable fulltext search (FTS)}
+\title{Create a new table in a dabase to enable fulltext search (fts)}
 \usage{
 createFtsTable(database_name, table_name, new_table_name)
 }
 \arguments{
 \item{database_name}{Name of database connection}
 
-\item{table_name}{Name of the table to duplicate as FTS table}
+\item{table_name}{Name of the table to duplicate as fts table}
 
-\item{new_table_name}{Name of the new FTS table}
+\item{new_table_name}{Name of the new fts table}
 }
 \value{
 Nothing. Update the relevant database 

@@ -269,7 +269,7 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
     #============================================================================
     # Extract GSMs from the experiment_title
     #============================================================================
-    spider_combined <- gsmExtractor(spider_combined)
+    spider_combined <- extractGSM(spider_combined)
     #============================================================================
     
     
@@ -334,7 +334,7 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
     #gsm_list <- c("GSM2342088")
     #gsm_list <- c("GSM2342088", "GSM2140962")
     
-    gsm_list <- spider_combined$gsm #Get GSMs from column created by gsmExtractor() # sampletogsm ===*===
+    gsm_list <- spider_combined$gsm #Get GSMs from column created by extractGSM() # sampletogsm ===*===
     gsm_list <- unique(gsm_list[!is.na(gsm_list)]) #Leave only unique, non-na entries
     #-------------------------
     

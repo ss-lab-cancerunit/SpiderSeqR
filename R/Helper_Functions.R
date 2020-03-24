@@ -7,14 +7,13 @@
 
 #CONNECTED AND MOVED
 #searchSRA()
-#conditionVerifier()
-#conditionVerifier2()
-#queryWriter()
+#verifyConditions()
+#writeQuery()
 #withOut()
-#gsmExtractor()
+#extractGSM()
 #searchForSRPChildren()
 #rbindUniqueCols()
-#naConverter()
+#unifyNAs()
 #universalExtractor()
 #inputDetector()
 #columnVerifier()
@@ -217,7 +216,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     for (s in seq_along(search)){
         if (length(search[[s]]!=0)){ #Only include non-empty search term types
             query <- paste0(query, "(", 
-                            queryWriter(search[[s]], fields[[s]]), " ) AND ")
+                            writeQuery(search[[s]], fields[[s]]), " ) AND ")
             #print(query)
         }
     }
@@ -290,7 +289,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     
     #------------------------------------------------
     #simple search:
-    #gene_indices <- conditionVerifier(output_list, gene, 
+    #gene_indices <- verifyConditions(output_list, gene, 
     #gene_fields, gene_prefixes, gene_suffixes)
     #------------------------------------------------
     
@@ -306,7 +305,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     
     if (length(gene)!=0){
         #Find rows which contain categories in sample_attribute field
-        cat_gene_indices <- conditionVerifier2(output_list, cat_gene, 
+        cat_gene_indices <- verifyConditions(output_list, cat_gene, 
                                                 "sample_attribute", 
                                                 "(^|\\|\\| )", ":" )
         
@@ -321,13 +320,13 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
         #Search within sample_attribute field 
         #(when matches to categories occur)
         gene_indices[cat_gene_indices] <- 
-            conditionVerifier2(output_list[cat_gene_indices, ], gene, 
+            verifyConditions(output_list[cat_gene_indices, ], gene, 
                                 "sample_attribute", list(cat_gene_prefixes))
         
         
         #Search within other fields (if there were no matches to categories)
         gene_indices[!cat_gene_indices] <- 
-            conditionVerifier2(output_list[!cat_gene_indices, ], 
+            verifyConditions(output_list[!cat_gene_indices, ], 
                             gene, withOut("sample_attribute", gene_fields), 
                               "(^|[^A-Za-z])") 
         #Noletter prefix as a separate input
@@ -372,7 +371,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     
     #------------------------------------------------
     #simple search:
-    #antibody_indices <- conditionVerifier(output_list, antibody, 
+    #antibody_indices <- verifyConditions(output_list, antibody, 
     #antibody_fields, antibody_prefixes, antibody_suffixes)
     #------------------------------------------------
     
@@ -382,21 +381,21 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     #(if any of the category synonyms exist, only search within them)
     #INITIAL VERSIONS
     
-    ##cat_antibody_indices <- conditionVerifier(output_list, list("antibody"), 
+    ##cat_antibody_indices <- verifyConditions(output_list, list("antibody"), 
     #"sample_attribute", list(rep("(^|\\|\\| )", nrow(output_list))), 
     #list(rep(":", nrow(output_list))) ) 
     #the size of prefixes/suffixes is unnecessary
     
     ##Find rows which contain categories in sample_attribute field
     
-    ##cat_antibody_indices <- conditionVerifier(output_list, 
+    ##cat_antibody_indices <- verifyConditions(output_list, 
     #list("antibody", "chip antibody"), "sample_attribute", 
     #"(^|\\|\\| )", ":" ) #worked
-    ##cat_antibody_indices <- conditionVerifier(output_list, 
+    ##cat_antibody_indices <- verifyConditions(output_list, 
     #c("antibody", "chip antibody"), "sample_attribute", "(^|\\|\\| )", ":" ) 
     #also worked
     
-    #cat_antibody_indices <- conditionVerifier(output_list, 
+    #cat_antibody_indices <- verifyConditions(output_list, 
     #cat_antibody, "sample_attribute", "(^|\\|\\| )", ":" )
     
     ##Initialise vector for rows with matches to antibody query
@@ -407,11 +406,11 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     ##OPTION 1: Search just for antibody
     #cat_antibody_prefixes <- paste0("(^|\\|\\| )", cat_antibody, ":[^\\|:]+")
     #antibody_indices[cat_antibody_indices] <- 
-    #conditionVerifier(output_list[cat_antibody_indices, ], antibody, 
+    #verifyConditions(output_list[cat_antibody_indices, ], antibody, 
     #"sample_attribute", list(cat_antibody_prefixes))
     
     #antibody_indices[!cat_antibody_indices] <- 
-    #conditionVerifier(output_list[!cat_antibody_indices, ], antibody, 
+    #verifyConditions(output_list[!cat_antibody_indices, ], antibody, 
     #antibody_fields, antibody_prefixes, antibody_suffixes)
     
     
@@ -421,21 +420,21 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     #antibody_noletter <- paste0("(^|[^A-Za-z])", antibody)
     ##antibody_noletter <- antibody
     #antibody_indices[cat_antibody_indices] <- 
-    #conditionVerifier2(output_list[cat_antibody_indices, ], 
+    #verifyConditions(output_list[cat_antibody_indices, ], 
     #antibody_noletter, "sample_attribute", list(cat_antibody_prefixes))
     
     ##antibody_indices[!cat_antibody_indices] <- 
-    #conditionVerifier(output_list[!cat_antibody_indices, ], 
+    #verifyConditions(output_list[!cat_antibody_indices, ], 
     #antibody_noletter, antibody_fields, antibody_prefixes, antibody_suffixes) 
     #Deleting prefixes and suffixes since antibody_noletter 
     #already includes that information
     
     ##antibody_indices[!cat_antibody_indices] <- 
-    #conditionVerifier2(output_list[!cat_antibody_indices, ], 
+    #verifyConditions(output_list[!cat_antibody_indices, ], 
     #antibody_noletter, withOut("sample_attribute", antibody_fields)) 
     #special variable used - antibody_noletter
     #antibody_indices[!cat_antibody_indices] <- 
-    #conditionVerifier2(output_list[!cat_antibody_indices, ], 
+    #verifyConditions(output_list[!cat_antibody_indices, ], 
     #antibody, withOut("sample_attribute", antibody_fields), "(^|[^A-Za-z])") 
     #Noletter prefix
     ##------------------------------------------------
@@ -453,7 +452,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     
     if (length(antibody)!=0){
         #Find rows which contain categories in sample_attribute field
-        cat_antibody_indices <- conditionVerifier2(output_list, cat_antibody, 
+        cat_antibody_indices <- verifyConditions(output_list, cat_antibody, 
                                                 "sample_attribute", 
                                                 "(^|\\|\\| )", ":" )
         
@@ -468,12 +467,12 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
         
         #Search within sample_attribute field(when matches to categories occur)
         antibody_indices[cat_antibody_indices] <- 
-            conditionVerifier2(output_list[cat_antibody_indices, ], antibody, 
+            verifyConditions(output_list[cat_antibody_indices, ], antibody, 
                             "sample_attribute", list(cat_antibody_prefixes))
         
         #Search within other fields (if there were no matches to categories)
         antibody_indices[!cat_antibody_indices] <- 
-            conditionVerifier2(output_list[!cat_antibody_indices, ], 
+            verifyConditions(output_list[!cat_antibody_indices, ], 
                                 antibody, withOut("sample_attribute", 
                                                 antibody_fields), 
                                 "(^|[^A-Za-z])") 
@@ -515,7 +514,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     #------------------------------------------------
     #CELL_TYPE
     #------------------------------------------------
-    cell_type_indices <- conditionVerifier2(output_list, 
+    cell_type_indices <- verifyConditions(output_list, 
                                             cell_type, cell_type_fields) 
     #There is a very extensive list of categories with tissue information
     
@@ -529,7 +528,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     
     ##------------------------------------------------
     ##Simple search
-    #treatment_indices <- conditionVerifier(output_list, 
+    #treatment_indices <- verifyConditions(output_list, 
     #treatment, treatment_fields)
     ##------------------------------------------------
     
@@ -551,7 +550,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     
     if (length(treatment)!=0){
         #Find rows which contain categories in sample_attribute field
-        cat_treatment_indices <- conditionVerifier2(output_list, cat_treatment,
+        cat_treatment_indices <- verifyConditions(output_list, cat_treatment,
                                                     "sample_attribute", 
                                                     "(^|\\|\\| )", ":" )
         
@@ -567,13 +566,13 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
         #Search within sample_attribute field 
         #(when matches to categories occur)
         treatment_indices[cat_treatment_indices] <- 
-            conditionVerifier2(output_list[cat_treatment_indices, ], 
+            verifyConditions(output_list[cat_treatment_indices, ], 
                                 treatment, "sample_attribute", 
                                 list(cat_treatment_prefixes))
         
         #Search within other fields (if there were no matches to categories)
         treatment_indices[!cat_treatment_indices] <- 
-            conditionVerifier2(output_list[!cat_treatment_indices, ], 
+            verifyConditions(output_list[!cat_treatment_indices, ], 
                                treatment, treatment_fields) 
         #Noletter prefix as a separate input
         
@@ -593,7 +592,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     #------------------------------------------------
     #SPECIES
     #------------------------------------------------
-    species_indices <- conditionVerifier2(output_list, species, 
+    species_indices <- verifyConditions(output_list, species, 
                                             "taxon_id")
     mm(paste0(sum(species_indices), " out of ", dim(output_list)[1], 
                 " initial entries comply with the species criteria"), "res")
@@ -601,7 +600,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     #------------------------------------------------
     #LIBRARY_STRATEGY
     #------------------------------------------------
-    library_strategy_indices <- conditionVerifier2(output_list, 
+    library_strategy_indices <- verifyConditions(output_list, 
                                                 library_strategy, 
                                                 "library_strategy")
     
@@ -613,7 +612,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     #------------------------------------------------
     #PLATFORM
     #------------------------------------------------
-    platform_indices <- conditionVerifier2(output_list, platform, "platform")
+    platform_indices <- verifyConditions(output_list, platform, "platform")
     mm(paste0(sum(platform_indices), " out of ", dim(output_list)[1], 
                 " initial entries comply with the platform criteria"), "res")
     
@@ -656,20 +655,37 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
 
 #----------------------------------------------------------------------------
 #Developed in searchForTerm5.R
-#Newer version: will allow to have atomic prefixes/suffixes vector, which will get repeated accordingly
+#Newer version: will allow to have atomic prefixes/suffixes vector, 
+#which will get repeated accordingly
 #Now prints regexp and the name of the column being searched
 #Enabled perl
 #------------------------------------------------
-conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
-    # Args:   - df - data frame to be verified
-    #         - keywords - vector of strings to be searched for
-    #         - columns - vector with column names to be searched
-    #         - prefixes - vector/list with prefixes to keywords (its first dimension needs to be the same as columns)
-    #         - suffixes - vector/list with suffixes to keywords (its first dimension needs to be the same as columns)
-    #
-    # Returns: logical vector (same length as df) with TRUE indicating matches to the conditions
-    #
-    mm("Running conditionVerifier2", "fn")
+
+
+#' Verify whether conditions are met in a data frame
+#' 
+#' @param df Data frame to be verified
+#' @param keywords Vector of strings to be searched for
+#' @param columns Vector with column names (within df) to be searched for
+#' @param prefixes (Optional) Vector or list with prefixes to keywords 
+#' (its first dimension needs to be the same as columns)
+#' @param suffixes (Optional) Vector or list with suffixes to keywords
+#' (its first dimension needs to be the same as columns)
+#' 
+#' @return Logical vector (same length as df) 
+#' with TRUE indicating matches to the conditions
+#' 
+#' @description Verify if the specified columns within the data frame 
+#' match specified conditions. 
+#' Match is performed using grepl (case insensitive, with perl set to TRUE).
+#' Any given row will be returned as TRUE if ANY of its columns 
+#' matched to ANY of the keywords with ANY of the prefixes 
+#' and ANY of the suffixes.
+#' 
+#' @keywords internal
+#' 
+verifyConditions <- function(df, keywords, columns, prefixes, suffixes){
+    mm("Running verifyConditions", "fn")
     
     if (missing(prefixes)){
         prefixes <- rep("", length(columns))
@@ -691,7 +707,8 @@ conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
         if (length(suffixes)==1){
             suffixes <- rep(suffixes, length(columns))
         } else {
-            stop("INFO: Suffix vector needs to be the same size as columns vector")
+            stop(paste0("INFO: Suffix vector needs to be the same size ",
+                        "as columns vector"))
         }
     }
     
@@ -705,7 +722,8 @@ conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
             for (k in seq_along(keywords)){
                 
                 
-                columns_index <- grep(paste0("^", columns[c], "$"), colnames(df))
+                columns_index <- grep(paste0("^", columns[c], "$"), 
+                                        colnames(df))
                 #print(colnames(df))
                 #print(colnames(df)[columns_index])
                 
@@ -717,11 +735,16 @@ conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
                 for (p in seq_along(prefixes[[c]])){
                     for (s in seq_along(suffixes[[c]])){
                         
-                        keywords_regexp <- paste0(prefixes[[c]][p], keywords[k], suffixes[[c]][s])
-                        mm(paste(keywords_regexp, "IN", colnames(df)[columns_index]), "query")
+                        keywords_regexp <- paste0(prefixes[[c]][p], 
+                                                keywords[k], suffixes[[c]][s])
+                        mm(paste(keywords_regexp, "IN", 
+                                    colnames(df)[columns_index]), "query")
                         #print(colnames(df)[columns_index])
                         #print(keywords_regexp)
-                        row_matches <- row_matches | grepl(keywords_regexp, df[,columns_index], ignore.case = TRUE, perl = TRUE)
+                        row_matches <- row_matches | grepl(keywords_regexp, 
+                                                        df[,columns_index], 
+                                                        ignore.case = TRUE, 
+                                                        perl = TRUE)
                     }
                 }
             }
@@ -731,90 +754,36 @@ conditionVerifier2 <- function(df, keywords, columns, prefixes, suffixes){
         row_matches <- rep(TRUE, nrow(df))
         warning("No keywords specified. All TRUE returned")
     }
-    mm("conditionVerifier2 completed", "fn")
+    mm("verifyConditions completed", "fn")
     
     return(row_matches)
     
 }
 #------------------------------------------------
 
-#------------------------------------------------
-#Older version
-#A few commented lines use it - double check whether it is redundant?
-conditionVerifier <- function(df, keywords, columns, prefixes, suffixes){
-    # Args:   - df - data frame to be verified
-    #         - keywords - vector of strings to be searched for
-    #         - columns - vector with column names to be searched
-    #         - prefixes - vector/list with prefixes to keywords (its first dimension needs to be the same as columns)
-    #         - suffixes - vector/list with suffixes to keywords (its first dimension needs to be the same as columns)
-    #
-    # Returns: logical vector (same length as df) with TRUE indicating matches to the conditions
-    #
-    mm("Running conditionVerifier", "fn")
-    
-    if (missing(prefixes)){
-        prefixes <- rep("", length(columns))
-    }
-    if (missing(suffixes)){
-        suffixes <- rep("", length(columns))
-    }
-    
-    if (length(prefixes)!=length(columns)){
-        stop("Prefix vector needs to be the same size as columns vector")
-    }
-    if (length(suffixes)!=length(columns)){
-        stop("Suffix vector needs to be the same size as columns vector")
-    }
-    
-    
-    
-    if (length(keywords)!=0){
-        
-        row_matches <- rep(FALSE, nrow(df))
-        
-        for (c in seq_along(columns)){
-            for (k in seq_along(keywords)){
-                
-                
-                columns_index <- grep(paste0("^", columns[c], "$"), colnames(df))
-                
-                if (length(columns_index)>1){
-                    warning("Multiple columns match to the same name")
-                } else if (length(columns_index)==0){
-                    warning("No matches to the specified column")
-                }
-                for (p in seq_along(prefixes[[c]])){
-                    for (s in seq_along(suffixes[[c]])){
-                        
-                        keywords_regexp <- paste0(prefixes[[c]][p], keywords[k], suffixes[[c]][s])
-                        mm(keywords_regexp, "query")
-                        row_matches <- row_matches | grepl(keywords_regexp, df[,columns_index], ignore.case = TRUE)
-                    }
-                }
-            }
-        }
-        
-    } else {
-        row_matches <- rep(TRUE, nrow(df))
-        warning("No keywords specified. All TRUE returned")
-    }
-    
-    return(row_matches)
-    mm("conditionVerifier completed", "fn")
-}
-#------------------------------------------------
+
+
 
 
 #------------------------------------------------
 #term <- c("term1", "term2")
 #fields <- c("field", "field2", "field3")
 
-queryWriter <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
-    # Args: term - vector of strings of interest
-    #       fields - vector of columns of interest
-    #       sql_before - sql query string before term
-    #       sql_after - sql query string after term
-    
+
+#' Automate Writing SQLite Queries
+#' 
+#' @param term Character vector with strings of interest
+#' @param fields character vector with columns of interest
+#' @param sql_before SQLite query string before term
+#' @param sql_after SQLite query string after term
+#' 
+#' @return Part of the  SQLite query pertaining to row selection criteria 
+#' (i.e. that comes after specifying the table and which columns to select)
+#' 
+#' @keywords internal
+#' 
+writeQuery <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
+
     #if (is.na(sql_before)){
     #  sql_before <- " LIKE '%"
     #}
@@ -822,7 +791,7 @@ queryWriter <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
     #if (is.na(sql_after)){
     #  sql_after <- "%'"
     #}
-    mm("Running queryWriter", "fn")
+    mm("Running writeQuery", "fn")
     
     query <- character()
     for (t in term){
@@ -830,15 +799,29 @@ queryWriter <- function(term, fields, sql_before=" LIKE '%", sql_after="%'"){
             query <- paste0(query, " (", f, sql_before, t, sql_after, ") OR")
         }
     }
-    query <- substr(query, 1, nchar(query)-3) #Remove the last "OR" (which is redundant)
-    mm("queryWriter completed", "fn")
+    
+    #Remove the last "OR" (which is redundant)
+    query <- substr(query, 1, nchar(query)-3) 
+    mm("writeQuery completed", "fn")
     return(query)
 }
 #------------------------------------------------
 
 
+
+
+
 #------------------------------------------------
 
+#' Remove matching elements from vector
+#' 
+#' @param names Character vector with values to be removed
+#' @param vector Character vector from which elements matching 
+#' to names will be removed
+#' 
+#' @return Original vector without specified elements
+#' 
+#' @keywords internal
 withOut <- function(names, vector){
     mm("Running withOut", "fn")
     names <- unique(names)
@@ -853,29 +836,47 @@ withOut <- function(names, vector){
 }
 
 #------------------------------------------------
-
 #----------------------------------------------------------------------------
 
 
 
 
 #----------------------------------------------------------------------------
-#Developed in gsmExtractor.R which also contains previous versions of the function
+#Developed in gsmExtractor.R 
+#which also contains previous versions of the function
 #New version of gsmExtractor - based on gsub tagging system
-gsmExtractor <- function(output_list, sampleColumn = TRUE){
-    mm("Running gsmExtractor", "fn")
+
+
+#' Extract GSM from the SRA_experiment_title column
+#' 
+#' @param output_list Data frame with (SRA_)experiment_title column
+#' @param sampleColumn Logical indicating whether a new column 
+#' should be added with extracted GSM numbers
+#' 
+#' @return Original data frame with extracted GSMs from (SRA_)experiment_title
+#' column and (if sampleColumn is set to TRUE) a new column 
+#' with extracted GSM numbers
+#' 
+#' @keywords internal
+#' 
+extractGSM <- function(output_list, sampleColumn = TRUE){
+    mm("Running extractGSM", "fn")
     #Find indices of rows which contain GSMs
     
     # Rename SRA_experiment_title
     rename_experiment_title <- FALSE
     if (sum(grepl("SRA_experiment_title", colnames(output_list)))==1){
         rename_experiment_title <- TRUE
-        colnames(output_list)[grepl("SRA_experiment_title", colnames(output_list))] <- "experiment_title"
+        colnames(output_list)[grepl(
+                                "SRA_experiment_title", 
+                                colnames(output_list))] <- "experiment_title"
     }
     
     
+    #Safer option, but not strictly necessary, 
+    #because GSM is always followed by ": ".
     gsm_indices <- grep("^GSM\\d\\d\\d+: ", output_list$experiment_title)
-    #gsm_indices <- grep("^GSM\\d\\d\\d+", output_list$experiment_title) #Safer option, but not strictly necessary, because GSM is always followed by ": ".
+    #gsm_indices <- grep("^GSM\\d\\d\\d+", output_list$experiment_title) 
     
     
     if (sampleColumn == TRUE){
@@ -883,20 +884,26 @@ gsmExtractor <- function(output_list, sampleColumn = TRUE){
         output_list$gsm <- NA # sampletogsm ===*===
         
         #Extract the GSMs to sample column
-        output_list$gsm[gsm_indices] <- gsub("^(GSM\\d\\d\\d+).*$", "\\1", output_list$experiment_title[gsm_indices]) # sampletogsm ===*===
+        output_list$gsm[gsm_indices] <- 
+            gsub("^(GSM\\d\\d\\d+).*$", "\\1", 
+                    output_list$experiment_title[gsm_indices]) 
+        # sampletogsm ===*===
     }
     
     
     #Remove the GSMs from experiment_title column
-    output_list$experiment_title[gsm_indices] <- gsub("^GSM\\d\\d\\d+: ", "", output_list$experiment_title[gsm_indices])
+    output_list$experiment_title[gsm_indices] <- 
+        gsub("^GSM\\d\\d\\d+: ", "", output_list$experiment_title[gsm_indices])
     
     
     # Rename experiment_title back to SRA_experiment_title
     if (rename_experiment_title){
-        colnames(output_list)[grepl("experiment_title", colnames(output_list))] <- "SRA_experiment_title"
+        colnames(output_list)[
+            grepl("experiment_title", colnames(output_list))] <- 
+                                                        "SRA_experiment_title"
     }
     
-    mm("gsmExtractor completed", "fn")
+    mm("extractGSM completed", "fn")
     return(output_list)
 }
 #----------------------------------------------------------------------------
@@ -907,9 +914,23 @@ gsmExtractor <- function(output_list, sampleColumn = TRUE){
 #----------------------------------------------------------------------------
 #[Developed in getSRP_indev.R]
 #This is the most up to date copy
+
+
+#' Search for missing SRRs within SRPs
+#' 
+#' @param srp_list Character vector with SRPs to search for
+#' @param srp_columns Character vector with names of columns 
+#' (within sra table of SRA) to be retrieved from the database
+#' NOTE: can also be "*", i.e. all columns
+#' @return Data frame with all the SRRs belonging to specified SRPs
+#' 
+#' @description Search for SRPs within SRA database to retrieve 
+#' their contents (i.e. all SRRs) as a data frame.
+#' 
+#' @keywords internal
 searchForSRPChildren <- function(srp_list, srp_columns){
     #Aims:
-    #- Find all the rows in the database containing relevant SRPs (study_acession column)
+    #- Find all the rows in the database containing relevant SRPs 
     #(This is equivalent to finding all SRRs belonging to a given SRP)
     #- Extract relevant columns from the sra table
     # ===*=== COMPARE PERFORMANCE AGAINST PARAMETRISED QUERY
@@ -922,8 +943,12 @@ searchForSRPChildren <- function(srp_list, srp_columns){
     srp_columns_collapsed <- paste(srp_columns, collapse = ", ")
     
     for (srp in srp_list){
-        srp_query <- paste0("SELECT ", srp_columns_collapsed, " FROM sra WHERE study_accession = '", srp, "'")
-        srp_entry <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), srp_query)
+        srp_query <- paste0("SELECT ", srp_columns_collapsed, 
+                            " FROM sra WHERE study_accession = '", srp, "'")
+        srp_entry <- DBI::dbGetQuery(
+                                get(database_name, envir = get(database_env)), 
+                                srp_query)
+        
         srp_all <- rbind(srp_all, srp_entry)
     }
     
@@ -942,14 +967,23 @@ searchForSRPChildren <- function(srp_list, srp_columns){
 #Replaced rbindUnique (which worked, but added an input column within itself)
 #New features:
 # - rbinds two dfs based on all columns with the exception of disregard_columns
+
+
+#' Bind unique entries from two data frames disregarding some of the columns
+#' 
+#' @param x, y Data frames to be merged (need to have the same columns; 
+#' entries that are duplicated among the dfs will be removed from y)
+#' @param disregard_columns Character vector with names of columns 
+#' which will be ignored when finding unique rows 
+#' of combined x and y data frame
+#' @return Data frame with all unique rows from x and y, 
+#' when considered disregarding specified columns 
+#' (only those rows of y that do not exist in x will be preserved)
+#' 
+#' @keywords internal
+#' 
 rbindUniqueCols <- function(x, y, disregard_columns){
-    # Args: x, y - data frames (need to share column names!)to be merged
-    #       disregard_columns - vector with column names which will be ignored
-    #                             when finding the unique rows of combined x and y df
-    # Returns: xy - data frame with all rows of x and only those rows of y that do not exist in x
-    #            (obtained by ignoring disregard_columns)
-    #
-    #
+
     mm("Running rbindUniqueCols", "fn")
     
     if (!setequal(colnames(x), colnames(y))){
@@ -965,8 +999,15 @@ rbindUniqueCols <- function(x, y, disregard_columns){
     
     #Get indices of columns within x and y
     for (c in seq_along(disregard_columns)){
-        x_dc_indices <- append(x_dc_indices, grep(paste0("^", disregard_columns[c], "$"), colnames(x)))
-        y_dc_indices <- append(y_dc_indices, grep(paste0("^", disregard_columns[c], "$"), colnames(y)))
+        x_dc_indices <- append(x_dc_indices, grep(paste0("^", 
+                                                        disregard_columns[c], 
+                                                        "$"), 
+                                                colnames(x)))
+        
+        y_dc_indices <- append(y_dc_indices, grep(paste0("^", 
+                                                        disregard_columns[c], 
+                                                        "$"), 
+                                                colnames(y)))
     }
     
     
@@ -985,8 +1026,11 @@ rbindUniqueCols <- function(x, y, disregard_columns){
         stop("Cannot disregard more columns than there are in the data frame")
     }
     
-    #Get indices of y that are not duplicated within x (ignoring disregard_columns)
-    #indices <- (!duplicated(rbind(x[ , -(x_dc_indices)], y[ , -(y_dc_indices)])) )[-(1:nrow(x))]
+    #Get indices of y that are not duplicated within x 
+    #(ignoring disregard_columns)
+    #indices <- (!duplicated(rbind(x[ , -(x_dc_indices)], 
+    #y[ , -(y_dc_indices)])) )[-(1:nrow(x))]
+    
     x_colnames <- colnames(x)
     x_only_relevant <-as.data.frame(x[ , -(x_dc_indices)])
     colnames(x_only_relevant) <- x_colnames[-x_dc_indices]
@@ -998,19 +1042,24 @@ rbindUniqueCols <- function(x, y, disregard_columns){
     #print(colnames(y_only_relevant))
     
     #This was a bug!
-    #indices <- (!duplicated(rbind(y_only_relevant, x_only_relevant)) )[-(1:nrow(x))]
+    #indices <- (!duplicated(rbind(y_only_relevant, x_only_relevant)) )[
+    #-(1:nrow(x))]
     
-    indices <- (!duplicated(rbind(x_only_relevant, y_only_relevant)) )[-seq(1, nrow(x))]
+    indices <- (!duplicated(rbind(x_only_relevant, y_only_relevant)) )[
+                                                            -seq(1, nrow(x))]
     
     #DOES NOT WORK IF ONLY A SINGLE COLUMN REMAINS
-    #indices <- (!duplicated(rbind(x[ , -(x_dc_indices)], y[ , -(y_dc_indices)])) )[-(1:nrow(x))]
+    #indices <- (!duplicated(rbind(x[ , -(x_dc_indices)], 
+    #y[ , -(y_dc_indices)])) )[-(1:nrow(x))]
     
     #THIS WORKS FOR VECTORS ONLY
-    #indices <- (!duplicated(append(x[ , -(x_dc_indices)], y[ , -(y_dc_indices)])) )[-(1:nrow(x))]
+    #indices <- (!duplicated(append(x[ , -(x_dc_indices)], 
+    #y[ , -(y_dc_indices)])) )[-(1:nrow(x))]
     #append(x[ , -(x_dc_indices)], y[ , -(y_dc_indices)])
     
     #THIS DOES NOT WORK (df naming issues) - but was almost there
-    #indices <- (!duplicated(rbind(as.data.frame(x[ , -(x_dc_indices)]), as.data.frame(y[ , -(y_dc_indices)]))) )[-(1:nrow(x))]
+    #indices <- (!duplicated(rbind(as.data.frame(x[ , -(x_dc_indices)]), 
+    #as.data.frame(y[ , -(y_dc_indices)]))) )[-(1:nrow(x))]
     
     #print(x[,-(x_dc_indices)])
     #print(y[,-(y_dc_indices)])
@@ -1044,24 +1093,28 @@ rbindUniqueCols <- function(x, y, disregard_columns){
 #df1b[1,1] <- "NA"
 
 
-#View(naConverter(df1b))
+#View(unifyNAs(df1b))
 
 #class(df1b[1,1])
 #class(df1b[1,2])
 #class(df1b[1,3])
 
 #is.na(df1b)
+
 #----------------------------------------------------------------------------
-naConverter <- function(x){
-    # Args: data frame
-    # Returns: data frame
-    # swapping "" and "NA" into NA
+
+#' Unify handling of NA values
+#' 
+#' @param x data frame
+#' @return Data frame with "" and "NA" values converted to NA
+#' 
+unifyNAs <- function(x){
+    mm("Running unifyNAs", "fn")
     
-    #print("Running naConverter")
     is.na(x) <- x == ""
     is.na(x) <- x == "NA"
-    #print("naConverter completed")
     
+    mm("unifyNAs completed", "fn")
     return(x)
 }
 #----------------------------------------------------------------------------
@@ -1070,37 +1123,50 @@ naConverter <- function(x){
 
 #----------------------------------------------------------------------------
 #From characteristics3.R
-#Newer version - with extra if statements to check if the newly added extract doesn't already exist in the extract
-#(i.e. to eliminate the cases when the same information is added multiple times)
+#Newer version - with extra if statements to check if 
+#the newly added extract doesn't already exist in the extract
+#(i.e. to eliminate the cases when the same information 
+#is added multiple times)
 #
 #Learning points: be careful about initialisation of lists
 #In theory, could also do: rep(list(character()), length(key_words))
 #instead of rep(list(""), length(key_words))
-#However, this would also require a different course of action for collapse procedures...
+#However, this would also require a different course 
+#of action for collapse procedures...
 #
 #Conditional loop problem solved
 #
 #Newest version - variable names changed
 #Print statements deleted
 #
-#gsub statement now deletes anything before the key_word as well (e.g. "chip antibody: " as opposed to "antibody: ", which would leave chip with the extracted part)
+#gsub statement now deletes anything before the key_word as well 
+#(e.g. "chip antibody: " as opposed to "antibody: ", 
+#which would leave chip with the extracted part)
 #grep and gsub changed to case insensitive
-universalExtractor <- function(characteristics, key_words, sep_split, sep_collapse){
-    # Extracts parts of the separable string which contain key_words (without the key_words) and the remainder after all the subtractions
-    #
-    # Args:
-    #      characteristics - separable string (must be a string!!!)
-    #      sep_split - separator for splitting
-    #      sep_collapse - separator for collapsing
-    #      key_words - list of key words to be searched for (and removed); each of the k list levels contains synonyms for the same category
-    #
-    # Returns: a vector with:
-    #      characteristics - original string
-    #      char_remainder - characteristics without the elements that contained any of the key_words
-    #      char_extract[1] - extract of key_word[[1]]
-    #      ...
-    #      char_extract[k] - extract of key_word[[k]]
-    
+
+
+#' Universal function for extracting from strings
+#' 
+#' @param characteristics Separable string (must be a string)
+#' @param sep_split A character denoting splitting character
+#' @param key_words A list of key words to be searched for (and removed); 
+#' each of the k list levels contains synonyms for the same category
+#' @return A vector with:
+#' \itemize{
+#'     \item characteristics (original string)
+#'     \item char_extract[1] - extract of key_word[[1]]
+#'     \item ...
+#'     \item char_extract[k] - extract of key_word[[k]]
+#' }
+#' 
+#' Extracts parts of a separable string which contains key_words 
+#' (without the key_words) and the remainder after all the subtractions
+#' 
+#' 
+#' @keywords internal
+#' 
+universalExtractor <- 
+    function(characteristics, key_words, sep_split, sep_collapse){
     #print("Running universalExtractor")
     
     #Split the string
@@ -1112,18 +1178,38 @@ universalExtractor <- function(characteristics, key_words, sep_split, sep_collap
     
     for (k in seq_along(key_words)){
         for (i in seq_along(key_words[[k]])){
-            char_curr_indices <- grep(key_words[[k]][i], char_split, ignore.case = TRUE) #Get indices of matches to current key_word
-            if (length(char_curr_indices)!=0){ #Proceed with the next steps if there were matches
-                char_curr_extract <- gsub(paste0("^.*", key_words[[k]][i]), "", char_split[char_curr_indices], ignore.case = TRUE) #Get extract (without the key_word preceding it)
-                char_indices <- append(char_indices, char_curr_indices) #Append indices to previous ones
+            
+            #Get indices of matches to current key_word
+            char_curr_indices <- 
+                grep(key_words[[k]][i], char_split, ignore.case = TRUE) 
+            
+            #Proceed with the next steps if there were matches
+            if (length(char_curr_indices)!=0){ 
+                
+                #Get extract (without the key_word preceding it)
+                char_curr_extract <- gsub(paste0("^.*", key_words[[k]][i]), "",
+                                        char_split[char_curr_indices], 
+                                        ignore.case = TRUE) 
+                
+                #Append indices to previous ones
+                char_indices <- append(char_indices, char_curr_indices) 
+                
                 for (t in seq_along(char_curr_extract)){
-                    if(char_curr_extract[t]!=""){ #Current extract is nonempty
+                    
+                    #Current extract is nonempty
+                    if(char_curr_extract[t]!=""){ 
                         if (length(char_extract[[k]])==0) {
-                            char_extract[[k]] <- append(char_extract[[k]], char_curr_extract[t]) #Append current extract
-                        } else if (length(grep(char_curr_extract[t], char_extract[[k]],
-                                               #ignore.case = TRUE,
-                                               fixed = TRUE))==0) {
-                            char_extract[[k]] <- append(char_extract[[k]], char_curr_extract[t]) #Append current extract
+                            #Append current extract
+                            char_extract[[k]] <- append(char_extract[[k]], 
+                                                        char_curr_extract[t]) 
+                        } else if (length(grep(char_curr_extract[t], 
+                                                char_extract[[k]],
+                                                #ignore.case = TRUE,
+                                                fixed = TRUE))==0) {
+                            #Append current extract
+                            char_extract[[k]] <-
+                                append(char_extract[[k]], 
+                                       char_curr_extract[t]) 
                         }
                     }
                 }
@@ -1150,24 +1236,28 @@ universalExtractor <- function(characteristics, key_words, sep_split, sep_collap
     char_indices <- char_indices[order(char_indices)]
     
     if (length(char_indices)!=0){
-        char_remainder <- char_split[-char_indices] #===*=== Consider an if statement assigning an empty string or NA...
+        #===*=== Consider an if statement assigning an empty string or NA...
+        char_remainder <- char_split[-char_indices] 
     } else {
         char_remainder <- char_split
     }
     
-    char_remainder <- paste(char_remainder, collapse = sep_collapse) #Return to the original state (i.e. separated by sep_collapse)
+    #Return to the original state (i.e. separated by sep_collapse)
+    char_remainder <- paste(char_remainder, collapse = sep_collapse) 
     
     #output <- append(char_remainder, char_extract)
     output <- append(characteristics, char_remainder)
     output <- append(output, char_extract)
     
-    output <- naConverter(output) #Replace "" and "NA" with NA
+    output <- unifyNAs(output) #Replace "" and "NA" with NA
     
     #This didn't work...
     #output <- as.data.frame(output, stringsAsFactors = FALSE)
-    #colnames(output) <- c("characteristics", "char_remainder", "char_extract1", "char_extract2")
+    #colnames(output) <- c("characteristics", 
+    #"char_remainder", "char_extract1", "char_extract2")
     
-    #output <- as.data.frame(t(append(char_remainder, char_extract)), stringsAsFactors = FALSE)
+    #output <- as.data.frame(t(append(char_remainder, char_extract)), 
+    #stringsAsFactors = FALSE)
     
     #print("universalExtractor completed")
     return(output)
@@ -1182,7 +1272,7 @@ universalExtractor <- function(characteristics, key_words, sep_split, sep_collap
 #New features:
 #- removed the necessary condition of "check" label within input column (now samples can also be re-labelled as input)
 #- only searches in the sa_antibody column if it is not empty
-#- uses conditionVerifier2() for its operation (simplifies the code...)
+#- uses verifyConditions() for its operation (simplifies the code...)
 #- uses columnVerifier() to check whether the specified columns exist within the df
 
 #Developed in inputDetector5.R (also based on previous versions)
@@ -1318,20 +1408,20 @@ inputDetector <- function(df){
     #NOTE: changed to AND operation (all necessary conditions need to be satisfied)
     necessary_indices <- rep(TRUE, nrow(df))
     for (n in seq_along(necessary_columns)){
-        necessary_indices <- necessary_indices & conditionVerifier2(df, necessary_names[[n]], necessary_columns[[n]])
+        necessary_indices <- necessary_indices & verifyConditions(df, necessary_names[[n]], necessary_columns[[n]])
     }
     #-------------------------------
     
     
     #-------------------------------
-    antibody_indices <- conditionVerifier2(df, antibody_names, antibody_columns)
+    antibody_indices <- verifyConditions(df, antibody_names, antibody_columns)
     #-------------------------------
     
     
     #-------------------------------
     match_indices <- rep(FALSE, nrow(df))
     for (m in seq_along(match_columns)){
-        match_indices <- match_indices | conditionVerifier2(df, match_names[[m]], match_columns[[m]])
+        match_indices <- match_indices | verifyConditions(df, match_names[[m]], match_columns[[m]])
     }
     #-------------------------------
     
@@ -1339,7 +1429,7 @@ inputDetector <- function(df){
     #-------------------------------
     otherwise_indices <- rep(FALSE, nrow(df))
     for (ot in seq_along(otherwise_columns)){
-        otherwise_indices <- otherwise_indices | conditionVerifier2(df, otherwise_names[[ot]], otherwise_columns[[ot]])
+        otherwise_indices <- otherwise_indices | verifyConditions(df, otherwise_names[[ot]], otherwise_columns[[ot]])
     }
     #-------------------------------
     
@@ -1414,6 +1504,8 @@ inputDetector <- function(df){
     return(df)
     
 }
+
+
 
 #================================================
 

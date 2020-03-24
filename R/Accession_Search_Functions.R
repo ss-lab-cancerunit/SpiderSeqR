@@ -498,8 +498,8 @@ listGSEFields <- function(omit_gse = TRUE){
 #' @return Data frame with results of the query
 #' 
 #' @examples 
-#' startSpiderSeqRDemo()
-#' batchedAccSearch(rep("SRR6823646", 10), "sra_con", "sra", "*", c_size = 1)
+#' # startSpiderSeqRDemo()
+#' # batchedAccSearch(rep("SRR6823646", 10), "sra_con", "sra", "*", c_size = 1)
 #' 
 #' @keywords internal
 #' 

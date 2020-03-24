@@ -33,8 +33,8 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
     
     output_df <- searchForAccessionAcrossDBsDF(acc_vector = x, sra_columns = "*", geo_columns = "*", gse_columns = "*")
     
-    #output_df <- gsmExtractor(output_df, sampleColumn = TRUE) #Create sample column
-    output_df <- gsmExtractor(output_df, sampleColumn = FALSE) #Don't create sample column
+    #output_df <- extractGSM(output_df, sampleColumn = TRUE) #Create sample column
+    output_df <- extractGSM(output_df, sampleColumn = FALSE) #Don't create sample column
     
     
     #Instead, rename the native gsm column to sample to match the column naming in searchForTerm
@@ -56,7 +56,7 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
     
     output_df <- pairedEndConverter(output_df)
     
-    output_df <- naConverter(output_df)
+    output_df <- unifyNAs(output_df)
     
     
     output_df <- renameOTHColumns(output_df)

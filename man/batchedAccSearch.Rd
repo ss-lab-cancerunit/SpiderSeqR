@@ -27,8 +27,8 @@ Data frame with results of the query
 Make batched queries to databases
 }
 \examples{
-startSpiderSeqRDemo()
-batchedAccSearch(rep("SRR6823646", 10), "sra_con", "sra", "*", c_size = 1)
+# startSpiderSeqRDemo()
+# batchedAccSearch(rep("SRR6823646", 10), "sra_con", "sra", "*", c_size = 1)
 
 }
 \keyword{internal}

@@ -8,7 +8,13 @@ searchSRA(SRA_library_strategy, gene, antibody, cell_type, treatment,
   species, platform)
 }
 \arguments{
-\item{SRA_library_strategy, gene, antibody, cell_type, treatment, species, platform}{Character vectors with information to search within SRA}
+\item{SRA_library_strategy}{Character vector specifying experiment approach}
+
+\item{gene, antibody, cell_type, treatment, species, platform}{Character vectors 
+with information to search within SRA}
+}
+\value{
+A data frame with results
 }
 \description{
 An internal function for searchForTerm

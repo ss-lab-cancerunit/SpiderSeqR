@@ -147,5 +147,5 @@ Other SpiderSeqR workflow functions: \code{\link{addMissingSamples}},
   \code{\link{filterByTermByAccessionLevel}},
   \code{\link{filterByTerm}}
 }
-\concept{SpiderSeqR main functions}
+\concept{SpiderSeqR core functions}
 \concept{SpiderSeqR workflow functions}

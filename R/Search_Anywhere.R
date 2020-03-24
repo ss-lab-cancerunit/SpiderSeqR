@@ -295,7 +295,7 @@ searchAnywhere <- function(query_all, acc_levels = c("run", "experiment", "sampl
     # Process results and add unifying columns ####
     
     
-    df_out <- gsmExtractor(df_out, sampleColumn = FALSE) #Don't create sample column
+    df_out <- extractGSM(df_out, sampleColumn = FALSE) #Don't create sample column
     
     df_out <- saExtractor(df_out)
     df_out <- chExtractor(df_out)
@@ -311,7 +311,7 @@ searchAnywhere <- function(query_all, acc_levels = c("run", "experiment", "sampl
     
     df_out <- pairedEndConverter(df_out)
     
-    df_out <- naConverter(df_out)
+    df_out <- unifyNAs(df_out)
     
     df_out <- renameOTHColumns(df_out)
     
