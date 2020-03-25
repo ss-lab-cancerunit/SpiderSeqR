@@ -33,7 +33,7 @@ one type at any given time, otherwise the function will generate an error.
 }
 
 \examples{
-classifyAccession("GSM11111")
+# classifyAccession("GSM11111")
 # classifyAccession(c("GSM11111", "GSE2222")) # Will throw error
 
 

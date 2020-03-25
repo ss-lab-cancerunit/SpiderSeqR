@@ -16,7 +16,8 @@ manageLibraryStrategy(x, input, output, task = "conv",
 
 \item{task}{String denoting the task to be performed (see below)}
 
-\item{mismatch.ignore}{Logical denoting whether mismatches are allowed (if TRUE and no match, original character is returned)}
+\item{mismatch.ignore}{Logical denoting whether mismatches are allowed 
+(if TRUE and no match, original character is returned)}
 }
 \value{
 Library strategy in a desired format
@@ -44,20 +45,22 @@ Currently, the function supports the following conversions:
 }
 }
 \description{
-\code{manageLibraryStrategy} by default converts between different formats of library strategy strings and offers a few other tasks related to library strategies
+\code{manageLibraryStrategy} by default converts between different formats 
+of library strategy strings and offers a few other tasks 
+related to library strategies
 }
 \examples{
 # Convert into short form
-manageLibraryStrategy("RNA-Seq", input = "can", output = "short") 
+# manageLibraryStrategy("RNA-Seq", input = "can", output = "short") 
 
 # Convert into canonical form
-manageLibraryStrategy("RNA", input = "syn", output = "can") 
+# manageLibraryStrategy("RNA", input = "syn", output = "can") 
 
 # List supported formats for library strategy
-manageLibraryStrategy(task = "ex") 
+# manageLibraryStrategy(task = "ex") 
 
 # Check whether library strategy is in canonical form
-manageLibraryStrategy("RNA-Seq", task = "check_can") 
+# manageLibraryStrategy("RNA-Seq", task = "check_can") 
 
 
 

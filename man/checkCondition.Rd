@@ -9,14 +9,17 @@ checkCondition(condition, x, message)
 \arguments{
 \item{condition}{String with a regular expression to be checked}
 
-\item{x}{Character vector (or list containing character vectors) to be checked}
+\item{x}{Character vector (or list containing character vectors) 
+to be checked}
 
 \item{message}{Error message to be displayed (not required)}
 }
 \value{
-Nothing. Produces an error message if condition is not fulfilled in all vector elements
+Nothing. Produces an error message if condition 
+    is not fulfilled in all vector elements
 }
 \description{
-\code{checkCondition} verifies a condition (using grepl), ignoring any NA elements in a vector
+\code{checkCondition} verifies a condition (using grepl), 
+ignoring any NA elements in a vector
 }
 \keyword{internal}

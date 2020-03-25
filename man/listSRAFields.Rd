@@ -13,7 +13,7 @@ Character vector containing column names of SRA table
 List all column names of SRA table
 }
 \examples{
-listSRAFields()
+# listSRAFields()
  
 }
 \keyword{internal}

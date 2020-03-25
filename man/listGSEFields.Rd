@@ -17,7 +17,7 @@ Character vector containing column names of GSE table (except gse)
 List all column names of the GSE table
 }
 \examples{
-listGSEFields()
+# listGSEFields()
  
 }
 \keyword{internal}

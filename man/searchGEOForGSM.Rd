@@ -23,8 +23,8 @@ Search for GSM in GEO
 }
 \examples{
 
-startSpiderSeqRDemo()
-searchGEOForGSM("GSM1173367", "*", "*")
+# startSpiderSeqRDemo()
+# searchGEOForGSM("GSM1173367", "*", "*")
 
 }
 \keyword{internal}

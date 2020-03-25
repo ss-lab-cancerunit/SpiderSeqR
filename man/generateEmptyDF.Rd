@@ -10,7 +10,9 @@ generateEmptyDF(tables = c("sra", "gsm", "gse", "other"))
 \item{tables}{Character vector with tables from which the columns}
 }
 \value{
-Data frame with columns corresponding to database columns (with names prepended with appropriate prefix). Format corresponds to that of searchForAccessionAcrossDBsDF
+Data frame with columns corresponding to database columns 
+(with names prepended with appropriate prefix). 
+Format corresponds to that of searchForAccessionAcrossDBsDF
 }
 \description{
 Generate empty df with columns corresponding to database columns

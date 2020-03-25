@@ -15,3 +15,4 @@ Data frame with modified column names
 \description{
 Rename non-SRA/GEO columns to 'OTH_'
 }
+\keyword{internal}

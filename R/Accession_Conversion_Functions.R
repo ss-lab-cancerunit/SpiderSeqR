@@ -36,8 +36,8 @@
 #' 
 #' @examples
 #' # Setup SpiderSeqR environment first (please use non-demo version)
-#' startSpiderSeqRDemo()
-#' searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") 
+#' # startSpiderSeqRDemo()
+#' # searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") 
 #' # df argument is optional
 #' 
 #' # If using named arguments, 

@@ -28,7 +28,7 @@
 #' @return Accession class (error if input does not match any)
 #' 
 #' @examples 
-#' classifyAccession("GSM11111")
+#' # classifyAccession("GSM11111")
 #' # classifyAccession(c("GSM11111", "GSE2222")) # Will throw error
 #' 
 #' 
@@ -110,7 +110,7 @@ classifyAccession <- function(x, na.ignore = FALSE){
 #' for the value to be set to TRUE for that position)
 #' 
 #' @examples 
-#' verifySimpleConditions("^m$", c("m", "mm", "cm", "M"))
+#' # verifySimpleConditions("^m$", c("m", "mm", "cm", "M"))
 #' 
 #' @keywords internal
 #' 

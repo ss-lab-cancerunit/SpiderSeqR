@@ -19,8 +19,8 @@ A data frame with results
 Search within SRR_GSM database
 }
 \examples{
-startSpiderSeqRDemo()
-searchSRR_GSM("GSM1173367")
+# startSpiderSeqRDemo()
+# searchSRR_GSM("GSM1173367")
 
 
 }

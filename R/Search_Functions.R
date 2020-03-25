@@ -288,10 +288,10 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
     #============================================================================
     # Detect inputs (ChIP) and controls (RNA)
     #============================================================================
-    spider_combined <- inputDetector(spider_combined) #Detect ChIP-Seq inputs
+    spider_combined <- detectInputs(spider_combined) #Detect ChIP-Seq inputs
     
     #spider_combined$rna_control <- NA #Add new column
-    spider_combined <- controlDetector(spider_combined) #Detect RNA-Seq controls
+    spider_combined <- detectControls(spider_combined) #Detect RNA-Seq controls
     #============================================================================
     
     
@@ -299,15 +299,15 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
     #============================================================================
     # Add columns for sample sheets (lane and merge* (will label it mer to avoid interference with merge function))
     #============================================================================
-    spider_combined <- mergeDetector(spider_combined)
-    missingRunVerifier(spider_combined$run_accession) #Check if there are any missing runs ===*=== Disabled (dbSendQuery stopped working!)
+    spider_combined <- detectMerges(spider_combined)
+    verifyMissingRuns(spider_combined$run_accession) #Check if there are any missing runs ===*=== Disabled (dbSendQuery stopped working!)
     #============================================================================
     
     
     #============================================================================
     # Add pairedEnd column
     #============================================================================
-    spider_combined <- pairedEndConverter(spider_combined)
+    spider_combined <- convertPairedEnds(spider_combined)
     #============================================================================
     
     
@@ -355,7 +355,7 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
         
         #saveRDS(spider_combined, "spider_combined_prelim.Rda")
         
-        spider_superseries <- superseriesVerifier(spider_combined$series_id) #Give info on superseries
+        spider_superseries <- verifySuperseries(spider_combined$series_id) #Give info on superseries
         #============================================================================
         
         

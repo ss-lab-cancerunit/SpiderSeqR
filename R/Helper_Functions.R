@@ -15,15 +15,15 @@
 #rbindUniqueCols()
 #unifyNAs()
 #universalExtractor()
-#inputDetector()
-#columnVerifier()
-#controlDetector()
-#mergeDetector()
-#missingRunVerifier()
+#detectInputs()
+#verifyColumns()
+#detectControls()
+#detectMerges()
+#verifyMissingRuns()
 #parQuery()
-#pairedEndConverter()
+#convertPairedEnds()
 #geoFinder()
-#superseriesVerifier()
+#verifySuperseries()
 
 #ALSO REQUIRED:
 #Search_Functions.R (searchForTerm)
@@ -40,7 +40,7 @@
 
 
 
-#--------------------------------------------------------------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 
 #============================================================================
 #Functions (in the order of being called)
@@ -114,15 +114,15 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     
     #OPTION 2: Conditional search
     cat_gene <- c("genotype", "ArrayExpress.Genotype", 
-                  "genotype/variation", "target.gene", 
-                  "genetic.background", "host.genotype", "Plant.genotype", 
-                  "genetic.modification", "transgene", "gene.id", 
-                  "myd88.genotype", "gene.perturbation.type", 
-                  "genetic.condition", "cytogenetics", 
-                  "concise.genotype.name", "genspecies.abbr", 
-                  "melanoma.genetic.conditions", "marker.gene", "gene", 
-                  "strain/genotype", "genotype/variation", 
-                  "knockout", "knockdown", "hgn") 
+                    "genotype/variation", "target.gene", 
+                    "genetic.background", "host.genotype", "Plant.genotype", 
+                    "genetic.modification", "transgene", "gene.id", 
+                    "myd88.genotype", "gene.perturbation.type", 
+                    "genetic.condition", "cytogenetics", 
+                    "concise.genotype.name", "genspecies.abbr", 
+                    "melanoma.genetic.conditions", "marker.gene", "gene", 
+                    "strain/genotype", "genotype/variation", 
+                    "knockout", "knockdown", "hgn") 
     #RESEARCHED (based on sa_categories)
     
     gene_fields <- informative_fields 
@@ -143,9 +143,9 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     # don't include it in antibody_fields
     
     cat_antibody <- c("chip.antibody", "antibody", 
-                      "ArrayExpress.Immunoprecipitate", "ip.antibody", 
-                      "rip.antibody", "medip.antibody", "clip.antibody", 
-                      "frip.antibody", "chip-seq.antibody") #RESEARCHED WELL
+                        "ArrayExpress.Immunoprecipitate", "ip.antibody", 
+                        "rip.antibody", "medip.antibody", "clip.antibody", 
+                        "frip.antibody", "chip-seq.antibody") #RESEARCHED WELL
     
     antibody_fields <- informative_fields 
     # RESEARCHED (based on p53 and STAT1)
@@ -328,7 +328,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
         gene_indices[!cat_gene_indices] <- 
             verifyConditions(output_list[!cat_gene_indices, ], 
                             gene, withOut("sample_attribute", gene_fields), 
-                              "(^|[^A-Za-z])") 
+                                "(^|[^A-Za-z])") 
         #Noletter prefix as a separate input
         
         mm(paste0(sum(gene_indices), " out of ", dim(output_list)[1], 
@@ -479,7 +479,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
         #Noletter prefix as a separate input
         
         mm(paste0(sum(antibody_indices), " out of ", dim(output_list)[1], 
-                  " initial entries comply with the antibody criteria"), "res")
+                " initial entries comply with the antibody criteria"), "res")
     } else {
         antibody_indices <- rep(TRUE, nrow(output_list))
         mm("No antibodies specified. Returned all TRUE", "adverse")
@@ -520,7 +520,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     
     #Conditional search will not be used for now
     mm(paste0(sum(cell_type_indices), " out of ", dim(output_list)[1], 
-              " initial entries comply with the cell type criteria"), "res")
+            " initial entries comply with the cell type criteria"), "res")
     
     #------------------------------------------------
     #TREATMENT
@@ -559,7 +559,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
         
         #Wrap regular expression around categories
         cat_treatment_prefixes <- paste0("(^|\\|\\| )", 
-                                         cat_treatment, ":(|[^\\|]*?)") 
+                                        cat_treatment, ":(|[^\\|]*?)") 
         #Use a non-greedy quantifier and alternation
         
         
@@ -573,7 +573,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
         #Search within other fields (if there were no matches to categories)
         treatment_indices[!cat_treatment_indices] <- 
             verifyConditions(output_list[!cat_treatment_indices, ], 
-                               treatment, treatment_fields) 
+                                treatment, treatment_fields) 
         #Noletter prefix as a separate input
         
         mm(paste0(sum(treatment_indices), " out of ", dim(output_list)[1], 
@@ -633,7 +633,7 @@ searchSRA <- function(SRA_library_strategy, gene, antibody,
     #output_list <- renameSRAColumns(output_list)
     
     message(paste0(dim(output_list)[1], 
-                   " results passed verification phase")) # ===*===
+                    " results passed verification phase")) # ===*===
     
     .GlobalEnv$spider_output_list_sra_filtered <- output_list
     
@@ -991,8 +991,8 @@ rbindUniqueCols <- function(x, y, disregard_columns){
     }
     
     #Check for presence of disregard_columns in x and y
-    columnVerifier(x, disregard_columns)
-    columnVerifier(y, disregard_columns)
+    verifyColumns(x, disregard_columns)
+    verifyColumns(y, disregard_columns)
     
     x_dc_indices <- c()
     y_dc_indices <- c()
@@ -1270,34 +1270,60 @@ universalExtractor <-
 
 #NEW VERSION OF INPUTDETECTOR()
 #New features:
-#- removed the necessary condition of "check" label within input column (now samples can also be re-labelled as input)
+#- removed the necessary condition of "check" label within input column 
+# (now samples can also be re-labelled as input)
 #- only searches in the sa_antibody column if it is not empty
 #- uses verifyConditions() for its operation (simplifies the code...)
-#- uses columnVerifier() to check whether the specified columns exist within the df
+#- uses verifyColumns() to check whether the specified columns 
+#    exist within the df
 
 #Developed in inputDetector5.R (also based on previous versions)
-inputDetector <- function(df){
-    # Args: df - data frame with many of the sra columns (be careful not to attempt searching in columns that do not exist!)
-    #    ===*==== Throw a warning if that happens TO DO
-    #
-    # Returns: df with input column entries labelled as 'input' where appropriate
-    #
-    # Logic: NECESSARY - these string matches are required (entries not fulfilling all necessary conditions will not be considered for labelling)
-    #        ANTIBODY - rows with non-empty sa_antibody column will only be labelled based on that field
-    #        MATCH - one of these string matches are sufficient to label an entry (provided it fulfils NECESSARY conditions and that it has an EMPTY (NA) sa_antibody field)
-    #        OTHERWISE - one of these string matches is sufficient to label an entry, but ONLY if none of the SRP members is labelled
-    #                    NECESSARY conditions are still required for labelling, sa_antibody can
-    #
-    
-    
-    #-------------------------------
-    #TO DO:
-    #===*=== CHECK THAT *_names and *_columns are the same length
-    #===*=== CHECK THAT specified columns exist within the data frame (maybe write a separate function...)
-    #          function(df, column_list)
-    #-------------------------------
-    
-    mm("Running inputDetector", "fn")
+
+
+
+
+
+#' Detect inputs in a sample sheet
+#' @param df Data frame to be checked (with a subset of sra columns)
+#' 
+#' @return Data frame with input column entries labelled as 'input' 
+#' where appropriate
+#' 
+#' @section Logic of input detection:
+#' 
+#' The entries are labelled as inputs based on the following rules. 
+#' They strictly need to fulfill NECESSARY conditions as well as:
+#' \itemize{
+#'     \item 1A: have matches to ANTIBODY conditions
+#'     \item 1B: have matches to MATCH conditions, 
+#'           provided no ANTIBODY information was provided
+#'     \item 2: the whole SRP had no matches to ANTIBODY or MATCH conditions, 
+#'           but there is a match to OTHERWISE conditions
+#' }
+#' 
+#' 
+#' Further details on the conditions:
+#'  
+#' 
+#' \itemize{
+#'     \item NECESSARY - these string matches are required 
+#'     (entries not fulfilling all necessary conditions 
+#'         will not be considered for labelling)
+#'     \item ANTIBODY - rows with non-empty sa_antibody column 
+#'         will only be labelled based on that field
+#'     \item MATCH - one of these string matches are sufficient 
+#'         to label an entry (provided it fulfils NECESSARY conditions 
+#'         and that it has an EMPTY (NA) sa_antibody field)
+#'     \item OTHERWISE - one of these string matches is sufficient 
+#'         to label an entry, but ONLY if none of the SRP members 
+#'         is labelled as input
+#' }
+#' 
+#' 
+#' @keywords internal
+#' 
+detectInputs <- function(df){
+    mm("Running detectInputs", "fn")
     
     
     #==============================================================
@@ -1314,7 +1340,8 @@ inputDetector <- function(df){
     necessary_columns <- list() #Columns where search will be undertaken
     
     necessary_names[[1]] <- "ChIP-Seq"
-    #necessary_names[[2]] <- "check" #Currently the samples can be re-labelled as inputs as well
+    #necessary_names[[2]] <- "check" 
+    #Currently the samples can be re-labelled as inputs as well
     
     necessary_columns[[1]] <- "library_strategy"
     #necessary_columns[[2]] <- "input"
@@ -1322,7 +1349,8 @@ inputDetector <- function(df){
     
     
     #-------------------------------
-    #ANTIBODY (antibody_indices: rows with one of the input synonyms within sa_antibody column)
+    # ANTIBODY (antibody_indices: 
+    # rows with one of the input synonyms within sa_antibody column)
     #-------------------------------
     antibody_names <- c("none", "no antibody", "input", "igg", "wce")
     antibody_columns <- "sa_antibody"
@@ -1330,7 +1358,8 @@ inputDetector <- function(df){
     
     
     #-------------------------------
-    #MATCH (match_indices: non-filled sa_antibody column, but at least one of the other columns contains input synonyms)
+    #MATCH (match_indices: non-filled sa_antibody column, 
+    # but at least one of the other columns contains input synonyms)
     #-------------------------------
     match_names <- list() #Names to be searched for
     match_columns <- list() #Columns where search will be undertaken
@@ -1340,10 +1369,21 @@ inputDetector <- function(df){
     match_names[[3]] <- "wce"
     match_names[[4]] <- c("none", "no antibody", "input", "igg")
     
-    #===*===Check columns to be searched ('%input%' has already been thoroughly checked)
-    match_columns[[1]] <- c("run_alias", "experiment_name", "experiment_alias", "experiment_title", "sample_name", "experiment_attribute", "sample_alias") #Consider removing library_name... UPDATE 20170802: removed library_name
+    # ===*===Check columns to be searched 
+    # ('%input%' has already been thoroughly checked)
+    match_columns[[1]] <- c("run_alias", 
+                            "experiment_name", 
+                            "experiment_alias", 
+                            "experiment_title", 
+                            "sample_name", 
+                            "experiment_attribute", 
+                            "sample_alias") 
+    #Consider removing library_name... UPDATE 20170802: removed library_name
     #Removed sample_attribute
-    #===*=== Check if there are not any more extracts to be made from sample_attribute that could be used for input detection
+    
+    #===*=== Check if there are not any more extracts to be made 
+    # from sample_attribute that could be used for input detection
+    
     match_columns[[2]] <- c("experiment_title", "experiment_alias")
     match_columns[[3]] <- c("experiment_title")
     match_columns[[4]] <- c("sa_antibody")
@@ -1351,15 +1391,26 @@ inputDetector <- function(df){
     
     
     #-------------------------------
-    # OTHERWISE conditions (if none of the SRP are labelled according to previous conditions)
+    # OTHERWISE conditions (if none of the SRP are labelled 
+    # according to previous conditions)
     #-------------------------------
     otherwise_names <- list() #Names to be searched for
     otherwise_columns <- list() #Columns where search will be undertaken
     
     otherwise_names[[1]] <- "control"
     
-    #===*===Check columns to be searched ('%control%' has already been thoroughly checked)
-    otherwise_columns[[1]] <-  c("run_alias", "experiment_name", "run_attribute", "experiment_alias", "experiment_title", "sample_name", "experiment_attribute", "sample_alias", "sample_attribute") #Thoroughly investigated fields (20170724)
+    #===*===Check columns to be searched 
+    # ('%control%' has already been thoroughly checked)
+    otherwise_columns[[1]] <-  c("run_alias", 
+                                "experiment_name", 
+                                "run_attribute", 
+                                "experiment_alias", 
+                                "experiment_title", 
+                                "sample_name", 
+                                "experiment_attribute", 
+                                "sample_alias", 
+                                "sample_attribute") 
+    #Thoroughly investigated fields (20170724)
     #-------------------------------
     
     
@@ -1373,23 +1424,37 @@ inputDetector <- function(df){
     
     #-------------------------------
     #Check whether lengths of inputs match
-    var_columns <- c("necessary_columns", "antibody_columns", "match_columns", "otherwise_columns")
-    var_names <- c("necessary_names", "antibody_names", "match_names", "otherwise_names")
+    var_columns <- c("necessary_columns", 
+                    "antibody_columns", 
+                    "match_columns", 
+                    "otherwise_columns")
+    
+    var_names <- c("necessary_names", 
+                    "antibody_names", 
+                   "match_names", 
+                   "otherwise_names")
     
     for (v in seq_along(var_columns)){
-        if (methods::is(get(var_columns[v]), "list") | methods::is(get(var_names[v]), "list")){
+        if (methods::is(get(var_columns[v]), "list") | 
+            methods::is(get(var_names[v]), "list")){
             if (length(get(var_columns[v])) != length(get(var_names[v]))){
-                mm(paste0("The following columns and names differ in length: ", paste(get(var_columns[v]), collapse = ", "), " and ", paste(get(var_names[v]), collapse = ", ")), "adverse")
+                mm(paste0(
+                        "The following columns and names differ in length: ", 
+                        paste(get(var_columns[v]), collapse = ", "), 
+                        " and ", 
+                        paste(get(var_names[v]), collapse = ", ")), 
+                    "adverse")
+                
                 warning("Columns and names differ in length")
             }
         }
     }
     
     #Check if specified columns exist within the data frame
-    columnVerifier(df, necessary_columns)
-    columnVerifier(df, antibody_columns)
-    columnVerifier(df, match_columns)
-    columnVerifier(df, otherwise_columns)
+    verifyColumns(df, necessary_columns)
+    verifyColumns(df, antibody_columns)
+    verifyColumns(df, match_columns)
+    verifyColumns(df, otherwise_columns)
     
     #-------------------------------
     
@@ -1399,16 +1464,21 @@ inputDetector <- function(df){
     #==============================================================
     #--------------------------------------------------------------
     # FIND INDICES OF ROWS MATCHING THE CRITERIA
-    # NOTE: these are not final row indices! They will be based on combinations of criteria
+    # NOTE: these are not final row indices! 
+    # They will be based on combinations of criteria
     #--------------------------------------------------------------
     #==============================================================
     
     
     #-------------------------------
-    #NOTE: changed to AND operation (all necessary conditions need to be satisfied)
+    #NOTE: changed to AND operation 
+    # (all necessary conditions need to be satisfied)
     necessary_indices <- rep(TRUE, nrow(df))
     for (n in seq_along(necessary_columns)){
-        necessary_indices <- necessary_indices & verifyConditions(df, necessary_names[[n]], necessary_columns[[n]])
+        necessary_indices <- 
+            necessary_indices & verifyConditions(df, 
+                                                necessary_names[[n]], 
+                                                necessary_columns[[n]])
     }
     #-------------------------------
     
@@ -1421,7 +1491,10 @@ inputDetector <- function(df){
     #-------------------------------
     match_indices <- rep(FALSE, nrow(df))
     for (m in seq_along(match_columns)){
-        match_indices <- match_indices | verifyConditions(df, match_names[[m]], match_columns[[m]])
+        match_indices <- 
+            match_indices | verifyConditions(df, 
+                                            match_names[[m]], 
+                                            match_columns[[m]])
     }
     #-------------------------------
     
@@ -1429,7 +1502,10 @@ inputDetector <- function(df){
     #-------------------------------
     otherwise_indices <- rep(FALSE, nrow(df))
     for (ot in seq_along(otherwise_columns)){
-        otherwise_indices <- otherwise_indices | verifyConditions(df, otherwise_names[[ot]], otherwise_columns[[ot]])
+        otherwise_indices <- 
+            otherwise_indices | verifyConditions(df, 
+                                                otherwise_names[[ot]], 
+                                                otherwise_columns[[ot]])
     }
     #-------------------------------
     
@@ -1447,7 +1523,8 @@ inputDetector <- function(df){
     #-------------------------------
     #LABEL INPUTS
     #-------------------------------
-    antibody_filled <- !is.na(df$sa_antibody) #====*=== Be careful!!! Specific column name used
+    #====*=== Be careful!!! Specific column name used
+    antibody_filled <- !is.na(df$sa_antibody) 
     
     cond1a <- antibody_filled & antibody_indices & necessary_indices
     cond1b <- (!antibody_filled) & match_indices & necessary_indices
@@ -1470,15 +1547,30 @@ inputDetector <- function(df){
     
     
     #-------------------------------
-    #Find the indices of SRP members where no successful match occurred in the entire SRP
+    #Find the indices of SRP members where 
+    #no successful match occurred in the entire SRP
     #(these will be taken into account for 'otherwise' conditions)
     #-------------------------------
-    #Code from the previous version of the inputDetector function - see older versions for alternative approaches using only two columns or for sorting not from last (requires use of xtfrm)
-    detected <- data.frame(df$run_accession, df$study_accession, cond1, stringsAsFactors = FALSE)
+    #Code from the previous version of the inputDetector function 
+    #- see older versions for alternative approaches using only two columns 
+    #or for sorting not from last (requires the use of xtfrm)
+    detected <- data.frame(df$run_accession, 
+                            df$study_accession, 
+                            cond1, 
+                            stringsAsFactors = FALSE)
+    
     colnames(detected) <- c("run_accession", "study_accession", "cond1")
-    detected <- detected[order(detected$study_accession, detected$cond1),] #Order by SRP and boolean value (input or not)
-    detected <- detected[!duplicated(detected$study_accession, fromLast = TRUE), ] #Remove duplicates
-    detected <- merge(df[,c("run_accession", "study_accession")], detected[,c("study_accession", "cond1")]) #Merge to obtain one boolean value per SRP
+    
+    #Order by SRP and boolean value (input or not)
+    detected <- detected[order(detected$study_accession, detected$cond1),] 
+    
+    #Remove duplicates
+    detected <- detected[!duplicated(detected$study_accession, 
+                                        fromLast = TRUE), ] 
+    
+    #Merge to obtain one boolean value per SRP
+    detected <- merge(df[,c("run_accession", "study_accession")], 
+                        detected[,c("study_accession", "cond1")]) 
     #-------------------------------
     
     
@@ -1494,12 +1586,13 @@ inputDetector <- function(df){
     
     
     #-------------------------------
-    #Label entries with no match within SRP (!detected$cond1) and which satisfy 'otherwise' and necessary conditions
+    #Label entries with no match within SRP (!detected$cond1) 
+    #and which satisfy 'otherwise' and necessary conditions
     #-------------------------------
     cond2 <- necessary_indices & (!detected$cond1) & otherwise_indices
     df$input[cond2] <- "input"
     #-------------------------------
-    mm("inputDetector completed", "fn")
+    mm("detectInputs completed", "fn")
     
     return(df)
     
@@ -1509,16 +1602,24 @@ inputDetector <- function(df){
 
 #================================================
 
-columnVerifier <- function(df, column_list){
-    #
-    # Args: data frame (with named columns)
-    # Returns: printed message on the matching between colnames(df) and column_list
-    #
-    # NOTE: Current version requires perfect matching (identical strings)
-    #         Methods which actually check the indices might be more flexible (e.g. case insensitive)
-    #
+#' Verify columns within a data frame
+#' 
+#' @param data frame (with named columns)
+#' @param column_list A character vector with column names to be checked
+#' 
+#' @return Nothing but a printed message on the matching 
+#' between colnames(df) and column_list
+#' 
+#' NOTE: Current version requires perfect matching (identical strings). 
+#' Methods which acutally check the indices might be more flexible 
+#' (e.g. case insensitive).
+#' 
+#' 
+#' @keywords internal
+#' 
+verifyColumns <- function(df, column_list){
     
-    mm("Runing columnVerifier", "fn")
+    mm("Runing verifyColumns", "fn")
     
     # Check that df is a data frame
     if (!"data.frame" %in% class(df)){
@@ -1533,12 +1634,14 @@ columnVerifier <- function(df, column_list){
     
     if (length(setdiff(column_list, df_cols)) != 0){
         warning("Not all specified columns can be found in the data frame")
-        mm(paste0("The following columns are missing from the data frame: ", paste(setdiff(column_list, df_cols), collapse = ",") ), "adverse")
+        mm(paste0("The following columns are missing from the data frame: ", 
+                    paste(setdiff(column_list, df_cols), collapse = ",") ), 
+            "adverse")
     } else {
         mm("All specified columns are within the data frame", "adverse")
         mm(paste(column_list, collapse = ", "), "adverse")
     }
-    mm("columnVerifier completed", "fn")
+    mm("verifyColumns completed", "fn")
 }
 
 #----------------------------------------------------------------------------
@@ -1547,21 +1650,36 @@ columnVerifier <- function(df, column_list){
 
 
 #----------------------------------------------------------------------------
-#Developed in controlDetector.R (based on inputDetector.R)
+#Developed in detectControls.R (based on inputDetector.R)
 #mostly inputDetector4.R (?)
-controlDetector <- function(df){
-    # Args: df - data frame with many of the sra columns (be careful not to attempt searching in columns that do not exist!)
-    #    -> Throws a warning if that happens
-    #
-    # Returns: df with control column entries labelled as 'control' where appropriate
-    #
-    # Logic: NECESSARY - these string matches are required (entries not fulfilling all necessary conditions will not be considered for labelling)
-    #        MATCH - one of these string matches are sufficient to label an entry (provided it fulfils NECESSARY conditions)
-    #        OTHERWISE - one of these string matches is sufficient to label an entry, but ONLY if none of the SRP members is labelled
-    #                    NECESSARY conditions are still required for labelling
-    #
+
+
+#' Detect controls in a sample sheet
+#' @param df Data frame to be checked (with a subset of sra columns)
+#' 
+#' @return Data frame with control column entries labelled as 'control' 
+#' where appropriate
+#' 
+#' @section Logic of control detection:
+#' \itemize{
+#'     \item NECESSARY - these string matches are required 
+#'     (entries not fulfilling all necessary conditions 
+#'         will not be considered for labelling)
+#'     \item ANTIBODY - rows with non-empty sa_antibody column 
+#'         will only be labelled based on that field
+#'     \item MATCH - one of these string matches are sufficient 
+#'         to label an entry (provided it fulfils NECESSARY conditions 
+#'         and that it has an EMPTY (NA) sa_antibody field)
+#'     \item OTHERWISE - one of these string matches is sufficient 
+#'         to label an entry, but ONLY if none of the SRP members 
+#'         is labelled as input
+#' }
+#' 
+#' @keywords internal
+#' 
+detectControls <- function(df){
     
-    mm("Running controlDetector", "fn")
+    mm("Running detectControls", "fn")
     
     
     #---------------------------------------------------------------
@@ -1579,7 +1697,8 @@ controlDetector <- function(df){
     
     
     #---------------------------------------------------------------
-    # Variables for match conditions (at least one of the conditions needs to be fulfilled)
+    # Variables for match conditions 
+    # (at least one of the conditions needs to be fulfilled)
     #---------------------------------------------------------------
     match_names <- list() #Names to be searched for
     match_columns <- list() #Columns where search will be undertaken
@@ -1588,14 +1707,29 @@ controlDetector <- function(df){
     match_names[[1]] <- "control"
     
     #===*===Check columns to be searched
-    #match_columns[[1]] <- c("run_alias", "experiment_name", "experiment_alias", "experiment_title", "sample_name", "experiment_attribute", "sample_alias", "sample_attribute") #===*=== Quite an arbitrary list taken from input's case
-    match_columns[[1]] <-  c("run_alias", "experiment_name", "run_attribute", "experiment_alias", "experiment_title", "sample_name", "experiment_attribute", "sample_alias", "sample_attribute") #Thoroughly investigated fields (20170724), but in relation to ChIP-Seq experiments
+    #match_columns[[1]] <- c("run_alias", "experiment_name", 
+    # "experiment_alias", "experiment_title", "sample_name", 
+    # "experiment_attribute", "sample_alias", "sample_attribute") 
+    #===*=== Quite an arbitrary list taken from input's case
+    
+    match_columns[[1]] <-  c("run_alias", 
+                            "experiment_name", 
+                            "run_attribute", 
+                            "experiment_alias", 
+                            "experiment_title", 
+                            "sample_name", 
+                            "experiment_attribute", 
+                            "sample_alias", 
+                            "sample_attribute") 
+    #Thoroughly investigated fields (20170724), 
+    # but in relation to ChIP-Seq experiments
     
     #---------------------------------------------------------------
     
     
     #---------------------------------------------------------------
-    # Variables for 'otherwise' conditions (if none of the SRP are labelled according to previous conditions)
+    # Variables for 'otherwise' conditions 
+    # (if none of the SRP are labelled according to previous conditions)
     #---------------------------------------------------------------
     otherwise_names <- list() #Names to be searched for
     otherwise_columns <- list() #Columns where search will be undertaken
@@ -1608,27 +1742,51 @@ controlDetector <- function(df){
     #Get indices of columns
     #Check if columns exist in the original data frame
     #Order column indices
+    
     for (i in seq_along(necessary_columns)){
-        necessary_col_ind[[i]] <- unique(unlist(lapply(necessary_columns[[i]], function(x) grep(x, colnames(df)))))
-        necessary_col_ind[[i]] <- necessary_col_ind[[i]][order(necessary_col_ind[[i]])]
+        
+        necessary_col_ind[[i]] <- 
+            unique(unlist(lapply(necessary_columns[[i]], 
+                                function(x) grep(x, colnames(df)))))
+        
+        necessary_col_ind[[i]] <- 
+            necessary_col_ind[[i]][order(necessary_col_ind[[i]])]
+        
         if (length(necessary_col_ind[[i]])!=length(necessary_columns[[i]])){
-            warning(paste0("Columns specified for detecting '", paste(necessary_names[[i]], collapse=", "), "' do not match the df"))
+            warning(paste0(
+                "Columns specified for detecting '", 
+                paste(necessary_names[[i]], collapse=", "), 
+                "' do not match the df"))
         }
     }
+    
     
     for (i in seq_along(match_columns)){
-        match_col_ind[[i]] <- unique(unlist(lapply(match_columns[[i]], function(x) grep(x, colnames(df)))))
+        match_col_ind[[i]] <- 
+            unique(unlist(lapply(match_columns[[i]], 
+                                function(x) grep(x, colnames(df)))))
+        
         match_col_ind[[i]] <- match_col_ind[[i]][order(match_col_ind[[i]])]
         if (length(match_col_ind[[i]])!=length(match_columns[[i]])){
-            warning(paste0("Columns specified for detecting '", paste(match_names[[i]], collapse=", "), "' do not match the df"))
+            warning(paste0("Columns specified for detecting '", 
+                            paste(match_names[[i]], collapse=", "), 
+                            "' do not match the df"))
         }
     }
     
+    
     for (i in seq_along(otherwise_columns)){
-        otherwise_col_ind[[i]] <- unique(unlist(lapply(otherwise_columns[[i]], function(x) grep(x, colnames(df)))))
-        otherwise_col_ind[[i]] <- otherwise_col_ind[[i]][order(otherwise_col_ind[[i]])]
+        otherwise_col_ind[[i]] <- 
+            unique(unlist(lapply(otherwise_columns[[i]], 
+                                function(x) grep(x, colnames(df)))))
+        
+        otherwise_col_ind[[i]] <- 
+            otherwise_col_ind[[i]][order(otherwise_col_ind[[i]])]
+        
         if (length(otherwise_col_ind[[i]])!=length(otherwise_columns[[i]])){
-            warning(paste0("Columns specified for detecting '", paste(otherwise_names[[i]], collapse=", "), "' do not match the df"))
+            warning(paste0("Columns specified for detecting '", 
+                            paste(otherwise_names[[i]], collapse=", "), 
+                            "' do not match the df"))
         }
     }
     
@@ -1654,17 +1812,23 @@ controlDetector <- function(df){
     for (i in seq_along(necessary_names)){ #For every key_word
         for (s in seq_along(necessary_names[[i]])){ #For every name synonym
             for (c in seq_along(necessary_col_ind[[i]])){ #For every column
-                temp <- grepl(necessary_names[[i]][s], df[,necessary_col_ind[[i]][c]], ignore.case = TRUE)
+                temp <- grepl(necessary_names[[i]][s], 
+                                df[,necessary_col_ind[[i]][c]], 
+                                ignore.case = TRUE)
                 necessary_tot[[i]]<- necessary_tot[[i]] | temp
             }
         }
     }
     
-    
-    for (i in seq_along(match_names)){ #For every key_word
-        for (s in seq_along(match_names[[i]])){ #For every name synonym
-            for (c in seq_along(match_col_ind[[i]])){ #For every column
-                temp <- grepl(match_names[[i]][s], df[,match_col_ind[[i]][c]], ignore.case = TRUE)
+    #For every key_word
+    for (i in seq_along(match_names)){ 
+        #For every name synonym
+        for (s in seq_along(match_names[[i]])){ 
+            #For every column
+            for (c in seq_along(match_col_ind[[i]])){ 
+                temp <- grepl(match_names[[i]][s], 
+                                df[,match_col_ind[[i]][c]], 
+                                ignore.case = TRUE)
                 match_tot[[i]]<- match_tot[[i]] | temp
             }
         }
@@ -1672,10 +1836,16 @@ controlDetector <- function(df){
     
     
     #otherwise_tot will be used later
-    for (i in seq_along(otherwise_names)){ #For every key_word
-        for (s in seq_along(otherwise_names[[i]])){ #For every name synonym
-            for (c in seq_along(otherwise_col_ind[[i]])){ #For every column
-                temp <- grepl(otherwise_names[[i]][s], df[,otherwise_col_ind[[i]][c]], ignore.case = TRUE)
+    
+    #For every key_word
+    for (i in seq_along(otherwise_names)){ 
+        #For every name synonym
+        for (s in seq_along(otherwise_names[[i]])){ 
+            #For every column
+            for (c in seq_along(otherwise_col_ind[[i]])){ 
+                temp <- grepl(otherwise_names[[i]][s], 
+                                df[,otherwise_col_ind[[i]][c]], 
+                                ignore.case = TRUE)
                 otherwise_tot[[i]]<- otherwise_tot[[i]] | temp
             }
         }
@@ -1690,20 +1860,25 @@ controlDetector <- function(df){
     #---------------------------------------------------------------
     
     #Create necessary_combined vector (all necessary conditions fulfilled)
-    necessary_combined <- rep(TRUE, nrow(df)) #TRUE needed because will apply '&'
+    #TRUE needed because will apply '&'
+    necessary_combined <- rep(TRUE, nrow(df)) 
     for (i in seq_along(necessary_tot)){
         necessary_combined <- necessary_tot[[i]] & necessary_combined
     }
     
-    #Create match_combined vector (at least one of the match conditions fulfilled)
-    match_combined <- rep(FALSE, nrow(df)) #FALSE needed because will apply '|'
+    #Create match_combined vector 
+    # (at least one of the match conditions fulfilled)
+    #FALSE needed because will apply '|'
+    match_combined <- rep(FALSE, nrow(df)) 
     for (i in seq_along(match_tot)){
         match_combined <- match_tot[[i]] | match_combined
     }
     
-    #Create otherwise_combined vector (at least one of the otherwise conditions fulfilled)
+    #Create otherwise_combined vector 
+    # (at least one of the otherwise conditions fulfilled)
     #Will be used later
-    otherwise_combined <- rep(FALSE, nrow(df)) #FALSE needed because will apply '|'
+    #FALSE needed because will apply '|'
+    otherwise_combined <- rep(FALSE, nrow(df)) 
     for (i in seq_along(otherwise_tot)){
         otherwise_combined <- otherwise_tot[[i]] | otherwise_combined
     }
@@ -1718,32 +1893,57 @@ controlDetector <- function(df){
     
     
     #---------------------------------------------------------------
-    #Find the indices of SRP members where no successful match occurred in the entire SRP
-    #(these will be taken into account for 'otherwise' conditions)
+    # Find the indices of SRP members 
+    # where no successful match occurred in the entire SRP
+    # (these will be taken into account for 'otherwise' conditions)
     #---------------------------------------------------------------
-    #Code from the previous version of the inputDetector function - see older versions for alternative approaches using only two columns or for sorting not from last (requires use of xtfrm)
-    detected <- data.frame(df$run_accession, df$study_accession, necessary_match_combined, stringsAsFactors = FALSE)
-    colnames(detected) <- c("run_accession", "study_accession", "necessary_match_combined")
-    detected <- detected[order(detected$study_accession, detected$necessary_match_combined),] #Order by SRP and boolean value
-    detected <- detected[!duplicated(detected$study_accession, fromLast = TRUE),] #Remove duplicates
-    detected <- merge(df[,c("run_accession", "study_accession")], detected[,c("study_accession", "necessary_match_combined")]) #Merge to obtain one boolean value per SRP
+    #Code from the previous version of the inputDetector function 
+    # - see older versions for alternative approaches using only two columns 
+    # or for sorting not from last (requires use of xtfrm)
+    detected <- data.frame(df$run_accession, 
+                            df$study_accession, 
+                            necessary_match_combined, 
+                            stringsAsFactors = FALSE)
+    
+    colnames(detected) <- c("run_accession", 
+                            "study_accession", 
+                            "necessary_match_combined")
+    
+    #Order by SRP and boolean value
+    detected <- detected[order(detected$study_accession, 
+                               detected$necessary_match_combined),] 
+    
+    #Remove duplicates
+    detected <- detected[!duplicated(detected$study_accession, 
+                                        fromLast = TRUE),] 
+    
+    #Merge to obtain one boolean value per SRP
+    detected <- merge(df[,c("run_accession", 
+                                "study_accession")], 
+                    detected[,c("study_accession", 
+                                "necessary_match_combined")]) 
     #---------------------------------------------------------------
     
     
     #---------------------------------------------------------------
-    #Label entries with no match (undetected) and which satisfy 'otherwise' conditions
+    #Label entries with no match (undetected) 
+    # and which satisfy 'otherwise' conditions
     #---------------------------------------------------------------
-    otherwise_undetected <- (!(detected$necessary_match_combined) & necessary_combined & otherwise_combined)
+    otherwise_undetected <- (!(detected$necessary_match_combined) & 
+                                    necessary_combined & 
+                                    otherwise_combined)
+    
     df$control[otherwise_undetected] <- "otherwise"
     #---------------------------------------------------------------
     
     
-    #----------------------------------------------------------------------------
+    #------------------------------------------------------------------------
     
-    mm("controlDetector completed", "fn")
+    mm("detectControls completed", "fn")
     return(df)
 }
 #----------------------------------------------------------------------------
+
 
 
 
@@ -1752,6 +1952,7 @@ controlDetector <- function(df){
 dplyr::`%>%`
 
 #----------------------------------------------------------------------------
+
 
 #----------------------------------------------------------------------------
 #' @importFrom crayon %+%
@@ -1764,23 +1965,35 @@ crayon::`%+%`
 
 #----------------------------------------------------------------------------
 #Developed in mergeDetector.R
-mergeDetector <- function(df, do_nothing = FALSE){
-    # Args: df - data frame (MUST HAVE experiment_accession column)
-    #                       ALSO: number of rows in df must correspond to number of SRRs
-    # Returns: df - original df with added columns:
-    #                * n - count of SRRs within that SRX
-    #                * lane - index of runs within a lane (1:n for each SRX)
-    #                * Mer - indication on how to merge runs
-    #                          "" - no merging required
-    #                          SRX... - merge runs with corresponding SRXs
+
+#' Detect merges in a sample sheet
+#' 
+#' @param df Data frame (must have experiment_accession column; 
+#' also, number of rows in df must correspond to number of SRRs)
+#' @param do_nothing Logical indicating whether, 
+#' after creating relevant columns, merge detection should be performed 
+#' (if FALSE, fills these columns with NAs)
+#' 
+#' @return Original data frame with added columns: \itemize{
+#'     \item n - count of SRRs within that SRx
+#'     \item lane - index of runs within a lane (1:n for each SRX)
+#'     \item mer - indication on how to merge runs \itemize{
+#'         \item "" - no merging required
+#'         \item SRX... - merge runs with corresponding SRXs
+#'     }
+#' }
+#' 
+#' @keywords internal
+#' 
+detectMerges <- function(df, do_nothing = FALSE){
     
-    mm("Running mergeDetector", "fn")
+    mm("Running detectMerges", "fn")
     
     if (do_nothing == TRUE){
         df$n <- NA
         df$lane <- NA
         df$mer <- NA
-        mm("mergeDetector completed", "fn")
+        mm("detectMerges completed", "fn")
         return(df)
     }
     
@@ -1789,7 +2002,7 @@ mergeDetector <- function(df, do_nothing = FALSE){
         df$lane <- NA
         df$mer <- NA #===*=== added later
         warning("No not-NA experiment_accesion elements")
-        mm("mergeDetector completed", "fn")
+        mm("detectMerges completed", "fn")
         return(df)
     }
     
@@ -1800,10 +2013,13 @@ mergeDetector <- function(df, do_nothing = FALSE){
         dplyr::add_count(experiment_accession) %>% #Count SRRx within SRX
         dplyr::group_by(experiment_accession) %>%
         dplyr::mutate(lane = seq_along(n)) %>% #Indexes all SRRs within SRX
-        dplyr::mutate(mer = dplyr::case_when(n >= 2 ~ experiment_accession, #Label with SRX when multiple SRRs exist in SRX
-                                             n < 2 ~ "")) #Leave empty if only one SRR in SRX
+        dplyr::mutate(mer = dplyr::case_when(n >= 2 ~ experiment_accession, #1)
+                                            n < 2 ~ "")) #2)
+    #1) # Label with SRX when multiple SRRs exist in SRX
+    #2) # Leave empty if only one SRR in SRX
+    
     df <- as.data.frame(df)
-    mm("mergeDetector completed", "fn")
+    mm("detectMerges completed", "fn")
     return(df)
 }
 #----------------------------------------------------------------------------
@@ -1813,11 +2029,18 @@ mergeDetector <- function(df, do_nothing = FALSE){
 #----------------------------------------------------------------------------
 #Developed in missingRunVerifier.R
 #NEW VERSION (using parQuery() function)
-missingRunVerifier <- function(srr_list_in){
-    #  Args: list of SRRs
-    #  Returns: printed notice on whether the SRXs to which the SRRs belong also have any other SRRs
+
+#' Verify missing Runs
+#' 
+#' @param srr_list_in A character vector with SRRs
+#' @return Nothing but a printed notice on whether the SRXs 
+#' to which the SRRs belong also have any other SRRs
+#' 
+#' @keywords internal
+#' 
+verifyMissingRuns <- function(srr_list_in){
     # ===*=== Double check if all the entries are identical...
-    mm("Running missingRunVerifier", "fn")
+    mm("Running verifyMissingRuns", "fn")
     
     database_name <- "sra_con"
     database_env <- ".GlobalEnv"
@@ -1826,30 +2049,51 @@ missingRunVerifier <- function(srr_list_in){
     
     srr_list_in <- unique(srr_list_in[order(srr_list_in)])
     
-    miss_exp <- parQuery(get(database_name, envir = get(database_env)), "SELECT experiment_accession, run_accession FROM sra WHERE run_accession = ?", srr_list_in)
+    miss_exp <- parQuery(get(database_name, envir = get(database_env)), 
+                        paste0("SELECT experiment_accession, run_accession ",
+                            "FROM sra WHERE run_accession = ?"), 
+                        srr_list_in)
     
     srx_list <- unique(miss_exp$experiment_accession)
     
-    miss_run <- parQuery(get(database_name, envir = get(database_env)), "SELECT experiment_accession, run_accession FROM sra WHERE experiment_accession = ?", srx_list)
+    miss_run <- parQuery(get(database_name, envir = get(database_env)), 
+                        paste0("SELECT experiment_accession, run_accession ",
+                            "FROM sra WHERE experiment_accession = ?"), 
+                        srx_list)
     
     srr_list_out <- miss_run$run_accession
     srr_list_out <- unique(srr_list_out[order(srr_list_out)])
     
     if (!setequal(srr_list_in, srr_list_out)) {
-        #if (length(intersect(srr_list_out, srr_list_in)) != length(srr_list_out)) {
+        #if (length(intersect(srr_list_out, 
+        # srr_list_in)) != length(srr_list_out)) {
+        
         missing <- paste(setdiff(srr_list_out, srr_list_in), collapse = ", ")
         mm("The list does not include all the runs", "adverse")
         mm(paste0("Missing runs: ", missing), "adverse")
-        #warning("The list does not include all the runs") #Warning does not work for some reason
+        
+        #warning("The list does not include all the runs") 
+        #Warning does not work for some reason
+        
     } else { #===*=== Maybe another criterion...?
-        mm("There are no missing runs within the selected experiment accessions", "adverse")
+        mm(paste0("There are no missing runs within ",
+                        "the selected experiment accessions"), 
+            "adverse")
     }
-    mm("missingRunVerifier completed", "fn")
+    mm("verifyMissingRuns completed", "fn")
+    
 }
 
 #================================================
 
-#Needed for missingRunVerifier()
+#Needed for verifyMissingRuns()
+
+#' Subfunction for verifyMissingRuns()
+#' 
+#' @param db_con,query,par_list Character vectors
+#' 
+#' @keywords internal
+#' 
 parQuery <- function(db_con, query, par_list){
     mm("Running parQuery", "fn")
     res <- DBI::dbSendQuery(db_con, query)
@@ -1865,18 +2109,29 @@ parQuery <- function(db_con, query, par_list){
 
 
 #----------------------------------------------------------------------------
-#Developed in pairedEndConverter.R
-pairedEndConverter <- function(df){
-    mm("Running pairedEndConverter", "fn")
+#Developed in convertPairedEnds.R
+
+
+#' Convert the entries to give information about paired ends
+#' 
+#' @param df Data frame to be processed
+#' @return Original data frame with a new column with a logical 
+#' indicating whether the run has paired end layout
+#' 
+#' @keywords internal
+#' 
+convertPairedEnds <- function(df){
+    mm("Running convertPairedEnds", "fn")
     
     # Rename col
     rename_col <- FALSE
     if (sum(grepl("SRA_library_layout", colnames(df)))==1){
         rename_col <- TRUE
-        colnames(df)[grepl("SRA_library_layout", colnames(df))] <- "library_layout"
+        colnames(df)[grepl("SRA_library_layout", colnames(df))] <- 
+                                                            "library_layout"
     }
     
-    columnVerifier(df, "library_layout")
+    verifyColumns(df, "library_layout")
     
     #Locate the library_layout column
     column_index <- grep("^library_layout$", colnames(df))
@@ -1897,10 +2152,11 @@ pairedEndConverter <- function(df){
     
     
     if (rename_col){
-        colnames(df)[grepl("library_layout", colnames(df))] <- "SRA_library_layout"
+        colnames(df)[grepl("library_layout", colnames(df))] <- 
+                                                        "SRA_library_layout"
     }
     
-    mm("pairedEndConverter completed", "fn")
+    mm("convertPairedEnds completed", "fn")
     return(df)
 }
 #----------------------------------------------------------------------------
@@ -1912,24 +2168,46 @@ pairedEndConverter <- function(df){
 
 #----------------------------------------------------------------------------
 #Developed in superseriesVerifier.R
-superseriesVerifier <- function(gse_list){
-    mm("Running superseriesVerifier", "fn")
-    #  Args: list of GSEs (as appear in the GEO db)
-    #  Prints the number of samples with multiple GSEs
-    #  Prints the list of GSEs that co-occur with other GSEs (i.e. some of them might be superseries)
+
+#' Verify presence of superseries
+#' 
+#' @param gse_list List of GSEs (as they appear in the series_id column, 
+#' i.e. comma-separated if multiple)
+#' 
+#' @return A character vector with GSEs that existed 
+#' in conjuction with other GSEs 
+#' (i.e. suggesting some of them might be superseries); 
+#' NULL if no potential superseries.
+#' Also gives console information on the number of samples with mutliple GSEs 
+#' and the first few GSEs which co-occur with other GSEs 
+#' (i.e. displays beginning of the function output)
+#' 
+#' @keywords internal
+#' 
+verifySuperseries <- function(gse_list){
+    mm("Running verifySuperseries", "fn")
     
     mm("CHECKING FOR PRESENCE OF SUPERSERIES", "fn")
     
     #Grepl GSE..., GSE... (...)
     ss_match <- grepl("^GSE\\d\\d\\d+,GSE\\d\\d\\d+.*$", gse_list)
-    mm(paste0(sum(ss_match), " out of ", length(gse_list), " entries belong to more than one GSE (some of them might be superseries)"), "res")
+    mm(paste0(sum(ss_match), 
+                " out of ", 
+                length(gse_list), 
+                " entries belong to more than one GSE ",
+                "(some of them might be superseries)"), 
+        "res")
     
     if (sum(ss_match)>0){
-        #Get a list of GSEs that co-occur with other GSEs (i.e. GSEs from samples which have more than one GSEs)
+        #Get a list of GSEs that co-occur with other GSEs 
+        # (i.e. GSEs from samples which have more than one GSEs)
         ss_list <- unlist(strsplit(unique(gse_list[ss_match]), split=","))
         ss_list <- unique(ss_list[order(ss_list)])
         if (length(ss_list)!=0){
-            mm(paste0("Consider carrying out superseries search on the following GSEs: ", paste(ss_list, collapse = ", ")), "adverse")
+            mm(paste0("Consider carrying out superseries ",
+                    "search on the following GSEs: ", 
+                    paste(ss_list, collapse = ", ")), 
+            "adverse")
         }
         return(ss_list)
         
@@ -1937,7 +2215,7 @@ superseriesVerifier <- function(gse_list){
         return(NULL)
     }
     
-    mm("superseriesVerifier completed", "fn")
+    mm("verifySuperseries completed", "fn")
 }
 #----------------------------------------------------------------------------
 
@@ -1947,17 +2225,21 @@ superseriesVerifier <- function(gse_list){
 #----------------------------------------------------------------------------
 # manageLibraryStrategy
 #----------------------------------------------------------------------------
-#'
+
+
 #'
 #' Manage Library Strategy Formats
 #' 
-#' \code{manageLibraryStrategy} by default converts between different formats of library strategy strings and offers a few other tasks related to library strategies
+#' \code{manageLibraryStrategy} by default converts between different formats 
+#' of library strategy strings and offers a few other tasks 
+#' related to library strategies
 #' 
 #' @param x Character vector to be converted
 #' @param input String denoting the input format (see below)
 #' @param output String denoting the output format (see below)
 #' @param task String denoting the task to be performed (see below)
-#' @param mismatch.ignore Logical denoting whether mismatches are allowed (if TRUE and no match, original character is returned)
+#' @param mismatch.ignore Logical denoting whether mismatches are allowed 
+#' (if TRUE and no match, original character is returned)
 #' 
 #' @return Library strategy in a desired format
 #' 
@@ -1987,16 +2269,16 @@ superseriesVerifier <- function(gse_list){
 #' 
 #' @examples
 #' # Convert into short form
-#' manageLibraryStrategy("RNA-Seq", input = "can", output = "short") 
+#' # manageLibraryStrategy("RNA-Seq", input = "can", output = "short") 
 #' 
 #' # Convert into canonical form
-#' manageLibraryStrategy("RNA", input = "syn", output = "can") 
+#' # manageLibraryStrategy("RNA", input = "syn", output = "can") 
 #' 
 #' # List supported formats for library strategy
-#' manageLibraryStrategy(task = "ex") 
+#' # manageLibraryStrategy(task = "ex") 
 #' 
 #' # Check whether library strategy is in canonical form
-#' manageLibraryStrategy("RNA-Seq", task = "check_can") 
+#' # manageLibraryStrategy("RNA-Seq", task = "check_can") 
 #' 
 #' 
 #' 
@@ -2004,7 +2286,12 @@ superseriesVerifier <- function(gse_list){
 #' @keywords internal
 #' 
 #' 
-manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore = FALSE){
+manageLibraryStrategy <- function(
+                                    x, 
+                                    input, 
+                                    output, 
+                                    task="conv", 
+                                    mismatch.ignore = FALSE){
     
     mm("Running manageLibraryStrategy", "fn")
     
@@ -2012,38 +2299,38 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
     
     # Canonical names (as exist within the SRA database)
     can <- c("WGS", #1
-             "AMPLICON", #2
-             "RNA-Seq", #3
-             "OTHER", #4
-             "WXS", #5
-             "ChIP-Seq", #6
-             "CLONE", #7
-             "POOLCLONE", #8
-             "Bisulfite-Seq", #9
-             "SELEX", #10
-             "miRNA-Seq", #11
-             "WGA", #12
-             "RAD-Seq", #13
-             "Targeted-Capture", #14
-             "ATAC-seq") #15
+                "AMPLICON", #2
+                "RNA-Seq", #3
+                "OTHER", #4
+                "WXS", #5
+                "ChIP-Seq", #6
+                "CLONE", #7
+                "POOLCLONE", #8
+                "Bisulfite-Seq", #9
+                "SELEX", #10
+                "miRNA-Seq", #11
+                "WGA", #12
+                "RAD-Seq", #13
+                "Targeted-Capture", #14
+                "ATAC-seq") #15
     
     
     #Shorthand forms
     short <- c("WGS", #1
-               "AMPLI", #2
-               "RNA", #3
-               "OTHER", #4
-               "WXS", #5
-               "ChIP", #6
-               "CLONE", #7
-               "POOLCL", #8
-               "Bisulf", #9
-               "SELEX", #10
-               "miRNA", #11
-               "WGA", #12
-               "RAD", #13
-               "Tar-Cap", #14
-               "ATAC") #15
+                "AMPLI", #2
+                "RNA", #3
+                "OTHER", #4
+                "WXS", #5
+                "ChIP", #6
+                "CLONE", #7
+                "POOLCL", #8
+                "Bisulf", #9
+                "SELEX", #10
+                "miRNA", #11
+                "WGA", #12
+                "RAD", #13
+                "Tar-Cap", #14
+                "ATAC") #15
     
     
     #Synonym forms
@@ -2064,7 +2351,8 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
                 c("ATAC-seq")) #15
     
     
-    #Make sure that the list of synonyms also contains short and canonical forms
+    #Make sure that the list of synonyms 
+    #also contains short and canonical forms
     for (i in seq_along(syn)){
         syn[[i]] <- c(can[[i]], syn[[i]], short[[i]])
         syn[[i]] <- unique(syn[[i]])
@@ -2072,7 +2360,9 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
     
     
     #Sanity check that all formats have the same length
-    if ( (length(can)!=length(short)) | (length(can)!=length(syn)) | (length(short)!=length(syn)) ){
+    if ( (length(can)!=length(short)) | 
+                                        (length(can)!=length(syn)) | 
+                                        (length(short)!=length(syn)) ){
         stop("The format lists have unequal lengths")
     }
     
@@ -2095,8 +2385,10 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
     
     
     
-    #Only two combinations are allowed (syn->can, can->short); (or output = "ex" which was done earlier)
-    if ( !( (input == "can" & output == "short") | (input == "syn" & output == "can") ) ){
+    #Only two combinations are allowed (syn->can, can->short); 
+    # (or output = "ex" which was done earlier)
+    if ( !( (input == "can" & output == "short") | 
+                                        (input == "syn" & output == "can") ) ){
         stop("Invalid input-output combination provided")
     }
     
@@ -2157,7 +2449,10 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
             }
         } else { #Mismatch not allowed
             if (res_num >1){
-                stop("Multiple matches were found. Please make your search term unique")
+                
+                stop(paste0("Multiple matches were found. ",
+                        "Please make your search term unique"))
+                
             } else if (res_num == 0){
                 stop("No results found")
             } else if (res_num == 1){
@@ -2186,11 +2481,15 @@ manageLibraryStrategy <- function(x, input, output, task="conv", mismatch.ignore
 #----------------------------------------------------------------------------
 # renameGSMColumns
 #----------------------------------------------------------------------------
-#'
+
+
 #' Rename df columns derived from gsm table to 'GSM_'
 #' 
 #' @param df Data frame
 #' @return Data frame with modified column names
+#' 
+#' @keywords internal
+#' 
 renameGSMColumns <- function(df){
     
     database_name <- "geo_con"
@@ -2200,8 +2499,12 @@ renameGSMColumns <- function(df){
         stop("df is not a data frame")
     }
     
-    gsm_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "gsm")
-    gsm_columns <- gsm_columns[!gsm_columns %in% c("gsm", "series_id")] # Exclude gsm and series_id
+    gsm_columns <- DBI::dbListFields(get(database_name, 
+                                            envir = get(database_env)), 
+                                    "gsm")
+    
+    # Exclude gsm and series_id
+    gsm_columns <- gsm_columns[!gsm_columns %in% c("gsm", "series_id")] 
     
     
     gsm_id <- (colnames(df) %in% gsm_columns)
@@ -2221,11 +2524,16 @@ renameGSMColumns <- function(df){
 #----------------------------------------------------------------------------
 # renameGSEColumns
 #----------------------------------------------------------------------------
-#'
+
+
+#' 
 #' Rename df columns derived from gse table to 'GSE_'
 #' 
 #' @param df Data frame
 #' @return Data frame with modified column names
+#' 
+#' @keywords internal
+#' 
 renameGSEColumns <- function(df){
     
     database_name <- "geo_con"
@@ -2235,9 +2543,12 @@ renameGSEColumns <- function(df){
         stop("df is not a data frame")
     }
     
-    gse_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "gse")
-    gse_columns <- gse_columns[!gse_columns %in% c("gsm", "series_id", "gse")] # Exclude gsm and series_id
+    gse_columns <- DBI::dbListFields(
+                                get(database_name, envir = get(database_env)), 
+                                "gse")
     
+    # Exclude gsm and series_id
+    gse_columns <- gse_columns[!gse_columns %in% c("gsm", "series_id", "gse")] 
     
     gse_id <- (colnames(df) %in% gse_columns)
     
@@ -2260,6 +2571,9 @@ renameGSEColumns <- function(df){
 #' 
 #' @param df Data frame
 #' @return Data frame with modified column names
+#' 
+#' @keywords internal
+#' 
 renameSRAColumns <- function(df){
     
     database_name <- "sra_con"
@@ -2269,8 +2583,16 @@ renameSRAColumns <- function(df){
         stop("df is not a data frame")
     }
     
-    sra_columns <- DBI::dbListFields(get(database_name, envir = get(database_env)), "sra")
-    sra_columns <- sra_columns[!sra_columns %in% c("run_accession", "experiment_accession", "sample_accession", "study_accession", "submission_accession")] # Exclude accession names
+    sra_columns <- DBI::dbListFields(
+                                get(database_name, envir = get(database_env)), 
+                                "sra")
+    
+    # Exclude accession names
+    sra_columns <- sra_columns[!sra_columns %in% c("run_accession", 
+                                                    "experiment_accession", 
+                                                    "sample_accession", 
+                                                    "study_accession", 
+                                                    "submission_accession")] 
     
     
     sra_id <- (colnames(df) %in% sra_columns)
@@ -2294,16 +2616,31 @@ renameSRAColumns <- function(df){
 #' @param df Data frame
 #' @return Data frame with modified column names
 #' 
+#' 
+#' @keywords internal
+#' 
 renameOTHColumns <- function(df){
     
     if (!is.data.frame(df)){
         stop("df is not a data frame")
     }
     
-    oth_columns <- c("input", "control", 
-                     "sa_tissue", "sa_antibody", "sa_gene", "sa_treatment", "sa_remainder", 
-                     "ch1_tissue", "ch1_antibody", "ch1_gene", "ch1_treatment", "ch1_remainder",
-                     "lane", "mer", "pairedEnd", "n")
+    oth_columns <- c("input", 
+                        "control", 
+                        "sa_tissue", 
+                        "sa_antibody", 
+                        "sa_gene", 
+                        "sa_treatment", 
+                        "sa_remainder", 
+                        "ch1_tissue", 
+                        "ch1_antibody", 
+                        "ch1_gene", 
+                        "ch1_treatment", 
+                        "ch1_remainder",
+                        "lane", 
+                        "mer", 
+                        "pairedEnd", 
+                        "n")
     
     oth_id <- (colnames(df) %in% oth_columns)
     
@@ -2323,31 +2660,41 @@ renameOTHColumns <- function(df){
 # generateEmptyDF
 #----------------------------------------------------------------------------
 #' Generate empty df with columns corresponding to database columns
+#' 
 #' @param tables Character vector with tables from which the columns
-#' @return Data frame with columns corresponding to database columns (with names prepended with appropriate prefix). Format corresponds to that of searchForAccessionAcrossDBsDF
+#' @return Data frame with columns corresponding to database columns 
+#' (with names prepended with appropriate prefix). 
+#' Format corresponds to that of searchForAccessionAcrossDBsDF
 #' 
 #' 
 #' @keywords internal
+#' 
 generateEmptyDF <- function(tables = c("sra", "gsm", "gse", "other")){
     df_columns <- character()
     
     if ("sra" %in% tables){
-        df_columns <- c(df_columns, as.character(unlist(listValidColumns()$SRA)))
+        df_columns <- 
+            c(df_columns, as.character(unlist(listValidColumns()$SRA)))
     }
     
     if ("gsm" %in% tables){
-        df_columns <- c(df_columns, as.character(unlist(listValidColumns()$GSM)))
+        df_columns <- 
+            c(df_columns, as.character(unlist(listValidColumns()$GSM)))
     }
     
     if ("gse" %in% tables){
-        df_columns <- c(df_columns, as.character(unlist(listValidColumns()$GSE)))
+        df_columns <- 
+            c(df_columns, as.character(unlist(listValidColumns()$GSE)))
     }
     
     if ("other" %in% tables){
-        df_columns <- c(df_columns, as.character(unlist(listValidColumns()$Other)))
+        df_columns <- 
+            c(df_columns, as.character(unlist(listValidColumns()$Other)))
     }
     
-    df <- stats::setNames(data.frame(matrix(ncol = length(df_columns), nrow = 0)), df_columns)
+    df <- stats::setNames(data.frame(matrix(ncol = length(df_columns), 
+                                        nrow = 0)), 
+                        df_columns)
     return(df)
 }
 #----------------------------------------------------------------------------

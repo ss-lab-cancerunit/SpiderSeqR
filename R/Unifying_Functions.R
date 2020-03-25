@@ -91,7 +91,7 @@ orderDFAccessions <- function(df, acc_order = c("study", "sample", "experiment",
     acc_cols[["gsm"]] <- "gsm"
     
     # Check df contains necessary columns
-    columnVerifier(df, acc_cols)
+    verifyColumns(df, acc_cols)
     
     col_ind <- integer() # For storing column indices
     

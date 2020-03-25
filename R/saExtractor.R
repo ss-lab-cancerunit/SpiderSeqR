@@ -28,7 +28,7 @@ saExtractor <- function(df){
         colnames(df)[grepl("SRA_sample_attribute", colnames(df))] <- "sample_attribute"
     }
     
-    columnVerifier(df, "sample_attribute")
+    verifyColumns(df, "sample_attribute")
     
     if (sum(!is.na(df$sample_attribute)) ==0 ){ #Return unchanged df if no not-NA elements in df
         df$sa_remainder <- NA

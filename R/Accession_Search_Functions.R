@@ -36,8 +36,8 @@
 #' 
 #' @examples 
 #' 
-#' startSpiderSeqRDemo()
-#' searchGEOForGSM("GSM1173367", "*", "*")
+#' # startSpiderSeqRDemo()
+#' # searchGEOForGSM("GSM1173367", "*", "*")
 #' 
 #' @keywords internal
 #' 
@@ -126,8 +126,8 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
 #' 
 #' 
 #' @examples 
-#' startSpiderSeqRDemo()
-#' searchGEOForGSE("GSE48253", "*", "*")
+#' # startSpiderSeqRDemo()
+#' # searchGEOForGSE("GSE48253", "*", "*")
 #' 
 #' @keywords internal
 #' 
@@ -211,8 +211,8 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
 #' @return A data frame with results
 #' 
 #' @examples 
-#' startSpiderSeqRDemo()
-#' searchSRAForAccession("SRP134708", "*")
+#' # startSpiderSeqRDemo()
+#' # searchSRAForAccession("SRP134708", "*")
 #' 
 #' @keywords internal
 #' 
@@ -319,8 +319,8 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
 #' @return A data frame with results
 #' 
 #' @examples 
-#' startSpiderSeqRDemo()
-#' searchSRR_GSM("GSM1173367")
+#' # startSpiderSeqRDemo()
+#' # searchSRR_GSM("GSM1173367")
 #' 
 #' 
 #' @keywords internal
@@ -407,7 +407,7 @@ searchSRR_GSM <- function(acc_vector,
 #' 
 #' 
 #' @examples
-#' listSRAFields()
+#' # listSRAFields()
 #'  
 #' @keywords internal
 #' 
@@ -433,7 +433,7 @@ listSRAFields <- function(){
 #' 
 #' 
 #' @examples 
-#' listGSMFields()
+#' # listGSMFields()
 #'  
 #' @keywords internal
 #' 
@@ -462,7 +462,7 @@ listGSMFields <- function(){
 #' 
 #' 
 #' @examples 
-#' listGSEFields()
+#' # listGSEFields()
 #'  
 #' @keywords internal
 #' 

@@ -12,22 +12,27 @@ List of character vectors with column names
 \description{
 List of sets of column names for use when subsetting results data frame. 
 
-To access a list of all available columns, please see \code{listValidColumns()}.
+To access a list of all available columns, 
+please see \code{listValidColumns()}.
 }
 \section{Available sets}{
 
 
 \itemize{
     \item Accession - accession ids only (SRA and GEO)
-    \item Overview - a subjective selection of most important columns (from SRA and GEO) for getting an overview of the samples
-    \item Overview2 - columns from Overview with added columns of extracted information from SRA_sample_attribute and GSM_characteristics_ch1 columns
+    \item Overview - a subjective selection of most important columns 
+    (from SRA and GEO) for getting an overview of the samples
+    \item Overview2 - columns from Overview with added columns 
+    of extracted information from SRA_sample_attribute 
+    and GSM_characteristics_ch1 columns
 }
 }
 
 \section{Applications}{
 
 
-The sets can be used for any purpose, though they have been created with display and filtering applications in mind. Here are recommended uses:
+The sets can be used for any purpose, though they have been created 
+with display and filtering applications in mind. Here are recommended uses:
 
 \itemize{
     \item Display: Accession, Overview, Overview2

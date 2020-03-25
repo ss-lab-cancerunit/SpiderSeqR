@@ -7,15 +7,18 @@
 orderAccessions(x, na.last = TRUE)
 }
 \arguments{
-\item{x}{Character vector (or list containing character vectors) to be ordered}
+\item{x}{Character vector (or list containing character vectors) 
+to be ordered}
 
-\item{na.last}{For controlling the treatment of NAs (see \code{\link[base]{order}})}
+\item{na.last}{For controlling the treatment of NAs 
+(see \code{\link[base]{order}})}
 }
 \value{
 Integer vector with order of indices
 }
 \description{
-\code{orderAccessions} orders character vectors or lists according to numbers, disregarding any lettrs.
+\code{orderAccessions} orders character vectors or lists 
+according to numbers, disregarding any lettrs.
 }
 \examples{
 startSpiderSeqRDemo()

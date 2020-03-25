@@ -15,3 +15,4 @@ Data frame with modified column names
 \description{
 Rename df columns derived from sra table to 'SRA_'
 }
+\keyword{internal}

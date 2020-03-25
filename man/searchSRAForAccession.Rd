@@ -19,8 +19,8 @@ A data frame with results
 Search for SRA accessions
 }
 \examples{
-startSpiderSeqRDemo()
-searchSRAForAccession("SRP134708", "*")
+# startSpiderSeqRDemo()
+# searchSRAForAccession("SRP134708", "*")
 
 }
 \keyword{internal}

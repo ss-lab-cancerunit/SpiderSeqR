@@ -22,8 +22,8 @@ A data frame with results
 Search for GSE in GEO
 }
 \examples{
-startSpiderSeqRDemo()
-searchGEOForGSE("GSE48253", "*", "*")
+# startSpiderSeqRDemo()
+# searchGEOForGSE("GSE48253", "*", "*")
 
 }
 \keyword{internal}

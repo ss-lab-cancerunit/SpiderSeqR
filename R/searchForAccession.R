@@ -46,15 +46,15 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
     output_df <- chExtractor(output_df)
     
     
-    #No input/controlDetector used
+    #No detectInputs/Controls used
     output_df$input <- NA
     output_df$control <- NA
     
-    output_df <- mergeDetector(output_df)
+    output_df <- detectMerges(output_df)
     
-    #No missingRunVerifier used
+    #No verifyMissingRuns used
     
-    output_df <- pairedEndConverter(output_df)
+    output_df <- convertPairedEnds(output_df)
     
     output_df <- unifyNAs(output_df)
     

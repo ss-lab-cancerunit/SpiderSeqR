@@ -29,7 +29,7 @@ chExtractor <- function(df){
             "characteristics_ch1"
     }
     
-    columnVerifier(df, "characteristics_ch1")
+    verifyColumns(df, "characteristics_ch1")
     
     geo_char_columns <- c("ch1_original", "ch1_remainder", 
                             "ch1_tissue", "ch1_antibody", 

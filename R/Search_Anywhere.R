@@ -301,15 +301,15 @@ searchAnywhere <- function(query_all, acc_levels = c("run", "experiment", "sampl
     df_out <- chExtractor(df_out)
     
     
-    #No input/controlDetector used
+    #No detectInputs/Controls used
     df_out$input <- NA
     df_out$control <- NA
     
-    df_out <- mergeDetector(df_out, do_nothing = TRUE)
+    df_out <- detectMerges(df_out, do_nothing = TRUE)
     
-    #No missingRunVerifier used
+    #No verifyMissingRuns used
     
-    df_out <- pairedEndConverter(df_out)
+    df_out <- convertPairedEnds(df_out)
     
     df_out <- unifyNAs(df_out)
     

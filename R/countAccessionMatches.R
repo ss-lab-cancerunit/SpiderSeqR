@@ -37,7 +37,7 @@ countAccessionMatches <- function(acc_vector, df, output = "logical"){
     # Get acc_class
     acc_class <- classifyAccession(acc_vector)
     
-    columnVerifier(df, acc_class)
+    verifyColumns(df, acc_class)
     
     ind <- grep(acc_class, colnames(df))
     

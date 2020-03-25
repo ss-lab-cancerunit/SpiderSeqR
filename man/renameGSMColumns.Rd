@@ -15,3 +15,4 @@ Data frame with modified column names
 \description{
 Rename df columns derived from gsm table to 'GSM_'
 }
+\keyword{internal}

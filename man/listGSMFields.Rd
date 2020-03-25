@@ -13,7 +13,7 @@ Character vector containing column names of GSM table
 List all column names of the GSM table
 }
 \examples{
-listGSMFields()
+# listGSMFields()
  
 }
 \keyword{internal}

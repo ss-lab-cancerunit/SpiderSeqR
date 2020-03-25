@@ -22,7 +22,7 @@ of the regexpr_vector elements (i.e. matching to one element is sufficient
 for the value to be set to TRUE for that position)
 }
 \examples{
-verifySimpleConditions("^m$", c("m", "mm", "cm", "M"))
+# verifySimpleConditions("^m$", c("m", "mm", "cm", "M"))
 
 }
 \keyword{internal}
