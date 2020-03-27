@@ -36,7 +36,7 @@ addMissingSamples(searchForAccession("SRR6823653"))
 }
 \seealso{
 Other SpiderSeqR workflow functions: \code{\link{convertAccession}},
-  \code{\link{filterByTermByAccessionLevel}},
-  \code{\link{filterByTerm}}
+  \code{\link{filterByTerm}},
+  \code{\link{filterSRAByTermByAccessionLevel}}
 }
 \concept{SpiderSeqR workflow functions}

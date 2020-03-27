@@ -4,24 +4,25 @@
 # Stores functions necessary for output generation 
 # (with the exception of SpiderSeqR-wide functions like verifyColumns)
 
-#- outputGenerator() - main function
-#- filenameGenerator() - for generating file names
+#- generateOutput() - main function
+#- generateFileName() - for generating file names
 #- orderAccessions() - for sorting by _R_s (ignoring the letter prefix) 
 #    - previously digitSort
 
-#- universalSampleSheetGenerator() - layout for sample sheets
+#- generateUniversalSampleSheet() - layout for sample sheets
 #    USES:
-#     - chipSampleSheetGenerator()
-#     - rnaSampleSheetGenerator()
-#     - otherSampleSheetGenerator()
+#     - generateSampleSheet_ChIP()
+#     - generateSampleSheet_RNA()
+#     - generateSampleSheet_Other()
 #     (all included here)
 #
-#- dbExtractGenerator() - layout for db extracts
-#- columnSelector() - main powerhorse of dbExtractGenerator()
+#- generateDBExtract() - layout for db extracts
+#- manageColumns() - main powerhorse of generateDBExtract()
+
 
 
 #============================================================================
-# outputGenerator()
+# generateOutput()
 #============================================================================
 
 #Developed in outputGenerator.R
@@ -38,24 +39,24 @@
 #' @details Orders the df, replaces tabs (in characteristics_ch1), 
 #' filters rows as appropriate, outputs files.
 #' 
-#'  @section Created files:
+#' @section Files created by generateOutput:
 #'  \itemize{
-#'      \item TARGET - samples of interest with relevant 
-#'          inputs/controls (ChIP/RNA)
-#'      \item ALL - all samples within SRP (that belong to the 
-#'          SRA_library_strategy) - only in the case of ChIP/RNA
-#'      \item SECONDARY - samples that belong to SRA_secondary_library_strategy
-#'          - only for ChIP with specified library_strategy
-#'  }
-#'  All the files are made available as sample sheets (.csv and .Rda) 
-#'  and database extracts (.csv, .Rda)
-#'  
-#'  @keywords internal
-#'  
-outputGenerator <- function(df, ss=NULL, st){
+#'     \item TARGET - samples of interest with relevant 
+#'         inputs/controls (ChIP/RNA)
+#'     \item ALL - all samples within SRP (that belong to the 
+#'         SRA_library_strategy) - only in the case of ChIP/RNA
+#'     \item SECONDARY - samples that belong to SRA_secondary_library_strategy
+#'         - only for ChIP with specified library_strategy
+#' }
+#' All the files are made available as sample sheets (.csv and .Rda) 
+#' and database extracts (.csv, .Rda)
+#' 
+#' @keywords internal
+#' 
+generateOutput <- function(df, ss=NULL, st){
 
 
-    mm("Running outputGenerator", "fn")
+    mm("Running generateOutput", "fn")
     
     SRA_library_strategy <- NULL
     OTH_input <- NULL
@@ -67,9 +68,9 @@ outputGenerator <- function(df, ss=NULL, st){
     
     #ORDER BY SRP, then SRS,  then SRX, then SRR
     order_columns <- list(df$study_accession,
-                          df$sample_accession,
-                          df$experiment_accession,
-                          df$run_accession)
+                            df$sample_accession,
+                            df$experiment_accession,
+                            df$run_accession)
     
     #Using custom function for ordering 
     # to disregard the '_RP/_RS/_RX/_RR' prefixes
@@ -94,7 +95,7 @@ outputGenerator <- function(df, ss=NULL, st){
     
     
     if (!is.null(ss)){
-        saveRDS(ss, do.call(filenameGenerator, 
+        saveRDS(ss, do.call(generateFileName, 
                             c(st, list(output="ss"), list(file_type="Rda"))))
     }
     
@@ -138,30 +139,30 @@ outputGenerator <- function(df, ss=NULL, st){
     if (spiderSet$internal == TRUE){
         #GENERATE TARGET SAMPLE SHEET
         target_sample_sheet <- 
-            universalSampleSheetGenerator(
+            generateUniversalSampleSheet(
                 df=target, SRA_library_strategy = st$SRA_library_strategy)
         
         #SAVE TARGET SAMPLE SHEET
         saveRDS(target_sample_sheet, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="tar_sm"), list(file_type="Rda"))))
         
         cwt(target_sample_sheet, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="tar_sm"), list(file_type="csv"))))
         
     }
     
     #GENERATE TARGET DB EXTRACT
-    target_db_extract <- dbExtractGenerator(target)
+    target_db_extract <- generateDBExtract(target)
     
     #SAVE TARGET DB EXTRACT
     saveRDS(target_db_extract, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="tar_db"), list(file_type="Rda"))))
     
     cwt(target_db_extract, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="tar_db"), list(file_type="csv"))))
     
     
@@ -176,37 +177,38 @@ outputGenerator <- function(df, ss=NULL, st){
         if (spiderSet$internal == TRUE){
             #GENERATE ALL SAMPLE SHEET
             all_sample_sheet <- 
-                universalSampleSheetGenerator(
+                generateUniversalSampleSheet(
                     df=all, SRA_library_strategy = st$SRA_library_strategy)
             
             #SAVE ALL SAMPLE SHEET
             saveRDS(all_sample_sheet, 
-                    do.call(filenameGenerator, 
+                    do.call(generateFileName, 
                             c(st, list(output="all_sm"), 
                                 list(file_type="Rda"))))
             
             cwt(all_sample_sheet, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="all_sm"), list(file_type="csv"))))
         }
         
         
         #GENERATE ALL DB EXTRACT
-        all_db_extract <- dbExtractGenerator(all)
+        all_db_extract <- generateDBExtract(all)
         
         #SAVE ALL DB EXTRACT
         saveRDS(all_db_extract, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="all_db"), list(file_type="Rda"))))
         
         cwt(all_db_extract, 
-            do.call(filenameGenerator, 
+            do.call(generateFileName, 
                     c(st, list(output="all_db"), list(file_type="csv"))))
         
         if (st$SRA_library_strategy == "ChIP-Seq" & 
                     !is.null(st$SRA_secondary_library_strategy)){
             #=========================
-            # 'SECONDARY' sheet (all entries within SRP that are from the SRA_secondary_library_strategy)
+            # 'SECONDARY' sheet (all entries within SRP 
+            #  that are from the SRA_secondary_library_strategy)
             #    ------ONLY AVAILABLE FOR CHIP------
             #=========================
             
@@ -219,31 +221,31 @@ outputGenerator <- function(df, ss=NULL, st){
                 
                 #GENERATE SECONDARY SAMPLE SHEET
                 secondary_sample_sheet <- 
-                    universalSampleSheetGenerator(
+                    generateUniversalSampleSheet(
                         df=secondary, 
                         SRA_library_strategy=st$SRA_secondary_library_strategy)
                 
                 #SAVE SECONDARY SAMPLE SHEET
                 saveRDS(secondary_sample_sheet, 
-                    do.call(filenameGenerator, 
+                    do.call(generateFileName, 
                         c(st, list(output="2ry_sm"), list(file_type="Rda"))))
                 
                 cwt(secondary_sample_sheet, 
-                    do.call(filenameGenerator, 
+                    do.call(generateFileName, 
                         c(st, list(output="2ry_sm"), list(file_type="csv"))))
                 
             }  
             
             #GENERATE SECONDARY DB EXTRACT
-            secondary_db_extract <- dbExtractGenerator(secondary)
+            secondary_db_extract <- generateDBExtract(secondary)
             
             #SAVE SECONDARY DB EXTRACT
             saveRDS(secondary_db_extract, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="2ry_db"), list(file_type="Rda"))))
             
             cwt(secondary_db_extract, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="2ry_db"), list(file_type="csv"))))
         }
     } else {
@@ -255,34 +257,34 @@ outputGenerator <- function(df, ss=NULL, st){
         if (spiderSet$internal == TRUE){
             #GENERATE ALL SAMPLE SHEET
             all_sample_sheet <- 
-                universalSampleSheetGenerator(
+                generateUniversalSampleSheet(
                     df=all, SRA_library_strategy = st$SRA_library_strategy)
             
             #SAVE ALL SAMPLE SHEET
             saveRDS(all_sample_sheet, 
-                    do.call(filenameGenerator, 
+                    do.call(generateFileName, 
                         c(st, list(output="all_sm"), list(file_type="Rda"))))
             
             cwt(all_sample_sheet, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="all_sm"), list(file_type="csv"))))
         }
         
         
         #GENERATE ALL DB EXTRACT
-        all_db_extract <- dbExtractGenerator(all)
+        all_db_extract <- generateDBExtract(all)
         
         #SAVE ALL DB EXTRACT
         saveRDS(all_db_extract, 
-                do.call(filenameGenerator, 
+                do.call(generateFileName, 
                         c(st, list(output="all_db"), list(file_type="Rda"))))
         
         cwt(all_db_extract, 
-            do.call(filenameGenerator, 
+            do.call(generateFileName, 
                     c(st, list(output="all_db"), list(file_type="csv"))))
         
     }
-    mm("outputGenerator completed", "fn")
+    mm("generateOutput completed", "fn")
 }
 #============================================================================
 
@@ -290,11 +292,24 @@ outputGenerator <- function(df, ss=NULL, st){
 
 
 #============================================================================
-# filenameGenerator()
+# generateFileName()
 #============================================================================
 
 #Developed in outputGenerator.R
-filenameGenerator <- function(
+
+#' Generate a file name
+#' 
+#' @param SRA_library_strategy,gene,antibody,cell_type and:
+#' @param treatment,species,platform,SRA_secondary_libarary_strategy Strings 
+#'     with search parameters used to generate the data
+#' @param output String with output type
+#' @param file_type String with file type
+#' 
+#' @return A string with the file name
+#' 
+#' @keywords internal
+#' 
+generateFileName <- function(
         SRA_library_strategy, 
         gene=NULL, 
         antibody=NULL, 
@@ -305,7 +320,7 @@ filenameGenerator <- function(
         SRA_secondary_library_strategy=NULL, 
         output, file_type){ #Same arguments as testf, & as output and file_type
     
-    mm("Running filenameGenerator", "fn")
+    mm("Running generateFileName", "fn")
     
     argument_list <- c("SRA_library_strategy", 
                         "gene", 
@@ -367,7 +382,7 @@ filenameGenerator <- function(
     name <- substr(name, 2, (nchar(name)))
     name <- paste0(name, ".", file_type) #file_type added separately at the end
     
-    mm("filenameGenerator completed", "fn")
+    mm("generateFileName completed", "fn")
     return(name)
     
 }
@@ -376,11 +391,11 @@ filenameGenerator <- function(
 
 
 #============================================================================
-# outputGenerator_acc()
+# generateOutput_Accession()
 #============================================================================
 
 #Developed in outputGenerator.R
-#Based largely on outputGenerator()
+#Based largely on generateOutput()
 # Differences:
 # - arguments (accession instead of st elements)
 # - filtering method
@@ -399,27 +414,29 @@ filenameGenerator <- function(
 #' @details Orders the df, replaces tabs (in characteristics_ch1), 
 #' filters rows as appropriate, outputs files.
 #' 
-#'  @section Created files:
-#'  \itemize{
-#'      \item ChIP-Seq - if present
-#'      \item RNA-Seq - if present
-#'      \item OTHER - if present
-#'  }
-#'  All the files are made available as sample sheets (.csv and .Rda) 
-#'  and database extracts (.csv, .Rda)
-#'  
-#'  @keywords internal
-#'  
-outputGenerator_acc <- function(df, ss=NULL, accession){
-    mm("Running outputGenerator_acc", "fn")
+#' 
+#' @section Files created by generateOutput_Accession:
+#' 
+#' \itemize{
+#'     \item ChIP-Seq - if present
+#'     \item RNA-Seq - if present
+#'     \item OTHER - if present
+#' }
+#' All the files are made available as sample sheets (.csv and .Rda) 
+#' and database extracts (.csv, .Rda)
+#' 
+#' @keywords internal
+#' 
+generateOutput_Accession <- function(df, ss=NULL, accession){
+    mm("Running generateOutput_Accession", "fn")
     
     SRA_library_strategy <- NULL
     
     #ORDER BY SRP, then SRS,  then SRX, then SRR
     order_columns <- list(df$study_accession,
-                          df$sample_accession,
-                          df$experiment_accession,
-                          df$run_accession)
+                            df$sample_accession,
+                            df$experiment_accession,
+                            df$run_accession)
     
     #Using custom function for ordering 
     # to disregard the '_RP/_RS/_RX/_RR' prefixes
@@ -442,7 +459,7 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
     
     # Consider saving ss ===*===
     #if (!is.null(ss)){
-    #  saveRDS(ss, do.call(filenameGenerator, 
+    #  saveRDS(ss, do.call(generateFileName, 
     # c(st, list(output="ss"), list(file_type="Rda"))))
     #}
     
@@ -451,33 +468,33 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
     # Generate unfiltered outputs
     #=========================================================================
     #GENERATE SAMPLE SHEET
-    df_sample_sheet <- universalSampleSheetGenerator(df, "OTHER")
+    df_sample_sheet <- generateUniversalSampleSheet(df, "OTHER")
     
     #SAVE SAMPLE SHEET
     saveRDS(df_sample_sheet, 
-            filenameGenerator_acc(SRA_library_strategy = "ALL", 
+            generateFileName_Accession(SRA_library_strategy = "ALL", 
                                     accession = accession, 
                                     output = "sm", 
                                     file_type = "Rda"))
     
     cwt(df_sample_sheet, 
-            filenameGenerator_acc(SRA_library_strategy = "ALL", 
+            generateFileName_Accession(SRA_library_strategy = "ALL", 
                                     accession = accession, 
                                     output = "sm", 
                                     file_type = "csv"))
     
     #GENERATE DB EXTRACT
-    df_db_extract <- dbExtractGenerator(df)
+    df_db_extract <- generateDBExtract(df)
     
     #SAVE DB EXTRACT
     saveRDS(df_db_extract, 
-            filenameGenerator_acc(SRA_library_strategy = "ALL", 
+            generateFileName_Accession(SRA_library_strategy = "ALL", 
                                     accession = accession, 
                                     output = "db", 
                                     file_type = "Rda"))
     
     cwt(df_db_extract, 
-            filenameGenerator_acc(SRA_library_strategy = "ALL", 
+            generateFileName_Accession(SRA_library_strategy = "ALL", 
                                     accession = accession, 
                                     output = "db", 
                                     file_type = "csv"))
@@ -510,33 +527,33 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
         
         #GENERATE SAMPLE SHEET
         df_chip_sample_sheet <- 
-                        universalSampleSheetGenerator(df_chip, "ChIP-Seq")
+                        generateUniversalSampleSheet(df_chip, "ChIP-Seq")
         
         #SAVE SAMPLE SHEET
         saveRDS(df_chip_sample_sheet, 
-                filenameGenerator_acc(SRA_library_strategy = "ChIP-Seq", 
+                generateFileName_Accession(SRA_library_strategy = "ChIP-Seq", 
                                         accession = accession, 
                                         output = "sm", 
                                         file_type = "Rda"))
         
         cwt(df_chip_sample_sheet, 
-                filenameGenerator_acc(SRA_library_strategy = "ChIP-Seq", 
+                generateFileName_Accession(SRA_library_strategy = "ChIP-Seq", 
                                         accession = accession, 
                                         output = "sm", 
                                         file_type = "csv"))
         
         #GENERATE DB EXTRACT
-        df_chip_db_extract <- dbExtractGenerator(df_chip)
+        df_chip_db_extract <- generateDBExtract(df_chip)
         
         #SAVE DB EXTRACT
         saveRDS(df_chip_db_extract, 
-                filenameGenerator_acc(SRA_library_strategy = "ChIP-Seq", 
+                generateFileName_Accession(SRA_library_strategy = "ChIP-Seq", 
                                         accession = accession, 
                                         output = "db", 
                                         file_type = "Rda"))
         
         cwt(df_chip_db_extract, 
-                filenameGenerator_acc(SRA_library_strategy = "ChIP-Seq", 
+                generateFileName_Accession(SRA_library_strategy = "ChIP-Seq", 
                                         accession = accession, 
                                         output = "db", 
                                         file_type = "csv"))
@@ -556,33 +573,33 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
     if (dim(df_rna)[1]!=0){
         
         #GENERATE SAMPLE SHEET
-        df_rna_sample_sheet <- universalSampleSheetGenerator(df_rna, "RNA-Seq")
+        df_rna_sample_sheet <- generateUniversalSampleSheet(df_rna, "RNA-Seq")
         
         #SAVE SAMPLE SHEET
         saveRDS(df_rna_sample_sheet, 
-                filenameGenerator_acc(SRA_library_strategy = "RNA-Seq", 
+                generateFileName_Accession(SRA_library_strategy = "RNA-Seq", 
                                         accession = accession, 
                                         output = "sm", 
                                         file_type = "Rda"))
         
         cwt(df_rna_sample_sheet, 
-                filenameGenerator_acc(SRA_library_strategy = "RNA-Seq", 
+                generateFileName_Accession(SRA_library_strategy = "RNA-Seq", 
                                         accession = accession, 
                                         output = "sm", 
                                         file_type = "csv"))
         
         #GENERATE DB EXTRACT
-        df_rna_db_extract <- dbExtractGenerator(df_rna)
+        df_rna_db_extract <- generateDBExtract(df_rna)
         
         #SAVE DB EXTRACT
         saveRDS(df_rna_db_extract, 
-                    filenameGenerator_acc(SRA_library_strategy = "RNA-Seq", 
+                    generateFileName_Accession(SRA_library_strategy = "RNA-Seq", 
                                             accession = accession, 
                                             output = "db", 
                                             file_type = "Rda"))
         
         cwt(df_rna_db_extract, 
-                    filenameGenerator_acc(SRA_library_strategy = "RNA-Seq", 
+                    generateFileName_Accession(SRA_library_strategy = "RNA-Seq", 
                                             accession = accession, 
                                             output = "db", 
                                             file_type = "csv"))
@@ -601,32 +618,32 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
         
         #GENERATE SAMPLE SHEET
         df_other_sample_sheet <- 
-                            universalSampleSheetGenerator(df_other, "OTHER")
+                            generateUniversalSampleSheet(df_other, "OTHER")
         
         #SAVE SAMPLE SHEET
         saveRDS(df_other_sample_sheet, 
-                    filenameGenerator_acc(SRA_library_strategy = "OTHER", 
+                    generateFileName_Accession(SRA_library_strategy = "OTHER", 
                                             accession = accession, 
                                             output = "sm", 
                                             file_type = "Rda"))
         cwt(df_other_sample_sheet, 
-                    filenameGenerator_acc(SRA_library_strategy = "OTHER", 
+                    generateFileName_Accession(SRA_library_strategy = "OTHER", 
                                             accession = accession, 
                                             output = "sm", 
                                             file_type = "csv"))
         
         #GENERATE DB EXTRACT
-        df_other_db_extract <- dbExtractGenerator(df_other)
+        df_other_db_extract <- generateDBExtract(df_other)
         
         #SAVE DB EXTRACT
         saveRDS(df_other_db_extract, 
-                    filenameGenerator_acc(SRA_library_strategy = "OTHER", 
+                    generateFileName_Accession(SRA_library_strategy = "OTHER", 
                                             accession = accession, 
                                             output = "db", 
                                             file_type = "Rda"))
         
         cwt(df_other_db_extract, 
-                    filenameGenerator_acc(SRA_library_strategy = "OTHER", 
+                    generateFileName_Accession(SRA_library_strategy = "OTHER", 
                                             accession = accession, 
                                             output = "db", 
                                             file_type = "csv"))
@@ -641,7 +658,7 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
     
     
     
-    mm("outputGenerator_acc completed", "fn")
+    mm("generateOutput_Accession completed", "fn")
 }
 #=============================================================================
 
@@ -649,21 +666,33 @@ outputGenerator_acc <- function(df, ss=NULL, accession){
 
 
 #============================================================================
-# filenameGenerator_acc()
+# generateFileName_Accession()
 #============================================================================
 #Developed in outputGenerator.R
-#Based largely on filenameGenerator
+#Based largely on generateFileName
 #Differences:
 # - arguments
 # - order (accession before library strategy)
 # - number of letters allowed (12 instead of 8)
 
-filenameGenerator_acc <- function(SRA_library_strategy, 
+
+#' Generate a file name (Accession)
+#' 
+#' @param SRA_library_strategy A string with the library strategy
+#' @param accession A string with the accesion searched for (will be truncated)
+#' @param output String with output type
+#' @param file_type String with file type
+#' 
+#' @return A string with the file name
+#' 
+#' @keywords internal
+#' 
+generateFileName_Accession <- function(SRA_library_strategy, 
                                     accession, 
                                     output, 
                                     file_type){
     
-    mm("Running filenameGenerator_acc", "fn")
+    mm("Running generateFileName_Accession", "fn")
     
     argument_list <- c("accession", 
                         "SRA_library_strategy", 
@@ -698,7 +727,7 @@ filenameGenerator_acc <- function(SRA_library_strategy,
     name <- substr(name, 2, (nchar(name)))
     name <- paste0(name, ".", file_type) #file_type added separately at the end
     
-    mm("filenameGenerator_acc completed", "fn")
+    mm("generateFileName_Accession completed", "fn")
     return(name)
     
 }
@@ -880,9 +909,9 @@ orderAccessions <- function(x, na.last = TRUE){
 #' \code{checkCondition} verifies a condition (using grepl), 
 #' ignoring any NA elements in a vector
 #' 
+#' @param condition String with a regular expression to check within x
 #' @param x Character vector (or list containing character vectors) 
 #'     to be checked
-#' @param condition String with a regular expression to be checked
 #' @param message Error message to be displayed (not required)
 #' @return Nothing. Produces an error message if condition 
 #'     is not fulfilled in all vector elements
@@ -912,37 +941,58 @@ checkCondition <- function(condition, x, message){
 
 
 #============================================================================
-# universalSampleSheetGenerator()
+# generateUniversalSampleSheet()
 #============================================================================
 #Developed in sampleSheetGenerator.R
-universalSampleSheetGenerator <- function(df, SRA_library_strategy){
+
+
+#' Generate a sample sheet (universal function)
+#' 
+#' @param df Data frame for export
+#' @param SRA_library_strategy A character vector with library strategy 
+#'     (used for determining the type of sample sheet to be generated)
+#' @return A data frame with only relevant columns for export
+#' 
+#' @description A wrapper function for selecting and creating 
+#'     the relevant sample sheet type for the data provided
+#' 
+#' @keywords internal
+#' 
+generateUniversalSampleSheet <- function(df, SRA_library_strategy){
     # Selects correct sample sheet generating function, 
     # depending on the SRA_library_strategy
     # ===*=== Consider having a list of acceptable strategies 
     # and testing if input is valid
-    mm("Running universalSampleSheetGenerator", "fn")
+    mm("Running generateUniversalSampleSheet", "fn")
     
     if (SRA_library_strategy == "ChIP-Seq"){
-        sample_sheet <- chipSampleSheetGenerator(df)
+        sample_sheet <- generateSampleSheet_ChIP(df)
     } else if (SRA_library_strategy == "RNA-Seq"){
-        sample_sheet <- rnaSampleSheetGenerator(df)
+        sample_sheet <- generateSampleSheet_RNA(df)
     } else {
         #If library strategy IS NOT chip or rna
-        sample_sheet <- otherSampleSheetGenerator(df)
+        sample_sheet <- generateSampleSheet_Other(df)
     }
-    mm("universalSampleSheetGenerator completed", "fn")
+    mm("generateUniversalSampleSheet completed", "fn")
     return(sample_sheet)
 }
 #============================================================================
 
 
 #============================================================================
-# chipSampleSheetGenerator()
+# generateSampleSheet_ChIP()
 #============================================================================
-chipSampleSheetGenerator <- function(df){
-    # Arg: df from which sample sheet will be generated
-    # Returns: sample_sheet (format compatible with the pipeline)
-    mm("Running chipSampleSheetGenerator", "fn")
+
+#' Generate ChIP sample sheet
+#' 
+#' @param df Data frame for export
+#' @return A data frame with only relevant columns for export 
+#'     (compatible with the pipeline)
+#' 
+#' @keywords internal
+#' 
+generateSampleSheet_ChIP <- function(df){
+    mm("Running generateSampleSheet_ChIP", "fn")
     
     #List of required columns
     required_columns <- c("run_accession",
@@ -979,7 +1029,7 @@ chipSampleSheetGenerator <- function(df){
     sample_sheet$adapterPE <- ""
     sample_sheet$trimQualityPE <- ""
     
-    mm("chipSampleSheetGenerator completed", "fn")
+    mm("generateSampleSheet_ChIP completed", "fn")
     return(sample_sheet)
 }
 #============================================================================
@@ -987,14 +1037,22 @@ chipSampleSheetGenerator <- function(df){
 
 
 #============================================================================
-# rnaSampleSheetGenerator()
+# generateSampleSheet_RNA()
 #============================================================================
-rnaSampleSheetGenerator <- function(df){
-    # Arg: df from which sample sheet will be generated
-    # Returns: sample_sheet (format compatible with the pipeline)
-    
-    # In comparison to ChIP: does not have tissue, input and macsGroup columns
-    mm("Running rnaSampleSheetGenerator", "fn")
+
+#' Generate RNA sample sheet
+#' 
+#' @param df Data frame for export
+#' @return A data frame with only relevant columns for export
+#'     (compatible with the pipeline)
+#'     
+#' @description 
+#' In comparison to ChIP: does not have tissue, input and macsGroup columns
+#' 
+#' @keywords internal
+#' 
+generateSampleSheet_RNA <- function(df){
+    mm("Running generateSampleSheet_RNA", "fn")
     
     #List of required columns
     required_columns <- c("run_accession",
@@ -1029,7 +1087,7 @@ rnaSampleSheetGenerator <- function(df){
     sample_sheet$adapterPE <- ""
     sample_sheet$trimQualityPE <- ""
     
-    mm("rnaSampleSheetGenerator completed", "fn")
+    mm("generateSampleSheet_RNA completed", "fn")
     return(sample_sheet)
 }
 #============================================================================
@@ -1037,16 +1095,22 @@ rnaSampleSheetGenerator <- function(df){
 
 
 #============================================================================
-# otherSampleSheetGenerator()
+# generateSampleSheet_Other()
 #============================================================================
-otherSampleSheetGenerator <- function(df){
-    # Arg: df from which sample sheet will be generated
-    # Returns: sample_sheet (format compatible with the pipeline)
-    
-    # Currently same as rnaSampleSheetGenerator
-    # In comparison to ChIP: does not have tissue, input and macsGroup columns
-    
-    mm("Running otherSampleSheetGenerator", "fn")
+
+#' Generate 'other' sample sheet
+#' 
+#' @param df Data frame for export
+#' @return A data frame with only relevant columns for export
+#' 
+#' @description Currently same format as \code{\link{generateSampleSheet_RNA}}. 
+#' In comparison to ChIP sample sheet, 
+#' it does not have tissue, input and macsGroup columns
+#' 
+#' @keywords internal
+#' 
+generateSampleSheet_Other <- function(df){
+    mm("Running generateSampleSheet_Other", "fn")
     
     #List of required columns
     required_columns <- c("run_accession",
@@ -1081,7 +1145,7 @@ otherSampleSheetGenerator <- function(df){
     sample_sheet$adapterPE <- ""
     sample_sheet$trimQualityPE <- ""
     
-    mm("otherSampleSheetGenerator completed", "fn")
+    mm("generateSampleSheet_Other completed", "fn")
     return(sample_sheet)
 }
 #============================================================================
@@ -1091,13 +1155,25 @@ otherSampleSheetGenerator <- function(df){
 
 
 #============================================================================
-#dbExtractGenerator()
+#generateDBExtract()
 #============================================================================
 
 #Developed in dbExtractGenerator.R
 #============================================================================
-dbExtractGenerator <- function(df){
-    mm("Running dbExtractGenerator", "fn")
+
+#' Generate DB extract
+#' 
+#' @param df Data frame for export
+#' @return A data frame with only relevant columns for export
+#' 
+#' @description The columns for the DB extract can be viewed or set 
+#' by \code{\link{getSpiderSeqROption}} and \code{\link{setSpiderSeqROption}}
+#' respectively.
+#' 
+#' @keywords internal
+#' 
+generateDBExtract <- function(df){
+    mm("Running generateDBExtract", "fn")
     
     # output_columns is null - default setting
     if (is.null(getSpiderSeqROption("output_columns"))){  
@@ -1116,15 +1192,15 @@ dbExtractGenerator <- function(df){
     db_extract_columns <- df_columns
     
     #Check if the specified columns exist within the df
-    #Not needed, because already done by columnSelector
+    #Not needed, because already done by manageColumns
     #verifyColumns(df, df_columns)
     
     #Create an extract
-    db_extract <- columnSelector(df, 
+    db_extract <- manageColumns(df, 
                                     df_columns = df_columns, 
                                     out_columns = db_extract_columns)
     
-    mm("dbExtractGenerator completed", "fn")
+    mm("generateDBExtract completed", "fn")
     return(db_extract)
     
 }
@@ -1134,14 +1210,26 @@ dbExtractGenerator <- function(df){
 
 
 #============================================================================
-# columnSelector()
+# manageColumns()
 #============================================================================
 
 
 #Developed in dbExtractGenerator.R
-columnSelector <- function(df, df_columns, out_columns){
+
+#' Manage columns within a data frame
+#' 
+#' @param df Data frame
+#' @param df_columns A character vector with column names 
+#'     to be selected from the data frame
+#' @param out_columns A character vector with new column names
+#' @return A data frame with only specified columns 
+#'     (renamed as specified in out_columns).
+#' 
+#' @keywords internal
+#' 
+manageColumns <- function(df, df_columns, out_columns){
     
-    mm("Running columnSelector", "fn")
+    mm("Running manageColumns", "fn")
     
     #Check if all specified columns exist within the df
     verifyColumns(df, df_columns) 
@@ -1159,7 +1247,7 @@ columnSelector <- function(df, df_columns, out_columns){
     }
     
     out <- out[,-1]
-    mm("columnSelector completed", "fn")
+    mm("manageColumns completed", "fn")
     return(out)
 }
 
@@ -1169,7 +1257,7 @@ columnSelector <- function(df, df_columns, out_columns){
 
 #============================================================================
 # Column Sets and Selection ####
-# Functions around columnSelector()
+# Functions around manageColumns()
 #============================================================================
 
 #' Select columns from a data frame
@@ -1182,13 +1270,22 @@ columnSelector <- function(df, df_columns, out_columns){
 #' This is a universal function for extracting only columns of interest 
 #' from a data frame. Related functions exist, 
 #' with pre-defined sets of columns, 
-#' see documentation for \code{\link{selectColumnsAccession}} 
-#' and \code{\link{selectColumnsOverview}}. 
+#' see documentation for \code{\link{selectColumns_Accession}} 
+#' and \code{\link{selectColumns_Overview}}. 
+#' 
+#' @examples 
+#' 
+#' startSpiderSeqRDemo()
+#' df <- searchForAccession("SRR2187611", file_output = FALSE)
+#' df_sel <- selectColumns(df, c("run_accession", 
+#'                               "study_accession", 
+#'                               "SRA_experiment_title", 
+#'                               "SRA_sample_attribute"))
 #' 
 #' 
 #' @export
 selectColumns <- function(df, cols){
-    df <- columnSelector(df = df, df_columns = cols, out_columns = cols)
+    df <- manageColumns(df = df, df_columns = cols, out_columns = cols)
     return(df)
 }
 
@@ -1231,6 +1328,8 @@ selectColumns <- function(df, cols){
 #'     \item Filtering: ===*=== (in progress)
 #'     
 #' }
+#' 
+#' 
 #' 
 #' @export
 #' 
@@ -1337,60 +1436,56 @@ listColumnSets <- function(){
 #' Select columns with accession information
 #' 
 #' @param df Data frame
-#' @return Original data frame containing only columns with accession information
+#' @return Original data frame containing 
+#'     only columns with accession information
+#'     
+#' @examples 
+#' startSpiderSeqRDemo()
+#' df <- searchForAccession("SRR2187611", file_output = FALSE)
+#' df_sel <- selectColumns_Accession(df)
 #' 
 #' @description 
-#' This is a shortcut function for \code{selectColumns(df, cols = listColumnSets()$Accession)}
+#' This is a shortcut function 
+#' for \code{selectColumns(df, cols = listColumnSets()$Accession)}
+#' 
+#' 
 #' 
 #' @export
 #' 
-selectColumnsAccession <- function(df){
+selectColumns_Accession <- function(df){
     cols <- listColumnSets()$Accession
-    df <- columnSelector(df, df_columns = cols, out_columns = cols)
+    df <- manageColumns(df, df_columns = cols, out_columns = cols)
     return(df)
 }
+
 
 
 #' Select columns with overview of sample information
 #' 
 #' @param df Data frame
-#' @return Original data frame containing only selected columns (most relevant for getting an overview about the samples)
+#' @return Original data frame containing only selected columns 
+#'     (most relevant for getting an overview about the samples)
+#'     
+#' @examples 
+#' startSpiderSeqRDemo()
+#' df <- searchForAccession("SRR2187611", file_output = FALSE)
+#' df_sel <- selectColumns_Overview(df)
 #' 
 #' @description 
-#' This is a shortcut function for \code{selectColumns(df, cols = listColumnSets()$Overview)}
+#' This is a shortcut function 
+#' for \code{selectColumns(df, cols = listColumnSets()$Overview)}
 #' 
 #' @export
 #' 
-selectColumnsOverview <- function(df){
+selectColumns_Overview <- function(df){
     cols <- listColumnSets()$Overview
-    df <- columnSelector(df, df_columns = cols, out_columns = cols)
+    df <- manageColumns(df, df_columns = cols, out_columns = cols)
     return(df)
 }
 
 #============================================================================
 #============================================================================
 
-
-
-
-
-#============================================================================
-# cwt_prev
-#============================================================================
-
-# ===*=== TBD
-cwt_prev <- function(object, filename){
-    # Custom write table (a wrapper to unify the parameters)
-    # Previous settings, which didn't facilitate automatic opening by Excel
-    utils::write.table(x = object,
-                       file = filename,
-                       sep = "\t",
-                       row.names = FALSE,
-                       quote = FALSE
-    )
-}
-
-#============================================================================
 
 
 
@@ -1401,6 +1496,14 @@ cwt_prev <- function(object, filename){
 # cwt
 #============================================================================
 
+#' Write table with set parameters
+#' 
+#' @param object Object to be written
+#' @param filename A character with the name of the file
+#' @return Nothing. Write the file
+#' 
+#' @keywords internal
+#' 
 cwt <- function(object, filename){
     # Custom write table (a wrapper to unify the parameters)
     utils::write.table(x = object,

@@ -66,7 +66,7 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
     .GlobalEnv$temp_output_df <- output_df
     
     if (file_output == TRUE){
-        outputGenerator_acc(output_df, accession = acc_vector)
+        generateOutput_Accession(output_df, accession = acc_vector)
     }
     
     

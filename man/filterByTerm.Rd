@@ -41,7 +41,7 @@ df <- filterByTerm(df, "TRIMKD")
 df <- filterByTerm(df, "SRA_experiment_title: TRIMKD")
 # NOTE: you can explore further possibilities by filtering by columns
 # corresponding to different accession levels, 
-# see \\code{\\link{filterByTermByAccessionLevel}}
+# see \\code{\\link{filterSRAByTermByAccessionLevel}}
 
 # For ease of viewing results
 df_view <- selectColumnsOverview(df) 
@@ -50,9 +50,9 @@ df_view <- selectColumnsOverview(df)
 \seealso{
 Other SpiderSeqR workflow functions: \code{\link{addMissingSamples}},
   \code{\link{convertAccession}},
-  \code{\link{filterByTermByAccessionLevel}}
+  \code{\link{filterSRAByTermByAccessionLevel}}
 
-Other SpiderSeqR manipulation functions: \code{\link{filterByTermByAccessionLevel}}
+Other SpiderSeqR manipulation functions: \code{\link{filterSRAByTermByAccessionLevel}}
 }
 \concept{SpiderSeqR manipulation functions}
 \concept{SpiderSeqR workflow functions}

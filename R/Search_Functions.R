@@ -196,9 +196,9 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
     #============================================================================
     # Save search parameters and call details in a file
     #============================================================================
-    parameterRecordGenerator(st = st, file = do.call(filenameGenerator, c(st, list(output="PAR"), list(file_type="tab"))), fun_name = "searchForTerm")
+    parameterRecordGenerator(st = st, file = do.call(generateFileName, c(st, list(output="PAR"), list(file_type="tab"))), fun_name = "searchForTerm")
     
-    callRecordGenerator(file = do.call(filenameGenerator, c(st, list(output="CALL"), list(file_type="Rda"))))
+    callRecordGenerator(file = do.call(generateFileName, c(st, list(output="CALL"), list(file_type="Rda"))))
     #============================================================================
     
     
@@ -400,7 +400,7 @@ searchForTerm <- function(SRA_library_strategy, gene=NULL, antibody=NULL, cell_t
     # Generate outputs
     #============================================================================
     
-    outputGenerator(spider_combined, spider_superseries, st = st)
+    generateOutput(spider_combined, spider_superseries, st = st)
     #============================================================================
     
     if (return_all == FALSE){

@@ -1209,7 +1209,7 @@ universalExtractor <-
                             #Append current extract
                             char_extract[[k]] <-
                                 append(char_extract[[k]], 
-                                       char_curr_extract[t]) 
+                                        char_curr_extract[t]) 
                         }
                     }
                 }
@@ -1431,8 +1431,8 @@ detectInputs <- function(df){
     
     var_names <- c("necessary_names", 
                     "antibody_names", 
-                   "match_names", 
-                   "otherwise_names")
+                    "match_names", 
+                    "otherwise_names")
     
     for (v in seq_along(var_columns)){
         if (methods::is(get(var_columns[v]), "list") | 
@@ -1911,7 +1911,7 @@ detectControls <- function(df){
     
     #Order by SRP and boolean value
     detected <- detected[order(detected$study_accession, 
-                               detected$necessary_match_combined),] 
+                                detected$necessary_match_combined),] 
     
     #Remove duplicates
     detected <- detected[!duplicated(detected$study_accession, 
@@ -2371,8 +2371,8 @@ manageLibraryStrategy <- function(
     if (task == "ex"){ #Special track for task == "ex"
         
         y <- list(Canonical_Forms = can,
-                  Short_Forms = short, 
-                  Currently_Accepted_Synonyms = syn)
+                    Short_Forms = short, 
+                    Currently_Accepted_Synonyms = syn)
         mm("manageLibraryStrategy completed", "fn")
         return(y)
         

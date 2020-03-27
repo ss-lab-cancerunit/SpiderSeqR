@@ -18,6 +18,17 @@ Original data frame containing only columns specified in cols
 This is a universal function for extracting only columns of interest 
 from a data frame. Related functions exist, 
 with pre-defined sets of columns, 
-see documentation for \code{\link{selectColumnsAccession}} 
-and \code{\link{selectColumnsOverview}}.
+see documentation for \code{\link{selectColumns_Accession}} 
+and \code{\link{selectColumns_Overview}}.
+}
+\examples{
+
+startSpiderSeqRDemo()
+df <- searchForAccession("SRR2187611", file_output = FALSE)
+df_sel <- selectColumns(df, c("run_accession", 
+                              "study_accession", 
+                              "SRA_experiment_title", 
+                              "SRA_sample_attribute"))
+
+
 }

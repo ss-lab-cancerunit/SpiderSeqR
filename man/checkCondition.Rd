@@ -7,7 +7,7 @@
 checkCondition(condition, x, message)
 }
 \arguments{
-\item{condition}{String with a regular expression to be checked}
+\item{condition}{String with a regular expression to check within x}
 
 \item{x}{Character vector (or list containing character vectors) 
 to be checked}

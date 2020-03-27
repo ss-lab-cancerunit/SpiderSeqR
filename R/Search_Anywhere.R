@@ -612,7 +612,7 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
     
     .GlobalEnv$temp_searchAnywhereSRA <- df
     
-    df <- filterSRAQueryByAccessionLevel(SRA_query, df, acc_levels)
+    df <- filterSRAByTermByAccessionLevel(SRA_query, df, acc_levels)
     
     df <- renameSRAColumns(df) # Must come after filtering, otherwise it would not work
     
@@ -644,7 +644,7 @@ searchAnywhereSRA <- function(SRA_query, acc_levels = c("run", "experiment", "sa
 #' 
 #' @export
 #' 
-filterByTermByAccessionLevel <- function(query, df, acc_levels = c("run", "experiment", "sample")){
+filterSRAByTermByAccessionLevel <- function(query, df, acc_levels = c("run", "experiment", "sample")){
     
     # =====================================================================================
     warning("Only works for SRA") # ===*===
