@@ -10,66 +10,100 @@ startSpiderSeqR(dir, general_expiry = 90, sra_expiry, geo_expiry,
 \arguments{
 \item{dir}{Directory where database files will be stored}
 
-\item{general_expiry}{Maximum number of days since creation of all database files}
+\item{general_expiry}{Maximum number of days since creation 
+of all database files}
 
-\item{sra_expiry}{Maximum number of days since creation of SRAmetadb.sqlite file}
+\item{sra_expiry}{Maximum number of days since creation 
+of SRAmetadb.sqlite file}
 
-\item{geo_expiry}{Maximum number of days since creation of GEOmetadb.sqlite file}
+\item{geo_expiry}{Maximum number of days since creation 
+of GEOmetadb.sqlite file}
 
-\item{srr_gsm_expiry}{Maximum number of days since creation of SRR_GSM.sqlite file}
+\item{srr_gsm_expiry}{Maximum number of days since creation 
+of SRR_GSM.sqlite file}
 }
 \value{
-Nothing. If necessary, it may download/create database files. Sets up database connections in the global environment.
+Nothing. If necessary, it may download/create database files. 
+Sets up database connections in the global environment.
 }
 \description{
-\code{startSpiderSeqR} prepares the environment so that other SpiderSeqR functions can be used. Run \code{startSpiderSeqR} every time you begin with a clear environment and want to use any of the other SpiderSeqR functions.
+\code{startSpiderSeqR} prepares the environment so that 
+other SpiderSeqR functions can be used. 
+Run \code{startSpiderSeqR} every time you begin with a clear environment 
+and want to use any of the other SpiderSeqR functions.
 In particular, the function does the following:
 \itemize{
     \item Ensure that SRAmetadb.sqlite is downloaded and up to date
     \item Ensure that GEOmetadb.sqlite is downloaded and up to date
     \item Ensure that SRR_GSM.sqlite is created and up to date
-    \item Set up database connections to the above files in the \code{.GlobalEnv}
+    \item Set up database connections to the above files 
+        in the \code{.GlobalEnv}
 }
 }
 \details{
-Depending on the contents of the specified directory, \code{startSpiderSeqR} may download/create the database files. It will always create the database connections in the global environment.
+Depending on the contents of the specified directory, 
+\code{startSpiderSeqR} may download/create the database files. 
+It will always create the database connections in the global environment.
 
-It is necessary to fulfil all the above requirements; without them the package will not work.
-The first two database files are relatively large in size (33 GB and 6 GB at the time of writing), so please ensure that you have adequate internet connection and sufficient disk space.
+It is necessary to fulfil all the above requirements; 
+without them the package will not work.
+The first two database files are relatively large in size 
+(33 GB and 6 GB at the time of writing), so please ensure that you have 
+adequate internet connection and sufficient disk space.
 
-It is recommended that the newest version of the databases is used. However, it is possible to ignore this requirement by manually setting the expiry date of the files (or by running default settings of the function and selecting the option not to download the newer files).
+It is recommended that the newest version of the databases is used. 
+However, it is possible to ignore this requirement by manually setting 
+the expiry date of the files (or by running default settings 
+of the function and selecting the option not to download the newer files).
 }
 \section{When to run \code{startSpiderSeqR}?}{
 
 
-Run \code{startSpiderSeqR} every time you start with a fresh environment. There is no harm in running it too many times.
+Run \code{startSpiderSeqR} every time you start with a fresh environment. 
+There is no harm in running it too many times.
 }
 
 \section{Which options to choose from \code{startSpiderSeqR} menu options?}{
 
 
-Should you have any missing or outdated files in the specified directory, \code{startSpiderSeqR} will offer to download/create the files. 
+Should you have any missing or outdated files in the specified directory, 
+\code{startSpiderSeqR} will offer to download/create the files. 
 
-Please note that it is \emph{required} to have all the three database files; if you choose not to download/create them, it will not be possible to run other SpiderSeqR functions. 
+Please note that it is \emph{required} to have all the three database files;
+if you choose not to download/create them, it will not be possible 
+to run other SpiderSeqR functions. 
 
-However, it is \emph{not required} for all the files to be up-to-date; \code{startSpiderSeqR} will suggest re-downloading/re-creating the files, but you can still use SpiderSeqR, even if you do not agree to re-download/re-create the files.
+However, it is \emph{not required} for all the files to be up-to-date; 
+\code{startSpiderSeqR} will suggest re-downloading/re-creating the files, 
+but you can still use SpiderSeqR, even if you do not agree 
+to re-download/re-create the files.
 }
 
 \section{Time and space requirements}{
 
 
-The following files must be present in order to run other SpiderSeqR functions; \code{startSpiderSeqR} will download/create them if necessary:
+The following files must be present in order to run other SpiderSeqR 
+functions; \code{startSpiderSeqR} will download/create them if necessary:
 \itemize{
   \item SRAmetadb.sqlite (from SRAdb package)
   \item GEOmetadb.sqlite (from GEOmetadb package)
-  \item SRR_GSM.sqlite (custom-made at the time of running \code{startSpiderSeqR})
+  \item SRR_GSM.sqlite (custom-made at the time of running 
+      \code{startSpiderSeqR})
 }
 
 
-They take approximately 40 GB of disk space (33 GB, 6 GB, <50 MB respectively at the time of writing), so please ensure that you have adequate internet connection and sufficient disk space. In order to save disk space, the previous files will be overwritten when downloading a newer version.
+They take approximately 40 GB of disk space 
+(33 GB, 6 GB, <50 MB respectively at the time of writing), so please ensure 
+that you have adequate internet connection and sufficient disk space. 
+In order to save disk space, the previous files will be overwritten 
+when downloading a newer version.
 
 
-Running \code{startSpiderSeqR} for the first time will inevitably take some time, because large database files need to be downloaded and custom database created. However, once all the files are present, the function should take an order of \emph{seconds} to complete (it is a matter of setting up database connections).
+Running \code{startSpiderSeqR} for the first time will inevitably 
+take some time, because large database files need to be downloaded 
+and custom database created. However, once all the files are present, 
+the function should take an order of \emph{seconds} to complete 
+(it is a matter of setting up database connections).
 }
 
 \examples{
@@ -94,7 +128,7 @@ startSpiderSeqR(dir = getwd(), sra_expiry = 365)
 
 
 
-startSpiderSeqR(getwd()) # Provide the location where the database files are
+startSpiderSeqR(getwd()) #Provide the location where the database files are
 
 
 

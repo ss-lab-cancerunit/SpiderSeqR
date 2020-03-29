@@ -10,7 +10,17 @@ searchSRA(SRA_library_strategy, gene, antibody, cell_type, treatment,
 \arguments{
 \item{SRA_library_strategy}{Character vector specifying experiment approach}
 
-\item{gene, antibody, cell_type, treatment, species, platform}{Character vectors 
+\item{gene}{...and...}
+
+\item{antibody}{...and...}
+
+\item{cell_type}{...and...}
+
+\item{treatment}{...and...}
+
+\item{species}{...and...}
+
+\item{platform}{Character vectors 
 with information to search within SRA}
 }
 \value{

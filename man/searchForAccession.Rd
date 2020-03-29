@@ -7,12 +7,15 @@
 searchForAccession(acc_vector, file_output = TRUE)
 }
 \arguments{
-\item{acc_vector}{A character vector with accession numbers (of one type only)}
+\item{acc_vector}{A character vector with accession numbers 
+(of one type only)}
 
-\item{file_output}{A logical indicating whether file output should be produced}
+\item{file_output}{A logical indicating whether file output 
+should be produced}
 }
 \value{
-A data frame (and file outputs, as appropriate) with matches to accession numbers
+A data frame (and file outputs, as appropriate) 
+     with matches to accession numbers
 }
 \description{
 Search for Accessions

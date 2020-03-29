@@ -12,7 +12,8 @@ searchAnywhereGEO(GSM_query, GSE_query, acc_levels = c("gse", "gsm"),
 
 \item{GSE_query}{String to search for within gse table}
 
-\item{acc_levels}{Character vector indicating where to conduct the search (only "gse" and "gsm" are considered)}
+\item{acc_levels}{Character vector indicating where to conduct the search 
+(only "gse" and "gsm" are considered)}
 
 \item{GEO_type}{Study type for filtering results (optional)}
 }
@@ -22,3 +23,4 @@ Data frame with result data from whole GEO (gsm and gse tables)
 \description{
 Search anywhere within gse and gsm tables of GEO database
 }
+\keyword{internal}

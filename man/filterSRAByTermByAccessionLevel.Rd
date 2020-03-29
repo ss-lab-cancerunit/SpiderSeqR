@@ -2,7 +2,8 @@
 % Please edit documentation in R/Search_Anywhere.R
 \name{filterSRAByTermByAccessionLevel}
 \alias{filterSRAByTermByAccessionLevel}
-\title{Filter df according to query matches only within accession levels of interest}
+\title{Filter df according to query matches 
+only within accession levels of interest}
 \usage{
 filterSRAByTermByAccessionLevel(query, df, acc_levels = c("run",
   "experiment", "sample"))
@@ -12,13 +13,17 @@ filterSRAByTermByAccessionLevel(query, df, acc_levels = c("run",
 
 \item{df}{Data frame to be filtered}
 
-\item{acc_levels}{Accession levels to search within (choose from: run, experiment, sample, study; defaults to c("run", "experiment", "sample"))}
+\item{acc_levels}{Accession levels to search within 
+(choose from: run, experiment, sample, study; 
+defaults to c("run", "experiment", "sample"))}
 }
 \value{
-Filtered df (containing only rows matching query within specified accession levels)
+Filtered df (containing only rows matching query 
+    within specified accession levels)
 }
 \description{
-Performs fts search on the data frame according to the query, only searching in the columns corresponding to specified accession levels of interest
+Performs fts search on the data frame according to the query, only searching
+in the columns corresponding to specified accession levels of interest
 }
 \seealso{
 Other SpiderSeqR workflow functions: \code{\link{addMissingSamples}},

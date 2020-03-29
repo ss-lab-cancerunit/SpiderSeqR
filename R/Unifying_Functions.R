@@ -14,7 +14,8 @@
 #'     \item Order columns
 #'     \item Remove duplicate rows (\code{unique(df)})
 #'     \item Order rows (and resetting row names)
-#'     \item Convert data types (mostly to character, with some exceptions converted to integer)
+#'     \item Convert data types (mostly to character, 
+#'         with some exceptions converted to integer)
 #' }
 #' 
 #' @keywords internal
@@ -26,8 +27,11 @@ unifyDFFormat <- function(df){
     # Order columns ####
     valid_columns <- listValidColumns()
     
+    # Exclude SRA_sra_ID (not present in sra_ft)
+    sra_ind <- 
+        which(colnames(df) %in% 
+                    valid_columns$SRA[!valid_columns$SRA=="SRA_sra_ID"]) 
     
-    sra_ind <- which(colnames(df) %in% valid_columns$SRA[!valid_columns$SRA=="SRA_sra_ID"]) # Exclude SRA_sra_ID (not present in sra_ft)
     gsm_ind <- which(colnames(df) %in% valid_columns$GSM)
     gse_ind <- which(colnames(df) %in% valid_columns$GSE)
     other_ind <- which(colnames(df) %in% valid_columns$Other)
@@ -43,12 +47,19 @@ unifyDFFormat <- function(df){
     
     # Convert column data type ####
     # Not used atm
-    numeric_cols <- c("SRA_spots", "SRA_bases", 
-                      "SRA_study_ID", "SRA_sample_ID", "SRA_experiment_ID", "SRA_submission_ID",
-                      "SRA_number_of_levels", "SRA_taxon_id", 
-                      "GSM_data_row_count", "GSM_channel_count", "GSM_ID",
-                      #"gsm_check", 
-                      "OTH_n", "OTH_lane")
+    numeric_cols <- c("SRA_spots", 
+                        "SRA_bases", 
+                        "SRA_study_ID", 
+                        "SRA_sample_ID", 
+                        "SRA_experiment_ID", 
+                        "SRA_submission_ID",
+                        "SRA_number_of_levels", 
+                        "SRA_taxon_id", 
+                        "GSM_data_row_count", 
+                        "GSM_channel_count", 
+                        "GSM_ID",
+                        #"gsm_check", 
+                        "OTH_n", "OTH_lane")
     
     for (i in seq(1, dim(df)[2])){
         #if (!colnames(df)[i] %in% numeric_cols){
@@ -75,13 +86,24 @@ unifyDFFormat <- function(df){
 
 #' Order df rows in accession order
 #' 
-#' @param df Data frame to be ordered (must contain columns corresponding to types specified in \code{acc_order}, i.e. study_accession, sample_accession, experiment_accession, run_accession, gsm).
-#' @param acc_order A character vector with accession levels to be used for ordering (their order specifies which accession level is taken into account first). Default value lists all possible elements.
-#' @param na.last Logical denoting whether NA values should be placed last. Defaults to TRUE.
+#' @param df Data frame to be ordered (must contain columns corresponding 
+#'     to types specified in \code{acc_order}, i.e. study_accession, 
+#'     sample_accession, experiment_accession, run_accession, gsm).
+#' @param acc_order A character vector with accession levels to be used 
+#'     for ordering (their order specifies which accession level is taken 
+#'     into account first). Default value lists all possible elements.
+#' @param na.last Logical denoting whether NA values should be placed last. 
+#'     Defaults to TRUE.
 #' @return Data frame with rows ordered accordingly. The row names are reset.
 #' 
 #' 
-orderDFAccessions <- function(df, acc_order = c("study", "sample", "experiment", "run", "gsm"), na.last = TRUE){
+orderDFAccessions <- function(df, 
+                            acc_order = c("study", 
+                                            "sample", 
+                                            "experiment", 
+                                            "run", 
+                                            "gsm"), 
+                            na.last = TRUE){
     
     acc_cols <- list()
     acc_cols[["study"]] <- "study_accession"
@@ -158,7 +180,8 @@ checkValidColumns <- function(df){
         message("All columns have valid names")
     } else {
         wrong_columns <- colnames(df)[!colnames(df) %in% allowed_columns]
-        stop(paste0("Some columns are not allowed: ", paste0(wrong_columns, collapse = ", ")))
+        stop(paste0("Some columns are not allowed: ", 
+                    paste0(wrong_columns, collapse = ", ")))
     }
 }
 
@@ -184,10 +207,14 @@ checkValidColumns <- function(df){
 #' @section Column Categories:
 #' The following categories are available:
 #' \itemize{
-#'     \item SRA - columns from the sra table (SRA database) with added 'SRA_' prefix
-#'     \item GSM - columns from the gsm table (GEO database) with added 'GSM_' prefix
-#'     \item GSE - columns from the gse table (GSE database) with added 'GSE_' prefix
-#'     \item Other - other columns (created within the pacakge) with added 'OTH_' prefix
+#'     \item SRA - columns from the sra table (SRA database) 
+#'         with added 'SRA_' prefix
+#'     \item GSM - columns from the gsm table (GEO database) 
+#'         with added 'GSM_' prefix
+#'     \item GSE - columns from the gse table (GSE database) 
+#'         with added 'GSE_' prefix
+#'     \item Other - other columns (created within the pacakge) 
+#'         with added 'OTH_' prefix
 #' }
 #' 
 #' 
@@ -201,37 +228,55 @@ listValidColumns <- function(){
     database_env <- ".GlobalEnv"
     
     # Columns that are not prefixed ####
-    sra_acc <- c("run_accession", "experiment_accession", "sample_accession", "study_accession", "submission_accession")
+    sra_acc <- c("run_accession", 
+                    "experiment_accession", 
+                    "sample_accession", 
+                    "study_accession", 
+                    "submission_accession")
     geo_acc <- c("gsm", "series_id")
     
     # List of other columns ####
     oth_columns <- c("input", "control", 
-                     "sa_tissue", "sa_antibody", "sa_gene", "sa_treatment", "sa_remainder", 
-                     "ch1_tissue", "ch1_antibody", "ch1_gene", "ch1_treatment", "ch1_remainder",
-                     "lane", "mer", "pairedEnd", "n")
+                        "sa_tissue", "sa_antibody", "sa_gene", 
+                        "sa_treatment", "sa_remainder", 
+                        "ch1_tissue", "ch1_antibody", "ch1_gene", 
+                        "ch1_treatment", "ch1_remainder",
+                        "lane", "mer", "pairedEnd", "n")
     oth_columns <- paste0("OTH_", oth_columns)
     
     
     
     # Create lists of db columns ####
-    sra_columns <- DBI::dbListFields(get(sra_database_name, envir = get(database_env)), "sra")
-    gsm_columns <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gsm")
-    gse_columns <- DBI::dbListFields(get(geo_database_name, envir = get(database_env)), "gse")
+    sra_columns <- DBI::dbListFields(get(sra_database_name, 
+                                        envir = get(database_env)), "sra")
+    gsm_columns <- DBI::dbListFields(get(geo_database_name, 
+                                        envir = get(database_env)), "gsm")
+    gse_columns <- DBI::dbListFields(get(geo_database_name, 
+                                        envir = get(database_env)), "gse")
     
     sra_columns <- sra_columns[!sra_columns %in% "sra_ID"] # Remove sra_ID
-    #sra_columns <- sra_columns[!sra_columns %in% "run_ID"] # Remove run_ID column ===*===
+    
+    # Remove run_ID column ===*===
+    #sra_columns <- sra_columns[!sra_columns %in% "run_ID"] 
+    
     gse_columns <- gse_columns[!gse_columns %in% "gse"] # Remove gse column
     
-    sra_columns[!sra_columns %in% sra_acc] <- paste0("SRA_", sra_columns[!sra_columns %in% sra_acc])
+    sra_columns[!sra_columns %in% sra_acc] <- 
+            paste0("SRA_", sra_columns[!sra_columns %in% sra_acc])
     #sra_columns <- c(sra_acc, sra_columns) # NOTE: order not preserved
     
-    gsm_columns[!gsm_columns %in% geo_acc] <- paste0("GSM_", gsm_columns[!gsm_columns %in% geo_acc])
+    gsm_columns[!gsm_columns %in% geo_acc] <- 
+            paste0("GSM_", gsm_columns[!gsm_columns %in% geo_acc])
     #gsm_columns <- c(geo_acc, gsm_columns) # NOTE: order not preserved
     
-    gse_columns[!gse_columns %in% geo_acc] <- paste0("GSE_", gse_columns[!gse_columns %in% geo_acc])
+    gse_columns[!gse_columns %in% geo_acc] <- 
+            paste0("GSE_", gse_columns[!gse_columns %in% geo_acc])
     #gse_columns <- c(geo_acc, gse_columns) # NOTE: order not preserved
     
-    db_columns <- list(SRA = sra_columns, GSM = gsm_columns, GSE = gse_columns, Other = oth_columns)
+    db_columns <- list(SRA = sra_columns, 
+                        GSM = gsm_columns, 
+                        GSE = gse_columns, 
+                        Other = oth_columns)
     return(db_columns)
     
 }

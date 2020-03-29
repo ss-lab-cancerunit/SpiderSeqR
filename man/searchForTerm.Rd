@@ -10,46 +10,68 @@ searchForTerm(SRA_library_strategy, gene = NULL, antibody = NULL,
   return_all = TRUE)
 }
 \arguments{
-\item{SRA_library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). Only one SRA_library_strategy is allowed in a single query. To get a list of available library strategies, run \code{ getDatabaseInformation()}}
+\item{SRA_library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). 
+Only one SRA_library_strategy is allowed in a single query. 
+To get a list of available library strategies, 
+run \code{ getDatabaseInformation()}}
 
-\item{gene}{A character vector with genes of interest (it is recommended to provide a few synonyms)}
+\item{gene}{A character vector with genes of interest 
+(it is recommended to provide a few synonyms)}
 
-\item{antibody}{A character vector with antibodies of interest (it is recommended to provide a few synonyms, some studies annotate their antibodies with trade names/symbols)}
+\item{antibody}{A character vector with antibodies of interest 
+(it is recommended to provide a few synonyms, please note that
+some studies annotate their antibodies with trade names/symbols)}
 
-\item{cell_type}{A character vector describing source types of interest (cell type, tissue, organ etc.)}
+\item{cell_type}{A character vector describing source types of interest 
+(cell type, tissue, organ etc.)}
 
-\item{treatment}{A character vector with keywords regarding treatment protocol}
+\item{treatment}{A character vector with keywords 
+regarding treatment protocol}
 
 \item{species}{A character vector with taxonomy IDs (e.g. "9606" for human)}
 
 \item{platform}{A character vector with sequencing platforms}
 
-\item{SRA_secondary_library_strategy}{Additional experimental method of interest filtered from the studies featured in search results}
+\item{SRA_secondary_library_strategy}{Additional experimental method 
+of interest filtered from the studies featured in search results}
 
-\item{return_all}{A logical indicating what results should be returned. FALSE means that only samples matching criteria of interest will be returned (and their putative inputs/controls for RNA-Seq or ChIP-Seq). TRUE means that the whole SRPs will be returned(containing matching samples, but also all the other samples within an SRP). Defaults to TRUE}
+\item{return_all}{A logical indicating what results should be returned. 
+FALSE means that only samples matching criteria of interest 
+will be returned (and their putative inputs/controls 
+for RNA-Seq or ChIP-Seq). 
+TRUE means that the whole SRPs will be returned(containing 
+matching samples, but also all the other samples within an SRP). 
+Defaults to TRUE}
 }
 \value{
-Nothing. Creates a range of files with the query information and search results.
+Nothing. Creates a range of files with the query information 
+    and search results.
 }
 \description{
-\code{searchForTerm} provides an automated framework for searching within SRA database for samples matching a range of different criteria (e.g. experimental method, tissue type). It also supplements the sample information with data from GEO (if available).
+\code{searchForTerm} provides an automated framework for searching 
+within SRA database for samples matching a range of different criteria 
+(e.g. experimental method, tissue type). 
+It also supplements the sample information with data from GEO (if available)
 }
 \section{Argument requirements}{
 
-\strong{REQUIRED}: SRA_library_strategy AND at least one of: gene, antibody, cell_type or treatment
+\strong{REQUIRED}: SRA_library_strategy AND at least one of: 
+gene, antibody, cell_type or treatment
 
 \strong{OPTIONAL}: species, platform, SRA_secondary_library_strategy
 }
 
 \section{Further information}{
 
-For further information (especially on the output files) please refer to the package vignettes.
+For further information (especially on the output files) 
+please refer to the package vignettes.
 }
 
 \examples{
 
 #Simple search
-searchForTerm(SRA_library_strategy = "RNA-Seq", gene = c("p53", "tp53"), species = "9606") 
+searchForTerm(SRA_library_strategy = "RNA-Seq", 
+    gene = c("p53", "tp53"), species = "9606") 
 
 #Search with parameters stored in a list
 st <- list(SRA_library_strategy="ChIP-Seq", gene="STAT1", antibody="STAT1")

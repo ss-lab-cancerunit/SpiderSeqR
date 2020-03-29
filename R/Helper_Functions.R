@@ -56,7 +56,12 @@
 #' An internal function for searchForTerm
 #' 
 #' @param SRA_library_strategy Character vector specifying experiment approach
-#' @param gene,antibody,cell_type,treatment,species,platform Character vectors 
+#' @param gene ...and...
+#' @param antibody ...and...
+#' @param cell_type ...and...
+#' @param treatment ...and...
+#' @param species ...and...
+#' @param platform Character vectors 
 #' with information to search within SRA
 #' @return A data frame with results
 #' 
@@ -969,7 +974,7 @@ searchForSRPChildren <- function(srp_list, srp_columns){
 # - rbinds two dfs based on all columns with the exception of disregard_columns
 
 
-#' Bind unique entries from two data frames disregarding some of the columns
+#' Bind unique entries from two dfs disregarding some of the columns
 #' 
 #' @param x, y Data frames to be merged (need to have the same columns; 
 #' entries that are duplicated among the dfs will be removed from y)
@@ -2088,9 +2093,10 @@ verifyMissingRuns <- function(srr_list_in){
 
 #Needed for verifyMissingRuns()
 
-#' Subfunction for verifyMissingRuns()
+#' Parametrised query for verifyMissingRuns()
 #' 
 #' @param db_con,query,par_list Character vectors
+#' @return Data frame with results
 #' 
 #' @keywords internal
 #' 

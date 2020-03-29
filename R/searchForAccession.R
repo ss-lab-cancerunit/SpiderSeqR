@@ -3,9 +3,12 @@
 
 #' Search for Accessions
 #' 
-#' @param acc_vector A character vector with accession numbers (of one type only)
-#' @param file_output A logical indicating whether file output should be produced
-#' @return A data frame (and file outputs, as appropriate) with matches to accession numbers
+#' @param acc_vector A character vector with accession numbers 
+#'     (of one type only)
+#' @param file_output A logical indicating whether file output 
+#'     should be produced
+#' @return A data frame (and file outputs, as appropriate) 
+#'      with matches to accession numbers
 #' 
 #' 
 #' @examples 
@@ -15,15 +18,6 @@
 #' @export
 #' 
 searchForAccession <- function(acc_vector, file_output = TRUE){
-    #
-    # IN PROGRESS - to find omitted processing steps, see SpideR_ToDo.Rmd
-    #
-    # Args: a character vector with accessions
-    #       (needs to completely match to one accession class; no partial matches or mixed classes allowed)
-    #
-    # Returns: df from SRA with matches to the acc_vector
-    #
-    
     x <- unique(acc_vector)
     x <- x[orderAccessions(x)]
     x <- x[!is.na(x)]
@@ -31,14 +25,21 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
     accession_class <- classifyAccession(x)
     
     
-    output_df <- searchForAccessionAcrossDBsDF(acc_vector = x, sra_columns = "*", geo_columns = "*", gse_columns = "*")
+    output_df <- searchForAccessionAcrossDBsDF(acc_vector = x, 
+                                                sra_columns = "*", 
+                                                geo_columns = "*", 
+                                                gse_columns = "*")
     
-    #output_df <- extractGSM(output_df, sampleColumn = TRUE) #Create sample column
-    output_df <- extractGSM(output_df, sampleColumn = FALSE) #Don't create sample column
+    #Create sample column
+    #output_df <- extractGSM(output_df, sampleColumn = TRUE) 
+    
+    #Don't create sample column
+    output_df <- extractGSM(output_df, sampleColumn = FALSE) 
     
     
-    #Instead, rename the native gsm column to sample to match the column naming in searchForTerm
-    #names(output_df)[names(output_df)=="gsm"] <- "sample" # sampletogsm ===*===
+    #Instead, rename the native gsm column to sample to match the column naming
+    # in searchForTerm
+    #names(output_df)[names(output_df)=="gsm"] <- "sample" #sampletogsm ===*===
     
     
     
@@ -61,7 +62,8 @@ searchForAccession <- function(acc_vector, file_output = TRUE){
     
     output_df <- renameOTHColumns(output_df)
     
-    output_df <- unifyDFFormat(output_df) # Removes SRA_sra_ID column, orders by accession
+    # [Removes SRA_sra_ID column, orders by accession]
+    output_df <- unifyDFFormat(output_df) 
     
     .GlobalEnv$temp_output_df <- output_df
     

@@ -2,14 +2,17 @@
 % Please edit documentation in R/Helper_Functions.R
 \name{parQuery}
 \alias{parQuery}
-\title{Subfunction for verifyMissingRuns()}
+\title{Parametrised query for verifyMissingRuns()}
 \usage{
 parQuery(db_con, query, par_list)
 }
 \arguments{
 \item{db_con, query, par_list}{Character vectors}
 }
+\value{
+Data frame with results
+}
 \description{
-Subfunction for verifyMissingRuns()
+Parametrised query for verifyMissingRuns()
 }
 \keyword{internal}

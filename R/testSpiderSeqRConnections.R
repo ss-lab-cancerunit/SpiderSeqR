@@ -2,18 +2,35 @@
 # Function for testing connections which will be used by SpiderSeqR
 # Returns counts of total entries within the databases
 
-
+#' Test SpiderSeqR Connections
+#' 
+#' @return Nothing. Prints information about the number of entries 
+#'    in the key database tables.
+#'    
+#' @examples
+#' testSpiderSeqRConnections()
+#' 
+#' @export
+#' 
 testSpiderSeqRConnections <- function(){
     
     #DBI::dbGetQuery(.GlobalEnv$srr_gsm, "SELECT count(*) FROM srr_gsm")
     
-    print(paste0("Entries in sra_con (SRR): ", as.numeric(DBI::dbGetQuery(get("sra_con", envir = .GlobalEnv), "SELECT count(*) FROM sra"))))
+    print(paste0("Entries in sra_con (SRR): ", 
+                as.numeric(DBI::dbGetQuery(get("sra_con", envir = .GlobalEnv),
+                                            "SELECT count(*) FROM sra"))))
     
-    print(paste0("Entries in geo_con (GSM): ", as.numeric(DBI::dbGetQuery(get("geo_con", envir = .GlobalEnv), "SELECT count(*) FROM gsm"))))
+    print(paste0("Entries in geo_con (GSM): ", 
+                as.numeric(DBI::dbGetQuery(get("geo_con", envir = .GlobalEnv),
+                                            "SELECT count(*) FROM gsm"))))
     
-    print(paste0("Entries in geo_con (GSE): ", as.numeric(DBI::dbGetQuery(get("geo_con", envir = .GlobalEnv), "SELECT count(*) FROM gse"))))
+    print(paste0("Entries in geo_con (GSE): ", 
+                as.numeric(DBI::dbGetQuery(get("geo_con", envir = .GlobalEnv),
+                                            "SELECT count(*) FROM gse"))))
     
-    print(paste0("Entries in srr_gsm (SRR/GSM): ", as.numeric(DBI::dbGetQuery(get("srr_gsm", envir = .GlobalEnv), "SELECT count(*) FROM srr_gsm"))))
+    print(paste0("Entries in srr_gsm (SRR/GSM): ", 
+                as.numeric(DBI::dbGetQuery(get("srr_gsm", envir = .GlobalEnv),
+                                            "SELECT count(*) FROM srr_gsm"))))
     
 }
 

@@ -16,10 +16,14 @@ List valid columns within the data frames
 
 The following categories are available:
 \itemize{
-    \item SRA - columns from the sra table (SRA database) with added 'SRA_' prefix
-    \item GSM - columns from the gsm table (GEO database) with added 'GSM_' prefix
-    \item GSE - columns from the gse table (GSE database) with added 'GSE_' prefix
-    \item Other - other columns (created within the pacakge) with added 'OTH_' prefix
+    \item SRA - columns from the sra table (SRA database) 
+        with added 'SRA_' prefix
+    \item GSM - columns from the gsm table (GEO database) 
+        with added 'GSM_' prefix
+    \item GSE - columns from the gse table (GSE database) 
+        with added 'GSE_' prefix
+    \item Other - other columns (created within the pacakge) 
+        with added 'OTH_' prefix
 }
 }
 

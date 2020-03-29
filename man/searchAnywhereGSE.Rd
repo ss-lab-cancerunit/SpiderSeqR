@@ -17,3 +17,4 @@ Data frame with result data from whole GEO (gsm and gse tables)
 \description{
 Search anywhere within gse table of GEO database
 }
+\keyword{internal}

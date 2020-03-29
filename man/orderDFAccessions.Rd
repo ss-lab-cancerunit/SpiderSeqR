@@ -8,11 +8,16 @@ orderDFAccessions(df, acc_order = c("study", "sample", "experiment",
   "run", "gsm"), na.last = TRUE)
 }
 \arguments{
-\item{df}{Data frame to be ordered (must contain columns corresponding to types specified in \code{acc_order}, i.e. study_accession, sample_accession, experiment_accession, run_accession, gsm).}
+\item{df}{Data frame to be ordered (must contain columns corresponding 
+to types specified in \code{acc_order}, i.e. study_accession, 
+sample_accession, experiment_accession, run_accession, gsm).}
 
-\item{acc_order}{A character vector with accession levels to be used for ordering (their order specifies which accession level is taken into account first). Default value lists all possible elements.}
+\item{acc_order}{A character vector with accession levels to be used 
+for ordering (their order specifies which accession level is taken 
+into account first). Default value lists all possible elements.}
 
-\item{na.last}{Logical denoting whether NA values should be placed last. Defaults to TRUE.}
+\item{na.last}{Logical denoting whether NA values should be placed last. 
+Defaults to TRUE.}
 }
 \value{
 Data frame with rows ordered accordingly. The row names are reset.

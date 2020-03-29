@@ -593,13 +593,13 @@ generateOutput_Accession <- function(df, ss=NULL, accession){
         
         #SAVE DB EXTRACT
         saveRDS(df_rna_db_extract, 
-                    generateFileName_Accession(SRA_library_strategy = "RNA-Seq", 
+                    generateFileName_Accession(SRA_library_strategy="RNA-Seq", 
                                             accession = accession, 
                                             output = "db", 
                                             file_type = "Rda"))
         
         cwt(df_rna_db_extract, 
-                    generateFileName_Accession(SRA_library_strategy = "RNA-Seq", 
+                    generateFileName_Accession(SRA_library_strategy="RNA-Seq", 
                                             accession = accession, 
                                             output = "db", 
                                             file_type = "csv"))
@@ -996,13 +996,13 @@ generateSampleSheet_ChIP <- function(df){
     
     #List of required columns
     required_columns <- c("run_accession",
-                          "study_accession",
-                          "OTH_sa_tissue",
-                          "SRA_experiment_title",
-                          "OTH_lane",
-                          "OTH_mer",
-                          "OTH_input",
-                          "OTH_pairedEnd")
+                            "study_accession",
+                            "OTH_sa_tissue",
+                            "SRA_experiment_title",
+                            "OTH_lane",
+                            "OTH_mer",
+                            "OTH_input",
+                            "OTH_pairedEnd")
     
     #Check if required columns exist within the data frame
     verifyColumns(df, required_columns)
@@ -1056,11 +1056,11 @@ generateSampleSheet_RNA <- function(df){
     
     #List of required columns
     required_columns <- c("run_accession",
-                          "study_accession",
-                          "SRA_experiment_title",
-                          "OTH_lane",
-                          "OTH_mer",
-                          "OTH_pairedEnd")
+                            "study_accession",
+                            "SRA_experiment_title",
+                            "OTH_lane",
+                            "OTH_mer",
+                            "OTH_pairedEnd")
     
     #Check if required columns exist within the data frame
     verifyColumns(df, required_columns)
@@ -1114,11 +1114,11 @@ generateSampleSheet_Other <- function(df){
     
     #List of required columns
     required_columns <- c("run_accession",
-                          "study_accession",
-                          "SRA_experiment_title",
-                          "OTH_lane",
-                          "OTH_mer",
-                          "OTH_pairedEnd")
+                            "study_accession",
+                            "SRA_experiment_title",
+                            "OTH_lane",
+                            "OTH_mer",
+                            "OTH_pairedEnd")
     
     #Check if required columns exist within the data frame
     verifyColumns(df, required_columns)
@@ -1377,7 +1377,7 @@ listColumnSets <- function(){
                         "SRA_sample_attribute", 
                         "GSM_characteristics_ch1", 
                         "GSM_source_name_ch1",    
-                      
+                        
                         "OTH_sa_tissue",
                         "OTH_ch1_tissue",
                         "OTH_sa_antibody",
@@ -1507,10 +1507,10 @@ selectColumns_Overview <- function(df){
 cwt <- function(object, filename){
     # Custom write table (a wrapper to unify the parameters)
     utils::write.table(x = object,
-                       file = filename,
-                       sep = ";",
-                       row.names = FALSE,
-                       quote = TRUE
+                        file = filename,
+                        sep = ";",
+                        row.names = FALSE,
+                        quote = TRUE
     )
 }
 

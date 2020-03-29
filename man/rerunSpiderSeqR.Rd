@@ -13,7 +13,12 @@ rerunSpiderSeqR(file)
 Rerun the query
 }
 \description{
-This function allows for repeating the same query without the need to re-type the parameters over and over again. The main application of this function is to update results after the database files have been updated (i.e. to check whether there are any more results than last time the query was run).
+This function allows for repeating the same query without 
+the need to re-type the parameters over and over again. 
+The main application of this function is to update results 
+after the database files have been updated 
+(i.e. to check whether there are any more results 
+than last time the query was run).
 }
 \examples{
 # rerunSpiderSeqR(file_name)

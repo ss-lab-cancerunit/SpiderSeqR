@@ -45,7 +45,12 @@ callRecordGenerator <- function(file){
 #' @return Rerun the query
 #' 
 #' @description 
-#' This function allows for repeating the same query without the need to re-type the parameters over and over again. The main application of this function is to update results after the database files have been updated (i.e. to check whether there are any more results than last time the query was run).
+#' This function allows for repeating the same query without 
+#' the need to re-type the parameters over and over again. 
+#' The main application of this function is to update results 
+#' after the database files have been updated 
+#' (i.e. to check whether there are any more results 
+#' than last time the query was run).
 #' 
 #' @examples 
 #' # rerunSpiderSeqR(file_name)
@@ -97,16 +102,17 @@ rerunSpiderSeqR <- function(file){
             x <- x[-1]
             
             st_template <- c("library_strategy",
-                             "gene",
-                             "antibody",
-                             "cell_type",
-                             "treatment",
-                             "species",
-                             "platform",
-                             "secondary_library_strategy")
+                                "gene",
+                                "antibody",
+                                "cell_type",
+                                "treatment",
+                                "species",
+                                "platform",
+                                "secondary_library_strategy")
             
             if ((length(st_template))!=length(x)){
-                stop("The number of lines in the input file needs to correspond to the number of input variables")
+                stop(paste0("The number of lines in the input file ",
+                "needs to correspond to the number of input variables"))
             }
             
             
@@ -117,7 +123,8 @@ rerunSpiderSeqR <- function(file){
             for (r in seq_along(st_template)){
                 temp <- unlist(strsplit(x[[r]], split = "\t"))
                 if (st_template[r]!=temp[1]){
-                    stop("The names need to match between the input and the template")
+                    stop(paste0("The names need to match between ",
+                    "the input and the template"))
                 }
                 
                 if (length(temp)>1){
@@ -148,7 +155,8 @@ rerunSpiderSeqR <- function(file){
     #====================================================
     
     
-    #Using output of parameterRecordGenerator (or equivalent for searchForAccession)
+    #Using output of parameterRecordGenerator 
+    # (or equivalent for searchForAccession)
     #===*===
 }
 

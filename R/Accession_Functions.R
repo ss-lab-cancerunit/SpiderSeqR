@@ -35,12 +35,12 @@
 #' 
 #' @section Supported accession classes:
 #' \itemize{
-#'    \item [D|E|S]RP - study_accession
-#'    \item [D|E|S]RS - sample_accession
-#'    \item [D|E|S]RX - experiment_accession
-#'    \item [D|E|S]RR - run_accession
-#'    \item GSE - series_id
-#'    \item GSM - gsm
+#'     \item [D|E|S]RP - study_accession
+#'     \item [D|E|S]RS - sample_accession
+#'     \item [D|E|S]RX - experiment_accession
+#'     \item [D|E|S]RR - run_accession
+#'     \item GSE - series_id
+#'     \item GSM - gsm
 #' }
 #' 
 #' \strong{NOTE:} Input vector needs to contain accessions belonging to only 

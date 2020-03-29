@@ -11,11 +11,18 @@ searchAnywhereSRA(SRA_query, acc_levels = c("run", "experiment",
 \arguments{
 \item{SRA_query}{Query passed to fts MATCH operator (cannot be a vector)}
 
-\item{acc_levels}{Character vector denoting which accession levels will be searched. Choose from some/all of c("run", "experiment", "sample", "study")}
+\item{acc_levels}{Character vector denoting which accession levels 
+will be searched. 
+Choose from some/all of c("run", "experiment", "sample", "study")}
 
-\item{SRA_library_strategy}{Character vector denoting library_strategy/ies of choice (OPTIONAL)}
+\item{SRA_library_strategy}{Character vector denoting 
+library_strategy/ies of choice (OPTIONAL)}
 
-\item{SRA_other_library_strategy}{A character vector indicating whether (and which) uncategorised library strategies are accepted (choose between one and all elements of c("OTHER", "NA", "NULL")); if not desired, set equal to FALSE. NOTE: only evaluated if library strategy is provided}
+\item{SRA_other_library_strategy}{A character vector indicating whether 
+(and which) uncategorised library strategies are accepted 
+(choose between one and all elements of c("OTHER", "NA", "NULL")); 
+if not desired, set equal to FALSE. 
+NOTE: only evaluated if library strategy is provided}
 
 \item{...}{Other options}
 }
@@ -23,20 +30,22 @@ searchAnywhereSRA(SRA_query, acc_levels = c("run", "experiment",
 Fulltext search in SRA
 }
 \examples{
-# stat3
-searchAnywhereSRA("stat3") 
+## stat3
+# searchAnywhereSRA("stat3") 
 
-# stat3 in human samples
-searchAnywhereSRA("stat3 taxon_id: 9606") 
+## stat3 in human samples
+# searchAnywhereSRA("stat3 taxon_id: 9606") 
 
-# stat3 chip-seq (including unclassified library strategies)
-searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq")
-# stat3 chip-seq not including unclassified library strategies
-searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq", SRA_other_library_strategy = FALSE) 
+## stat3 chip-seq (including unclassified library strategies)
+# searchAnywhereSRA("stat3", library_strategy = "ChIP-Seq")
+## stat3 chip-seq not including unclassified library strategies
+# searchAnywhereSRA("stat3", 
+#    library_strategy = "ChIP-Seq", 
+#    SRA_other_library_strategy = FALSE) 
 
-#stat3 ignoring matches at study level
-searchAnywhereSRA("stat3", acc_levels = c("run", "experiment", "sample")) 
-
+## stat3 ignoring matches at study level
+#searchAnywhereSRA("stat3", acc_levels = c("run", "experiment", "sample")) 
 
 
 }
+\keyword{internal}

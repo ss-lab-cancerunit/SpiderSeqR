@@ -2,7 +2,7 @@
 % Please edit documentation in R/Helper_Functions.R
 \name{rbindUniqueCols}
 \alias{rbindUniqueCols}
-\title{Bind unique entries from two data frames disregarding some of the columns}
+\title{Bind unique entries from two dfs disregarding some of the columns}
 \usage{
 rbindUniqueCols(x, y, disregard_columns)
 }
@@ -20,6 +20,6 @@ when considered disregarding specified columns
 (only those rows of y that do not exist in x will be preserved)
 }
 \description{
-Bind unique entries from two data frames disregarding some of the columns
+Bind unique entries from two dfs disregarding some of the columns
 }
 \keyword{internal}

@@ -10,7 +10,8 @@ findSRAAccessionLevelColumnNames(acc_levels = c("run", "experiment",
 \arguments{
 \item{acc_levels}{Accession levels}
 
-\item{add_run_accession}{Logical indicating whether to add run_accession column name}
+\item{add_run_accession}{Logical indicating whether to add 
+run_accession column name}
 
 \item{table_name}{A character with table name}
 }

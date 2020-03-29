@@ -17,7 +17,8 @@ Unifies the format of a data frame. The following transformations are made:
     \item Order columns
     \item Remove duplicate rows (\code{unique(df)})
     \item Order rows (and resetting row names)
-    \item Convert data types (mostly to character, with some exceptions converted to integer)
+    \item Convert data types (mostly to character, 
+        with some exceptions converted to integer)
 }
 }
 \description{

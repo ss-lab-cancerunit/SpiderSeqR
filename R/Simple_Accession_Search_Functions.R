@@ -33,9 +33,13 @@ simpleSearchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
     
     #Search for GSMs
     for (a in seq_along(acc_vector)){
-        query <- paste0("SELECT ", geo_columns, " FROM gsm WHERE gsm = '", acc_vector[a], "'")
+        query <- paste0("SELECT ", 
+                        geo_columns, 
+                        " FROM gsm WHERE gsm = '", 
+                        acc_vector[a], "'")
         print(query)
-        chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+        chunk <- DBI::dbGetQuery(get(database_name, 
+                                        envir = get(database_env)), query)
         search_count <- search_count + as.integer(dim(chunk)[1]>=1)
         df <- rbind(df, chunk)
     }
@@ -50,7 +54,11 @@ simpleSearchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
     
     df <- appendGSEColumns(df, gse_columns)
     
-    print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
+    print(paste0("Found results for ", 
+                    search_count, 
+                    " out of ", 
+                    length(acc_vector), 
+                    " accession search terms"))
     
     if (search_count!=length(acc_vector)){
         warning("Some accessions were not found in the GEO database")
@@ -101,9 +109,16 @@ simpleSearchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
     
     #Search for GSMs
     for (a in seq_along(acc_vector)){
-        query <- paste0("SELECT ", geo_columns, " FROM gsm WHERE series_id LIKE '%", acc_vector[a], "' OR series_id LIKE '%", acc_vector[a], ",%'")
+        query <- paste0("SELECT ", 
+                        geo_columns, 
+                        " FROM gsm WHERE series_id LIKE '%", 
+                        acc_vector[a], 
+                        "' OR series_id LIKE '%", 
+                        acc_vector[a], 
+                        ",%'")
         print(query)
-        chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+        chunk <- DBI::dbGetQuery(get(database_name, 
+                                        envir = get(database_env)), query)
         search_count <- search_count + as.integer(dim(chunk)[1]>=1)
         df <- rbind(df, chunk)
     }
@@ -114,7 +129,11 @@ simpleSearchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
     df <- appendGSEColumns(df, gse_columns)
     
     
-    print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
+    print(paste0("Found results for ", 
+                    search_count, 
+                    " out of ", 
+                    length(acc_vector), 
+                    " accession search terms"))
     
     if (search_count!=length(acc_vector)){
         warning("Some accessions were not found in the GEO database")
@@ -142,7 +161,8 @@ simpleSearchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
 #simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
 simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
     # Args: a character vector with accessions
-    #       (needs to completely match to one accession class; no partial matches or mixed classes allowed)
+    #       (needs to completely match to one accession class; 
+    #       no partial matches or mixed classes allowed)
     #
     # Returns: df from SRA with matches to the acc_vector
     #
@@ -159,7 +179,12 @@ simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
     database_env <- ".GlobalEnv"
     sra_table <- "sra"
     
-    #sra_columns <- c("experiment_name", "run_attribute", "experiment_accession", "experiment_url_link", "experiment_title", "library_strategy", "library_layout", "sample_alias", "taxon_id", "library_construction_protocol", "run_accession", "study_accession", "run_alias", "experiment_alias", "sample_name", "sample_attribute", "experiment_attribute")
+    #sra_columns <- c("experiment_name", "run_attribute", 
+    #"experiment_accession", "experiment_url_link", "experiment_title", 
+    #"library_strategy", "library_layout", "sample_alias", "taxon_id", 
+    #"library_construction_protocol", "run_accession", "study_accession", 
+    #"run_alias", "experiment_alias", "sample_name", "sample_attribute", 
+    #"experiment_attribute")
     #sra_columns <- c("experiment_title")
     #sra_columns <- "*"
     
@@ -179,14 +204,23 @@ simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
     search_count <- 0
     accession_df <- data.frame()
     
-    if (accession_class %in% c("study_accession", "sample_accession", "experiment_accession", "run_accession")){
+    if (accession_class %in% c("study_accession", 
+                                "sample_accession", 
+                                "experiment_accession", 
+                                "run_accession")){
         
-        query_beg <- paste0("SELECT ", sra_columns, " FROM ", sra_table, " WHERE ", accession_class, " = '")
+        query_beg <- paste0("SELECT ", 
+                            sra_columns, 
+                            " FROM ", 
+                            sra_table, 
+                            " WHERE ", 
+                            accession_class, " = '")
         
         for (a in seq_along(x)){
             query <- paste0(query_beg, x[a], "'")
             print(query)
-            chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+            chunk <- DBI::dbGetQuery(get(database_name, 
+                                            envir = get(database_env)), query)
             search_count <- search_count + as.integer(dim(chunk)[1]>=1)
             accession_df <- rbind(accession_df, chunk)
         }
@@ -194,7 +228,11 @@ simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
         stop("Only SRA accessions are allowed")
     }
     
-    print(paste0("Found results for ", search_count, " out of ", length(x), " accession search terms"))
+    print(paste0("Found results for ", 
+                    search_count, 
+                    " out of ", 
+                    length(x), 
+                    " accession search terms"))
     #print(search_count)
     #print(length(x))
     
@@ -220,8 +258,10 @@ simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
 
 #------------------------------------------------------
 #------------------------------------------------------
-#simpleSearchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
-simpleSearchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
+#simpleSearchSRR_GSM <- function(acc_vector, srr_gsm_columns = 
+# c("run_accession", "gsm", "gsm_check")){
+simpleSearchSRR_GSM <- function(acc_vector, 
+                srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
     
     print("Running searchSRR_GSM")
     
@@ -230,7 +270,8 @@ simpleSearchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession",
     
     accession_class <- classifyAccession(acc_vector)
     
-    #This is a safeguard in case incomplete SRA accessions had equivalents in GEO
+    #This is a safeguard in case incomplete SRA accessions 
+    # had equivalents in GEO
     #Can only remove it if it is certain that this is not the case
     if (!(accession_class %in% c("run_accession", "gsm"))){
         stop("Only SRRs and GSMs are accepted")
@@ -249,21 +290,30 @@ simpleSearchSRR_GSM <- function(acc_vector, srr_gsm_columns = c("run_accession",
     search_count <- 0
     accession_df <- data.frame()
     
-    query_beg <- paste0("SELECT ", srr_gsm_columns, " FROM srr_gsm WHERE ", accession_class, " = '")
+    query_beg <- paste0("SELECT ", 
+                        srr_gsm_columns, 
+                        " FROM srr_gsm WHERE ", 
+                        accession_class, " = '")
     
     for (a in seq_along(acc_vector)){
         query <- paste0(query_beg, acc_vector[a], "'")
         print(query)
-        chunk <- DBI::dbGetQuery(get(database_name, envir = get(database_env)), query)
+        chunk <- DBI::dbGetQuery(get(database_name, 
+                                        envir = get(database_env)), query)
         search_count <- search_count + as.integer(dim(chunk)[1]>=1)
         accession_df <- rbind(accession_df, chunk)
     }
     
     
-    print(paste0("Found results for ", search_count, " out of ", length(acc_vector), " accession search terms"))
+    print(paste0("Found results for ", 
+                    search_count, 
+                    " out of ", length(acc_vector), 
+                    " accession search terms"))
     
     if (search_count!=length(acc_vector)){
-        warning("Some accessions were not found in the SRR_GSM database. You may wish to re-check for SRA-GEO correspondence manually")
+        warning(paste0("Some accessions were not found ",
+            "in the SRR_GSM database. ",
+            "You may wish to re-check for SRA-GEO correspondence manually"))
     }
     
     accession_df <- unique(accession_df)
