@@ -39,6 +39,9 @@ unifyDFFormat <- function(df){
     
     df <- df[, c(sra_ind, gsm_ind, gse_ind, other_ind)]
     
+    
+    df <- orderDFColumns(df)
+    
     # Remove duplicates
     df <- unique(df)
     
@@ -282,4 +285,46 @@ listValidColumns <- function(){
 }
 #----------------------------------------------------------------------------
 #----------------------------------------------------------------------------
+
+
+
+
+
+
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+#' Order columns in a data frame
+#' 
+#' @param df Data frame with columns to be ordered
+#' @return Data frame with ordered columns
+#' 
+#' The columns are matched against the list in listValidColumns() 
+#' (in the order of subsets). Any non-matching columns are not included
+#' 
+#' @keywords internal
+#' 
+orderDFColumns <- function(df){
+    x <- colnames(df)
+    x_length <- length(x)
+    col_list <- as.character(unlist(listValidColumns()))
+    y <- character()
+    
+    for (i in seq_along(col_list)){
+        if (sum(x %in% col_list[i]) > 0){
+            y <- c(y, match(col_list[i], x))
+        }
+    }
+    y <- as.integer(y)
+    
+    df <- df[ , x[y]]
+    
+    if (length(y) < x_length){
+        warning("Some columns were removed")
+    }
+    return(df)
+    
+}
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+
 

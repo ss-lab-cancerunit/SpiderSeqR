@@ -757,7 +757,7 @@ verifyConditions <- function(df, keywords, columns, prefixes, suffixes){
         
     } else {
         row_matches <- rep(TRUE, nrow(df))
-        warning("No keywords specified. All TRUE returned")
+        message("No keywords specified. All TRUE returned")
     }
     mm("verifyConditions completed", "fn")
     

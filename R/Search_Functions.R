@@ -540,6 +540,8 @@ searchForTerm <- function(SRA_library_strategy,
         
     }
     
+    spider_combined <- unifyDFFormat(spider_combined)
+    
     return(spider_combined)
     
     

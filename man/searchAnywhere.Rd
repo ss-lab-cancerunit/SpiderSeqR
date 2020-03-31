@@ -2,7 +2,7 @@
 % Please edit documentation in R/Search_Anywhere.R
 \name{searchAnywhere}
 \alias{searchAnywhere}
-\title{Search Anywhere within SRA and GEO databases (under construction!)}
+\title{Search Anywhere within SRA and GEO databases}
 \usage{
 searchAnywhere(query_all, acc_levels = c("run", "experiment", "sample",
   "gsm"), category_both = NULL, SRA_library_strategy = NULL,
@@ -12,7 +12,9 @@ searchAnywhere(query_all, acc_levels = c("run", "experiment", "sample",
 \arguments{
 \item{query_all}{Search term for both SRA and GEO (gse and gsm tables)}
 
-\item{acc_levels}{Accession levels at which the search is conducted}
+\item{acc_levels}{Accession levels at which the search is conducted. 
+Possible options include run, sample, experiment, study, gsm, gse. 
+Defaults to c("run", "experiment", "sample", "gsm")}
 
 \item{category_both}{A character with category 
 for SRA library strategy and GEO type}
@@ -34,8 +36,11 @@ unclassified entries}
 
 \item{...}{Other options}
 }
+\value{
+A data frame with results of the search
+}
 \description{
-Search Anywhere within SRA and GEO databases (under construction!)
+Search Anywhere within SRA and GEO databases
 }
 \section{Argument requirements}{
 
@@ -142,13 +147,18 @@ Under construction ===*===
 }
 
 \examples{
-searchAnywhere("*stat3*") #The broadest search
-searchAnywhere("stat3")
-searchAnywhere("tp53 OR p53") #Can list synonyms
+startSpiderSeqRDemo()
+searchAnywhere("*sir3*") # The broadest search
+searchAnywhere("sir3") # omits entries with characters before/after sir3
+searchAnywhere("sir3 OR sir3p") # Can list synonyms
 
+## Only search for matches in SRA
+searchAnywhere ("sir3", acc_levels = c("run", 
+           "sample", "experiment", "study"))
 
-#Only search for entries that occur in GEO
+## Only search for matches in GEO
 searchAnywhere ("p53", acc_levels = c("gsm", "gse"))
+
 
 
 

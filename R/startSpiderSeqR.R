@@ -220,7 +220,7 @@ startSpiderSeqR <- function(dir,
         sra_menu <- utils::menu(c("yes", "no"))
         if (sra_menu == 1){
             mm("Downloading the file", "search")
-            sra_file <<- SRAdb::getSRAdbFile()
+            sra_file <- SRAdb::getSRAdbFile()
         } else {
             stop(paste0(sra_file, 
                     " file is necessary for the functioning of the package"))
@@ -241,7 +241,7 @@ startSpiderSeqR <- function(dir,
         sra_menu <- utils::menu(c("yes", "no"))
         if (sra_menu == 1){
             mm("Downloading the file", "search")
-            sra_file <<- SRAdb::getSRAdbFile()
+            sra_file <- SRAdb::getSRAdbFile()
         } else {
             warning(paste0("Next time consider downloading a new version of ", 
                             sra_file, " file"))

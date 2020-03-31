@@ -1,10 +1,12 @@
 
 
-#' Search Anywhere within SRA and GEO databases (under construction!)
+#' Search Anywhere within SRA and GEO databases
 #' 
 #' @param query_all Search term for both SRA and GEO (gse and gsm tables)
 #' 
-#' @param acc_levels Accession levels at which the search is conducted
+#' @param acc_levels Accession levels at which the search is conducted. 
+#'     Possible options include run, sample, experiment, study, gsm, gse. 
+#'     Defaults to c("run", "experiment", "sample", "gsm")
 #' @param category_both A character with category 
 #'     for SRA library strategy and GEO type
 #' @param SRA_library_strategy A character with SRA library strategy
@@ -16,17 +18,23 @@
 #' @param GSM_query Search term for gsm table only (GEO)
 #' @param GSE_query Search term for gse table only (GEO)
 #' @param ... Other options
+#' @return A data frame with results of the search
 #' 
 #' 
 #' 
 #' @examples 
-#' searchAnywhere("*stat3*") #The broadest search
-#' searchAnywhere("stat3")
-#' searchAnywhere("tp53 OR p53") #Can list synonyms
+#' startSpiderSeqRDemo()
+#' searchAnywhere("*sir3*") # The broadest search
+#' searchAnywhere("sir3") # omits entries with characters before/after sir3
+#' searchAnywhere("sir3 OR sir3p") # Can list synonyms
 #' 
+#' ## Only search for matches in SRA
+#' searchAnywhere ("sir3", acc_levels = c("run", 
+#'            "sample", "experiment", "study"))
 #' 
-#' #Only search for entries that occur in GEO
+#' ## Only search for matches in GEO
 #' searchAnywhere ("p53", acc_levels = c("gsm", "gse"))
+#' 
 #' 
 #' 
 #' 
@@ -144,9 +152,9 @@ searchAnywhere <- function(query_all,
                         GSE_query, ...){
     
     
-    # Query arguments ####
-    # Checking arguments (either query_all or SRA_query AND GEO_query 
-    # (OR GSM_query AND GSE_query))
+    ## Query arguments ####
+    ## Checking arguments (either query_all or SRA_query AND GEO_query 
+    ## (OR GSM_query AND GSE_query))
     
     if (!missing(query_all)){ # QUERY_ALL PRESENT
         
@@ -164,7 +172,7 @@ searchAnywhere <- function(query_all,
         
     } else { # QUERY_ALL ABSENT
         
-        #SRA_query as provided (SRA_query <- SRA_query)
+        ## SRA_query as provided (SRA_query <- SRA_query)
         if (missing(SRA_query)){
             stop("SRA_query is required")
         }
@@ -648,11 +656,6 @@ searchAnywhereGSE <- function(GSE_query, GEO_type){
 #' 
 #' 
 #' @keywords internal
-
-#searchAnywhereSRA <- function(SRA_query, 
-#    acc_levels, SRA_library_strategy=NULL, 
-#    SRA_other_library_strategy = c("OTHER", "NA", "NULL"),  ...){
-
 searchAnywhereSRA <- function(SRA_query, 
                         acc_levels = c("run", "experiment", "sample", "study"),
                         SRA_library_strategy=NULL, 
