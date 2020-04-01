@@ -9,7 +9,7 @@
 #' 
 #' @keywords internal
 #' 
-parameterRecordGenerator <- function(st, file, fun_name){
+.generateParameterRecord <- function(st, file, fun_name){
     
     file.create(file)
     y <- st
@@ -50,7 +50,7 @@ parameterRecordGenerator <- function(st, file, fun_name){
 #' 
 #' @keywords internal
 #' 
-callRecordGenerator <- function(file){
+.generateCallRecord <- function(file){
     c <- match.call(definition = sys.function(-1), call = sys.call(-1))
     saveRDS(c, file = file)
 }
@@ -70,9 +70,9 @@ callRecordGenerator <- function(file){
 #' 
 #' @keywords internal
 #' 
-generateCallFile_SFA <- function(acc_vector){
+.generateFileName_CALL_SFA <- function(acc_vector){
     
-    mm("Running generateCallFileName", "fn")
+    .mm("Running .generateFileName_CALL_SFA", "fn")
     
     name <- "SFA_"
     acc_vector <- unique(acc_vector)
@@ -98,13 +98,102 @@ generateCallFile_SFA <- function(acc_vector){
     
     name <- paste0(name, ".Rda") 
     
-    mm("generateCallFileName completed", "fn")
+    .mm(".generateFileName_CALL_SFA completed", "fn")
     return(name)
     
 }
 
 
 
+
+
+#' Generate file name for call record (searchAnywhere)
+#' 
+#' @param x A list containing relevant parameters from searchAnywhere
+#' @return A string with the file name
+#' 
+#' @keywords internal
+#' 
+.generateFileName_CALL_SA <- function(x){
+    
+    .mm("Running .generateFileName_CALL_SA", "fn")
+    
+    name <- "SA_"
+    
+    # Supported arguments
+    sa_poss_arguments <- c("SRA_query",
+                            "GSM_query",
+                            "GSE_query",
+                            "SRA_library_strategy")
+                            #"GEO_type") # Not included
+                            #"acc_levels") # Not included
+    
+    sa_arguments <- x[c(sa_poss_arguments)]
+
+    
+    .vex("sa_arguments", sa_arguments)
+    #sa_arguments <- sa_arguments[-1]
+    sa_arguments <- as.character(unlist(sa_arguments))
+    sa_arguments <- unique(sa_arguments)
+    
+    sa_arguments <- .replaceForbiddenCharacters(sa_arguments)
+    
+    
+    if (length(sa_arguments) > 2){
+        sa_name <- paste0(sa_arguments[c(1, length(sa_arguments))], 
+                            collapse = "-")
+        sa_name <- paste0(sa_arguments, "_", length(sa_arguments), "n")
+        
+    } else {
+        sa_name <- paste0(sa_arguments, collapse = "-")
+    }
+    
+    if (nchar(sa_name)>40){
+        sa_name <- paste0(substr(sa_name, 1, 40), "_")
+    }
+    
+    name <- paste0(name, sa_name)
+    
+    today <- Sys.time()
+    today <- format(today, format = "%Y-%m-%d-%H%M%S")
+    
+    name <- paste0(name, "_", today)
+    
+    name <- paste0(name, ".Rda") 
+    
+    .GlobalEnv$fn <- name
+    
+    .mm(".generateFileName_CALL_SA completed", "fn")
+    return(name)
+    
+}
+
+
+
+
+
+#' Replace forbidden characters from a string
+#' 
+#' @param x A character vector with characters to be replaced
+#' @return Character vector with replaced forbidden characters
+#' 
+#' @keywords internal
+.replaceForbiddenCharacters <- function(x){
+    
+    # Doesn't work
+    #forbidden_characters <- c('*', '/', '\\', '"', '.', ':', ';', '|', ',')
+    #forbidden_characters <- c('*', '/', '\\', '"', '.', ':', ';', '|', ',')
+    
+    forbidden_characters <- c('\\*', '/', '"', '\\.', ':', ';', '\\|', ',')
+    
+    for (i in seq_along(forbidden_characters)){
+        x <- gsub(forbidden_characters[i], "_", x)
+    }
+    return(x)
+    #characters_not_included <- c('\\')
+    #gsub('\\', '', 'sght\gg')
+    
+}
 
 
 
@@ -148,7 +237,7 @@ rerunSpiderSeqR <- function(file){
     if (ext_Rda){
         x <- readRDS(file)
         
-        #Using output of callRecordGenerator
+        #Using output of .generateCallRecord
         if (methods::is(x, "call")){
             eval(x)
         }
@@ -227,7 +316,7 @@ rerunSpiderSeqR <- function(file){
     #====================================================
     
     
-    #Using output of parameterRecordGenerator 
+    #Using output of .generateParameterRecord 
     # (or equivalent for searchForAccession)
     #===*===
 }

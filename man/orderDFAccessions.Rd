@@ -25,3 +25,17 @@ Data frame with rows ordered accordingly. The row names are reset.
 \description{
 Order df rows in accession order
 }
+\examples{
+# Use for ordering rows within df after manipulating it, e.g.: 
+startSpiderSeqRDemo()
+df1 <- searchAnywhere("trimkd")
+df2 <- searchAnywhere("arabidopsis")
+df <- rbind(df1, df2)
+df <- orderDFAccessions(df)
+
+}
+\seealso{
+Other Manipulation functions: \code{\link{filterByTermByAccessionLevel}},
+  \code{\link{filterByTerm}}
+}
+\concept{Manipulation functions}

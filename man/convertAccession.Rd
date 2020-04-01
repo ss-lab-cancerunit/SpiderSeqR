@@ -145,7 +145,10 @@ convertAccession(c("DRP003157", "SRP061795"))
 \seealso{
 Other Workflow functions: \code{\link{addMissingSamples}},
   \code{\link{filterByTermByAccessionLevel}},
-  \code{\link{filterByTerm}}
+  \code{\link{filterByTerm}},
+  \code{\link{searchForAccession}}
+
+Other Core functions: \code{\link{searchForAccession}}
 }
 \concept{Core functions}
 \concept{Workflow functions}

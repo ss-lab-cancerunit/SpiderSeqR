@@ -37,6 +37,7 @@ addMissingSamples(searchForAccession("SRR6823653"))
 \seealso{
 Other Workflow functions: \code{\link{convertAccession}},
   \code{\link{filterByTermByAccessionLevel}},
-  \code{\link{filterByTerm}}
+  \code{\link{filterByTerm}},
+  \code{\link{searchForAccession}}
 }
 \concept{Workflow functions}

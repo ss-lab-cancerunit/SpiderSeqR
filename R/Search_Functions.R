@@ -8,6 +8,7 @@
 # do.call(searchForTerm, st)
 
 
+
 #' Search for samples matching criteria of interest
 #' 
 #' \code{searchForTerm} provides an automated framework for searching 
@@ -69,9 +70,7 @@
 #' 
 #' 
 #' @export
-#
-#NEW searchForTerm FUNCTION (in progress) - WILL BE COMPLETED IN INDEV3.R
-
+#' 
 searchForTerm <- function(SRA_library_strategy, 
                             gene=NULL, 
                             antibody=NULL, 
@@ -125,14 +124,14 @@ searchForTerm <- function(SRA_library_strategy,
     
     library_warning_message <- paste0("Library strategy does not belong ",
         "to the recommended options. If you do not get satisfying results, ",
-        "please run manageLibraryStrategy for further information") 
+        "please run .manageLibraryStrategy for further information") 
     
     
-    #print(manageLibraryStrategy(
+    #print(.manageLibraryStrategy(
     #SRA_secondary_library_strategy, task="check_can"))
     
     
-    if( !manageLibraryStrategy(SRA_library_strategy, task="check_can") ){
+    if( !.manageLibraryStrategy(SRA_library_strategy, task="check_can") ){
         warning(library_warning_message)
     }
     
@@ -191,7 +190,7 @@ searchForTerm <- function(SRA_library_strategy,
     
     #Warning message if SRA_secondary_library_strategy not in canonical form
     if (!is.null(SRA_secondary_library_strategy)){
-        if( !manageLibraryStrategy(SRA_secondary_library_strategy, 
+        if( !.manageLibraryStrategy(SRA_secondary_library_strategy, 
                                     task="check_can") ){
             warning(library_warning_message)
         }
@@ -227,22 +226,22 @@ searchForTerm <- function(SRA_library_strategy,
     }
     
     #PRINT SEARCH CONDITIONS SUMMARY
-    mm("SEARCH CONDITIONS SUMMARY", "search")
-    mm(paste0("Selected gene: ", 
+    .mm("SEARCH CONDITIONS SUMMARY", "search")
+    .mm(paste0("Selected gene: ", 
                 paste(gene, collapse = " OR ")), "search")
-    mm(paste0("Selected antibody: ", 
+    .mm(paste0("Selected antibody: ", 
                 paste(antibody, collapse = " OR ")), "search")
-    mm(paste0("Selected cell type: ", 
+    .mm(paste0("Selected cell type: ", 
                 paste(cell_type, collapse = " OR ")), "search")
-    mm(paste0("Selected treatment: ", 
+    .mm(paste0("Selected treatment: ", 
                 paste(treatment, collapse = " OR ")), "search")
-    mm(paste0("Selected species: ", 
+    .mm(paste0("Selected species: ", 
                 paste(species, collapse = " OR ")), "search")
-    mm(paste0("Selected SRA_library_strategy: ", 
+    .mm(paste0("Selected SRA_library_strategy: ", 
                 paste(SRA_library_strategy, collapse = " OR ")), "search")
-    mm(paste0("Selected platform: ", 
+    .mm(paste0("Selected platform: ", 
                 paste(platform, collapse = " OR ")), "search")
-    mm(paste0("Selected SRA_secondary_library_strategy: ", 
+    .mm(paste0("Selected SRA_secondary_library_strategy: ", 
                 paste(SRA_secondary_library_strategy, collapse = " OR ")), 
         "search")
     
@@ -269,13 +268,13 @@ searchForTerm <- function(SRA_library_strategy,
     #=========================================================================
     # Save search parameters and call details in a file
     #=========================================================================
-    parameterRecordGenerator(st = st, 
-                            file = do.call(generateFileName, 
+    .generateParameterRecord(st = st, 
+                            file = do.call(.generateFileName, 
                                             c(st, list(output="PAR"), 
                                                 list(file_type="tab"))), 
                             fun_name = "searchForTerm")
     
-    callRecordGenerator(file = do.call(generateFileName, 
+    .generateCallRecord(file = do.call(.generateFileName, 
                                             c(st, list(output="CALL"), 
                                                 list(file_type="Rda"))))
     #=========================================================================
@@ -286,7 +285,7 @@ searchForTerm <- function(SRA_library_strategy,
     # Find entries containing search_terms (sample_list)
     #=========================================================================
     
-    sample_list <- do.call(searchSRA, 
+    sample_list <- do.call(.searchSRA, 
                             st[-grep("SRA_secondary_library_strategy", 
                                         names(st))])
     #=========================================================================
@@ -316,10 +315,10 @@ searchForTerm <- function(SRA_library_strategy,
     #=========================================================================
     #For all the projects from the sample list, find all the corresponding SRRs
     #=========================================================================
-    #all_list <- searchForSRPChildren(unique(sample_list$study_accession), 
+    #all_list <- .searchForSRPChildren(unique(sample_list$study_accession), 
     #sra_columns)
     #Changed to avoid problems with column management
-    all_list <- searchForSRPChildren(unique(sample_list$study_accession), "*") 
+    all_list <- .searchForSRPChildren(unique(sample_list$study_accession), "*") 
     all_list$input <- NA
     all_list$control <- NA
     #=========================================================================
@@ -333,7 +332,7 @@ searchForTerm <- function(SRA_library_strategy,
     # Mark SRRs from sample_list with "N" and the remaining SRRs with "check"
     #=========================================================================
     #spider_combined <- rbindUnique(sample_list, all_list) #PREVIOUSLY
-    spider_combined <- rbindUniqueCols(x=sample_list, 
+    spider_combined <- .rbindUniqueCols(x=sample_list, 
                                         y = all_list, 
                                         disregard_columns=c("input","control"))
     #=========================================================================
@@ -357,7 +356,7 @@ searchForTerm <- function(SRA_library_strategy,
     #=========================================================================
     # Extract GSMs from the experiment_title
     #=========================================================================
-    spider_combined <- extractGSM(spider_combined)
+    spider_combined <- .extractGSM(spider_combined)
     #=========================================================================
     
     
@@ -367,7 +366,7 @@ searchForTerm <- function(SRA_library_strategy,
     #=========================================================================
     # Extract SRA sample attributes
     #=========================================================================
-    spider_combined <- saExtractor(spider_combined)
+    spider_combined <- .saExtractor(spider_combined)
     #=========================================================================
     
     
@@ -376,10 +375,10 @@ searchForTerm <- function(SRA_library_strategy,
     #=========================================================================
     # Detect inputs (ChIP) and controls (RNA)
     #=========================================================================
-    spider_combined <- detectInputs(spider_combined) #Detect ChIP-Seq inputs
+    spider_combined <- .detectInputs(spider_combined) #Detect ChIP-Seq inputs
     
     #spider_combined$rna_control <- NA #Add new column
-    spider_combined <- detectControls(spider_combined) #Detect RNA-Seq controls
+    spider_combined <- .detectControls(spider_combined) #Detect RNA-Seq controls
     #=========================================================================
     
     
@@ -388,21 +387,21 @@ searchForTerm <- function(SRA_library_strategy,
     # Add columns for sample sheets (lane and merge* 
     # (will label it mer to avoid interference with merge function))
     #=========================================================================
-    spider_combined <- detectMerges(spider_combined)
+    spider_combined <- .detectMerges(spider_combined)
     #Check if there are any missing runs ===*=== Disabled 
     # (dbSendQuery stopped working!)
-    verifyMissingRuns(spider_combined$run_accession) 
+    .verifyMissingRuns(spider_combined$run_accession) 
     #=========================================================================
     
     
     #=========================================================================
     # Add pairedEnd column
     #=========================================================================
-    spider_combined <- convertPairedEnds(spider_combined)
+    spider_combined <- .convertPairedEnds(spider_combined)
     #=========================================================================
     
     
-    .GlobalEnv$spider_output_combined_no_geo <- spider_combined
+    .vex("spider_output_combined_no_geo", spider_combined)
     
     #=========================================================================
     # Search for entries in GEO
@@ -426,7 +425,7 @@ searchForTerm <- function(SRA_library_strategy,
     #gsm_list <- c("GSM2342088")
     #gsm_list <- c("GSM2342088", "GSM2140962")
     
-    #Get GSMs from column created by extractGSM() # sampletogsm ===*===
+    #Get GSMs from column created by .extractGSM() # sampletogsm ===*===
     gsm_list <- spider_combined$gsm 
     #Leave only unique, non-na entries
     gsm_list <- unique(gsm_list[!is.na(gsm_list)]) 
@@ -435,14 +434,14 @@ searchForTerm <- function(SRA_library_strategy,
     #spider_geo <- geoFinder(get(gsm_db_name, envir = get(database_env)), 
     #gsm_list = gsm_list, gsm_columns = gsm_columns, gse_columns = gse_columns)
     if (length(gsm_list)>0){
-        spider_geo <- searchGEOForGSM(gsm_list, 
+        spider_geo <- .searchGEOForGSM(gsm_list, 
                                         geo_columns = gsm_columns, 
                                         gse_columns = gse_columns)
         
         #=====================================================================
         # Extract characteristics_ch1 into separate columns
         #=====================================================================
-        spider_geo <- chExtractor(spider_geo)
+        spider_geo <- .chExtractor(spider_geo)
         #=====================================================================
         
         #=====================================================================
@@ -454,7 +453,7 @@ searchForTerm <- function(SRA_library_strategy,
         
         #saveRDS(spider_combined, "spider_combined_prelim.Rda")
         #Give info on superseries
-        spider_superseries <- verifySuperseries(spider_combined$series_id)
+        spider_superseries <- .verifySuperseries(spider_combined$series_id)
         #=====================================================================
         
         
@@ -465,7 +464,7 @@ searchForTerm <- function(SRA_library_strategy,
             columns_to_add <- 
                     as.character(unlist(listValidColumns()[c("GSM", "GSE")]))
             spider_combined[, columns_to_add] <- NA
-            spider_combined <- chExtractor(spider_combined)
+            spider_combined <- .chExtractor(spider_combined)
             spider_superseries <- NULL
             
         } else {
@@ -474,7 +473,7 @@ searchForTerm <- function(SRA_library_strategy,
         }
     }
     
-    #.GlobalEnv$temp_spider_geo <- spider_geo
+    #.vex("temp_spider_geo", spider_geo)
     
     
     #=========================================================================
@@ -495,9 +494,9 @@ searchForTerm <- function(SRA_library_strategy,
                 spider_combined[, -grep("sra_ID", colnames(spider_combined))]
     }
     
-    spider_combined <- renameSRAColumns(spider_combined)
-    spider_combined <- renameOTHColumns(spider_combined)
-    checkValidColumns(spider_combined)
+    spider_combined <- .renameSRAColumns(spider_combined)
+    spider_combined <- .renameOTHColumns(spider_combined)
+    .checkValidColumns(spider_combined)
     #=========================================================================
     
     
@@ -505,7 +504,7 @@ searchForTerm <- function(SRA_library_strategy,
     # Generate outputs
     #=========================================================================
     
-    generateOutput(spider_combined, spider_superseries, st = st)
+    .generateOutput(spider_combined, spider_superseries, st = st)
     #=========================================================================
     
     if (return_all == FALSE){
@@ -541,7 +540,7 @@ searchForTerm <- function(SRA_library_strategy,
         
     }
     
-    spider_combined <- unifyDFFormat(spider_combined)
+    spider_combined <- .unifyDFFormat(spider_combined)
     
     return(spider_combined)
     

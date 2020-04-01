@@ -50,9 +50,11 @@ df_view <- selectColumns_Overview(df)
 \seealso{
 Other Workflow functions: \code{\link{addMissingSamples}},
   \code{\link{convertAccession}},
-  \code{\link{filterByTermByAccessionLevel}}
+  \code{\link{filterByTermByAccessionLevel}},
+  \code{\link{searchForAccession}}
 
-Other Manipulation functions: \code{\link{filterByTermByAccessionLevel}}
+Other Manipulation functions: \code{\link{filterByTermByAccessionLevel}},
+  \code{\link{orderDFAccessions}}
 }
 \concept{Manipulation functions}
 \concept{Workflow functions}

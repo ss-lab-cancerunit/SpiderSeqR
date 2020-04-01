@@ -19,7 +19,7 @@
 #' }
 #' 
 #' @keywords internal
-unifyDFFormat <- function(df){
+.unifyDFFormat <- function(df){
     
     #col_order <- c("sra", "gsm", "gse", "other", "added")
     
@@ -40,7 +40,7 @@ unifyDFFormat <- function(df){
     df <- df[, c(sra_ind, gsm_ind, gse_ind, other_ind)]
     
     
-    df <- orderDFColumns(df)
+    df <- .orderDFColumns(df)
     
     # Remove duplicates
     df <- unique(df)
@@ -99,6 +99,17 @@ unifyDFFormat <- function(df){
 #'     Defaults to TRUE.
 #' @return Data frame with rows ordered accordingly. The row names are reset.
 #' 
+#' @family Manipulation functions
+#' 
+#' @examples
+#' # Use for ordering rows within df after manipulating it, e.g.: 
+#' startSpiderSeqRDemo()
+#' df1 <- searchAnywhere("trimkd")
+#' df2 <- searchAnywhere("arabidopsis")
+#' df <- rbind(df1, df2)
+#' df <- orderDFAccessions(df)
+#' 
+#' @export
 #' 
 orderDFAccessions <- function(df, 
                             acc_order = c("study", 
@@ -116,7 +127,7 @@ orderDFAccessions <- function(df,
     acc_cols[["gsm"]] <- "gsm"
     
     # Check df contains necessary columns
-    verifyColumns(df, acc_cols)
+    .verifyColumns(df, acc_cols)
     
     col_ind <- integer() # For storing column indices
     
@@ -155,7 +166,7 @@ orderDFAccessions <- function(df,
 
 
 #----------------------------------------------------------------------------
-# checkValidColumns
+# .checkValidColumns
 #----------------------------------------------------------------------------
 #' 
 #' Check if column names of df are within allowed set
@@ -170,7 +181,7 @@ orderDFAccessions <- function(df,
 #' }
 #' 
 #' @keywords internal
-checkValidColumns <- function(df){
+.checkValidColumns <- function(df){
     
     if (!class(df) %in% "data.frame"){
         stop("Argument is not a data frame")
@@ -304,7 +315,7 @@ listValidColumns <- function(){
 #' 
 #' @keywords internal
 #' 
-orderDFColumns <- function(df){
+.orderDFColumns <- function(df){
     x <- colnames(df)
     x_length <- length(x)
     col_list <- as.character(unlist(listValidColumns()))

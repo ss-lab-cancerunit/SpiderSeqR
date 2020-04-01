@@ -7,7 +7,8 @@
 searchAnywhere(query_all, acc_levels = c("run", "experiment", "sample",
   "gsm"), category_both = NULL, SRA_library_strategy = NULL,
   SRA_other_library_strategy = c("OTHER", "NA", "NULL"),
-  GEO_type = NULL, SRA_query, GEO_query, GSM_query, GSE_query, ...)
+  GEO_type = NULL, SRA_query, GEO_query, GSM_query, GSE_query,
+  call_output = FALSE)
 }
 \arguments{
 \item{query_all}{Search term for both SRA and GEO (gse and gsm tables)}
@@ -34,7 +35,7 @@ unclassified entries}
 
 \item{GSE_query}{Search term for gse table only (GEO)}
 
-\item{...}{Other options}
+\item{call_output}{A logical indicating whether to produce a call record}
 }
 \value{
 A data frame with results of the search

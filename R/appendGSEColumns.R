@@ -39,8 +39,8 @@
 #' (they will be named with a prepended 'GSE_')
 #' 
 #' @examples
-#' # appendGSEColumns(df, "pubmed_id") # Append only pubmed_id column
-#' # appendGSEColumns(df, "*") # Append all available columns from gse
+#' # .appendGSEColumns(df, "pubmed_id") # Append only pubmed_id column
+#' # .appendGSEColumns(df, "*") # Append all available columns from gse
 #' 
 #' 
 #' @details 
@@ -52,9 +52,9 @@
 #' 
 #'
 #' 
-appendGSEColumns <- function(df, gse_columns){
+.appendGSEColumns <- function(df, gse_columns){
     
-    mm("Running appendGSEColumns", "fn")
+    .mm("Running .appendGSEColumns", "fn")
     gsm <- NULL
     series_id <- NULL
     
@@ -150,7 +150,7 @@ appendGSEColumns <- function(df, gse_columns){
                                             nrow = dim(df)[1])), gse_columns) 
         
         df_out <- cbind(df, df_columns)
-        df_out <- renameGSEColumns(df_out)
+        df_out <- .renameGSEColumns(df_out)
         #df_out[gse_columns] <- NA # Didn't work
         return(df_out)
     }
@@ -178,7 +178,7 @@ appendGSEColumns <- function(df, gse_columns){
     # Rename columns
     # colnames(gse_df)[colnames(gse_df)!="series_id"] <- 
     #    paste0("GSE_", colnames(gse_df)[colnames(gse_df)!="series_id"])
-    gse_df <- renameGSEColumns(gse_df)
+    gse_df <- .renameGSEColumns(gse_df)
     
     # Join (and collapse) gse_df and df_ids_long dfs ####
     
@@ -250,9 +250,9 @@ appendGSEColumns <- function(df, gse_columns){
     #                                              by = c("gsm", "series_id")) 
     
     df_out <- as.data.frame(df_out)
-    .GlobalEnv$temp_df_out <- df_out
+    .vex("temp_df_out", df_out)
     
-    mm("appendGSEColumns completed", "fn")
+    .mm(".appendGSEColumns completed", "fn")
     return(df_out)
     
 }

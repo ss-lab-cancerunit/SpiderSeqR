@@ -153,7 +153,7 @@ test_that("Associative SRA -> GEO", {
     
     x_123 <- rbind(x1, x2, x3)
     
-    x_123 <- unifyDFFormat(x_123)
+    x_123 <- .unifyDFFormat(x_123)
     
     x_all <- convertAccession(x)
     expect_identical(x_123, x_all)
@@ -175,7 +175,7 @@ test_that("Associative GEO -> SRA", {
     
     x_123 <- rbind(x1, x2, x3)
     
-    x_123 <- unifyDFFormat(x_123)
+    x_123 <- .unifyDFFormat(x_123)
     
     x_all <- convertAccession(x)
     

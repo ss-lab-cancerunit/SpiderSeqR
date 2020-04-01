@@ -29,3 +29,13 @@ startSpiderSeqRDemo()
 df <- searchForAccession("SRP026280")
 
 }
+\seealso{
+Other Workflow functions: \code{\link{addMissingSamples}},
+  \code{\link{convertAccession}},
+  \code{\link{filterByTermByAccessionLevel}},
+  \code{\link{filterByTerm}}
+
+Other Core functions: \code{\link{convertAccession}}
+}
+\concept{Core functions}
+\concept{Workflow functions}

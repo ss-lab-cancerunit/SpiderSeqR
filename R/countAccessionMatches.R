@@ -21,7 +21,7 @@
 #' 
 #' @keywords internal
 #' 
-countAccessionMatches <- function(acc_vector, df, output = "logical"){
+.countAccessionMatches <- function(acc_vector, df, output = "logical"){
     
     output_list <- c("logical", "numeric")
     output <- match.arg(output, output_list, several.ok = FALSE)
@@ -37,7 +37,7 @@ countAccessionMatches <- function(acc_vector, df, output = "logical"){
     # Get acc_class
     acc_class <- classifyAccession(acc_vector)
     
-    verifyColumns(df, acc_class)
+    .verifyColumns(df, acc_class)
     
     ind <- grep(acc_class, colnames(df))
     
@@ -56,16 +56,16 @@ countAccessionMatches <- function(acc_vector, df, output = "logical"){
     missing_acc <- acc_vector[!(acc_vector %in% df_acc)]
     
     if (match_count == length(acc_vector)){
-        mm(paste0("All accessions found (", match_count, "/", 
+        .mm(paste0("All accessions found (", match_count, "/", 
                     length(acc_vector), ")."), "res")
         
     } else {
-        mm(paste0("Not all accessions found (", match_count, "/", 
+        .mm(paste0("Not all accessions found (", match_count, "/", 
                     length(acc_vector), ")."), "res")
         
         # Do not overflow the console output with lots of accessions
         if (length(missing_acc)<200){ 
-            mm(paste0("Missing accessions: ", paste0(missing_acc, 
+            .mm(paste0("Missing accessions: ", paste0(missing_acc, 
                                                     collapse = ", ")), "res")
         }
     }

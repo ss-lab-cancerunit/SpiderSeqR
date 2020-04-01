@@ -7,12 +7,12 @@
 #'     from the sample attribute column and a few added new columns, 
 #'     currently: sa_remainder, sa_tissue, sa_antibody, sa_gene, sa_treatment
 #' 
-#' @description This function is a wrapper around universalExtractor 
+#' @description This function is a wrapper around .universalExtractor 
 #' with key words specific for (SRA_)sample_attribute field
 #' 
 #' @keywords internal
 #' 
-saExtractor <- function(df){
+.saExtractor <- function(df){
     #PREVIOUSLY
     #sra_attr_keywords <- list(c("tissue: ", "cell.line: ", 
     #                               "source.name: ", "cell.type: "),
@@ -21,7 +21,7 @@ saExtractor <- function(df){
     #                          c("treatment: "))
     
     
-    mm("Running saExtractor", "fn")
+    .mm("Running .saExtractor", "fn")
     
     # Rename SRA_sample_attribute
     rename_col <- FALSE
@@ -31,7 +31,7 @@ saExtractor <- function(df){
                                                             "sample_attribute"
     }
     
-    verifyColumns(df, "sample_attribute")
+    .verifyColumns(df, "sample_attribute")
     
     sa_columns <-c("sa_original", 
                     "sa_remainder", 
@@ -63,7 +63,7 @@ saExtractor <- function(df){
                                                         "SRA_sample_attribute"
         }
         warning("No not-NA sample attributes available")
-        mm("saExtractor completed", "fn")
+        .mm(".saExtractor completed", "fn")
         return(df)
     }
     
@@ -174,7 +174,7 @@ saExtractor <- function(df){
     
     
     df_sra_attr <- plyr::ldply(df$sample_attribute, 
-                                function(x) universalExtractor(x, 
+                                function(x) .universalExtractor(x, 
                                                             sra_attr_keywords, 
                                                             sra_sep_split, 
                                                             sra_sep_collapse))
@@ -195,7 +195,7 @@ saExtractor <- function(df){
     
     #========================================================================
     
-    mm("saExtractor completed", "fn")
+    .mm(".saExtractor completed", "fn")
     return(df)
     
 }

@@ -1,6 +1,3 @@
-
-
-
 #' Filter data frame by term
 #'  
 #' @param df Data frame
@@ -53,15 +50,15 @@ filterByTerm <- function(df, query, filter_columns=NULL){
     # - filter the original df based on the query result
     # - remove additional ord column
     
-    #filter_con <- NULL
+    filter_con <- NULL
     
     if (exists("filter_con", envir = .GlobalEnv)){
         rm("filter_con", envir = .GlobalEnv)
     }
     
-    
     ord <- NULL
     
+    rm("filter_con", envir = environment())
     
     if (!("data.frame" %in% class(df))){
         stop("Object needs to be a data frame")
@@ -92,7 +89,7 @@ filterByTerm <- function(df, query, filter_columns=NULL){
     
     print(class(df_subset))
     #print(df_subset)
-    .GlobalEnv$temp_df_subset <- df_subset
+    .vex("temp_df_subset", df_subset)
     
     # Create db
     filter_db_file <- "filter_db.sqlite"
@@ -111,18 +108,18 @@ filterByTerm <- function(df, query, filter_columns=NULL){
     #                      name="df", value = df_subset, field.types = NULL, 
     #                      row.names = FALSE, append = TRUE)
     RSQLite::dbWriteTable(conn = get("filter_con", 
-                                        envir = .GlobalEnv), name="df", 
+                                    envir = .GlobalEnv), name="df", 
                             value = df_subset)
     
     # Create fts table of the db
-    createFtsTable("filter_con", "df", "df_ft")
+    .createFtsTable("filter_con", "df", "df_ft")
     query <- paste0("SELECT ord FROM df_ft WHERE df_ft MATCH '", query, "'")
     
     # This will be a df
     filt_ord <- DBI::dbGetQuery(.GlobalEnv$filter_con, query)$ord 
     
     DBI::dbDisconnect(filter_con)
-    ##file.remove(filter_db_file)
+    file.remove(filter_db_file)
     rm(filter_con, envir = .GlobalEnv)
     
     df <- df %>% dplyr::filter(ord %in% filt_ord)
@@ -131,9 +128,4 @@ filterByTerm <- function(df, query, filter_columns=NULL){
     return(df)
     
 }
-
-
-# subsetSRAByAccessionLevel - will not be needed in the current scenario
-
-
 

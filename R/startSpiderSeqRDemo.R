@@ -62,7 +62,7 @@ startSpiderSeqRDemo <- function(){
                         name='srr_gsm', value=SpiderSeqR::srr_demo)
     DBI::dbWriteTable(conn=get("sra_con", envir = get(database_env)), 
                         name='sra', value=SpiderSeqR::sra_demo)
-    createFtsTable("sra_con", "sra", "sra_ft")
+    .createFtsTable("sra_con", "sra", "sra_ft")
     
 }
 

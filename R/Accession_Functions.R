@@ -9,7 +9,7 @@
 # into correct class or returns an error if not all elements are matched 
 # to the same class
 # 
-# - verifySimpleConditions - grepl'es on the input vector according to any 
+# - .verifySimpleConditions - grepl'es on the input vector according to any 
 # of the regular expressions (an OR operation)
 
 
@@ -79,7 +79,7 @@ classifyAccession <- function(x, na.ignore = FALSE){
     accession_class <- NA
     
     for (a in seq_along(accession_regexp)){
-        if (sum(verifySimpleConditions(accession_regexp[[a]], x))==length(x))
+        if (sum(.verifySimpleConditions(accession_regexp[[a]], x))==length(x))
             accession_class <- accession_name[a]
     }
     
@@ -110,12 +110,12 @@ classifyAccession <- function(x, na.ignore = FALSE){
 #' for the value to be set to TRUE for that position)
 #' 
 #' @examples 
-#' # verifySimpleConditions("^m$", c("m", "mm", "cm", "M"))
+#' # .verifySimpleConditions("^m$", c("m", "mm", "cm", "M"))
 #' 
 #' @keywords internal
 #' 
 #' 
-verifySimpleConditions <- function(regexpr_vector, x){
+.verifySimpleConditions <- function(regexpr_vector, x){
     rv <- regexpr_vector
     
     out <- rep(FALSE, length(x))

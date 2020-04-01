@@ -6,9 +6,9 @@
 
 #------------------------------------------------------
 #------------------------------------------------------
-simpleSearchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
+.simpleSearchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
     #searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
-    print("Running searchGEOForGSM")
+    print("Running simpleSearchGEOForGSM")
     
     database_name <- "geo_con"
     database_env <- ".GlobalEnv"
@@ -45,14 +45,14 @@ simpleSearchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
     }
     
     # Rename GSM columns
-    df <- renameGSMColumns(df)
+    df <- .renameGSMColumns(df)
     
     #print(colnames(chunk))
     #if (dim(df)[1]==0){
     #  df <- chunk
     #}
     
-    df <- appendGSEColumns(df, gse_columns)
+    df <- .appendGSEColumns(df, gse_columns)
     
     print(paste0("Found results for ", 
                     search_count, 
@@ -67,7 +67,7 @@ simpleSearchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
     df <- unique(df)
     
     
-    print("searchGEOForGSM completed")
+    print("simpleSearchGEOForGSM completed")
     
     return(df)
 }
@@ -82,9 +82,9 @@ simpleSearchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
 
 #------------------------------------------------------
 #------------------------------------------------------
-simpleSearchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
+.simpleSearchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
     #searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
-    print("Running searchGEOForGSE")
+    print("Running simpleSearchGEOForGSE")
     
     database_name <- "geo_con"
     database_env <- ".GlobalEnv"
@@ -124,9 +124,9 @@ simpleSearchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
     }
     
     # Rename GSM columns
-    df <- renameGSMColumns(df)
+    df <- .renameGSMColumns(df)
     
-    df <- appendGSEColumns(df, gse_columns)
+    df <- .appendGSEColumns(df, gse_columns)
     
     
     print(paste0("Found results for ", 
@@ -141,7 +141,7 @@ simpleSearchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
     
     df <- unique(df)
     
-    print("searchGEOForGSE completed")
+    print("simpleSearchGEOForGSE completed")
     
     return(df)
     
@@ -158,8 +158,8 @@ simpleSearchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
 #------------------------------------------------------
 #------------------------------------------------------
 #Previously: searchForAccession. Adapted to only include SRA accessions
-#simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
-simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
+#.simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
+.simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
     # Args: a character vector with accessions
     #       (needs to completely match to one accession class; 
     #       no partial matches or mixed classes allowed)
@@ -168,11 +168,11 @@ simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
     #
     
     
-    print("Running searchSRAForAccession")
+    print("Running simpleSearchSRAForAccession")
     
     #------------------------------------------------
     #------------------------------------------------
-    #TECHNICALITIES (taken from searchSRA):
+    #TECHNICALITIES (taken from .searchSRA):
     #------------------------------------------------
     #------------------------------------------------
     database_name <- "sra_con"
@@ -243,10 +243,10 @@ simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
     accession_df <- unique(accession_df)
     
     # Rename SRA columns
-    accession_df <- renameSRAColumns(accession_df)
+    accession_df <- .renameSRAColumns(accession_df)
     
     
-    print("searchSRAForAccession completed")
+    print("simpleSearchSRAForAccession completed")
     
     return(accession_df)
 }
@@ -258,12 +258,12 @@ simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
 
 #------------------------------------------------------
 #------------------------------------------------------
-#simpleSearchSRR_GSM <- function(acc_vector, srr_gsm_columns = 
+#.simpleSearchSRR_GSM <- function(acc_vector, srr_gsm_columns = 
 # c("run_accession", "gsm", "gsm_check")){
-simpleSearchSRR_GSM <- function(acc_vector, 
+.simpleSearchSRR_GSM <- function(acc_vector, 
                 srr_gsm_columns = c("run_accession", "gsm", "gsm_check")){
     
-    print("Running searchSRR_GSM")
+    print("Running simpleSearchSRR_GSM")
     
     database_name <- "srr_gsm"
     database_env <- ".GlobalEnv"
@@ -319,7 +319,7 @@ simpleSearchSRR_GSM <- function(acc_vector,
     accession_df <- unique(accession_df)
     
     
-    print("searchSRR_GSM completed")
+    print("simpleSearchSRR_GSM completed")
     
     return(accession_df)
     

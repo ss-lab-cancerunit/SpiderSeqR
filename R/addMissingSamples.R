@@ -40,7 +40,7 @@ addMissingSamples <- function(df, values = c(1,0)){
     # Bind 
     
     
-    checkValidColumns(df) # Check that column names are within allowed set
+    .checkValidColumns(df) # Check that column names are within allowed set
     
     if ( (!"study_accession" %in% colnames(df)) | 
             (!"series_id" %in% colnames(df))){
@@ -58,7 +58,7 @@ addMissingSamples <- function(df, values = c(1,0)){
     
     if (length(srps)>0){
         srp_df <- searchForAccession(srps, file_output = FALSE)
-        srp_df <- unifyDFFormat(srp_df)
+        srp_df <- .unifyDFFormat(srp_df)
         srp_df$OTH_sample <- values[2]
         
         # Remove rows that are already present
@@ -76,7 +76,7 @@ addMissingSamples <- function(df, values = c(1,0)){
     
     if (length(gses)>0){
         gse_df <- searchForAccession(gses)
-        gse_df <- unifyDFFormat(gse_df)
+        gse_df <- .unifyDFFormat(gse_df)
         gse_df$OTH_sample <- values[2]
         
         # Remove rows that are already present

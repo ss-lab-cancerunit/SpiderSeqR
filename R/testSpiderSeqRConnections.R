@@ -9,6 +9,8 @@
 #'    
 #' @examples
 #' startSpiderSeqRDemo()
+#' ## OR:
+#' # startSpiderSeqR(getwd())
 #' testSpiderSeqRConnections()
 #' 
 #' @export
@@ -46,12 +48,12 @@ testSpiderSeqRConnections <- function(){
 
 # Checking whether embedding connections works
 
-testEmbed <- function(){
+.testEmbed <- function(){
     database_name <- "sra_con"
     database_env <- ".GlobalEnv"
-    return(testCon(get(database_name, envir = get(database_env))))
+    return(.testCon(get(database_name, envir = get(database_env))))
 }
 
-testCon <- function(db_con){
+.testCon <- function(db_con){
     as.numeric(DBI::dbGetQuery(db_con, "SELECT count(*) FROM sra"))
 }

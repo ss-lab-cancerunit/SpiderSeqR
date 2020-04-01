@@ -28,9 +28,11 @@ in the columns corresponding to specified accession levels of interest
 \seealso{
 Other Workflow functions: \code{\link{addMissingSamples}},
   \code{\link{convertAccession}},
-  \code{\link{filterByTerm}}
+  \code{\link{filterByTerm}},
+  \code{\link{searchForAccession}}
 
-Other Manipulation functions: \code{\link{filterByTerm}}
+Other Manipulation functions: \code{\link{filterByTerm}},
+  \code{\link{orderDFAccessions}}
 }
 \concept{Manipulation functions}
 \concept{Workflow functions}

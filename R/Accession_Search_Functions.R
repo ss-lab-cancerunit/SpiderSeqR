@@ -6,12 +6,12 @@
 # such as searchForAccessionAcrosDBs, convertAccession and searchForAccession
 #
 # CONTAINS:
-# - searchGEOForGSM()
-# - searchGEOForGSE()
+# - .searchGEOForGSM()
+# - .searchGEOForGSE()
 # 
-# - searchSRAForAccession()
+# - .searchSRAForAccession()
 #
-# - searchSRR_GSM()
+# - .searchSRR_GSM()
 
 
 
@@ -37,12 +37,12 @@
 #' @examples 
 #' 
 #' # startSpiderSeqRDemo()
-#' # searchGEOForGSM("GSM1173367", "*", "*")
+#' # .searchGEOForGSM("GSM1173367", "*", "*")
 #' 
 #' @keywords internal
 #' 
-searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
-    mm("Running searchGEOForGSM", "fn")
+.searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
+    .mm("Running .searchGEOForGSM", "fn")
     
     database_name <- "geo_con"
     database_env <- ".GlobalEnv"
@@ -72,27 +72,27 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
         }
     }
     
-    # This is dealt with by batchedAccSearch()
+    # This is dealt with by .batchedAccSearch()
     #geo_columns <- paste0(geo_columns, collapse = ", ") 
     search_count <- 0
     #df <- data.frame()
     
     #Search for GSMs
-    df <- batchedAccSearch(acc_vector = acc_vector, 
+    df <- .batchedAccSearch(acc_vector = acc_vector, 
                             database_name = database_name, 
                             table_name = "gsm", 
                             col_names = geo_columns)
     
     
     # Rename GSM columns
-    df <- renameGSMColumns(df)
+    df <- .renameGSMColumns(df)
     
     #print(colnames(chunk))
     #if (dim(df)[1]==0){
     #  df <- chunk
     #}
     
-    df <- appendGSEColumns(df, gse_columns)
+    df <- .appendGSEColumns(df, gse_columns)
     
     # Implement a solution for counting matches ===*===
     # print(paste0("Found results for ", search_count, 
@@ -104,7 +104,7 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
     df <- unique(df)
     
     
-    mm("searchGEOForGSM completed", "fn")
+    .mm(".searchGEOForGSM completed", "fn")
     
     return(df)
 }
@@ -127,12 +127,12 @@ searchGEOForGSM <- function(acc_vector, geo_columns, gse_columns){
 #' 
 #' @examples 
 #' # startSpiderSeqRDemo()
-#' # searchGEOForGSE("GSE48253", "*", "*")
+#' # .searchGEOForGSE("GSE48253", "*", "*")
 #' 
 #' @keywords internal
 #' 
-searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
-    mm("Running searchGEOForGSE", "fn")
+.searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
+    .mm("Running .searchGEOForGSE", "fn")
     
     database_name <- "geo_con"
     database_env <- ".GlobalEnv"
@@ -161,21 +161,21 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
         }
     }
     
-    # This is dealt with by batchedAccSearch()
+    # This is dealt with by .batchedAccSearch()
     #geo_columns <- paste0(geo_columns, collapse = ", ") 
     search_count <- 0
     #df <- data.frame()
     
     #Search for GSEs
-    df <- batchedAccSearch(acc_vector = acc_vector, 
+    df <- .batchedAccSearch(acc_vector = acc_vector, 
                             database_name = database_name, 
                             table_name = "gsm", 
                             col_names = geo_columns)
     
     # Rename GSM columns
-    df <- renameGSMColumns(df)
+    df <- .renameGSMColumns(df)
     
-    df <- appendGSEColumns(df, gse_columns)
+    df <- .appendGSEColumns(df, gse_columns)
     
     # Implement a solution for counting matches ===*===
     # print(paste0("Found results for ", search_count, 
@@ -187,7 +187,7 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
     
     df <- unique(df)
     
-    mm("searchGEOForGSE completed", "fn")
+    .mm(".searchGEOForGSE completed", "fn")
     
     return(df)
     
@@ -201,7 +201,7 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
 #------------------------------------------------------
 #------------------------------------------------------
 # Previously: searchForAccession. Adapted to only include SRA accessions
-# simpleSearchSRAForAccession <- function(acc_vector, sra_columns){
+# .searchSRAForAccession <- function(acc_vector, sra_columns){
 
 #' Search for SRA accessions
 #' 
@@ -212,12 +212,12 @@ searchGEOForGSE <- function(acc_vector, geo_columns, gse_columns){
 #' 
 #' @examples 
 #' # startSpiderSeqRDemo()
-#' # searchSRAForAccession("SRP134708", "*")
+#' # .searchSRAForAccession("SRP134708", "*")
 #' 
 #' @keywords internal
 #' 
 #' 
-searchSRAForAccession <- function(acc_vector, sra_columns){
+.searchSRAForAccession <- function(acc_vector, sra_columns){
     # Args: a character vector with accessions
     #       (needs to completely match to one accession class; 
     # no partial matches or mixed classes allowed)
@@ -226,11 +226,11 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
     #
     
     
-    mm("Running searchSRAForAccession", "fn")
+    .mm("Running .searchSRAForAccession", "fn")
     
     #------------------------------------------------
     #------------------------------------------------
-    #TECHNICALITIES (taken from searchSRA):
+    #TECHNICALITIES (taken from .searchSRA):
     #------------------------------------------------
     #------------------------------------------------
     database_name <- "sra_con"
@@ -247,7 +247,7 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
     #                 "experiment_attribute")
     # sra_columns <- c("experiment_title")
     # sra_columns <- "*"
-    ## This is dealt with by batchedAccSearch()
+    ## This is dealt with by .batchedAccSearch()
     # sra_columns <- paste(sra_columns, collapse = ", ") 
     
     #------------------------------------------------
@@ -272,7 +272,7 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
     } 
     
     # Search for SRA accessions
-    df <- batchedAccSearch(acc_vector = acc_vector, 
+    df <- .batchedAccSearch(acc_vector = acc_vector, 
                             database_name = database_name, 
                             table_name = "sra", col_names = sra_columns)
     
@@ -289,10 +289,10 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
     df <- unique(df)
     
     # Rename SRA columns
-    df <- renameSRAColumns(df)
+    df <- .renameSRAColumns(df)
     
     
-    mm("searchSRAForAccession completed", "fn")
+    .mm(".searchSRAForAccession completed", "fn")
     
     return(df)
 }
@@ -303,10 +303,7 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
 
 #------------------------------------------------------
 #------------------------------------------------------
-# simpleSearchSRR_GSM <- function(acc_vector,
-#                                 srr_gsm_columns = c("run_accession", 
-#                                 "gsm", "gsm_check)){
-# searchSRR_GSM <- function(acc_vector, 
+# .searchSRR_GSM <- function(acc_vector, 
 #                           srr_gsm_columns = c("run_accession", 
 #                                               "gsm", "gsm_check")){
 
@@ -320,16 +317,16 @@ searchSRAForAccession <- function(acc_vector, sra_columns){
 #' 
 #' @examples 
 #' # startSpiderSeqRDemo()
-#' # searchSRR_GSM("GSM1173367")
+#' # .searchSRR_GSM("GSM1173367")
 #' 
 #' 
 #' @keywords internal
 #' 
 #' 
 #' 
-searchSRR_GSM <- function(acc_vector, 
+.searchSRR_GSM <- function(acc_vector, 
                             srr_gsm_columns = c("run_accession", "gsm")){
-    mm("Running searchSRR_GSM", "fn")
+    .mm("Running .searchSRR_GSM", "fn")
     
     database_name <- "srr_gsm"
     database_env <- ".GlobalEnv"
@@ -357,7 +354,7 @@ searchSRR_GSM <- function(acc_vector,
     accession_df <- data.frame()
     
     
-    df <- batchedAccSearch(acc_vector = acc_vector, 
+    df <- .batchedAccSearch(acc_vector = acc_vector, 
                             database_name = "srr_gsm", 
                             table_name = "srr_gsm", 
                             col_names = srr_gsm_columns)
@@ -387,7 +384,7 @@ searchSRR_GSM <- function(acc_vector,
     df <- unique(df)
     
     
-    mm("searchSRR_GSM completed", "fn")
+    .mm(".searchSRR_GSM completed", "fn")
     
     return(df)
     
@@ -407,11 +404,11 @@ searchSRR_GSM <- function(acc_vector,
 #' 
 #' 
 #' @examples
-#' # listSRAFields()
+#' # .listSRAFields()
 #'  
 #' @keywords internal
 #' 
-listSRAFields <- function(){
+.listSRAFields <- function(){
     database_name <- "sra_con"
     database_env <- ".GlobalEnv"
     sra_table <- "sra"
@@ -433,11 +430,11 @@ listSRAFields <- function(){
 #' 
 #' 
 #' @examples 
-#' # listGSMFields()
+#' # .listGSMFields()
 #'  
 #' @keywords internal
 #' 
-listGSMFields <- function(){
+.listGSMFields <- function(){
     database_name <- "geo_con"
     database_env <- ".GlobalEnv"
     geo_table <- "gsm"
@@ -462,11 +459,11 @@ listGSMFields <- function(){
 #' 
 #' 
 #' @examples 
-#' # listGSEFields()
+#' # .listGSEFields()
 #'  
 #' @keywords internal
 #' 
-listGSEFields <- function(omit_gse = TRUE){
+.listGSEFields <- function(omit_gse = TRUE){
     database_name <- "geo_con"
     database_env <- ".GlobalEnv"
     geo_table <- "gse"
@@ -499,11 +496,11 @@ listGSEFields <- function(omit_gse = TRUE){
 #' 
 #' @examples 
 #' # startSpiderSeqRDemo()
-#' # batchedAccSearch(rep("SRR6823646", 10), "sra_con", "sra", "*", c_size = 1)
+#' # .batchedAccSearch(rep("SRR6823646", 10), "sra_con", "sra", "*", c_size = 1)
 #' 
 #' @keywords internal
 #' 
-batchedAccSearch <- function(acc_vector, database_name, 
+.batchedAccSearch <- function(acc_vector, database_name, 
                                 table_name, col_names, c_size = 500){
     
     database_env <- ".GlobalEnv"
@@ -570,7 +567,7 @@ batchedAccSearch <- function(acc_vector, database_name,
             
             query_el <- substr(query_el, 1, nchar(query_el)-end_char)
             query <- paste0(query_beg, query_el, " )")
-            mm(query, "query")
+            .mm(query, "query")
             chunk <- DBI::dbGetQuery(get(database_name, 
                                             envir = get(database_env)), query)
             df <- rbind(df, chunk)
@@ -597,7 +594,7 @@ batchedAccSearch <- function(acc_vector, database_name,
             
             query_el <- substr(query_el, 1, nchar(query_el)-end_char)
             query <- paste0(query_beg, query_el, " )")
-            mm(query, "query")
+            .mm(query, "query")
             chunk <- DBI::dbGetQuery(get(database_name, 
                                             envir = get(database_env)), query)
             df <- rbind(df, chunk)
@@ -619,7 +616,7 @@ batchedAccSearch <- function(acc_vector, database_name,
             
             query_el <- substr(query_el, 1, nchar(query_el)-end_char)
             query <- paste0(query_beg, query_el, " )")
-            mm(query, "query")
+            .mm(query, "query")
             chunk <- DBI::dbGetQuery(get(database_name, 
                                             envir = get(database_env)), query)
             df <- rbind(df, chunk)

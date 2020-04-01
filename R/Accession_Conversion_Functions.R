@@ -1,10 +1,10 @@
 # NEW
-# searchForAccessionAcrossDBsDF - initial accessionConverter 
+# .searchForAccessionAcrossDBsDF - initial accessionConverter 
 # with more function arguments (i.e. table columns for sra and geo)
 # 
 # CHANGED
 # convertAccession (previously accessionConverter) 
-# - a wrapper around searchForAccessionAcrossDBsDF
+# - a wrapper around .searchForAccessionAcrossDBsDF
 # Converts a list of accessions (of one type) 
 # into all possible accessions within SRA and GEO
 
@@ -18,7 +18,7 @@
 #'
 #'  Search for accession across databases
 #' 
-#' \code{searchForAccessionAcrossDBsDF} classifies accessions, 
+#' \code{.searchForAccessionAcrossDBsDF} classifies accessions, 
 #' searches for them in their original database (SRA or GEO), 
 #' then, if conversion is possible, searches for corresponding accessions 
 #' in the other database (SRA or GEO). If no conversion is possible, 
@@ -37,12 +37,12 @@
 #' @examples
 #' ## Setup SpiderSeqR environment first (please use non-demo version)
 #' ## startSpiderSeqRDemo()
-#' ## searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") 
+#' ## .searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") 
 #' ## df argument is optional
 #' 
 #' ## If using named arguments, 
 #' ## it is not necessary to provide columns from the original df
-#' # searchForAccessionAcrossDBsDF(acc_vector = df$gsm, sra_columns="*", df=df) 
+#' # .searchForAccessionAcrossDBsDF(acc_vector = df$gsm,sra_columns="*",df=df) 
 #' 
 #' @section Using df argument:
 #' When data frame argument is provided, corresponding columns 
@@ -54,7 +54,7 @@
 #' 
 #' @keywords internal
 #' 
-searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, 
+.searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns, 
                                             geo_columns, gse_columns, df){
     
     accession_class <- classifyAccession(acc_vector)
@@ -81,18 +81,18 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
             if (!missing(df)){
                 geo_df <- df # Set original df as geo_df
             } else {
-                geo_df <- searchGEOForGSM(acc_vector, geo_columns, gse_columns)
+                geo_df <- .searchGEOForGSM(acc_vector, geo_columns, gse_columns)
             }
         }
         if (accession_class == "series_id"){
             if (!missing(df)){
                 warning("Provided df will be ignored")
             }
-            geo_df <- searchGEOForGSE(acc_vector, geo_columns, gse_columns)
+            geo_df <- .searchGEOForGSE(acc_vector, geo_columns, gse_columns)
         }
         
         #TEMP
-        .GlobalEnv$temp_geo_df <- geo_df
+        .vex("temp_geo_df", geo_df)
         #...
         
         if (dim(geo_df)[1]==0) stop("No matching entries found")
@@ -100,23 +100,23 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
         #saveRDS(geo_df, "geo_df.Rda")
         
         #SRR_GSM data frame
-        srr_gsm_df <- searchSRR_GSM(geo_df$gsm)
+        srr_gsm_df <- .searchSRR_GSM(geo_df$gsm)
         #saveRDS(srr_gsm_df, "srr_gsm_df.Rda")
         
         #TEMP
-        .GlobalEnv$temp_srr_gsm_df <- srr_gsm_df
+        .vex("temp_srr_gsm_df", srr_gsm_df)
         #...
         
         #SRA data frame
         if(sum(grepl("SRR\\d\\d\\d+", srr_gsm_df$run_accession)>0)){
             # Only search SRA if there is viable GEO/SRA conversion
             # if(length(srr_gsm_df$run_accession)!=0){ 
-            sra_df <- searchSRAForAccession(srr_gsm_df$run_accession, 
+            sra_df <- .searchSRAForAccession(srr_gsm_df$run_accession, 
                                             sra_columns)
         } else { # Generate an empty data frame if no results in SRR_GSM
             if (length(sra_columns) == 1 & sra_columns[1] == "*"){
                 # Set sql_sra_columns to the list of all
-                sql_sra_columns <- listSRAFields() 
+                sql_sra_columns <- .listSRAFields() 
             } else {
                 # Otherwise keep all of them intact
                 sql_sra_columns <- sra_columns 
@@ -124,13 +124,13 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
             sra_df <- 
                 stats::setNames(data.frame(matrix(ncol=length(sql_sra_columns), 
                                                 nrow = 0)), sql_sra_columns)
-            sra_df <- renameSRAColumns(sra_df)
+            sra_df <- .renameSRAColumns(sra_df)
         }
         
         #saveRDS(sra_df, "sra_df.Rda")
         
         #TEMP
-        .GlobalEnv$temp_sra_df <- sra_df
+        .vex("temp_sra_df", sra_df)
         #...
         
         
@@ -143,8 +143,8 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
                                     by.y = "run_accession", all = TRUE)
         
         #TEMP
-        .GlobalEnv$temp_geo_srr_gsm_df <- geo_srr_gsm_df
-        .GlobalEnv$temp_geo_srr_gsm_sra_df <- geo_srr_gsm_sra_df
+        .vex("temp_geo_srr_gsm_df", geo_srr_gsm_df)
+        .vex("temp_geo_srr_gsm_sra_df", geo_srr_gsm_sra_df)
         #...
         
         #Rename data frame
@@ -166,28 +166,29 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
         if (!missing(df)){
             sra_df <- df # Set original df as sra_df
         } else {
-            sra_df <- searchSRAForAccession(acc_vector, sra_columns)
+            sra_df <- .searchSRAForAccession(acc_vector, sra_columns)
         }
         
         
         
         #TEMP
-        .GlobalEnv$temp_sra_df <- sra_df
+        .vex("temp_sra_df", sra_df)
+        
         #...
         
         if (dim(sra_df)[1]==0) stop("No matching entries found")
         
         #SRR_GSM data frame
-        srr_gsm_df <- searchSRR_GSM(sra_df$run_accession)
+        srr_gsm_df <- .searchSRR_GSM(sra_df$run_accession)
         
         #TEMP
-        .GlobalEnv$temp_srr_gsm_df <- srr_gsm_df
+        .vex("temp_srr_gsm_df", srr_gsm_df)
         #...
         
         #GEO data frame
         # # Only search GEO if there is viable SRA/GEO conversion
         # if(length(srr_gsm_df$gsm)!=0){ 
-        #   geo_df <- searchGEOForGSM(srr_gsm_df$gsm, geo_columns)
+        #   geo_df <- .searchGEOForGSM(srr_gsm_df$gsm, geo_columns)
         #}  else { # Generate an empty data frame if no results in SRR_GSM
         #   geo_df <- stats::setNames(data.frame(matrix(ncol = 
         #                length(geo_columns), nrow = 0)), geo_columns)
@@ -198,13 +199,13 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
         if (sum(grepl("GSM\\d\\d\\d+", srr_gsm_df$gsm)>0)){
             # Only search GEO if there is viable SRA/GEO conversion
             # if(length(srr_gsm_df$gsm)!=0){ 
-            geo_df <- searchGEOForGSM(srr_gsm_df$gsm, geo_columns, gse_columns)
+            geo_df <- .searchGEOForGSM(srr_gsm_df$gsm, geo_columns, gse_columns)
         } else { # Generate an empty data frame if no results in SRR_GSM
             
             # GSM
             if (length(geo_columns) == 1 & geo_columns[1] == "*"){
                 # Set gsm_columns to the list of all
-                df_gsm_columns <- listGSMFields() 
+                df_gsm_columns <- .listGSMFields() 
             } else {
                 # Otherwise keep all of them intact
                 df_gsm_columns <- geo_columns 
@@ -212,7 +213,7 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
             df_gsm <- 
                 stats::setNames(data.frame(matrix(ncol=length(df_gsm_columns), 
                                                 nrow = 0)), df_gsm_columns)
-            df_gsm <- renameGSMColumns(df_gsm)
+            df_gsm <- .renameGSMColumns(df_gsm)
             
             
             # GSE
@@ -223,14 +224,14 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
                 
                 if (length(gse_columns) == 1 & gse_columns[1] == "*"){
                     # Set sql_geo_columns to the list of all
-                    df_gse_columns <- listGSEFields() 
+                    df_gse_columns <- .listGSEFields() 
                 } else {
                     # Otherwise keep all of them intact
                     df_gse_columns <- gse_columns 
                 }
                 df_gse <- stats::setNames(data.frame(matrix(
                     ncol = length(df_gse_columns), nrow = 0)), df_gse_columns)
-                df_gse <- renameGSEColumns(df_gse)
+                df_gse <- .renameGSEColumns(df_gse)
                 
                 geo_df <- cbind(df_gsm, df_gse)
                 
@@ -247,7 +248,7 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
         #}
         
         #TEMP
-        .GlobalEnv$temp_geo_df <- geo_df
+        .vex("temp_geo_df", geo_df)
         #...
         
         #Merge
@@ -257,7 +258,7 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
                                 by.y = "run_accession", all = TRUE)
         
         #TEMP
-        .GlobalEnv$temp_sra_srr_gsm_df <- sra_srr_gsm_df
+        .vex("temp_sra_srr_gsm_df", sra_srr_gsm_df)
         #...
         
         
@@ -265,7 +266,7 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
                                     by.x = "gsm", by.y = "gsm", all = TRUE)
         
         #TEMP
-        .GlobalEnv$temp_sra_srr_gsm_geo_df <- sra_srr_gsm_geo_df
+        .vex("temp_sra_srr_gsm_geo_df", sra_srr_gsm_geo_df)
         #...
         
         output_df <- sra_srr_gsm_geo_df
@@ -421,19 +422,19 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
 convertAccession <- function(acc_vector){
     
     geo_columns <- c("gsm", "series_id")
-    # Not needed (searchSRR_GSM has defaults)
+    # Not needed (.searchSRR_GSM has defaults)
     #srr_gsm_columns <- c("gsm", "gsm_check", "run_accession") 
     sra_columns <- c("run_accession", "experiment_accession", 
                     "sample_accession", "study_accession")
     
-    output_df <- suppressMessages(searchForAccessionAcrossDBsDF(acc_vector, 
+    output_df <- suppressMessages(.searchForAccessionAcrossDBsDF(acc_vector, 
                                 geo_columns = geo_columns, 
                                 sra_columns = sra_columns, gse_columns = NULL))
     
-    # Suppress messages to prevent the message from appendGSEColumns 
+    # Suppress messages to prevent the message from .appendGSEColumns 
     # about no columns being needed
     
-    # output_df <- searchForAccessionAcrossDBsDF(acc_vector, 
+    # output_df <- .searchForAccessionAcrossDBsDF(acc_vector, 
     #                                           geo_columns = geo_columns, 
     #                                           sra_columns = sra_columns, 
     #                                           gse_columns = NULL)
@@ -461,7 +462,7 @@ convertAccession <- function(acc_vector){
     output_df <- output_df[orderAccessions(order_columns), ]
     
     
-    output_df <- unifyDFFormat(output_df)
+    output_df <- .unifyDFFormat(output_df)
     
     return(output_df)
     

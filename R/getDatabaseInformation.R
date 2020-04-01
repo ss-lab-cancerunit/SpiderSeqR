@@ -247,7 +247,7 @@ getColumnDescriptions <- function(){
     sra_database_name <- "sra_con"
     geo_database_name <- "geo_con"
     
-    mm("Which database are you interested in?", "search")
+    .mm("Which database are you interested in?", "search")
     db_choices <- utils::menu(c("SRA database", "GEO database"))
     if (db_choices == 1){
         df <- 

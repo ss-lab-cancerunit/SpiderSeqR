@@ -4,17 +4,17 @@
 #' @param df Data frame with characteristics_ch1 column
 #' @return Data frame with extracted information
 #' 
-#' This is a wrapper around universalExtractor, with key words specific 
+#' This is a wrapper around .universalExtractor, with key words specific 
 #' for characteristics_ch1 field
 #' 
 #' @examples 
-#' # chExtractor(df)
+#' # .chExtractor(df)
 #' 
 #' 
 #' @keywords internal
 #' 
-chExtractor <- function(df){
-    mm("Running chExtractor", "fn")
+.chExtractor <- function(df){
+    .mm("Running .chExtractor", "fn")
     
     
     # Add a clause for tackling GSM_ prefix
@@ -25,7 +25,7 @@ chExtractor <- function(df){
             "characteristics_ch1"
     }
     
-    verifyColumns(df, "characteristics_ch1")
+    .verifyColumns(df, "characteristics_ch1")
     
     geo_char_columns <- c("ch1_original", "ch1_remainder", 
                             "ch1_tissue", "ch1_antibody", 
@@ -56,7 +56,7 @@ chExtractor <- function(df){
                 "GSM_characteristics_ch1"
         }
         warning("No not-NA sample attributes available")
-        mm("chExtractor completed", "fn")
+        .mm(".chExtractor completed", "fn")
         return(df)
     }
     
@@ -95,7 +95,7 @@ chExtractor <- function(df){
     
     df_geo_char <- 
         plyr::ldply(df$characteristics_ch1, 
-                    function(x) universalExtractor(x, geo_char_keywords, 
+                    function(x) .universalExtractor(x, geo_char_keywords, 
                                                     geo_sep_split, 
                                                     geo_sep_collapse))
     
@@ -111,7 +111,7 @@ chExtractor <- function(df){
             "GSM_characteristics_ch1"
     }
     
-    mm("chExtractor completed", "fn")
+    .mm(".chExtractor completed", "fn")
     return(df)
 }
 

@@ -20,3 +20,9 @@ For further details regarding available categories (and their
 corresponding elements), inspect the \code{SRA_GEO_Category_Conversion} 
 object or see its documentation page: \code{?SRA_GEO_Category_Conversion}.
 }
+\examples{
+convertCategoriesToLibraryStrategyType("Transcriptome MA")
+convertCategoriesToLibraryStrategyType("ChIP-Seq")
+
+
+}

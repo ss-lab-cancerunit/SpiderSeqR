@@ -15,6 +15,8 @@ Test SpiderSeqR Connections
 }
 \examples{
 startSpiderSeqRDemo()
+## OR:
+# startSpiderSeqR(getwd())
 testSpiderSeqRConnections()
 
 }

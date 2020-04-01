@@ -1,5 +1,4 @@
 
-#searchForAccession - under construction (20171207)
 
 #' Search for Accessions
 #' 
@@ -11,6 +10,9 @@
 #'     should be produced
 #' @return A data frame (and file outputs, as appropriate) 
 #'      with matches to accession numbers
+#' 
+#' @family Workflow functions
+#' @family Core functions
 #' 
 #' 
 #' @examples 
@@ -30,20 +32,20 @@ searchForAccession <- function(acc_vector,
     accession_class <- classifyAccession(x)
     
     if (call_output){
-        callRecordGenerator(file = generateCallFile_SFA(acc_vector))
+        .generateCallRecord(file = .generateFileName_CALL_SFA(acc_vector))
     }
     
     
-    output_df <- searchForAccessionAcrossDBsDF(acc_vector = x, 
+    output_df <- .searchForAccessionAcrossDBsDF(acc_vector = x, 
                                                 sra_columns = "*", 
                                                 geo_columns = "*", 
                                                 gse_columns = "*")
     
     #Create sample column
-    #output_df <- extractGSM(output_df, sampleColumn = TRUE) 
+    #output_df <- .extractGSM(output_df, sampleColumn = TRUE) 
     
     #Don't create sample column
-    output_df <- extractGSM(output_df, sampleColumn = FALSE) 
+    output_df <- .extractGSM(output_df, sampleColumn = FALSE) 
     
     
     #Instead, rename the native gsm column to sample to match the column naming
@@ -52,32 +54,32 @@ searchForAccession <- function(acc_vector,
     
     
     
-    output_df <- saExtractor(output_df)
-    output_df <- chExtractor(output_df)
+    output_df <- .saExtractor(output_df)
+    output_df <- .chExtractor(output_df)
     
     
-    #No detectInputs/Controls used
+    #No .detectInputs/Controls used
     output_df$input <- NA
     output_df$control <- NA
     
-    output_df <- detectMerges(output_df)
+    output_df <- .detectMerges(output_df)
     
-    #No verifyMissingRuns used
+    #No .verifyMissingRuns used
     
-    output_df <- convertPairedEnds(output_df)
+    output_df <- .convertPairedEnds(output_df)
     
-    output_df <- unifyNAs(output_df)
+    output_df <- .unifyNAs(output_df)
     
     
-    output_df <- renameOTHColumns(output_df)
+    output_df <- .renameOTHColumns(output_df)
     
     # [Removes SRA_sra_ID column, orders by accession]
-    output_df <- unifyDFFormat(output_df) 
+    output_df <- .unifyDFFormat(output_df) 
     
-    .GlobalEnv$temp_output_df <- output_df
+    .vex("temp_output_df", output_df)
     
     if (file_output == TRUE){
-        generateOutput_Accession(output_df, accession = acc_vector)
+        .generateOutput_Accession(output_df, accession = acc_vector)
     }
     
     

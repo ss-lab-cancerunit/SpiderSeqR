@@ -1,6 +1,6 @@
-context("universalExtractor")
+context(".universalExtractor")
 
-#universalExtractor(characteristics, sep_split, sep_collapse, key_words)
+#.universalExtractor(characteristics, sep_split, sep_collapse, key_words)
 
 sep_split_sra <- " \\|\\| "
 sep_split_geo <- ";\t"
@@ -14,7 +14,7 @@ sep_collapse_geo <- ";\t"
 test_uE_sra <- function(characteristics, key_words){
   sep_split_sra <- " \\|\\| "
   sep_collapse_sra <- " || "
-  universalExtractor(characteristics = characteristics, key_words = key_words, sep_split = sep_split_sra, sep_collapse = sep_collapse_sra)
+  .universalExtractor(characteristics = characteristics, key_words = key_words, sep_split = sep_split_sra, sep_collapse = sep_collapse_sra)
 }
 
 test_that("One key word", {

@@ -8,7 +8,7 @@
 #rm(db_demo_ft)
 #db_demo_ft <- dbConnect(SQLite(), dbname = "SRAmetadb_demo_ft.sqlite")
 
-#createFtsTable("db_demo_ft", "sra", "sra_demo_ft")
+#.createFtsTable("db_demo_ft", "sra", "sra_demo_ft")
 
 #----------------------------------------------------
 #Creating gsm_ft
@@ -17,7 +17,7 @@
 
 #geo_ft <- dbConnect(SQLite(), dbname = "GEOmetadb_ft.sqlite")
 #start_time <- Sys.time()
-#createFtsTable("geo_ft", "gse", "gse_ft")
+#.createFtsTable("geo_ft", "gse", "gse_ft")
 #end_time <- Sys.time()
 #end_time - start_time
 
@@ -50,12 +50,12 @@
 #' and optimises the table.
 #' 
 #' @examples 
-#' # createFtsTable("sra_con", "sra", "sra_new_ft")
+#' # .createFtsTable("sra_con", "sra", "sra_new_ft")
 #' 
 #' 
 #' @keywords internal
 #' 
-createFtsTable <- function(database_name, table_name, new_table_name){
+.createFtsTable <- function(database_name, table_name, new_table_name){
     
     table_list <- DBI::dbListTables(get(database_name, envir = .GlobalEnv))
     if (new_table_name %in% table_list) stop("The table already exists")
@@ -71,13 +71,13 @@ createFtsTable <- function(database_name, table_name, new_table_name){
     creation_query <-paste0("CREATE VIRTUAL TABLE ", 
                             new_table_name, " USING fts3 (", column_names, ")")
     
-    mm(creation_query, "query")
+    .mm(creation_query, "query")
     rs <- DBI::dbSendQuery(get(database_name, 
                                 envir = .GlobalEnv), creation_query)
     DBI::dbClearResult(rs)
     
-    mm("Number of entries to be copied:", "prog")
-    mm(as.numeric(DBI::dbGetQuery(get(database_name, 
+    .mm("Number of entries to be copied:", "prog")
+    .mm(as.numeric(DBI::dbGetQuery(get(database_name, 
                                         envir = .GlobalEnv), 
                                     paste0("SELECT count(*) FROM ", 
                                         table_name))), "prog")
@@ -88,13 +88,13 @@ createFtsTable <- function(database_name, table_name, new_table_name){
                                 " SELECT * FROM ", 
                                 table_name)
     
-    mm(insertion_query, "query")
+    .mm(insertion_query, "query")
     rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), 
                             insertion_query)
     DBI::dbClearResult(rs)
     
-    mm("Number of entries in new table:", "prog")
-    mm(as.numeric(DBI::dbGetQuery(get(database_name, 
+    .mm("Number of entries in new table:", "prog")
+    .mm(as.numeric(DBI::dbGetQuery(get(database_name, 
                                         envir = .GlobalEnv), 
                                     paste0("SELECT count(*) FROM ", 
                                         new_table_name))), "prog")
