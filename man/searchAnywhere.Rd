@@ -12,7 +12,7 @@ searchAnywhere(query_all, acc_levels = c("run", "experiment", "sample",
 \arguments{
 \item{query_all}{Search term for both SRA and GEO (gse and gsm tables)}
 
-\item{acc_levels}{Accession levels at which the search is conducted. 
+\item{acc_levels}{Accession levels at which the search is conducted.
 Possible options include run, sample, experiment, study, gsm, gse. 
 Defaults to c("run", "experiment", "sample", "gsm")}
 
@@ -134,18 +134,6 @@ to one of the databases
 (e.g. search in SRA only if category_both = "DNA NGS" (DNA sequencing))
 }
 
-\section{Examples of usage}{
-
-
-
-Under construction ===*===
-
-\enumerate{
-    \item Search for rare types of experiments 
-    ('library_strategy: HiC'; 'hic library_strategy: OTHER')
-}
-}
-
 \examples{
 startSpiderSeqRDemo()
 searchAnywhere("*sir3*") # The broadest search
@@ -157,7 +145,7 @@ searchAnywhere ("sir3", acc_levels = c("run",
            "sample", "experiment", "study"))
 
 ## Only search for matches in GEO
-searchAnywhere ("p53", acc_levels = c("gsm", "gse"))
+searchAnywhere ("sir3", acc_levels = c("gsm", "gse"))
 
 
 

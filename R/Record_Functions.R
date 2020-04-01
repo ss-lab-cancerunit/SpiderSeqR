@@ -1,4 +1,14 @@
 
+
+#' Generate a record of parameters
+#' 
+#' @param st A list of arguments
+#' @param file A string with the file name
+#' @param fun_name A string with the function name
+#' @return Nothing. Create a file with the record
+#' 
+#' @keywords internal
+#' 
 parameterRecordGenerator <- function(st, file, fun_name){
     
     file.create(file)
@@ -33,10 +43,69 @@ parameterRecordGenerator <- function(st, file, fun_name){
 
 
 
+#' Generate record of the call
+#' 
+#' @param file A string with the file name (needs to be .Rda to work)
+#' @return Nothing. Saves the file with call object
+#' 
+#' @keywords internal
+#' 
 callRecordGenerator <- function(file){
     c <- match.call(definition = sys.function(-1), call = sys.call(-1))
     saveRDS(c, file = file)
 }
+
+
+
+
+
+#' Generate call file for searchForAccession
+#' 
+#' @param acc_vector A character vector with accessions searched for
+#' @return A character vector with the file name
+#' 
+#' Current format:
+#' 
+#' SFA_ACC1_ACCN_Nn_d-a-te.Rda
+#' 
+#' @keywords internal
+#' 
+generateCallFile_SFA <- function(acc_vector){
+    
+    mm("Running generateCallFileName", "fn")
+    
+    name <- "SFA_"
+    acc_vector <- unique(acc_vector)
+    
+    acc_vector <- acc_vector[orderAccessions(acc_vector)]
+    
+    
+    if (length(acc_vector) > 2){
+        acc_name <- paste0(acc_vector[c(1, length(acc_vector))], 
+                            collapse = "-")
+        acc_name <- paste0(acc_name, "_", length(acc_vector), "n")
+        
+    } else {
+        acc_name <- paste0(acc_vector, collapse = "-")
+    }
+    
+    name <- paste0(name, acc_name)
+    
+    today <- Sys.time()
+    today <- format(today, format = "%Y-%m-%d-%H%M%S")
+    
+    name <- paste0(name, "_", today)
+    
+    name <- paste0(name, ".Rda") 
+    
+    mm("generateCallFileName completed", "fn")
+    return(name)
+    
+}
+
+
+
+
 
 
 #' Rerun SpiderSeqR query
@@ -53,12 +122,11 @@ callRecordGenerator <- function(file){
 #' than last time the query was run).
 #' 
 #' @examples 
-#' # rerunSpiderSeqR(file_name)
+#' # rerunSpiderSeqR("filename.Rda")
 #' 
 #' @export
 #' 
 #' 
-
 rerunSpiderSeqR <- function(file){
     
     ext_Rda <- grepl("*.Rda$", file)
@@ -66,6 +134,10 @@ rerunSpiderSeqR <- function(file){
     
     if (ext_Rda & ext_tab){
         stop("Something went wrong - two extensions?")
+    }
+    
+    if (!(ext_Rda | ext_tab)){
+        stop("Only Rda and tab files are accepted")
     }
     
     

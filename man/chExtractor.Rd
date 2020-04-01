@@ -11,12 +11,16 @@ chExtractor(df)
 }
 \value{
 Data frame with extracted information
+
+This is a wrapper around universalExtractor, with key words specific 
+for characteristics_ch1 field
 }
 \description{
 Extract characteristics from a vector
 }
 \examples{
 # chExtractor(df)
+
 
 }
 \keyword{internal}

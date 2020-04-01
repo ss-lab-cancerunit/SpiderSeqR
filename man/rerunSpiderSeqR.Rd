@@ -21,6 +21,6 @@ after the database files have been updated
 than last time the query was run).
 }
 \examples{
-# rerunSpiderSeqR(file_name)
+# rerunSpiderSeqR("filename.Rda")
 
 }

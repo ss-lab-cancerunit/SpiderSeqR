@@ -28,6 +28,7 @@ The following categories are available:
 }
 
 \examples{
+startSpiderSeqRDemo()
 listValidColumns() # List all columns
 listValidColumns()$SRA # List columns from sra table
 listValidColumns()$GSM # List columns from gsm table

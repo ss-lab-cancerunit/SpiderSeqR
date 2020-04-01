@@ -16,7 +16,7 @@
 #' 
 #' @return Nothing. Create relevant connections in the Global Environment
 #' 
-#' @family SpiderSeqR setup functions
+#' @family Setup functions
 #' @examples 
 #' startSpiderSeqRDemo() # The function does not take any arguments
 #' 

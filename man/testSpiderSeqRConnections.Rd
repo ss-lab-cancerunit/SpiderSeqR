@@ -14,6 +14,7 @@ Nothing. Prints information about the number of entries
 Test SpiderSeqR Connections
 }
 \examples{
+startSpiderSeqRDemo()
 testSpiderSeqRConnections()
 
 }

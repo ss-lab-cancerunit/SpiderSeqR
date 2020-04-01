@@ -8,6 +8,7 @@
 #'    in the key database tables.
 #'    
 #' @examples
+#' startSpiderSeqRDemo()
 #' testSpiderSeqRConnections()
 #' 
 #' @export

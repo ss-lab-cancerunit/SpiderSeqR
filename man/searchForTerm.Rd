@@ -68,14 +68,15 @@ please refer to the package vignettes.
 }
 
 \examples{
-
+startSpiderSeqRDemo()
 #Simple search
-searchForTerm(SRA_library_strategy = "RNA-Seq", 
-    gene = c("p53", "tp53"), species = "9606") 
+searchForTerm(SRA_library_strategy = "ChIP-Seq", gene = "sir3")
+#searchForTerm(SRA_library_strategy = "RNA-Seq", 
+#    gene = c("p53", "tp53"), species = "9606") 
 
 #Search with parameters stored in a list
-st <- list(SRA_library_strategy="ChIP-Seq", gene="STAT1", antibody="STAT1")
-do.call(searchForTerm, st)
+#st <- list(SRA_library_strategy="ChIP-Seq", gene="STAT1", antibody="STAT1")
+#do.call(searchForTerm, st)
 
 
 }

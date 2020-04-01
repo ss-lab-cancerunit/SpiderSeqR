@@ -24,7 +24,7 @@
 #' }
 #' 
 #' @examples 
-#' getDatabaseInformation()
+#' # getDatabaseInformation()
 #' 
 #' 
 #' @export

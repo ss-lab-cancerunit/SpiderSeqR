@@ -4,20 +4,16 @@
 #' @param df Data frame with characteristics_ch1 column
 #' @return Data frame with extracted information
 #' 
+#' This is a wrapper around universalExtractor, with key words specific 
+#' for characteristics_ch1 field
+#' 
 #' @examples 
 #' # chExtractor(df)
+#' 
 #' 
 #' @keywords internal
 #' 
 chExtractor <- function(df){
-    #
-    # Args: df (must contain characteristics_ch1 column)
-    # Returns: df (with added columns - currently: ===*===)
-    #
-    # This function is a wrapper around universalExtractor 
-    # with key words specific for characteristics_ch1 field
-    #
-    #
     mm("Running chExtractor", "fn")
     
     
@@ -38,8 +34,22 @@ chExtractor <- function(df){
     
     if (sum(!is.na(df$characteristics_ch1))==0){
         
+        df <- createEmptyColumns(df, geo_char_columns[-1])
+        
         # Create new columns, except ch1_original
-        df[, geo_char_columns[-1]] <- NA 
+        #if (dim(df)[1]==0){
+        #    df[, geo_char_columns[2]] <- character(0)
+        #    df[, geo_char_columns[3]] <- character(0)
+        #    df[, geo_char_columns[4]] <- character(0)
+        #    df[, geo_char_columns[5]] <- character(0)
+        #    df[, geo_char_columns[6]] <- character(0)
+        #    #df[, geo_char_columns[-1]] <- rep(character(0), 
+        #    #                                    length(geo_char_columns[-1]))
+        #} else {
+        #    df[, geo_char_columns[-1]] <- NA 
+        #}
+        
+        
         
         if (gsm_replace){
             colnames(df)[colnames(df) %in% "characteristics_ch1"] <- 

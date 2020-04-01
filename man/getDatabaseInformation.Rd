@@ -32,7 +32,7 @@ Some of the information available includes:
 }
 
 \examples{
-getDatabaseInformation()
+# getDatabaseInformation()
 
 
 }

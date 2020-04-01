@@ -22,17 +22,5 @@
 #' 
 #' 
 #' 
-#' @section Things to include here ===*===:
-#' 
-#' \itemize{
-#'   \item How to access vignettes -  
-#'   Example: `vignette("roxygen2", package = "roxygen2")`, 
-#'   `vignette("rd", package = "roxygen2")`, 
-#'   `vignette("namespace", package = "roxygen2")`
-#'   \item Explicit links to information on setup
-#'   \item List of databases accessed by SpiderSeqR
-#'   \item Main functions (under development)
-#' }
-#'
 #' @docType package
 "_PACKAGE"

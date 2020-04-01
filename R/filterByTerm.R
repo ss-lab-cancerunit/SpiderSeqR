@@ -8,8 +8,8 @@
 #' @param filter_columns Character vector with column names
 #' @return A data frame subset according to query conditions
 #' 
-#' @family SpiderSeqR workflow functions
-#' @family SpiderSeqR manipulation functions
+#' @family Workflow functions
+#' @family Manipulation functions
 #' 
 #' @description
 #' Filter a data frame using full-text search within the data frame. 
@@ -36,10 +36,10 @@
 #' df <- filterByTerm(df, "SRA_experiment_title: TRIMKD")
 #' # NOTE: you can explore further possibilities by filtering by columns
 #' # corresponding to different accession levels, 
-#' # see \code{\link{filterSRAByTermByAccessionLevel}}
+#' # see \code{\link{filterByTermByAccessionLevel}}
 #' 
 #' # For ease of viewing results
-#' df_view <- selectColumnsOverview(df) 
+#' df_view <- selectColumns_Overview(df) 
 #' 
 #' @export
 #' 

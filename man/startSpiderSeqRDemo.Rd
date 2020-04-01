@@ -28,6 +28,6 @@ startSpiderSeqRDemo() # The function does not take any arguments
 
 }
 \seealso{
-Other SpiderSeqR setup functions: \code{\link{startSpiderSeqR}}
+Other Setup functions: \code{\link{startSpiderSeqR}}
 }
-\concept{SpiderSeqR setup functions}
+\concept{Setup functions}

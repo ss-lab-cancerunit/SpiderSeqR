@@ -9,7 +9,7 @@
 #' @return Data frame with added missing rows from the same GSE/SRP. 
 #' It will also contain an additional column to indicate whether the row 
 #' was originally present or not
-#' @family SpiderSeqR workflow functions
+#' @family Workflow functions
 #' 
 #' @description 
 #' This function is intended to facilitate workflow with the results of 

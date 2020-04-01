@@ -2,7 +2,7 @@
 % Please edit documentation in R/Search_Anywhere.R
 \name{findSRAAccessionLevelColumnNames}
 \alias{findSRAAccessionLevelColumnNames}
-\title{Find SRA column names corresponding to accession levels}
+\title{Find SRA column names corresponding to accession levels (ORI)}
 \usage{
 findSRAAccessionLevelColumnNames(acc_levels = c("run", "experiment",
   "sample", "study"), add_run_accession = TRUE, table_name = "sra_ft")
@@ -17,12 +17,14 @@ run_accession column name}
 }
 \value{
 Vector with column names
+
+NOTE: works on the original column names (from the database)
 }
 \description{
-Find SRA column names corresponding to accession levels
+Find SRA column names corresponding to accession levels (ORI)
 }
 \examples{
-findSRAAccessionLevelColumnNames("run")
-
+# findSRAAccessionLevelColumnNames("run")
 
 }
+\keyword{internal}

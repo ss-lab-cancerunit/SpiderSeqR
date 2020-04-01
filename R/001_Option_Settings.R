@@ -43,6 +43,7 @@ local({
 #' }
 #' 
 #' @examples 
+#' startSpiderSeqRDemo()
 #' setSpiderSeqROption("file_output", FALSE)
 #' setSpiderSeqROption("output_columns", c("run_accession", "gsm"))
 #' setSpiderSeqROption("output_columns", listColumnSets()$Accession)

@@ -4,7 +4,7 @@
 #' 
 #' @param query_all Search term for both SRA and GEO (gse and gsm tables)
 #' 
-#' @param acc_levels Accession levels at which the search is conducted. 
+#' @param acc_levels Accession levels at which the search is conducted.
 #'     Possible options include run, sample, experiment, study, gsm, gse. 
 #'     Defaults to c("run", "experiment", "sample", "gsm")
 #' @param category_both A character with category 
@@ -33,7 +33,7 @@
 #'            "sample", "experiment", "study"))
 #' 
 #' ## Only search for matches in GEO
-#' searchAnywhere ("p53", acc_levels = c("gsm", "gse"))
+#' searchAnywhere ("sir3", acc_levels = c("gsm", "gse"))
 #' 
 #' 
 #' 
@@ -126,17 +126,6 @@
 #' 
 #' 
 #' 
-#' 
-#' 
-#' @section Examples of usage:
-#' 
-#' 
-#' Under construction ===*===
-#' 
-#' \enumerate{
-#'     \item Search for rare types of experiments 
-#'     ('library_strategy: HiC'; 'hic library_strategy: OTHER')
-#' }
 #' 
 #' @export
 #' 
@@ -293,18 +282,18 @@ searchAnywhere <- function(query_all,
         }
         
     }
-    
-    message("===SEARCH DETAILS===")
-    message("---QUERY---")
+    message("========================================================")
+    message("===SEARCH DETAILS=======================================")
+    message("---QUERY------------------------------------------------")
     message("SRA_query: ", SRA_query)
     message("GSM_query: ", GSM_query)
     message("GSE_query: ", GSE_query)
-    message("---LIBRARY_STRATEGY/TYPE---")
+    message("---LIBRARY_STRATEGY/TYPE--------------------------------")
     message("SRA_library_strategy: ", SRA_library_strategy)
     message("GEO_type: ", GEO_type)
-    message("---ACCESSION LEVELS FOR SEARCHING---")
+    message("---ACCESSION LEVELS FOR SEARCHING-----------------------")
     message("acc_levels: ", paste0(acc_levels, collapse = ", "))
-    message("=====================")
+    message("========================================================")
     
     
     # Developer check ===*===
@@ -415,12 +404,11 @@ searchAnywhere <- function(query_all,
     df_out <- extractGSM(df_out, sampleColumn = FALSE) 
     
     df_out <- saExtractor(df_out)
+    .GlobalEnv$temp_TEN_df_out <- df_out
     df_out <- chExtractor(df_out)
     
-    
-    #No detectInputs/Controls used
-    df_out$input <- NA
-    df_out$control <- NA
+    # No detectInputs/Controls used
+    df_out <- createEmptyColumns(df_out, c("input", "control"))
     
     df_out <- detectMerges(df_out, do_nothing = TRUE)
     
@@ -428,10 +416,15 @@ searchAnywhere <- function(query_all,
     
     df_out <- convertPairedEnds(df_out)
     
-    df_out <- unifyNAs(df_out)
+    
+    if (dim(df_out)[1]!=0){
+        df_out <- unifyNAs(df_out)
+    }
+    
     
     df_out <- renameOTHColumns(df_out)
     
+    .GlobalEnv$temp_df_out <- df_out
     df_out <- unifyDFFormat(df_out)
     
     return(df_out)
@@ -773,7 +766,11 @@ searchAnywhereSRA <- function(SRA_query,
     
     .GlobalEnv$temp_searchAnywhereSRA <- df
     
-    df <- filterSRAByTermByAccessionLevel(SRA_query, df, acc_levels)
+    if (dim(df)[1]!=0){
+        df <- filterSRAByTermByAccessionLevel(SRA_query, df, acc_levels)
+    }
+    
+    
     
     # Must come after filtering, otherwise it would not work
     df <- renameSRAColumns(df)
@@ -806,18 +803,15 @@ searchAnywhereSRA <- function(SRA_query,
 #' @return Filtered df (containing only rows matching query 
 #'     within specified accession levels)
 #' 
-#' @family SpiderSeqR workflow functions
-#' @family SpiderSeqR manipulation functions
 #' 
-#' 
-#' @export
+#' @keywords internal
 #' 
 filterSRAByTermByAccessionLevel <- function(query, 
                             df, 
                             acc_levels = c("run", "experiment", "sample")){
     
     # =====================================================================
-    warning("Only works for SRA") # ===*===
+    #warning("Only works for SRA") # ===*===
     # =====================================================================
     
     acc_possible <- c("run", "experiment", "sample", "study")
@@ -843,6 +837,63 @@ filterSRAByTermByAccessionLevel <- function(query,
     return(df_out)
     
 }
+
+
+
+#' Filter df according to query matches 
+#' only within accession levels of interest
+#' 
+#' Performs fts search on the data frame according to the query, only searching
+#' in the columns corresponding to specified accession levels of interest
+#' 
+#' 
+#' @param query Query to be passed to MATCH operator (for fts)
+#' @param df Data frame to be filtered
+#' @param acc_levels Accession levels to search within 
+#'     (choose from: run, experiment, sample, study, gsm, gse); 
+#'     defaults to c("run", "experiment", "sample", "gsm")
+#' @return Filtered df (containing only rows matching query 
+#'     within specified accession levels)
+#' 
+#' @family Workflow functions
+#' @family Manipulation functions
+#' 
+#' 
+#' @export
+#' 
+filterByTermByAccessionLevel <- function(
+                        query, 
+                        df, 
+                        acc_levels = c("run", "experiment", "sample", "gsm")){
+    
+    # =====================================================================
+    # warning("Only works for SRA") # ===*===
+    # =====================================================================
+    
+    acc_possible <- c("run", "experiment", "sample", "study", "gsm", "gse")
+    acc_levels <- match.arg(acc_levels, acc_possible, several.ok = TRUE)
+    
+    mm(paste0("Filtering for the following acc_levels: ", 
+                            paste0(acc_levels, collapse = ", ")), "search")
+    
+    if (sum(unique(acc_levels) %in% c("study", 
+                                        "sample", 
+                                        "experiment", 
+                                        "run", "gsm", "gse"))==6){
+        mm("Nothing to filter - returning original df", "adverse")
+        return(df)
+    }
+    
+    acc_columns <- findAccessionLevelColumnNames(acc_levels = acc_levels)
+    
+    
+    df_out <- filterByTerm(df = df,query = query, filter_columns = acc_columns)
+    
+    return(df_out)
+    
+}
+
+
 
 
 
@@ -917,7 +968,7 @@ convertCategoriesToLibraryStrategyType <- function(x){
 }
 
 
-#' Find SRA column names corresponding to accession levels
+#' Find SRA column names corresponding to accession levels (ORI)
 #' 
 #' @param acc_levels Accession levels
 #' @param add_run_accession Logical indicating whether to add 
@@ -925,9 +976,12 @@ convertCategoriesToLibraryStrategyType <- function(x){
 #' @param table_name A character with table name
 #' @return Vector with column names
 #' 
-#' @examples 
-#' findSRAAccessionLevelColumnNames("run")
+#' NOTE: works on the original column names (from the database)
 #' 
+#' @examples 
+#' # findSRAAccessionLevelColumnNames("run")
+#' 
+#' @keywords internal
 #' 
 findSRAAccessionLevelColumnNames <- 
     function(acc_levels = c("run", "experiment", "sample", "study"), 
@@ -995,5 +1049,56 @@ findSRAAccessionLevelColumnNames <-
     
 }
 
+
+
+
+#' Find column names corresponding to accession levels in SRA and GEO (SP)
+#' 
+#' @param acc_levels Accession levels
+#' @return Vector with column names
+#' 
+#' NOTE: works on the SpiderSeqR column names (i.e. with prefixes)
+#' 
+#' @examples 
+#' # findAccessionLevelColumnNames("run")
+#' 
+#' @keywords internal
+#' 
+findAccessionLevelColumnNames <- 
+    function(acc_levels = c("run", "experiment", "sample", "gsm")){
+        
+        sra_accessions <- c("run", "experiment", "sample", "study")
+        acc_possible <- c(sra_accessions, "gsm", "gse")
+        
+        
+        acc_levels <- match.arg(acc_levels, acc_possible, several.ok = TRUE)
+        
+        
+        acc_columns <- character()
+        if (sum(acc_levels %in% sra_accessions)>0){
+            sra_columns <- 
+                findSRAAccessionLevelColumnNames(acc_levels = 
+                                    acc_levels[acc_levels %in% sra_accessions])
+            
+            df <- stats::setNames(data.frame(matrix(ncol = length(sra_columns),
+                                                    nrow = 0)), sra_columns)
+            df <- renameSRAColumns(df)
+            
+            sra_columns <- colnames(df)
+            
+            acc_columns <- c(acc_columns, sra_columns)
+        }
+        
+        
+        if ("gsm" %in% acc_levels){
+            acc_columns <- c(acc_columns, listValidColumns()$GSM)
+        }
+        
+        if ("gse" %in% acc_levels){
+            acc_columns <- c(acc_columns, listValidColumns()$GSE)
+        }
+        
+        return(acc_columns)
+    }
 
 

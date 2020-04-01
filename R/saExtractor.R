@@ -33,14 +33,31 @@ saExtractor <- function(df){
     
     verifyColumns(df, "sample_attribute")
     
+    sa_columns <-c("sa_original", 
+                    "sa_remainder", 
+                    "sa_tissue", 
+                    "sa_antibody", 
+                    "sa_gene", 
+                    "sa_treatment")
     
     #Return unchanged df if no not-NA elements in df
-    if (sum(!is.na(df$sample_attribute)) ==0 ){ 
-        df$sa_remainder <- NA
-        df$sa_tissue <- NA
-        df$sa_antibody <- NA
-        df$sa_gene <- NA
-        df$sa_treatment <- NA
+    if (sum(!is.na(df$sample_attribute)) ==0){ 
+        df <- createEmptyColumns(df, sa_columns[-1])
+        
+        #if (dim(df)[1]==0){
+        #    df$sa_remainder <- character(0)
+        #    df$sa_tissue <- character(0)
+        #    df$sa_antibody <- character(0)
+        #    df$sa_gene <- character(0)
+        #    df$sa_treatment <- character(0)
+        #} else {
+        #    df$sa_remainder <- NA
+        #    df$sa_tissue <- NA
+        #    df$sa_antibody <- NA
+        #    df$sa_gene <- NA
+        #    df$sa_treatment <- NA
+        #}
+        
         if (rename_col==TRUE){
             colnames(df)[grepl("sample_attribute", colnames(df))] <- 
                                                         "SRA_sample_attribute"
@@ -162,12 +179,8 @@ saExtractor <- function(df){
                                                             sra_sep_split, 
                                                             sra_sep_collapse))
     
-    colnames(df_sra_attr) <- c("sa_original", 
-                                "sa_remainder", 
-                                "sa_tissue", 
-                                "sa_antibody", 
-                                "sa_gene", 
-                                "sa_treatment")
+    colnames(df_sra_attr) <- sa_columns
+
     
     #Combine extracted columns with df (except attr_original column)
     df <- cbind(df, df_sra_attr[,(-1)]) 

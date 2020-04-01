@@ -7,6 +7,8 @@
 #'     (of one type only)
 #' @param file_output A logical indicating whether file output 
 #'     should be produced
+#' @param call_output A logical indicating whether call output 
+#'     should be produced
 #' @return A data frame (and file outputs, as appropriate) 
 #'      with matches to accession numbers
 #' 
@@ -17,12 +19,19 @@
 #' 
 #' @export
 #' 
-searchForAccession <- function(acc_vector, file_output = TRUE){
+searchForAccession <- function(acc_vector, 
+                                file_output = FALSE, 
+                                call_output = FALSE){
+    
     x <- unique(acc_vector)
     x <- x[orderAccessions(x)]
     x <- x[!is.na(x)]
     
     accession_class <- classifyAccession(x)
+    
+    if (call_output){
+        callRecordGenerator(file = generateCallFile_SFA(acc_vector))
+    }
     
     
     output_df <- searchForAccessionAcrossDBsDF(acc_vector = x, 

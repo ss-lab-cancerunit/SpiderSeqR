@@ -375,7 +375,7 @@ generateFileName <- function(
     #today <- format(today, format = "%y%m%d")
     
     today <- Sys.time()
-    today <- format(today, format = "%y%m%d-%H%M%S")
+    today <- format(today, format = "%Y-%m-%d-%H%M%S")
     
     name <- paste0(name, "_", today)
     

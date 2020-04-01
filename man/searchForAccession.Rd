@@ -4,13 +4,17 @@
 \alias{searchForAccession}
 \title{Search for Accessions}
 \usage{
-searchForAccession(acc_vector, file_output = TRUE)
+searchForAccession(acc_vector, file_output = FALSE,
+  call_output = FALSE)
 }
 \arguments{
 \item{acc_vector}{A character vector with accession numbers 
 (of one type only)}
 
 \item{file_output}{A logical indicating whether file output 
+should be produced}
+
+\item{call_output}{A logical indicating whether call output 
 should be produced}
 }
 \value{

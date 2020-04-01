@@ -30,6 +30,7 @@ Set options for global behaviour of the package functions.
 }
 
 \examples{
+startSpiderSeqRDemo()
 setSpiderSeqROption("file_output", FALSE)
 setSpiderSeqROption("output_columns", c("run_accession", "gsm"))
 setSpiderSeqROption("output_columns", listColumnSets()$Accession)

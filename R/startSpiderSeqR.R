@@ -85,22 +85,22 @@
 #' 
 #' @examples 
 #' 
-#' # Database files are stored (or will be downloaded) 
-#' #    in the working directory
-#' startSpiderSeqR(dir = getwd()) 
+#' ## Database files are stored (or will be downloaded) 
+#' ##    in the working directory
+#' # startSpiderSeqR(dir = getwd()) 
 #' 
-#' # Use the following if you would like to download 
-#' #   the newest database files
-#' startSpiderSeqR(dir = getwd(), general_expiry = 0) 
+#' ## Use the following if you would like to download 
+#' ##   the newest database files
+#' # startSpiderSeqR(dir = getwd(), general_expiry = 0) 
 #' 
-#' # Use the following if you have old database files
-#' #   that you do not wish to re-download on this occasion
-#' startSpiderSeqR(dir = getwd(), general_expiry = 365) 
+#' ## Use the following if you have old database files
+#' ##   that you do not wish to re-download on this occasion
+#' # startSpiderSeqR(dir = getwd(), general_expiry = 365) 
 #' 
-#' # Use the following if you only wish to ignore 
-#' #    an old SRAmetadb.sqlite file, 
-#' #    but get reminders to re-download the other files
-#' startSpiderSeqR(dir = getwd(), sra_expiry = 365) 
+#' ## Use the following if you only wish to ignore 
+#' ##    an old SRAmetadb.sqlite file, 
+#' ##    but get reminders to re-download the other files
+#' # startSpiderSeqR(dir = getwd(), sra_expiry = 365) 
 #' 
 #' 
 #' 
@@ -118,10 +118,8 @@
 #' @return Nothing. If necessary, it may download/create database files. 
 #' Sets up database connections in the global environment.
 #' 
-#' @family SpiderSeqR setup functions
+#' @family Setup functions
 #' 
-#' @examples 
-#' startSpiderSeqR(getwd()) #Provide the location where the database files are
 #' 
 #'
 #'

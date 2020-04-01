@@ -1116,6 +1116,16 @@ rbindUniqueCols <- function(x, y, disregard_columns){
 unifyNAs <- function(x){
     mm("Running unifyNAs", "fn")
     
+    if (length(x)==0){
+        mm("unifyNAs completed", "fn")
+        return(x)
+    }
+    
+    #if (("data.frame" %in% class(x)) & dim(x)[1]==0){
+    #    mm("unifyNAs completed", "fn")
+    #    return(x)
+    #}
+    
     is.na(x) <- x == ""
     is.na(x) <- x == "NA"
     
@@ -1254,7 +1264,13 @@ universalExtractor <-
     output <- append(characteristics, char_remainder)
     output <- append(output, char_extract)
     
+    
     output <- unifyNAs(output) #Replace "" and "NA" with NA
+    
+    #if (dim(output)[1]!=0){
+    #    output <- unifyNAs(output) #Replace "" and "NA" with NA
+    #}
+    
     
     #This didn't work...
     #output <- as.data.frame(output, stringsAsFactors = FALSE)
@@ -1994,18 +2010,38 @@ detectMerges <- function(df, do_nothing = FALSE){
     
     mm("Running detectMerges", "fn")
     
+    dm_columns <- c("n", "lane", "mer")
+    
     if (do_nothing == TRUE){
-        df$n <- NA
-        df$lane <- NA
-        df$mer <- NA
+        
+        df <- createEmptyColumns(df, dm_columns)
+        
+        #if (dim(df)[1]==0){
+        #    df$n <- character(0)
+        #    df$lane <- character(0)
+        #    df$mer <- character(0) #===*=== added later
+        #} else {
+        #    df$n <- NA
+        #    df$lane <- NA
+        #    df$mer <- NA #===*=== added later
+        #}
         mm("detectMerges completed", "fn")
         return(df)
     }
     
     if (sum(!is.na(df$experiment_accession))==0){
-        df$n <- NA
-        df$lane <- NA
-        df$mer <- NA #===*=== added later
+        
+        df <- createEmptyColumns(df, dm_columns)
+        #if (dim(df)[1]==0){
+        #    df$n <- character(0)
+        #    df$lane <- character(0)
+        #    df$mer <- character(0) #===*=== added later
+        #} else {
+        #    df$n <- NA
+        #    df$lane <- NA
+        #    df$mer <- NA #===*=== added later
+        #}
+        
         warning("No not-NA experiment_accesion elements")
         mm("detectMerges completed", "fn")
         return(df)
@@ -2137,7 +2173,21 @@ convertPairedEnds <- function(df){
                                                             "library_layout"
     }
     
+    
+    
     verifyColumns(df, "library_layout")
+    
+    
+    # Empty data frame
+    if (dim(df)[1]==0){
+        df <- createEmptyColumns(df, "pairedEnd")
+        
+        if (rename_col){
+            colnames(df)[grepl("library_layout", colnames(df))] <- 
+                                                        "SRA_library_layout"
+        }
+        return(df)
+    }
     
     #Locate the library_layout column
     column_index <- grep("^library_layout$", colnames(df))
@@ -2708,4 +2758,23 @@ generateEmptyDF <- function(tables = c("sra", "gsm", "gse", "other")){
 
 
 
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
+createEmptyColumns <- function(df, x){
+    if (dim(df)[1]==0){
+        for (i in seq_along(x)){
+            if (!(x[i] %in% colnames(df))) {
+                df[, x[i]] <- character(0)
+            }
+        }
+        
+    } else {
+        x <- x[!(x %in% colnames(df))]
+        df[ , x] <- as.character(NA)
+        
+    }
+    return(df)
+}
+#----------------------------------------------------------------------------
+#----------------------------------------------------------------------------
 

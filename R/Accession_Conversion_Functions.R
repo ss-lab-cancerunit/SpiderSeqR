@@ -35,14 +35,14 @@
 #' @return A data frame with the results of the query
 #' 
 #' @examples
-#' # Setup SpiderSeqR environment first (please use non-demo version)
-#' # startSpiderSeqRDemo()
-#' # searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") 
-#' # df argument is optional
+#' ## Setup SpiderSeqR environment first (please use non-demo version)
+#' ## startSpiderSeqRDemo()
+#' ## searchForAccessionAcrossDBsDF("GSE48253", "*", "*", "*") 
+#' ## df argument is optional
 #' 
-#' # If using named arguments, 
-#' # it is not necessary to provide columns from the original df
-#' searchForAccessionAcrossDBsDF(acc_vector = df$gsm, sra_columns="*", df=df) 
+#' ## If using named arguments, 
+#' ## it is not necessary to provide columns from the original df
+#' # searchForAccessionAcrossDBsDF(acc_vector = df$gsm, sra_columns="*", df=df) 
 #' 
 #' @section Using df argument:
 #' When data frame argument is provided, corresponding columns 
@@ -294,8 +294,8 @@ searchForAccessionAcrossDBsDF <- function(acc_vector, sra_columns,
 #' @param acc_vector A vector of accessions 
 #' \strong{(all must belong to the same type)}
 #' @return A data frame with conversion between all accession types
-#' @family SpiderSeqR workflow functions
-#' @family SpiderSeqR core functions
+#' @family Workflow functions
+#' @family Core functions
 #' @examples
 #' 
 #' # Setup SpiderSeqR environment first (please use non-demo version)

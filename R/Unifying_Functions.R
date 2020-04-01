@@ -201,6 +201,7 @@ checkValidColumns <- function(df){
 #' @return A list with column names grouped into categories
 #' 
 #' @examples 
+#' startSpiderSeqRDemo()
 #' listValidColumns() # List all columns
 #' listValidColumns()$SRA # List columns from sra table
 #' listValidColumns()$GSM # List columns from gsm table
