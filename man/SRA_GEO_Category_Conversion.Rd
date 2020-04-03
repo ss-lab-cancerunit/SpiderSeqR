@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 41 rows and 3 columns.
 }
 \usage{
-data(SRA_GEO_Category_Conversion)
+SRA_GEO_Category_Conversion
 }
 \description{
 A manually curated set of conversions between SRA library_strategy 

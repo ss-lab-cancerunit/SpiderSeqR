@@ -191,14 +191,31 @@ srr_demo <- srr_df
 sra_demo <- sra_df
 
 
+# SRA GEO Category Conversion ####
+
+## code to prepare `SRA_GEO_Category_Conversion` dataset 
+
+SRA_GEO_Category_Conversion <- read.csv("data-raw/SRA_GEO_Category_Conversion.csv", stringsAsFactors = FALSE)
+
+#usethis::use_data(SRA_GEO_Category_Conversion, compress = "xz")
+
+
+#save(SRA_GEO_Category_Conversion, file = "SRA_GEO_Category_Conversion.RData")
+
+# Export #####
+
+save(gse_demo, gsm_demo, srr_demo, sra_demo, SRA_GEO_Category_Conversion, 
+        file = "SpiderSeqR.RData")
+
+#save(gse_demo, gsm_demo, srr_demo, sra_demo, file = "Demo_DBs.RData")
 
 
 # Save data ####
 
-usethis::use_data(gse_demo, compress = "xz")
-usethis::use_data(gsm_demo, compress = "xz")
-usethis::use_data(srr_demo, compress = "xz")
-usethis::use_data(sra_demo, compress = "xz")
+#usethis::use_data(gse_demo, compress = "xz")
+#usethis::use_data(gsm_demo, compress = "xz")
+#usethis::use_data(srr_demo, compress = "xz")
+#usethis::use_data(sra_demo, compress = "xz")
 
 
 

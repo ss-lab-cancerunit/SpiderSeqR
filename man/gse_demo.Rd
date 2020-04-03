@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 13 rows and 18 columns.
 }
 \usage{
-data(gse_demo)
+gse_demo
 }
 \description{
 Series included in the data frame:
