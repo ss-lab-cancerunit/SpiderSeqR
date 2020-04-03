@@ -14,6 +14,6 @@ below to see their documentation.
 \describe{
   \item{crayon}{\code{\link[crayon]{\%+\%}}}
 
-  \item{dplyr}{\code{\link[dplyr]{\%>\%}}}
+  \item{magrittr}{\code{\link[magrittr]{\%>\%}}}
 }}
 

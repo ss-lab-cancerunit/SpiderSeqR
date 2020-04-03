@@ -283,19 +283,35 @@ searchAnywhere <- function(query_all,
         }
         
     }
+    .mm(cli::rule(), "search")
+    .mm(cli::rule(left = "SEARCH DETAILS:"), "search")
+    #.mm(cli::rule(), "search")
+    .mm(cli::rule(left = "QUERY"), "search")
+    #.mm(cli::rule(), "search")
+    .mm(paste0("SRA_query: ", SRA_query), "search")
+    .mm(paste0("GSM_query: ", GSM_query), "search")
+    .mm(paste0("GSE_query: ", GSE_query), "search")
+    .mm(cli::rule(left = "LIBRARY_STRATEGY/TYPE"), "search")
+    .mm(paste0("SRA_library_strategy: ", SRA_library_strategy), "search")
+    .mm(paste0("GEO_type: ", GEO_type), "search")
+    .mm(cli::rule(left = "ACCESSION LEVELS FOR SEARCHING"), 
+        "search")
+    .mm(paste0("acc_levels: ", paste0(acc_levels, collapse = ", ")), "search")
+    .mm(cli::rule(), "search")
     
-    message("========================================================")
-    message("===SEARCH DETAILS=======================================")
-    message("---QUERY------------------------------------------------")
-    message("SRA_query: ", SRA_query)
-    message("GSM_query: ", GSM_query)
-    message("GSE_query: ", GSE_query)
-    message("---LIBRARY_STRATEGY/TYPE--------------------------------")
-    message("SRA_library_strategy: ", SRA_library_strategy)
-    message("GEO_type: ", GEO_type)
-    message("---ACCESSION LEVELS FOR SEARCHING-----------------------")
-    message("acc_levels: ", paste0(acc_levels, collapse = ", "))
-    message("========================================================")
+    
+    #message("========================================================")
+    #message("===SEARCH DETAILS=======================================")
+    #message("---QUERY------------------------------------------------")
+    #message("SRA_query: ", SRA_query)
+    #message("GSM_query: ", GSM_query)
+    #message("GSE_query: ", GSE_query)
+    #message("---LIBRARY_STRATEGY/TYPE--------------------------------")
+    #message("SRA_library_strategy: ", SRA_library_strategy)
+    #message("GEO_type: ", GEO_type)
+    #message("---ACCESSION LEVELS FOR SEARCHING-----------------------")
+    #message("acc_levels: ", paste0(acc_levels, collapse = ", "))
+    #message("========================================================")
     
     if (call_output){
         sa_argument_list <- list(SRA_query=SRA_query,
@@ -320,7 +336,7 @@ searchAnywhere <- function(query_all,
     
     # Search within SRA ####
     if (sum(acc_levels %in% c("run", "experiment", "sample", "study"))>0){
-        .mm("Search SRA", "adverse")
+        .mm("Searching for matches in SRA...", "prog")
         sra_df <- .searchAnywhereSRA(SRA_query = SRA_query, 
                     acc_levels = acc_levels, 
                     SRA_library_strategy = SRA_library_strategy, 
@@ -345,7 +361,7 @@ searchAnywhere <- function(query_all,
     
     # Search within GEO ####
     if (sum(acc_levels %in% c("gse", "gsm"))>0){
-        .mm("Search GEO", "adverse")
+        .mm("Searching for matches in GEO...", "prog")
         geo_df <- .searchAnywhereGEO(GSM_query = GSM_query, 
                                     GSE_query = GSE_query, 
                                     acc_levels = acc_levels, 
@@ -441,6 +457,19 @@ searchAnywhere <- function(query_all,
     
     .vex("temp_df_out", df_out)
     df_out <- .unifyDFFormat(df_out)
+    
+    df_dim <- dim(df_out)[1]
+    
+    if (df_dim == 1){
+        .mm(paste0("Found ", df_dim, " entry matching search terms"), 
+            "res")
+    } else {
+        .mm(paste0("Found ", df_dim, " entries matching search terms"), 
+            "res")
+    }
+    
+    
+    
     
     return(df_out)
     
@@ -784,6 +813,7 @@ searchAnywhere <- function(query_all,
     .vex("temp_searchAnywhereSRA", df)
     
     if (dim(df)[1]!=0){
+        .mm("Filtering results according to accession levels...", "prog")
         df <- .filterSRAByTermByAccessionLevel(SRA_query, df, acc_levels)
     }
     

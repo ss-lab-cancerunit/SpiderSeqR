@@ -81,8 +81,18 @@ searchForAccession <- function(acc_vector,
     if (file_output == TRUE){
         .generateOutput_Accession(output_df, accession = acc_vector)
     }
+    res_dim <- as.integer(dim(output_df)[1])
     
-    
+    if (res_dim == 1){
+        .mm(paste0("Found ", res_dim, 
+                    " entry matching the accessions of interest"), 
+            "res")
+    } else {
+        .mm(paste0("Found ", res_dim, 
+                    " entries matching the accessions of interest"), 
+            "res")
+    }
+
     return(output_df)
     
     

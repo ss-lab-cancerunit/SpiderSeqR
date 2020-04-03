@@ -1,19 +1,335 @@
 ---
-title: "Quick_SpiderSeqR"
+title: "Quick SpiderSeqR"
+author: "A.Sozanska"
 output: rmarkdown::html_vignette
 vignette: >
-  %\VignetteIndexEntry{Quick_SpiderSeqR}
+  %\VignetteIndexEntry{Quick SpiderSeqR}
   %\VignetteEngine{knitr::rmarkdown}
   %\VignetteEncoding{UTF-8}
 ---
 
-```{r, include = FALSE}
-knitr::opts_chunk$set(
-  collapse = TRUE,
-  comment = "#>"
-)
-```
+---------------------------------------------------------------------  
+  
+
+***A RAPID INTRODUCTION TO THE PACKAGE***
+  
+---------------------------------------------------------------------  
+
+## Why SpiderSeqR?
+
+SpiderSeqR accelerates and simplifies genomic research by offering a new 
+framework for searching and filtering metadata from SRA and GEO databases.
+
+It builds upon the database files from SRAdb and GEOmetadb packages 
+(which contain metadata of genomic datasets from NCBI SRA and GEO 
+databases respectively) and enhances them by integrating them 
+and adding tools for ease of search and retrieval.  
+Our aim was to make publically available genomic datasets more accessible 
+to enable re-use of existing datasets for high-throughput analysis.  
+Some of the key features of SpiderSeqR include:  
+
+- simulatenous search in both databases with a single query  
+- manipulation of the results (including filtering and subsetting)  
+- creating a record of previous searches (for future re-use)  
+- conversion between (and within) SRA and GEO database entries  
+
+
+
+## Setup and Requirements
+  
+  
+In order to use SpiderSeqR, 
+please ensure that you have the following installed:  
+
+- R  
+- SpiderSeqR  
+- SRAdb  
+- GEOmetadb  
+- any additional package dependencies  
+ (as prompted during SpiderSeqR installation process)  
+  
+Additionally, you will need free hard drive space to store 
+the large database files (we would recommend at least 100GB of disc space).  
+
+
+You must run the following in order to start using SpiderSeqR 
+(this should be done every time a new session is commenced).  
+
 
 ```{r setup}
 library(SpiderSeqR)
 ```
+
+
+
+```{r}
+startSpiderSeqRDemo() # DEMO. Use to it to quickly get a flavour of SpiderSeqR
+```
+
+Please note that the above initialises only the demo version 
+with a small extract from the large database files.   
+It is is useful for this vignette and for getting familiar with SpiderSeqR, 
+but to get access to whole databases, please run the code below:
+
+```{r, eval =FALSE}
+startSpideR(dir=getwd()) 
+## The 'dir' argument determines the location of large database files 
+## (running this command for the first time can be time consuming, 
+## but will be fast on all successive runs provided 
+## that the directory does not change)
+```
+
+
+## A note about databases
+It is extremely helpful to understand how the information about datasets 
+is organised in SRA and GEO databases.  
+SRA and GEO have different hierarchy systems for their *accession levels*.  
+In SRA these are:  
+
+- study (SRPxxxxxxx)  
+- sample (SRSxxxxxxx) 
+- experiment (SRPxxxxxxx)  
+- run (SRRxxxxxxx)  
+
+The relationship is 'one to many' between higher and lower accession levels, 
+i.e. one study can contain many samples, each of which may correspond 
+to many experiments, of which each can contain multiple runs.  
+GEO has fewer accession levels, i.e.:  
+
+- series (GSExxxxxxx)  
+- sample (GSMxxxxxxx)  
+
+Like in SRA, each GEO series may contain many samples, but the situation 
+is further complicated by some of the series playing a role of 'superseries 
+(also GSExxxxxxx), which makes some series interconnected. This also means 
+that some of the samples may belong to multiple series.  
+In spite of these challenges, SpiderSeqR aims to make the conversion 
+between all these levels as seamless as possible.  
+  
+
+---------------------------------------------------------------------  
+
+## SpiderSeqR by Task
+
+  
+For more detailed information, please refer to the documentation of 
+the individual package functions.  
+  
+The subsections below introduce typical tasks and examples of how they can be 
+completed using main SpiderSeqR functions.  
+  
+**NOTE:** the results of the queries will be different using the actual 
+databases rather than the small demo extract and they are likely to 
+take longer to run due to the size of the database 
+(it is likely to take on the order of a few minutes for each search, 
+depending on your machine).  
+
+### Search for (unknown) experiments - by search terms
+
+There are two functions that achieve this: 
+**searchAnywhere()** and **searchForTerm()**.  
+  
+**searchAnywhere()** performs a fulltext search across the two databases 
+and returns any entries with matches to search terms. Users can restrict 
+the search to only seek matches within specific *accession levels*. 
+For example, study level usually contains general information about 
+the study aims and may contain spurious matches (e.g. a mention of a related 
+gene in the abstract that is not investigated experimentally). 
+This might be undesirable when searching for a well-studied molecule as it 
+might result in a lot of matches, many of which will be irrelevant. 
+However, it might be useful in other cases, when searching for 
+a more uncommon gene. It is also possible to filter results of the search 
+afterwards (see filterByTerm() and filterByTermByAccessionLevel()).  
+  
+**searchForTerm()** is a much more specific function which filters out 
+information for the user according to its inbuilt logic to minimise 
+the possibility of unwanted matches. It was built in an attempt to maximally 
+automate the process of collating a list of samples for high-throughput 
+analysis. In that vein, it also attempts to identify relevant 'inputs' 
+and 'controls' for ChIP-Seq and RNA-Seq studies respectively. 
+However, we highly recommend to verify the suitability of matches manually, 
+due to unavoidable limitations of our function and the variability 
+with which the experimental data is annotated in the databases. 
+If there are insufficient results produced by searchForterm(), 
+it is worth performing a less-restrictive search using searchAnywhere() 
+and compare the results.  
+
+
+
+
+
+**TASK:** *"I would like to find the ChIP-Seq experiments that were done*
+*regarding a trim gene (more specific, but less sensitive search)"*  
+```{r, eval = FALSE}
+searchForTerm(SRA_library_strategy = "ChIP-Seq", gene = "trim")
+```
+
+
+**TASK:** *"I would like to find the ChIP-Seq experiments that were done*
+*regarding a trim gene (broad search)"* 
+```{r, eval = FALSE}
+searchAnywhere("trim*")
+```
+
+
+### Filter the results
+**TASK:** *"I would like to search within the results to further refine them"*
+
+
+```{r}
+df <- searchAnywhere("trim*")
+
+## Filter anywhere in the data frame
+df2a <- filterByTerm(df, "input")
+
+## Filter within columns corresponding to accession levels of interest
+df2b <- filterByTermByAccessionLevel(query = "input", 
+                             df = df, acc_levels = "experiment")
+```
+
+
+### Select columns of interest
+
+**TASK:** *"I find that there are too many columns to view comfortably;"*
+*I would rather have fewer columns to view my results*
+
+```{r}
+df <- searchAnywhere("trim*")
+
+## Use pre-made column sets:
+
+## Columns with accession numbers only
+df_for_view <- selectColumns_Accession(df)
+
+## A suggested set of columns that gives a good overview of the data
+df_for_view <- selectColumns_Overview(df)
+```
+
+**TASK:** *"I find that there are too many columns to view comfortably;"*
+*I am only interested in a few columns that matter to me*
+
+```{r}
+df <- searchAnywhere("trim*")
+
+## Define your set
+column_set <- c("run_accession", 
+                "study_accession", 
+                "gsm",
+                "SRA_experiment_title",
+                "SRA_sample_attribute")
+
+df_for_view <- selectColumns(df, column_set)
+```
+
+
+
+
+
+### Search for (known) experiments - by accession numbers (searchForAccession)
+
+**TASK:** *"I would like to retrieve a handy list of samples*
+*from a study I already know."*  
+```{r}
+df <- searchForAccession("SRP063011") # Search for accession
+## Select most informative columns for ease of viewing
+selectColumns_Overview(df) 
+
+```
+
+It is also possible to search for multiple accessions at the same time, 
+provided they belong to only one type:  
+
+```{r}
+df <- searchForAccession(c("SRR3624458", "SRR3624459", "SRR3624460"))
+```
+
+
+### Convert between accession types (convertAccession)
+
+
+**TASK:** *"I have a study accession number and would like to find*
+*a list of sample accessions that belong to it."*  
+```{r}
+convertAccession("GSM1173370") 
+```
+
+As with searchForAccession(), you can convert between multiple accessions 
+at the same time:
+
+
+```{r}
+convertAccession(c("SRR3624458", "SRR3624459", "SRR3624460"))
+```
+
+
+### Find other samples in a study (addMissingSamples)
+
+**TASK:** *"I have found samples/runs of interest, but I would now like to *
+*retrieve all the entries within their study/series"*
+
+```{r}
+df <- searchAnywhere("trimkd", acc_levels = c("run", "gsm"))
+## Using selectColumns_Overview to limit the number of columns displayed
+df_for_view <- selectColumns_Overview(addMissingSamples(df)) 
+```
+
+
+
+### Save a query and run it again at a later date (rerunSpiderSeqR)
+
+In the spirit of reproducible research, SpiderSeqR provides tools for running 
+its queries again. This functionality is available for all of its main 
+search functions, i.e. searchForTerm(), searchAnywhere() 
+and searchForAccession(). We believe that this feature might prove useful 
+when wanting to check whether there are any new matches to a query of interest,
+after updating the database files (which is done by running startSpiderSeqR(); 
+you can set expiry date for the function to make sure the files 
+are updated regularly)
+
+**TASK:** *"I would like to save my query to re-use at a later date"*
+
+```{r, eval = FALSE}
+## Enable saving call output in a file
+searchAnywhere("stat1", call_output = TRUE) 
+```
+
+
+**TASK:** *"I have downloaded a new version of the database and would like*
+*to re-run a query"*
+
+
+```{r, eval = FALSE}
+rerunSpiderSeqR("filename")
+```
+
+
+
+
+### Update the database files regularly
+
+The database files are updated regularly by SRAdb and GEOmetadb packages.
+To find out how old your local files are, you can simply run startSpiderSeqR().
+To update the files, set the expiry date to a desired limit whenever you run
+startSpiderSeqR().
+
+
+**TASK:** *"I would like to make sure that my database files are no older*
+*than one month"*
+
+```{r, eval = FALSE}
+startSpiderSeqR(getwd(), general_expiry = 30)
+```
+
+
+### Find out more about the databases (getDatabaseInformation)
+
+**TASK:** *"I would like to know what are the experiment types *
+*(library_strategy) featured in the database."*
+
+```{r, eval = FALSE}
+## Choose a relevant option from the menu when it appears
+getDatabaseInformation()
+```
+
+
+

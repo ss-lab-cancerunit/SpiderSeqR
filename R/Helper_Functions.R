@@ -69,6 +69,7 @@
 .searchSRA <- function(SRA_library_strategy, gene, antibody, 
                         cell_type, treatment, species, platform){
     .mm("Running .searchSRA", "fn")
+    .mm("Searching in SRA...", "prog")
     
     #------------------------------------------------
     #------------------------------------------------
@@ -240,9 +241,10 @@
         "symbols/synonyms entered or whether such entries exist on ncbi."))
     }
     
+    .mm("Search in SRA completed!", "prog")
     .mm("SQL query completed", "fn")
     
-    message(paste0("Found ", dim(output_list)[1], " results")) #===*===
+    .mm(paste0("Found ", dim(output_list)[1], " results"), "res")
     .vex("spider_output_list_sra_unfiltered", output_list)
     
     #------------------------------------------------
@@ -251,7 +253,7 @@
     #------------------------------------------------
     #------------------------------------------------
     
-    .mm("Begining verification of the data frame", "fn")
+    .mm("Begining verification of the data frame...", "prog")
     
     #------------------------------------------------
     # NOTES ON REGEXP:
@@ -340,7 +342,7 @@
                     " initial entries comply with the gene criteria"), "res")
     } else {
         gene_indices <- rep(TRUE, nrow(output_list))
-        .mm("No genes specified. Returned all TRUE", "adverse")
+        .mm("No genes specified. Returned all TRUE", "diag")
     }
     
     
@@ -487,7 +489,7 @@
                 " initial entries comply with the antibody criteria"), "res")
     } else {
         antibody_indices <- rep(TRUE, nrow(output_list))
-        .mm("No antibodies specified. Returned all TRUE", "adverse")
+        .mm("No antibodies specified. Returned all TRUE", "diag")
     }
     
     #------------------------------------------------
@@ -585,7 +587,7 @@
                 " initial entries comply with the treatment criteria"), "res")
     } else {
         treatment_indices <- rep(TRUE, nrow(output_list))
-        .mm("No treatment specified. Returned all TRUE", "adverse")
+        .mm("No treatment specified. Returned all TRUE", "diag")
     }
     
     #------------------------------------------------
@@ -637,16 +639,15 @@
     # Rename columns
     #output_list <- .renameSRAColumns(output_list)
     
-    message(paste0(dim(output_list)[1], 
-                    " results passed verification phase")) # ===*===
+    .mm(crayon::bold(paste0(dim(output_list)[1], 
+                    " results passed verification phase")), "res") # ===*===
     
     .vex("spider_output_list_sra_filtered", output_list)
     
     if (dim(output_list)[1]==0) {
         stop("No results passed the verification phase")
     }
-    .mm("Number of entries returned:", "res")
-    .mm(dim(output_list)[[1]], "res")
+    .mm(paste0("Number of entries returned: ", dim(output_list)[[1]]), "res")
     .mm(".searchSRA completed", "fn")
     return(output_list)
     
@@ -702,7 +703,8 @@
     if (length(prefixes)!=length(columns)){
         if (length(prefixes)==1){
             prefixes <- rep(prefixes, length(columns))
-            message("INFO: Replicated prefixes to match the number of columns")
+            .mm("INFO: Replicated prefixes to match the number of columns", 
+                "diag")
         } else {
             stop("Prefix vector needs to be the same size as columns vector")
         }
@@ -743,7 +745,7 @@
                         keywords_regexp <- paste0(prefixes[[c]][p], 
                                                 keywords[k], suffixes[[c]][s])
                         .mm(paste(keywords_regexp, "IN", 
-                                    colnames(df)[columns_index]), "query")
+                                    colnames(df)[columns_index]), "dev")
                         #print(colnames(df)[columns_index])
                         #print(keywords_regexp)
                         row_matches <- row_matches | grepl(keywords_regexp, 
@@ -757,7 +759,7 @@
         
     } else {
         row_matches <- rep(TRUE, nrow(df))
-        message("No keywords specified. All TRUE returned")
+        .mm("No keywords specified. All TRUE returned", "diag")
     }
     .mm(".verifyConditions completed", "fn")
     
@@ -1345,7 +1347,7 @@
 #' 
 .detectInputs <- function(df){
     .mm("Running .detectInputs", "fn")
-    
+    .mm("Detecting inputs...", "prog")
     
     #==============================================================
     #--------------------------------------------------------------
@@ -1654,13 +1656,13 @@
     }
     
     if (length(setdiff(column_list, df_cols)) != 0){
-        warning("Not all specified columns can be found in the data frame")
+        .mm("Not all specified columns can be found in the data frame", "diag")
         .mm(paste0("The following columns are missing from the data frame: ", 
                     paste(setdiff(column_list, df_cols), collapse = ",") ), 
-            "adverse")
+            "diag")
     } else {
-        .mm("All specified columns are within the data frame", "adverse")
-        .mm(paste(column_list, collapse = ", "), "adverse")
+        .mm("All specified columns are within the data frame", "dev")
+        .mm(paste(column_list, collapse = ", "), "dev")
     }
     .mm(".verifyColumns completed", "fn")
 }
@@ -1701,6 +1703,7 @@
 .detectControls <- function(df){
     
     .mm("Running .detectControls", "fn")
+    .mm("Detecting controls...", "prog")
     
     
     #---------------------------------------------------------------
@@ -1969,8 +1972,8 @@
 
 
 #----------------------------------------------------------------------------
-#' @importFrom dplyr %>%
-dplyr::`%>%`
+#' @importFrom magrittr %>%
+magrittr::`%>%`
 
 #----------------------------------------------------------------------------
 
@@ -2086,7 +2089,7 @@ crayon::`%+%`
     database_name <- "sra_con"
     database_env <- ".GlobalEnv"
     
-    .mm("CHECKING FOR MISSING RUNS", "fn")
+    .mm("Checking for missing runs...", "prog")
     
     srr_list_in <- unique(srr_list_in[order(srr_list_in)])
     
@@ -2111,7 +2114,7 @@ crayon::`%+%`
         
         missing <- paste(setdiff(srr_list_out, srr_list_in), collapse = ", ")
         .mm("The list does not include all the runs", "adverse")
-        .mm(paste0("Missing runs: ", missing), "adverse")
+        .mm(paste0("Missing runs: ", missing), "comm")
         
         #warning("The list does not include all the runs") 
         #Warning does not work for some reason
@@ -2119,7 +2122,7 @@ crayon::`%+%`
     } else { #===*=== Maybe another criterion...?
         .mm(paste0("There are no missing runs within ",
                         "the selected experiment accessions"), 
-            "adverse")
+            "dev")
     }
     .mm(".verifyMissingRuns completed", "fn")
     
@@ -2164,6 +2167,7 @@ crayon::`%+%`
 #' 
 .convertPairedEnds <- function(df){
     .mm("Running .convertPairedEnds", "fn")
+    .mm("Checking for presence of paired ends...", "prog")
     
     # Rename col
     rename_col <- FALSE
@@ -2198,7 +2202,8 @@ crayon::`%+%`
     paired_indices <- grepl("PAIRED", df$library_layout)
     #unpaired_indices <- grepl("SINGLE", df$library_layout)
     
-    .mm(paste0("Found ", sum(paired_indices), " runs with paired ends"), "res")
+    .mm(paste0("Found ", sum(paired_indices), " run(s) with paired ends"), 
+        "res")
     #print(sum(paired_indices))
     #print(sum(unpaired_indices))
     
@@ -2243,7 +2248,7 @@ crayon::`%+%`
 .verifySuperseries <- function(gse_list){
     .mm("Running .verifySuperseries", "fn")
     
-    .mm("CHECKING FOR PRESENCE OF SUPERSERIES", "fn")
+    .mm("Checking for the presence of superseries", "prog")
     
     #Grepl GSE..., GSE... (...)
     ss_match <- grepl("^GSE\\d\\d\\d+,GSE\\d\\d\\d+.*$", gse_list)
@@ -2260,10 +2265,10 @@ crayon::`%+%`
         ss_list <- unlist(strsplit(unique(gse_list[ss_match]), split=","))
         ss_list <- unique(ss_list[order(ss_list)])
         if (length(ss_list)!=0){
-            .mm(paste0("Consider carrying out superseries ",
+            .mm(paste0("Consider carrying out a superseries",
                     "search on the following GSEs: ", 
                     paste(ss_list, collapse = ", ")), 
-            "adverse")
+            "comm")
         }
         return(ss_list)
         
@@ -2453,7 +2458,7 @@ crayon::`%+%`
     #CONVERSION: can->short
     if (input == "can" & output == "short"){
         
-        .mm("CONVERSION: can -> short", "query")
+        .mm("CONVERSION: can -> short", "dev")
         
         ind <- grep(paste0("^", x, "$"), can)
         
@@ -2480,7 +2485,7 @@ crayon::`%+%`
     #CONVERSION: syn->can
     if (input == "syn" & output == "can"){
         
-        .mm("CONVERSION: syn -> can", "query")
+        .mm("CONVERSION: syn -> can", "dev")
         
         ind <- rep(list(integer(0)),15)
         res_num <- 0

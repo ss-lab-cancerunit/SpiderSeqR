@@ -71,8 +71,11 @@ filterByTerm <- function(df, query, filter_columns=NULL){
     # Create a new column with an index
     df$ord <- seq(dim(df)[1])
     
-    print(filter_columns)
-    print(colnames(df))
+    .mm("Filter Columns", "dev")
+    .mm(paste0(filter_columns, collapse = "\n"), "dev")
+    #print(filter_columns)
+    #print(colnames(df))
+    
     if (!is.null(filter_columns)){
         if (!all(filter_columns %in% colnames(df))){
             stop("All columns need to be within the data frame")
@@ -87,7 +90,7 @@ filterByTerm <- function(df, query, filter_columns=NULL){
     
     df_subset <- df[, col_ind]
     
-    print(class(df_subset))
+    #print(class(df_subset))
     #print(df_subset)
     .vex("temp_df_subset", df_subset)
     

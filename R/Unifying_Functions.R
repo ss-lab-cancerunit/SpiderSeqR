@@ -191,7 +191,7 @@ orderDFAccessions <- function(df,
     allowed_columns <- as.character(unlist(listValidColumns()))
     
     if (sum(colnames(df) %in% allowed_columns)==length(colnames(df))){
-        message("All columns have valid names")
+        .mm("All columns have valid names", "diag")
     } else {
         wrong_columns <- colnames(df)[!colnames(df) %in% allowed_columns]
         stop(paste0("Some columns are not allowed: ", 

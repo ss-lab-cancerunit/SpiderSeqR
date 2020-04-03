@@ -15,6 +15,8 @@
 Nothing. Create the variable in the global environment
 }
 \description{
-Assign local variables to global environment (development mode)
+This function is for development use only; 
+it assigns variables from many of SpiderSeqR internal functions 
+to the Global Environment for ease of code development.
 }
 \keyword{internal}

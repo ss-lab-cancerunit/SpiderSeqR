@@ -131,7 +131,15 @@ startSpiderSeqR <- function(dir,
                             srr_gsm_expiry){
     ori_wd <- getwd()
     setwd(dir)
-    .mm(paste0("Location of database files: ", getwd()), "search")
+    .mm(cli::rule(), "comm")
+    .mm("Welcome to SpiderSeqR!!!", "qn")
+    .mm("Please bear with us while we download and prepare database files...", 
+                                                                        "comm")
+    .mm(paste0("NOTE: this might take some time ",
+        "and will require about 100GB of disc space"), "comm")
+    .mm(cli::rule(), "comm")
+    .mm("...Setting up the database connections...", "comm")
+    .mm(paste0("Location of database files: ", getwd()), "comm")
     
     
     #Setup:
@@ -144,14 +152,14 @@ startSpiderSeqR <- function(dir,
     # Logic:
     # - SRAmetadb:
     #    * if does not exist - download (else: stop)
-    #    * if exists and not up to date - offer to re-download (else: warning)
+    #    * if exists and not up to date - offer to re-download (else: message)
     # - GEOmetadb:
     #    * if does not exist - download (else: stop)
-    #    * if exists and not up to date - offer to re-download (else: warning)
+    #    * if exists and not up to date - offer to re-download (else: message)
     # - SRR_GSM:
     #    * if file exists
     #        - if in date - do nth
-    #        - if not up to date - offer to re-create (else: warning)
+    #        - if not up to date - offer to re-create (else: message)
     #    * if does not exist - create (else: stop)
     
     
@@ -194,12 +202,13 @@ startSpiderSeqR <- function(dir,
     #==========================================================
     
     
-    .mm("Expiry dates for databases (number of days since file creation date):",
-                                                                    "search")
-    .mm(paste0("SRA: ", sra_expiry, " days"), "search")
-    .mm(paste0("GEO: ", geo_expiry, " days"), "search")
-    .mm(paste0("SRR_GSM: ", srr_gsm_expiry, " days"), "search")
+    .mm(paste0("Using the following expiry dates for databases \n",
+        "(max. number of days since file creation date):"), "comm")
     
+    .mm(paste0("SRA: ", sra_expiry, " days"), "comm")
+    .mm(paste0("GEO: ", geo_expiry, " days"), "comm")
+    .mm(paste0("SRR_GSM: ", srr_gsm_expiry, " days"), "comm")
+    .mm(cli::rule(), "comm")
     
     #==========================================================
     # SRAmetadb ####
@@ -211,13 +220,13 @@ startSpiderSeqR <- function(dir,
         .mm(paste0("The file ", 
                     sra_file, 
                     " was not found in the current working directory"), 
-            "search")
+            "qn")
         
-        .mm("Would you like to download the file now?", "search")
+        .mm("Would you like to download the file now?", "qn")
         
         sra_menu <- utils::menu(c("yes", "no"))
         if (sra_menu == 1){
-            .mm("Downloading the file", "search")
+            .mm("Downloading the file", "comm")
             sra_file <- SRAdb::getSRAdbFile()
         } else {
             stop(paste0(sra_file, 
@@ -231,23 +240,24 @@ startSpiderSeqR <- function(dir,
         (difftime(Sys.Date(), 
                     file.info(sra_file)$mtime, units = "days") > sra_expiry) ){
         
-        .mm(paste0("The file ", sra_file, " is out of date"), "search")
-        .mm(paste0("Last modified: ", file.info(sra_file)$mtime), "search")
+        .mm(paste0("The file ", sra_file, " is out of date"), "qn")
+        .mm(paste0("Last modified: ", file.info(sra_file)$mtime), "comm")
         .mm(paste0("Would you like to download a new version of the file ",
-        "right now? (this is recommended, though not necessary)?"), "search")
+        "right now?\n(this is recommended, though not necessary)"), "qn")
         
         sra_menu <- utils::menu(c("yes", "no"))
         if (sra_menu == 1){
-            .mm("Downloading the file", "search")
+            .mm("Downloading the file", "comm")
             sra_file <- SRAdb::getSRAdbFile()
         } else {
-            warning(paste0("Next time consider downloading a new version of ", 
-                            sra_file, " file"))
+            .mm(paste0(
+                "Next time please consider downloading a new version of ", 
+                            sra_file, " file"), "adverse")
         }
         
     } else if(file.exists(sra_file)) {
-        .mm(paste0("The file ", sra_file, " is up to date"), "search")
-        .mm(paste0("Last modified: ", file.info(sra_file)$mtime), "search")
+        .mm(paste0("The file ", sra_file, " is up to date"), "comm")
+        .mm(paste0("Last modified: ", file.info(sra_file)$mtime), "comm")
     }
     
     
@@ -255,7 +265,7 @@ startSpiderSeqR <- function(dir,
     
     
     
-    
+    .mm(cli::rule(), "comm")
     
     
     #==========================================================
@@ -269,13 +279,13 @@ startSpiderSeqR <- function(dir,
         .mm(paste0("The file ", 
                     geo_file, 
                     " was not found in the current working directory"), 
-                "search")
+                "qn")
         
-        .mm("Would you like to download the file right now?", "search")
+        .mm("Would you like to download the file right now?", "qn")
         
         geo_menu <- utils::menu(c("yes", "no"))
         if (geo_menu == 1){
-            .mm("Downloading the file", "search")
+            .mm("Downloading the file", "comm")
             geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = 
                                                         "GEOmetadb.sqlite.gz")
         } else {
@@ -290,24 +300,25 @@ startSpiderSeqR <- function(dir,
         (difftime(Sys.Date(), 
                     file.info(geo_file)$mtime, units = "days") > geo_expiry) ){
         
-        .mm(paste0("The file ", geo_file, " is out of date"), "search")
-        .mm(paste0("Last modified: ", file.info(geo_file)$mtime), "search")
+        .mm(paste0("The file ", geo_file, " is out of date"), "qn")
+        .mm(paste0("Last modified: ", file.info(geo_file)$mtime), "comm")
         .mm(paste0("Would you like to download a new version of the file ",
-        "right now? (this is recommended, though not necessary)?"), "search")
+            "right now?\n(this is recommended, though not necessary)"), "qn")
         
         geo_menu <- utils::menu(c("yes", "no"))
         if (geo_menu == 1){
-            .mm("Downloading the file", "search")
+            .mm("Downloading the file", "comm")
             geo_gz_file <- 
                     GEOmetadb::getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
         } else {
-            warning(paste0("Next time consider downloading a new version of ", 
-                            geo_file, " file"))
+            .mm(paste0(
+                "Next time please consider downloading a new version of ", 
+                            geo_file, " file"), "adverse")
         }
         
     } else if(file.exists(geo_file)) {
-        .mm(paste0("The file ", geo_file, " is up to date"), "search")
-        .mm(paste0("Last modified: ", file.info(geo_file)$mtime), "search")
+        .mm(paste0("The file ", geo_file, " is up to date"), "comm")
+        .mm(paste0("Last modified: ", file.info(geo_file)$mtime), "comm")
     }
     
     #==========================================================
@@ -325,12 +336,15 @@ startSpiderSeqR <- function(dir,
         warning(paste0("Something went wrong. Some database files might ",
             "be missing. Consider loading the package again."))
     } else {
-        .mm(paste0("Both db files are present (remember not to remove them!). ",
-        "Proceeding to the final step (custom database creation)."), "search")
+        .mm(paste0(
+                "Both db files are present (remember not to remove them!)\n",
+                "Proceeding to the final step (custom database creation)."), 
+            "comm")
     }
     #==========================================================
     
     
+    .mm(cli::rule(), "comm")
     
     #==========================================================
     # FIND OUT WHETHER IT IS NECESSARY TO CREATE CUSTOM DATABASE ####
@@ -339,11 +353,12 @@ startSpiderSeqR <- function(dir,
     if (!file.exists(srr_gsm_file)){ # NO FILE
         
         .mm(paste0("Would you like to create a cutstom database for converting",
-            " between GEO and SRA? This might take a little while, but it is ",
-            "necessary for the correct functioning of the package."), "search")
+            " between GEO and SRA? "), "qn")
+        .mm(paste0("This might take a little while, but it is ",
+            "necessary for the correct functioning \nof the package."), "comm")
         srr_gsm_menu <- utils::menu(c("yes", "no"))
         if (srr_gsm_menu == 1){ # WILLING TO CREATE DB
-            .mm("Database will be created shortly", "search")
+            .mm("Database will be created shortly", "comm")
             db_needed <- TRUE
         } else { # DECLINED CREATION OF DB
             db_needed <- FALSE
@@ -357,31 +372,31 @@ startSpiderSeqR <- function(dir,
                                             units = "days") < srr_gsm_expiry){
             db_needed <- FALSE
             .mm(paste0("The custom database for converting between ",
-                            "SRA and GEO is up to date"), "search")
+                            "SRA and GEO is up to date"), "comm")
             .mm(paste0("Last modified: ", 
                         file.info(srr_gsm_file)$mtime), 
-                "search")
+                "comm")
             
         } else { # OLD FILE
             
             .mm(paste0("The file ", 
-                        srr_gsm_file, " is out of date"), "search")
+                        srr_gsm_file, " is out of date"), "qn")
             
             .mm(paste0("Last modified: ", 
-                        file.info(srr_gsm_file)$mtime), "search")
+                        file.info(srr_gsm_file)$mtime), "comm")
             
             .mm(paste0("Would you like to create a new version of the ",
-            "file right now? (this is recommended, though not necessary)?"), 
-            "search")
+            "file right now?\n(this is recommended, though not necessary)"), 
+            "qn")
             
             srr_gsm_menu <- utils::menu(c("yes", "no"))
             if (srr_gsm_menu == 1){ # WILLING TO CREATE DB
-                .mm("Database will be re-created shortly", "search")
+                .mm("Database will be re-created shortly", "comm")
                 db_needed <- TRUE
             } else { # DECLINED CREATION OF DB
                 db_needed <- FALSE
-                warning(paste0("Next time consider re-creating the ", 
-                                srr_gsm_file, " file"))
+                .mm(paste0("Next time please consider re-creating the ", 
+                                srr_gsm_file, " file"), "adverse")
             }
         }
         
@@ -390,11 +405,12 @@ startSpiderSeqR <- function(dir,
     
     
     
+    
     #==========================================================
     # Create custom database ####
     #==========================================================
     if (db_needed){
-        .mm("Creating the custom database", "search")
+        .mm("Please wait, creating the custom database...", "comm")
         
         #==========================================================
         #SRR_GSM
@@ -419,6 +435,9 @@ startSpiderSeqR <- function(dir,
         geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
         
         db_df <- data.frame()
+        
+        tt <- 1
+        
         rs <- DBI::dbSendQuery(sra_con, "SELECT
                         run_accession,
                         experiment_accession,
@@ -430,6 +449,10 @@ startSpiderSeqR <- function(dir,
                         LIKE 'GSM%' OR experiment_attribute LIKE '%GSM%'")
         
         while (!DBI::dbHasCompleted(rs)){
+            cat(".")
+            if (tt %% 80 ==0) cat("\n")
+            tt <- tt + 1
+            
             chunk <- DBI::dbFetch(rs, 1000)
             
             #Create intermediate columns for extracting GSM information
@@ -497,11 +520,14 @@ startSpiderSeqR <- function(dir,
                                 "gsm_check")]
             
             #Get the number of entries with GSM content
-            .mm(sum(run_gsm_indices | exp_gsm_indices), "search")
+            .mm(sum(run_gsm_indices | exp_gsm_indices), "dev")
+            
             
             db_df <- rbind(db_df, chunk)
             
+            
         }
+        cat("\n")
         
         
         DBI::dbClearResult(rs)
@@ -549,22 +575,21 @@ startSpiderSeqR <- function(dir,
     
     setwd(ori_wd)
     
-    .mm("==========================================================", "search")
-    .mm(paste0("Further info on ", sra_file, " database:"), "search")
-    .mm("==========================================================", "search")
+    .mm(cli::rule(), "comm")
+    .mm(paste0("Further information on ", sra_file, " database:"), "comm")
+    #.mm(cli::rule(), "comm")
     .mm(DBI::dbGetQuery(get("geo_con", 
                         envir = get(".GlobalEnv")), 
-                        "SELECT * FROM metaInfo"), "search")
+                        "SELECT * FROM metaInfo"), "comm")
     
-    .mm("==========================================================", "search")
-    .mm(paste0("Further info on ", geo_file, " database:"), "search")
-    .mm("==========================================================", "search")
+    .mm(cli::rule(), "comm")
+    .mm(paste0("Further information on ", geo_file, " database:"), "comm")
+    #.mm(cli::rule(), "comm")
     .mm(DBI::dbGetQuery(get("sra_con", 
                         envir = get(".GlobalEnv")), 
-                        "SELECT * FROM metaInfo"), "search")
-    
-    .mm("==========================================================", "search")
-    .mm("Welcome to SpiderSeqR", "search")
+                        "SELECT * FROM metaInfo"), "comm")
+    .mm(cli::rule(), "comm")
+    .mm("Welcome to SpiderSeqR! All set!", "qn")
     
     
     

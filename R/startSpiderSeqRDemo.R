@@ -24,6 +24,9 @@
 #' 
 startSpiderSeqRDemo <- function(){
     
+    .mm(cli::rule(), "comm")
+    .mm("...Setting up the database connections...", "comm")
+    
     database_env <- ".GlobalEnv"
     
     
@@ -63,6 +66,16 @@ startSpiderSeqRDemo <- function(){
     DBI::dbWriteTable(conn=get("sra_con", envir = get(database_env)), 
                         name='sra', value=SpiderSeqR::sra_demo)
     .createFtsTable("sra_con", "sra", "sra_ft")
+    
+    #cat(cli::rule(col = "magenta"), "\n")
+    #.mm(cli::rule(), "comm")
+    .mm("Welcome to the SpiderSeqR Demo! All set!", "qn")
+    .mm(paste0("To use SpiderSeqR for real queries, ",
+                    "please run startSpiderSeqR()"), 
+            "adverse")
+    
+    .mm(cli::rule(), "comm")
+    #cat(cli::rule(col = "magenta", "\n"))
     
 }
 

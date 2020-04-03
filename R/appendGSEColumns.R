@@ -55,6 +55,7 @@
 .appendGSEColumns <- function(df, gse_columns){
     
     .mm("Running .appendGSEColumns", "fn")
+    .mm("Adding information about GSEs...", "prog")
     gsm <- NULL
     series_id <- NULL
     

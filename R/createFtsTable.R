@@ -71,16 +71,16 @@
     creation_query <-paste0("CREATE VIRTUAL TABLE ", 
                             new_table_name, " USING fts3 (", column_names, ")")
     
-    .mm(creation_query, "query")
+    .mm(creation_query, "dev")
     rs <- DBI::dbSendQuery(get(database_name, 
                                 envir = .GlobalEnv), creation_query)
     DBI::dbClearResult(rs)
     
-    .mm("Number of entries to be copied:", "prog")
+    .mm("Number of entries to be copied:", "dev")
     .mm(as.numeric(DBI::dbGetQuery(get(database_name, 
                                         envir = .GlobalEnv), 
                                     paste0("SELECT count(*) FROM ", 
-                                        table_name))), "prog")
+                                        table_name))), "dev")
     
     # Insert contents into table
     insertion_query <- paste0("INSERT INTO ", 
@@ -88,16 +88,16 @@
                                 " SELECT * FROM ", 
                                 table_name)
     
-    .mm(insertion_query, "query")
+    .mm(insertion_query, "dev")
     rs <- DBI::dbSendQuery(get(database_name, envir = .GlobalEnv), 
                             insertion_query)
     DBI::dbClearResult(rs)
     
-    .mm("Number of entries in new table:", "prog")
+    .mm("Number of entries in new table:", "dev")
     .mm(as.numeric(DBI::dbGetQuery(get(database_name, 
                                         envir = .GlobalEnv), 
                                     paste0("SELECT count(*) FROM ", 
-                                        new_table_name))), "prog")
+                                        new_table_name))), "dev")
     
     # Optimise the database
     optimisation_query <- paste0( "INSERT INTO ", 

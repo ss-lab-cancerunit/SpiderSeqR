@@ -57,6 +57,7 @@
 
 
     .mm("Running .generateOutput", "fn")
+    .mm("Generating file output...", "prog")
     
     SRA_library_strategy <- NULL
     OTH_input <- NULL
@@ -429,6 +430,7 @@
 #' 
 .generateOutput_Accession <- function(df, ss=NULL, accession){
     .mm("Running .generateOutput_Accession", "fn")
+    .mm("Generating file output...", "prog")
     
     SRA_library_strategy <- NULL
     

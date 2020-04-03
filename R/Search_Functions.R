@@ -226,7 +226,7 @@ searchForTerm <- function(SRA_library_strategy,
     }
     
     #PRINT SEARCH CONDITIONS SUMMARY
-    .mm("SEARCH CONDITIONS SUMMARY", "search")
+    .mm(cli::rule(left="SEARCH CONDITIONS SUMMARY"), "search")
     .mm(paste0("Selected gene: ", 
                 paste(gene, collapse = " OR ")), "search")
     .mm(paste0("Selected antibody: ", 
@@ -244,6 +244,7 @@ searchForTerm <- function(SRA_library_strategy,
     .mm(paste0("Selected SRA_secondary_library_strategy: ", 
                 paste(SRA_secondary_library_strategy, collapse = " OR ")), 
         "search")
+    .mm(cli::rule(), "search")
     
     
     #=========================================================================

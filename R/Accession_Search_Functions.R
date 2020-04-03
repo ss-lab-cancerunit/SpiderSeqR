@@ -78,6 +78,8 @@
     #df <- data.frame()
     
     #Search for GSMs
+    
+    .mm("Searching in GEO for GSMs...", "prog")
     df <- .batchedAccSearch(acc_vector = acc_vector, 
                             database_name = database_name, 
                             table_name = "gsm", 
@@ -167,6 +169,7 @@
     #df <- data.frame()
     
     #Search for GSEs
+    .mm("Searching in GEO for GSEs...", "prog")
     df <- .batchedAccSearch(acc_vector = acc_vector, 
                             database_name = database_name, 
                             table_name = "gsm", 
@@ -272,6 +275,7 @@
     } 
     
     # Search for SRA accessions
+    .mm("Searching in SRA...", "prog")
     df <- .batchedAccSearch(acc_vector = acc_vector, 
                             database_name = database_name, 
                             table_name = "sra", col_names = sra_columns)
@@ -353,7 +357,7 @@
     search_count <- 0
     accession_df <- data.frame()
     
-    
+    .mm("Searching in SRR_GSM...", "prog")
     df <- .batchedAccSearch(acc_vector = acc_vector, 
                             database_name = "srr_gsm", 
                             table_name = "srr_gsm", 
