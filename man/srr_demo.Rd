@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 47 rows and 6 columns.
 }
 \usage{
-srr_demo
+data(srr_demo)
 }
 \description{
 A data frame created as a DEMO for srr_gsm table from custom sqlite database

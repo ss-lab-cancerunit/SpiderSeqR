@@ -23,6 +23,8 @@
 #' 
 #' @docType data
 #'
+#' @usage data(SRA_GEO_Category_Conversion)
+#' 
 "SRA_GEO_Category_Conversion"
 
 
@@ -48,6 +50,7 @@
 #' 
 #' @docType data
 #'
+#' @usage data(sra_demo)
 "sra_demo"
 
 
@@ -62,6 +65,7 @@
 #' 
 #' @docType data
 #' 
+#' @usage data(srr_demo)
 "srr_demo"
 
 
@@ -87,6 +91,7 @@
 #'  
 #' }
 #' @docType data
+#' @usage data(gse_demo)
 "gse_demo"
 
 
@@ -111,6 +116,7 @@
 #'  \item GSE80767
 #'  
 #' }
-#'@docType data
+#' @docType data
+#' @usage data(gsm_demo)
 "gsm_demo"
 

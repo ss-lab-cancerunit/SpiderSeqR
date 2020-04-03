@@ -8,7 +8,7 @@
 An object of class \code{data.frame} with 146 rows and 75 columns.
 }
 \usage{
-sra_demo
+data(sra_demo)
 }
 \description{
 Study accessions included in the data frame
