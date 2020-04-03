@@ -28,4 +28,4 @@ Imports:
     GEOmetadb (>= 1.40),
     utils,
     stats
-RoxygenNote: 6.1.1
+RoxygenNote: 7.1.0

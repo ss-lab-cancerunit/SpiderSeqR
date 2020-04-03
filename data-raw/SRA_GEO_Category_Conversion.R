@@ -2,6 +2,6 @@
 
 SRA_GEO_Category_Conversion <- read.csv("data-raw/SRA_GEO_Category_Conversion.csv", stringsAsFactors = FALSE)
 
-usethis::use_data(SRA_GEO_Category_Conversion)
+usethis::use_data(SRA_GEO_Category_Conversion, compress = "xz")
 
 

@@ -4,8 +4,13 @@
 \alias{.batchedAccSearch}
 \title{Make batched queries to databases}
 \usage{
-.batchedAccSearch(acc_vector, database_name, table_name, col_names,
-  c_size = 500)
+.batchedAccSearch(
+  acc_vector,
+  database_name,
+  table_name,
+  col_names,
+  c_size = 500
+)
 }
 \arguments{
 \item{acc_vector}{A character vector with accessions to search for 

@@ -4,8 +4,12 @@
 \alias{.searchAnywhereGEO}
 \title{Search anywhere within gse and gsm tables of GEO database}
 \usage{
-.searchAnywhereGEO(GSM_query, GSE_query, acc_levels = c("gse", "gsm"),
-  GEO_type = NULL)
+.searchAnywhereGEO(
+  GSM_query,
+  GSE_query,
+  acc_levels = c("gse", "gsm"),
+  GEO_type = NULL
+)
 }
 \arguments{
 \item{GSM_query}{String to search for within gsm table}

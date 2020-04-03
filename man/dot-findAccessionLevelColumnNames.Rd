@@ -4,8 +4,9 @@
 \alias{.findAccessionLevelColumnNames}
 \title{Find column names corresponding to accession levels in SRA and GEO (SP)}
 \usage{
-.findAccessionLevelColumnNames(acc_levels = c("run", "experiment",
-  "sample", "gsm"))
+.findAccessionLevelColumnNames(
+  acc_levels = c("run", "experiment", "sample", "gsm")
+)
 }
 \arguments{
 \item{acc_levels}{Accession levels}

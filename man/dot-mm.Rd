@@ -20,7 +20,7 @@ Console Messages
 \examples{
 ## Equivalents
 # .mm(cli::rule(), "comm")
-# cat(cli::rule(col = "magenta", "\\n"))
+# cat(cli::rule(col = "magenta", "\n"))
  
 # .mm(cli::rule(col = "magenta", left = "SEARCH DETAILS"), "search")
 

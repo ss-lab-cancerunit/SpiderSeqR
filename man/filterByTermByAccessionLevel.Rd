@@ -5,8 +5,11 @@
 \title{Filter df according to query matches 
 only within accession levels of interest}
 \usage{
-filterByTermByAccessionLevel(query, df, acc_levels = c("run",
-  "experiment", "sample", "gsm"))
+filterByTermByAccessionLevel(
+  query,
+  df,
+  acc_levels = c("run", "experiment", "sample", "gsm")
+)
 }
 \arguments{
 \item{query}{Query to be passed to MATCH operator (for fts)}
@@ -26,13 +29,15 @@ Performs fts search on the data frame according to the query, only searching
 in the columns corresponding to specified accession levels of interest
 }
 \seealso{
-Other Workflow functions: \code{\link{addMissingSamples}},
-  \code{\link{convertAccession}},
-  \code{\link{filterByTerm}},
-  \code{\link{searchForAccession}}
+Other Workflow functions: 
+\code{\link{addMissingSamples}()},
+\code{\link{convertAccession}()},
+\code{\link{filterByTerm}()},
+\code{\link{searchForAccession}()}
 
-Other Manipulation functions: \code{\link{filterByTerm}},
-  \code{\link{orderDFAccessions}}
+Other Manipulation functions: 
+\code{\link{filterByTerm}()},
+\code{\link{orderDFAccessions}()}
 }
 \concept{Manipulation functions}
 \concept{Workflow functions}

@@ -4,7 +4,9 @@
 \name{SRA_GEO_Category_Conversion}
 \alias{SRA_GEO_Category_Conversion}
 \title{SRA - GEO Category Conversion Table}
-\format{An object of class \code{data.frame} with 41 rows and 3 columns.}
+\format{
+An object of class \code{data.frame} with 41 rows and 3 columns.
+}
 \usage{
 data(SRA_GEO_Category_Conversion)
 }

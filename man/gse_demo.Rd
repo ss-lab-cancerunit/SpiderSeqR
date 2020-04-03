@@ -4,7 +4,9 @@
 \name{gse_demo}
 \alias{gse_demo}
 \title{DEMO extract from gse table (from sqlite file of GEOmetadb package)}
-\format{An object of class \code{data.frame} with 13 rows and 18 columns.}
+\format{
+An object of class \code{data.frame} with 13 rows and 18 columns.
+}
 \usage{
 data(gse_demo)
 }

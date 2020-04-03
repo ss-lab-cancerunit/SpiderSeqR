@@ -4,9 +4,13 @@
 \alias{.searchAnywhereSRA}
 \title{Fulltext search in SRA}
 \usage{
-.searchAnywhereSRA(SRA_query, acc_levels = c("run", "experiment",
-  "sample", "study"), SRA_library_strategy = NULL,
-  SRA_other_library_strategy = c("OTHER", "NA", "NULL"), ...)
+.searchAnywhereSRA(
+  SRA_query,
+  acc_levels = c("run", "experiment", "sample", "study"),
+  SRA_library_strategy = NULL,
+  SRA_other_library_strategy = c("OTHER", "NA", "NULL"),
+  ...
+)
 }
 \arguments{
 \item{SRA_query}{Query passed to fts MATCH operator (cannot be a vector)}

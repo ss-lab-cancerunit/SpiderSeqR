@@ -5,8 +5,11 @@
 \title{Filter df according to query matches 
 only within accession levels of interest}
 \usage{
-.filterSRAByTermByAccessionLevel(query, df, acc_levels = c("run",
-  "experiment", "sample"))
+.filterSRAByTermByAccessionLevel(
+  query,
+  df,
+  acc_levels = c("run", "experiment", "sample")
+)
 }
 \arguments{
 \item{query}{Query to be passed to MATCH operator (for fts)}

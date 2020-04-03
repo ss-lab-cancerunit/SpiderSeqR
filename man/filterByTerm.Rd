@@ -41,20 +41,22 @@ df <- filterByTerm(df, "TRIMKD")
 df <- filterByTerm(df, "SRA_experiment_title: TRIMKD")
 # NOTE: you can explore further possibilities by filtering by columns
 # corresponding to different accession levels, 
-# see \\code{\\link{filterByTermByAccessionLevel}}
+# see \code{\link{filterByTermByAccessionLevel}}
 
 # For ease of viewing results
 df_view <- selectColumns_Overview(df) 
 
 }
 \seealso{
-Other Workflow functions: \code{\link{addMissingSamples}},
-  \code{\link{convertAccession}},
-  \code{\link{filterByTermByAccessionLevel}},
-  \code{\link{searchForAccession}}
+Other Workflow functions: 
+\code{\link{addMissingSamples}()},
+\code{\link{convertAccession}()},
+\code{\link{filterByTermByAccessionLevel}()},
+\code{\link{searchForAccession}()}
 
-Other Manipulation functions: \code{\link{filterByTermByAccessionLevel}},
-  \code{\link{orderDFAccessions}}
+Other Manipulation functions: 
+\code{\link{filterByTermByAccessionLevel}()},
+\code{\link{orderDFAccessions}()}
 }
 \concept{Manipulation functions}
 \concept{Workflow functions}

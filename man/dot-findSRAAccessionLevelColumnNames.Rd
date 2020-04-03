@@ -4,8 +4,11 @@
 \alias{.findSRAAccessionLevelColumnNames}
 \title{Find SRA column names corresponding to accession levels (ORI)}
 \usage{
-.findSRAAccessionLevelColumnNames(acc_levels = c("run", "experiment",
-  "sample", "study"), add_run_accession = TRUE, table_name = "sra_ft")
+.findSRAAccessionLevelColumnNames(
+  acc_levels = c("run", "experiment", "sample", "study"),
+  add_run_accession = TRUE,
+  table_name = "sra_ft"
+)
 }
 \arguments{
 \item{acc_levels}{Accession levels}

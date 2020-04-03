@@ -49,8 +49,8 @@ getDatabaseInformation <- function(){
             "accession-level tables are used in the sra table).")
     
     
-    cat(crayon::magenta("\n" %+% crayon::bold("getDatabaseInformation:") %+% 
-                        " summaries and handy extracts from the databases\n"))
+    cat(crayon::magenta(crayon::bold("getDatabaseInformation:")))
+    cat(crayon::magenta(" summaries and handy extracts from the databases\n")) 
     cat(crayon::magenta(paste0("PLEASE NOTE: the order and content of the ",
     "options below may change in the future.\n\n")))
     

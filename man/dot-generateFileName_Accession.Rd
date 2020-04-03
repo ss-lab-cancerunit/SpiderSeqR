@@ -4,8 +4,7 @@
 \alias{.generateFileName_Accession}
 \title{Generate a file name (Accession)}
 \usage{
-.generateFileName_Accession(SRA_library_strategy, accession, output,
-  file_type)
+.generateFileName_Accession(SRA_library_strategy, accession, output, file_type)
 }
 \arguments{
 \item{SRA_library_strategy}{A string with the library strategy}

@@ -4,8 +4,7 @@
 \alias{searchForAccession}
 \title{Search for Accessions}
 \usage{
-searchForAccession(acc_vector, file_output = FALSE,
-  call_output = FALSE)
+searchForAccession(acc_vector, file_output = FALSE, call_output = FALSE)
 }
 \arguments{
 \item{acc_vector}{A character vector with accession numbers 
@@ -30,12 +29,14 @@ df <- searchForAccession("SRP026280")
 
 }
 \seealso{
-Other Workflow functions: \code{\link{addMissingSamples}},
-  \code{\link{convertAccession}},
-  \code{\link{filterByTermByAccessionLevel}},
-  \code{\link{filterByTerm}}
+Other Workflow functions: 
+\code{\link{addMissingSamples}()},
+\code{\link{convertAccession}()},
+\code{\link{filterByTermByAccessionLevel}()},
+\code{\link{filterByTerm}()}
 
-Other Core functions: \code{\link{convertAccession}}
+Other Core functions: 
+\code{\link{convertAccession}()}
 }
 \concept{Core functions}
 \concept{Workflow functions}

@@ -4,8 +4,13 @@
 \alias{.manageLibraryStrategy}
 \title{Manage Library Strategy Formats}
 \usage{
-.manageLibraryStrategy(x, input, output, task = "conv",
-  mismatch.ignore = FALSE)
+.manageLibraryStrategy(
+  x,
+  input,
+  output,
+  task = "conv",
+  mismatch.ignore = FALSE
+)
 }
 \arguments{
 \item{x}{Character vector to be converted}

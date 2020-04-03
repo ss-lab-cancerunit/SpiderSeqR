@@ -4,8 +4,11 @@
 \alias{orderDFAccessions}
 \title{Order df rows in accession order}
 \usage{
-orderDFAccessions(df, acc_order = c("study", "sample", "experiment",
-  "run", "gsm"), na.last = TRUE)
+orderDFAccessions(
+  df,
+  acc_order = c("study", "sample", "experiment", "run", "gsm"),
+  na.last = TRUE
+)
 }
 \arguments{
 \item{df}{Data frame to be ordered (must contain columns corresponding 
@@ -35,7 +38,8 @@ df <- orderDFAccessions(df)
 
 }
 \seealso{
-Other Manipulation functions: \code{\link{filterByTermByAccessionLevel}},
-  \code{\link{filterByTerm}}
+Other Manipulation functions: 
+\code{\link{filterByTermByAccessionLevel}()},
+\code{\link{filterByTerm}()}
 }
 \concept{Manipulation functions}

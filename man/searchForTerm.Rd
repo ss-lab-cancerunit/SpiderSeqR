@@ -4,10 +4,17 @@
 \alias{searchForTerm}
 \title{Search for samples matching criteria of interest}
 \usage{
-searchForTerm(SRA_library_strategy, gene = NULL, antibody = NULL,
-  cell_type = NULL, treatment = NULL, species = NULL,
-  platform = NULL, SRA_secondary_library_strategy = NULL,
-  return_all = TRUE)
+searchForTerm(
+  SRA_library_strategy,
+  gene = NULL,
+  antibody = NULL,
+  cell_type = NULL,
+  treatment = NULL,
+  species = NULL,
+  platform = NULL,
+  SRA_secondary_library_strategy = NULL,
+  return_all = TRUE
+)
 }
 \arguments{
 \item{SRA_library_strategy}{Experimental method (e.g. RNA-Seq, ChIP-Seq). 

@@ -4,8 +4,15 @@
 \alias{.searchSRA}
 \title{An internal function for searchForTerm}
 \usage{
-.searchSRA(SRA_library_strategy, gene, antibody, cell_type, treatment,
-  species, platform)
+.searchSRA(
+  SRA_library_strategy,
+  gene,
+  antibody,
+  cell_type,
+  treatment,
+  species,
+  platform
+)
 }
 \arguments{
 \item{SRA_library_strategy}{Character vector specifying experiment approach}

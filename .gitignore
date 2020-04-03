@@ -2,3 +2,10 @@ inst/doc
 .Rproj.user
 doc
 Meta
+
+*.Rproj
+
+# History files
+.Rhistory
+/*.Rhistory
+.Rapp.history

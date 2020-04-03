@@ -4,8 +4,13 @@
 \alias{.searchForAccessionAcrossDBsDF}
 \title{Search for accession across databases}
 \usage{
-.searchForAccessionAcrossDBsDF(acc_vector, sra_columns, geo_columns,
-  gse_columns, df)
+.searchForAccessionAcrossDBsDF(
+  acc_vector,
+  sra_columns,
+  geo_columns,
+  gse_columns,
+  df
+)
 }
 \arguments{
 \item{acc_vector}{A vector of accessions 

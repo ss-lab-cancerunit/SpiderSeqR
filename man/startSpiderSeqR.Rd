@@ -4,8 +4,13 @@
 \alias{startSpiderSeqR}
 \title{Prepare the environment to run SpiderSeqR}
 \usage{
-startSpiderSeqR(dir, general_expiry = 90, sra_expiry, geo_expiry,
-  srr_gsm_expiry)
+startSpiderSeqR(
+  dir,
+  general_expiry = 90,
+  sra_expiry,
+  geo_expiry,
+  srr_gsm_expiry
+)
 }
 \arguments{
 \item{dir}{Directory where database files will be stored}
@@ -130,6 +135,7 @@ the function should take an order of \emph{seconds} to complete
 
 }
 \seealso{
-Other Setup functions: \code{\link{startSpiderSeqRDemo}}
+Other Setup functions: 
+\code{\link{startSpiderSeqRDemo}()}
 }
 \concept{Setup functions}

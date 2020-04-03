@@ -4,10 +4,18 @@
 \alias{.generateFileName}
 \title{Generate a file name}
 \usage{
-.generateFileName(SRA_library_strategy, gene = NULL, antibody = NULL,
-  cell_type = NULL, treatment = NULL, species = NULL,
-  platform = NULL, SRA_secondary_library_strategy = NULL, output,
-  file_type)
+.generateFileName(
+  SRA_library_strategy,
+  gene = NULL,
+  antibody = NULL,
+  cell_type = NULL,
+  treatment = NULL,
+  species = NULL,
+  platform = NULL,
+  SRA_secondary_library_strategy = NULL,
+  output,
+  file_type
+)
 }
 \arguments{
 \item{SRA_library_strategy, gene, antibody, cell_type}{and:}

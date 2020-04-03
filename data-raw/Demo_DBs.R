@@ -6,7 +6,8 @@
 # Setup ####
 
 devtools::load_all()
-startSpiderSeqR(getwd())
+#startSpiderSeqR(getwd())
+startSpiderSeqR("C:\\DD\\Projects\\SpideRs\\SpiderSeqR-Auxillaries\\Database_Files")
 library(DBI)
 
 
@@ -194,10 +195,10 @@ sra_demo <- sra_df
 
 # Save data ####
 
-usethis::use_data(gse_demo)
-usethis::use_data(gsm_demo)
-usethis::use_data(srr_demo)
-usethis::use_data(sra_demo)
+usethis::use_data(gse_demo, compress = "xz")
+usethis::use_data(gsm_demo, compress = "xz")
+usethis::use_data(srr_demo, compress = "xz")
+usethis::use_data(sra_demo, compress = "xz")
 
 
 

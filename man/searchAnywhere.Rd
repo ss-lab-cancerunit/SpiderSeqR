@@ -4,11 +4,19 @@
 \alias{searchAnywhere}
 \title{Search Anywhere within SRA and GEO databases}
 \usage{
-searchAnywhere(query_all, acc_levels = c("run", "experiment", "sample",
-  "gsm"), category_both = NULL, SRA_library_strategy = NULL,
+searchAnywhere(
+  query_all,
+  acc_levels = c("run", "experiment", "sample", "gsm"),
+  category_both = NULL,
+  SRA_library_strategy = NULL,
   SRA_other_library_strategy = c("OTHER", "NA", "NULL"),
-  GEO_type = NULL, SRA_query, GEO_query, GSM_query, GSE_query,
-  call_output = FALSE)
+  GEO_type = NULL,
+  SRA_query,
+  GEO_query,
+  GSM_query,
+  GSE_query,
+  call_output = FALSE
+)
 }
 \arguments{
 \item{query_all}{Search term for both SRA and GEO (gse and gsm tables)}

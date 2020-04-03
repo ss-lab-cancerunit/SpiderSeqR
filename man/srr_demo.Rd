@@ -4,7 +4,9 @@
 \name{srr_demo}
 \alias{srr_demo}
 \title{DEMO extract from srr_gsm table (from custom sqlite database)}
-\format{An object of class \code{data.frame} with 47 rows and 6 columns.}
+\format{
+An object of class \code{data.frame} with 47 rows and 6 columns.
+}
 \usage{
 data(srr_demo)
 }

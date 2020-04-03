@@ -4,7 +4,9 @@
 \name{sra_demo}
 \alias{sra_demo}
 \title{DEMO extract from sra table (from sqlite file of SRAdb package)}
-\format{An object of class \code{data.frame} with 146 rows and 75 columns.}
+\format{
+An object of class \code{data.frame} with 146 rows and 75 columns.
+}
 \usage{
 data(sra_demo)
 }
