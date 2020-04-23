@@ -9,7 +9,8 @@ startSpiderSeqR(
   general_expiry = 90,
   sra_expiry,
   geo_expiry,
-  srr_gsm_expiry
+  srr_gsm_expiry,
+  recurse_levels = 2
 )
 }
 \arguments{
@@ -26,6 +27,10 @@ of GEOmetadb.sqlite file}
 
 \item{srr_gsm_expiry}{Maximum number of days since creation 
 of SRR_GSM.sqlite file}
+
+\item{recurse_levels}{Integer with the number of directory levels 
+above the specified directory; used for searching for database files 
+if they are missing in the specified directory}
 }
 \value{
 Nothing. If necessary, it may download/create database files. 
@@ -53,7 +58,7 @@ It will always create the database connections in the global environment.
 It is necessary to fulfil all the above requirements; 
 without them the package will not work.
 The first two database files are relatively large in size 
-(33 GB and 6 GB at the time of writing), so please ensure that you have 
+(32 GB and 9 GB at the time of writing), so please ensure that you have 
 adequate internet connection and sufficient disk space.
 
 It is recommended that the newest version of the databases is used. 
@@ -98,10 +103,14 @@ functions; \code{startSpiderSeqR} will download/create them if necessary:
 
 
 They take approximately 40 GB of disk space 
-(33 GB, 6 GB, <50 MB respectively at the time of writing), so please ensure 
-that you have adequate internet connection and sufficient disk space. 
+(32 GB, 9 GB and 100 MB respectively at the time of writing), 
+so please ensure that you have adequate internet connection 
+and sufficient disk space. 
+The two downloaded files are downloaded compressed, 
+so the download size is smaller than the final file size. 
 In order to save disk space, the previous files will be overwritten 
-when downloading a newer version.
+when downloading a newer version, so if you would like to keep them, 
+please rename them before updating.
 
 
 Running \code{startSpiderSeqR} for the first time will inevitably 
@@ -130,7 +139,9 @@ the function should take an order of \emph{seconds} to complete
 ##    but get reminders to re-download the other files
 # startSpiderSeqR(dir = getwd(), sra_expiry = 365) 
 
-
+## Use the following if you would like to locate
+##   the database files in a few directory levels above
+# startSpiderSeqR(dir = getwd(), recurse_levels = 4)
 
 
 }

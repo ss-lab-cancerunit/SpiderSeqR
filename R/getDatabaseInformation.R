@@ -82,7 +82,7 @@ getDatabaseInformation <- function(){
     
     
     if (menu_options == 1){ # library_strategy
-        
+        .mm("Please wati, this might take some time to compute...", "prog")
         df <- 
             DBI::dbGetQuery(get(sra_database_name, envir = get(database_env)),
                             paste0("SELECT library_strategy, count(*) ",

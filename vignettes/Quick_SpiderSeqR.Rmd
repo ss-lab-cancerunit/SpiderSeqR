@@ -49,7 +49,11 @@ please ensure that you have the following installed:
  (as prompted during SpiderSeqR installation process)  
   
 Additionally, you will need free hard drive space to store 
-the large database files (we would recommend at least 100GB of disc space).  
+the large database files 
+(we would recommend having at least 100 GB of disc space available).
+The most recent database files took up only about 40 GB in total, but
+this is likely to gradually increase over time as the number of samples 
+in the databases continues to grow. 
 
 
 You must run the following in order to start using SpiderSeqR 
@@ -72,7 +76,7 @@ It is is useful for this vignette and for getting familiar with SpiderSeqR,
 but to get access to whole databases, please run the code below:
 
 ```{r, eval =FALSE}
-startSpideR(dir=getwd()) 
+startSpiderSeqR(dir=getwd()) 
 ## The 'dir' argument determines the location of large database files 
 ## (running this command for the first time can be time consuming, 
 ## but will be fast on all successive runs provided 
@@ -319,6 +323,28 @@ startSpiderSeqR().
 ```{r, eval = FALSE}
 startSpiderSeqR(getwd(), general_expiry = 30)
 ```
+
+### Search more directories to locate the database files
+
+
+By default, startSpiderSeqR() tries to locate the database files within 
+the specified directory. If files are not present there, 
+it will increase the scope to a **recurse_levels** number of directories above
+(and all their subdirectories).
+
+**TASK:** *"I would like to be more flexible about the location* 
+*of the database files"*
+
+To increase the scope of the search, set **recurse_levels** to a higher level.
+Please note, however, that if the number is too large 
+(e.g. large enough to reach your root directory), the search might take 
+much longer time.
+
+
+```{r, eval = FALSE}
+startSpiderSeqR(getwd(), recurse_levels = 4)
+```
+
 
 
 ### Find out more about the databases (getDatabaseInformation)

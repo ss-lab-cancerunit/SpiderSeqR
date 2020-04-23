@@ -1,4 +1,8 @@
 
+# - startSpiderSeqR
+# - findFiles
+
+
 
 #' Prepare the environment to run SpiderSeqR
 #' 
@@ -23,7 +27,7 @@
 #' It is necessary to fulfil all the above requirements; 
 #' without them the package will not work.
 #' The first two database files are relatively large in size 
-#' (33 GB and 6 GB at the time of writing), so please ensure that you have 
+#' (32 GB and 9 GB at the time of writing), so please ensure that you have 
 #' adequate internet connection and sufficient disk space.
 #' 
 #' It is recommended that the newest version of the databases is used. 
@@ -69,10 +73,14 @@
 #' 
 #' 
 #' They take approximately 40 GB of disk space 
-#' (33 GB, 6 GB, <50 MB respectively at the time of writing), so please ensure 
-#' that you have adequate internet connection and sufficient disk space. 
+#' (32 GB, 9 GB and 100 MB respectively at the time of writing), 
+#' so please ensure that you have adequate internet connection 
+#' and sufficient disk space. 
+#' The two downloaded files are downloaded compressed, 
+#' so the download size is smaller than the final file size. 
 #' In order to save disk space, the previous files will be overwritten 
-#' when downloading a newer version.
+#' when downloading a newer version, so if you would like to keep them, 
+#' please rename them before updating.
 #' 
 #' 
 #' Running \code{startSpiderSeqR} for the first time will inevitably 
@@ -102,7 +110,9 @@
 #' ##    but get reminders to re-download the other files
 #' # startSpiderSeqR(dir = getwd(), sra_expiry = 365) 
 #' 
-#' 
+#' ## Use the following if you would like to locate
+#' ##   the database files in a few directory levels above
+#' # startSpiderSeqR(dir = getwd(), recurse_levels = 4)
 #' 
 #' 
 #' @param dir Directory where database files will be stored
@@ -114,6 +124,9 @@
 #'     of GEOmetadb.sqlite file
 #' @param srr_gsm_expiry Maximum number of days since creation 
 #'     of SRR_GSM.sqlite file
+#' @param recurse_levels Integer with the number of directory levels 
+#'     above the specified directory; used for searching for database files 
+#'     if they are missing in the specified directory
 #' 
 #' @return Nothing. If necessary, it may download/create database files. 
 #' Sets up database connections in the global environment.
@@ -128,18 +141,122 @@ startSpiderSeqR <- function(dir,
                             general_expiry=90, 
                             sra_expiry, 
                             geo_expiry, 
-                            srr_gsm_expiry){
+                            srr_gsm_expiry,
+                            recurse_levels=2){
+    
     ori_wd <- getwd()
     setwd(dir)
+    
+    
     .mm(cli::rule(), "comm")
     .mm("Welcome to SpiderSeqR!!!", "qn")
-    .mm("Please bear with us while we download and prepare database files...", 
-                                                                        "comm")
-    .mm(paste0("NOTE: this might take some time ",
-        "and will require about 100GB of disc space"), "comm")
+    .mm(paste0("Please wait while the database files and connections ",
+            "are being configured..."), "comm")
     .mm(cli::rule(), "comm")
-    .mm("...Setting up the database connections...", "comm")
-    .mm(paste0("Location of database files: ", getwd()), "comm")
+    
+    
+    
+    sra_file <- "SRAmetadb.sqlite"
+    geo_file <- "GEOmetadb.sqlite"
+    srr_gsm_file <- "SRR_GSM.sqlite"
+    
+    sra_file_name <- sra_file
+    geo_file_name <- geo_file
+    srr_gsm_file_name <- srr_gsm_file
+    
+    #==========================================================
+    # Checking files and searching in other directories####
+    #==========================================================
+    # NOTE: will be re-checked again later, this is for expanding search
+    # and communicating to the user
+    
+    .mm(paste0("Searching for database files in: "), "comm")
+    .mm(getwd(), "qn")
+    
+    # Number of files missing
+    number_missing <- sum(!file.exists(sra_file), 
+                        !file.exists(geo_file), 
+                        !file.exists(srr_gsm_file))
+    
+    if (number_missing==0) .mm("Successfully found all database files", "comm")
+    if (number_missing %in% c(1,2)) .mm(paste0("Some files not found ",
+                                        "in the specified directory"), "comm")
+    if (number_missing==3) .mm("No files found in the specified directory", 
+                                "comm")
+    
+    # Expand search for missing files
+    if (number_missing > 0){
+        .mm(cli::rule(), "comm")
+        .mm("Expanding the search to within:", "comm")
+        .mm(paste(dir, "and", recurse_levels, "directory levels above"), "qn")
+        
+        file_list <- c("sra_file", "geo_file", "srr_gsm_file")
+        
+        for (i in seq_along(file_list)){
+            
+            match_files <- .findFiles(paste0("(^|*)", get(file_list[i])), 
+                                        recurse_levels=recurse_levels)
+            
+            # If length = 0, do nothing
+            if (length(match_files) == 1){
+                .mm(paste0("Found ", file_list[i], ":\n", match_files), "comm")
+                assign(file_list[i], match_files) # Substitute the path
+            } else if (length(match_files > 1)){
+                
+                .mm(paste0("Found multiple matching files. ",
+                    "Which one would you like to use?"), "qn")
+                
+                # Let the user choose the file
+                file_choice <- utils::menu(match_files)
+                assign(file_list[i], match_files[file_choice])
+            }
+            
+        }
+        
+        # Repeat missing check after extended search done
+        missing_logical <- c(!file.exists(sra_file), 
+                            !file.exists(geo_file), 
+                            !file.exists(srr_gsm_file))
+        
+        missing_files <- c(sra_file, geo_file, srr_gsm_file)
+        missing_files <- missing_files[missing_logical]
+        
+        
+        if (sum(missing_logical)==3){
+            # ALL missing
+            .mm(paste0("The required files could not be found (", 
+                        paste0(missing_files, collapse = ", "), ")"), "comm")
+            
+        } else if (sum(missing_logical) > 0){
+            # SOME missing
+            .mm(paste0("Some of the required files could not be found (", 
+                        paste0(missing_files, collapse = ", "), ")"), "comm")
+            
+        } else if (sum(missing_logical) == 0){
+            # NONE missing
+            .mm("Successfully found all database files", "comm")
+        }
+        
+        # General message for (any number of) missing files
+        if(sum(missing_logical)>0){
+            .mm(paste0("You will shortly be prompted to download/generate ", 
+                "the missing files"), "comm")
+            .mm(cli::rule(), "comm")
+            #.mm("NOTE:", "qn")
+            .mm(paste0("NOTE: The total download size of all three files ",
+                    "is about 10-15 GB (compressed)\n", 
+                    "requiring about 40-50 GB disc space after extraction \n",
+                    "(these numbers may change as the databases ",
+                    "keep growing)"), "comm")
+            #.mm(cli::rule(), "comm")
+            
+        }
+        
+    }
+    
+    
+    #==========================================================
+    
     
     
     #Setup:
@@ -163,9 +280,6 @@ startSpiderSeqR <- function(dir,
     #    * if does not exist - create (else: stop)
     
     
-    sra_file <- "SRAmetadb.sqlite"
-    geo_file <- "GEOmetadb.sqlite"
-    srr_gsm_file <- "SRR_GSM.sqlite"
     
     
     #==========================================================
@@ -199,16 +313,31 @@ startSpiderSeqR <- function(dir,
                 !(is.numeric(srr_gsm_expiry)) ){
         stop("Expiry parameters must be numeric")
     }
+    
+    #==========================================================
+    
+    # Only communicate the expiry dates if there are some files present
+    if (sum(missing_logical)<3){
+        .mm(cli::rule(), "comm")
+        .mm(paste0("Reminders for outdated database files will occur ",
+                    "once files are older than XX days:"), "comm")
+        
+        #.mm(paste0("Using the following expiry dates for databases \n",
+        #    "(max. number of days since file creation date):"), "comm")
+        
+        .mm(paste0("SRA: ", sra_expiry, " days"), "qn")
+        .mm(paste0("GEO: ", geo_expiry, " days"), "qn")
+        .mm(paste0("SRR_GSM: ", srr_gsm_expiry, " days"), "qn")
+    }
+    
+    
+    
+    .mm(cli::rule(), "comm")
+    
+    
     #==========================================================
     
     
-    .mm(paste0("Using the following expiry dates for databases \n",
-        "(max. number of days since file creation date):"), "comm")
-    
-    .mm(paste0("SRA: ", sra_expiry, " days"), "comm")
-    .mm(paste0("GEO: ", geo_expiry, " days"), "comm")
-    .mm(paste0("SRR_GSM: ", srr_gsm_expiry, " days"), "comm")
-    .mm(cli::rule(), "comm")
     
     #==========================================================
     # SRAmetadb ####
@@ -218,8 +347,8 @@ startSpiderSeqR <- function(dir,
     if(!file.exists(sra_file)){ # NO FILE
         
         .mm(paste0("The file ", 
-                    sra_file, 
-                    " was not found in the current working directory"), 
+                    sra_file_name, 
+                    " was not found in the specified directories"), 
             "qn")
         
         .mm("Would you like to download the file now?", "qn")
@@ -229,7 +358,7 @@ startSpiderSeqR <- function(dir,
             .mm("Downloading the file", "comm")
             sra_file <- SRAdb::getSRAdbFile()
         } else {
-            stop(paste0(sra_file, 
+            stop(paste0(sra_file_name, 
                     " file is necessary for the functioning of the package"))
         }
     }
@@ -240,7 +369,7 @@ startSpiderSeqR <- function(dir,
         (difftime(Sys.Date(), 
                     file.info(sra_file)$mtime, units = "days") > sra_expiry) ){
         
-        .mm(paste0("The file ", sra_file, " is out of date"), "qn")
+        .mm(paste0("The file ", sra_file_name, " is out of date"), "qn")
         .mm(paste0("Last modified: ", file.info(sra_file)$mtime), "comm")
         .mm(paste0("Would you like to download a new version of the file ",
         "right now?\n(this is recommended, though not necessary)"), "qn")
@@ -252,11 +381,11 @@ startSpiderSeqR <- function(dir,
         } else {
             .mm(paste0(
                 "Next time please consider downloading a new version of ", 
-                            sra_file, " file"), "adverse")
+                            sra_file_name, " file"), "adverse")
         }
         
     } else if(file.exists(sra_file)) {
-        .mm(paste0("The file ", sra_file, " is up to date"), "comm")
+        .mm(paste0("The file ", sra_file_name, " is up to date"), "comm")
         .mm(paste0("Last modified: ", file.info(sra_file)$mtime), "comm")
     }
     
@@ -277,8 +406,8 @@ startSpiderSeqR <- function(dir,
         
         
         .mm(paste0("The file ", 
-                    geo_file, 
-                    " was not found in the current working directory"), 
+                    geo_file_name, 
+                    " was not found in the specified directories"), 
                 "qn")
         
         .mm("Would you like to download the file right now?", "qn")
@@ -289,7 +418,7 @@ startSpiderSeqR <- function(dir,
             geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = 
                                                         "GEOmetadb.sqlite.gz")
         } else {
-            stop(paste0(geo_file, 
+            stop(paste0(geo_file_name, 
                     " file is necessary for the functioning of the package"))
         }
     }
@@ -300,7 +429,7 @@ startSpiderSeqR <- function(dir,
         (difftime(Sys.Date(), 
                     file.info(geo_file)$mtime, units = "days") > geo_expiry) ){
         
-        .mm(paste0("The file ", geo_file, " is out of date"), "qn")
+        .mm(paste0("The file ", geo_file_name, "is out of date"), "qn")
         .mm(paste0("Last modified: ", file.info(geo_file)$mtime), "comm")
         .mm(paste0("Would you like to download a new version of the file ",
             "right now?\n(this is recommended, though not necessary)"), "qn")
@@ -313,18 +442,18 @@ startSpiderSeqR <- function(dir,
         } else {
             .mm(paste0(
                 "Next time please consider downloading a new version of ", 
-                            geo_file, " file"), "adverse")
+                            geo_file_name, " file"), "adverse")
         }
         
     } else if(file.exists(geo_file)) {
-        .mm(paste0("The file ", geo_file, " is up to date"), "comm")
+        .mm(paste0("The file ", geo_file_name, " is up to date"), "comm")
         .mm(paste0("Last modified: ", file.info(geo_file)$mtime), "comm")
     }
     
     #==========================================================
     
     
-    
+    .mm(cli::rule(), "comm")
     
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
@@ -379,8 +508,8 @@ startSpiderSeqR <- function(dir,
             
         } else { # OLD FILE
             
-            .mm(paste0("The file ", 
-                        srr_gsm_file, " is out of date"), "qn")
+            .mm(paste0("The file\n", 
+                        srr_gsm_file, "\nis out of date"), "qn")
             
             .mm(paste0("Last modified: ", 
                         file.info(srr_gsm_file)$mtime), "comm")
@@ -436,7 +565,18 @@ startSpiderSeqR <- function(dir,
         
         db_df <- data.frame()
         
-        tt <- 1
+        #print(Sys.time())
+        #tt <- 1
+        i <- 1000
+        
+        #Not searching for the total number of entries; it adds a huge overhead
+        #tot_query <- paste0("SELECT count(*) FROM sra WHERE run_alias ",
+        #               "LIKE 'GSM%' OR experiment_attribute LIKE '%GSM%'")
+        #tot_n <- DBI::dbGetQuery(sra_con, tot_query)
+        #tot_n <- as.integer(tot_n)
+        
+        # Last found total
+        tot_n <- 1618978
         
         rs <- DBI::dbSendQuery(sra_con, "SELECT
                         run_accession,
@@ -449,9 +589,10 @@ startSpiderSeqR <- function(dir,
                         LIKE 'GSM%' OR experiment_attribute LIKE '%GSM%'")
         
         while (!DBI::dbHasCompleted(rs)){
-            cat(".")
-            if (tt %% 80 ==0) cat("\n")
-            tt <- tt + 1
+            #cat(".")
+            #if (tt %% 80 ==0) cat("\n")
+            #tt <- tt + 1
+            .progressBar(i, tot_n)
             
             chunk <- DBI::dbFetch(rs, 1000)
             
@@ -525,10 +666,14 @@ startSpiderSeqR <- function(dir,
             
             db_df <- rbind(db_df, chunk)
             
+            i <- i+1000
             
         }
+        .progressBar(tot_n, tot_n)
+        
         cat("\n")
         
+        #print(Sys.time())
         
         DBI::dbClearResult(rs)
         
@@ -558,6 +703,8 @@ startSpiderSeqR <- function(dir,
         DBI::dbDisconnect(sra_con)
         DBI::dbDisconnect(geo_con)
         
+        #print(Sys.time())
+        
         
     }
     #==========================================================
@@ -576,22 +723,108 @@ startSpiderSeqR <- function(dir,
     setwd(ori_wd)
     
     .mm(cli::rule(), "comm")
-    .mm(paste0("Further information on ", sra_file, " database:"), "comm")
+    .mm(paste0("Further information on ", sra_file_name, " database:"), "comm")
     #.mm(cli::rule(), "comm")
     .mm(DBI::dbGetQuery(get("geo_con", 
                         envir = get(".GlobalEnv")), 
                         "SELECT * FROM metaInfo"), "comm")
     
     .mm(cli::rule(), "comm")
-    .mm(paste0("Further information on ", geo_file, " database:"), "comm")
+    .mm(paste0("Further information on ", geo_file_name, " database:"), "comm")
     #.mm(cli::rule(), "comm")
     .mm(DBI::dbGetQuery(get("sra_con", 
                         envir = get(".GlobalEnv")), 
                         "SELECT * FROM metaInfo"), "comm")
     .mm(cli::rule(), "comm")
-    .mm("Welcome to SpiderSeqR! All set!", "qn")
+    .mm("SpiderSeqR setup complete", "qn")
     
     
     
     
 }
+
+
+
+
+
+#' Find files (wrapper around dir allowing to search a few levels up)
+#' 
+#' @param pattern Regular expression pattern to search for (passed to dir())
+#' @param recurse_levels Integer with the number of directory levels 
+#'     (above current working directory) to search in
+#' @return A full path with the matching file(s)
+#' 
+#' @examples 
+#' #.findFiles("*.sqlite", 5)
+#' 
+#' @keywords internal
+#' 
+.findFiles <- function(pattern, recurse_levels){
+    ori_wd <- getwd()
+    
+    # recurse_levels patterns:
+    # rl 0 "."
+    # rl 1 ".."
+    # rl 2 "../.."
+    # rl n "..[n-1](/..)
+    
+    if (recurse_levels == 0){
+        path <- "."
+    } else {
+        path <- ".."
+        if ((recurse_levels-1)>0){
+            path <- paste0(path, 
+                        paste0(rep("/..", recurse_levels-1), collapse = ""))
+        }
+    }
+    
+    setwd(path)
+    #print(getwd())
+    .mm(paste0("Searching for ", pattern, " files in: ", getwd()), "dev")
+    
+    matches <- dir(path = getwd(), pattern = pattern, 
+                    recursive = TRUE, full.names = TRUE)
+    
+    
+    setwd(ori_wd)
+    #print(matches)
+    
+    return(matches)
+}
+
+
+
+
+
+
+#' Generate a progress bar scaled by width
+#' 
+#' @param i Current stage
+#' @param n Total number of stages
+#' @param width Number of characters for progress display 
+#'     (the whole bar will have 2 extra ones used for marking both ends)
+#' @return Nothing. Output progress to console
+#' 
+#' @examples 
+#' 
+#' #for (i in 1:10){
+#' #    progressBar_Scaled(i, 10, 100)
+#' #    Sys.sleep(1)
+#' #}
+#' 
+#' @keywords internal
+#' 
+.progressBar <- function(i, n, width=78){
+    
+    if (i > n) i <- n
+    
+    x <- (i*width) %/% n
+    
+    
+    #cat("PROGRESS:\n")
+    string <- paste0("[", paste0(rep(".", x), collapse = ""), 
+                        paste0(rep(" ", width-x), collapse = ""), "]")
+    cat(string, " \r")
+    utils::flush.console()
+}
+
