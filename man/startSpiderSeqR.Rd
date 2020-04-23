@@ -9,8 +9,7 @@ startSpiderSeqR(
   general_expiry = 90,
   sra_expiry,
   geo_expiry,
-  srr_gsm_expiry,
-  recurse_levels = 2
+  srr_gsm_expiry
 )
 }
 \arguments{
@@ -27,10 +26,6 @@ of GEOmetadb.sqlite file}
 
 \item{srr_gsm_expiry}{Maximum number of days since creation 
 of SRR_GSM.sqlite file}
-
-\item{recurse_levels}{Integer with the number of directory levels 
-above the specified directory; used for searching for database files 
-if they are missing in the specified directory}
 }
 \value{
 Nothing. If necessary, it may download/create database files. 

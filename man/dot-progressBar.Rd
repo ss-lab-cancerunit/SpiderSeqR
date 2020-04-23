@@ -23,7 +23,7 @@ Generate a progress bar scaled by width
 \examples{
 
 #for (i in 1:10){
-#    progressBar_Scaled(i, 10, 100)
+#    .progressBar(i, 10, 100)
 #    Sys.sleep(1)
 #}
 

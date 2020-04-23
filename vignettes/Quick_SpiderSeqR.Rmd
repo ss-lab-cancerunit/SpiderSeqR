@@ -324,25 +324,39 @@ startSpiderSeqR().
 startSpiderSeqR(getwd(), general_expiry = 30)
 ```
 
-### Search more directories to locate the database files
+
+
+### I would like to store my database files in a subdirectory
 
 
 By default, startSpiderSeqR() tries to locate the database files within 
-the specified directory. If files are not present there, 
-it will increase the scope to a **recurse_levels** number of directories above
-(and all their subdirectories).
+the specified directory. This may also include any of its subdirectories. 
+You can therefore store the files in "./Database_Files" or even 
+in ("./SRA_files", "./GEO_files" and "./SRR_GSM_files"). 
+All the files will be located and in case of multiple matches, 
+user will be prompted to choose the desired file.
+<br>
+Please note, however, that the specified directory remains the default location
+for downloading database files (for avoidance of doubt, in case each of 
+the three files have a different location). Therefore, if you update or 
+download a missing database, it will be placed in the specified directory, 
+not in the location(s) of the other files. You can move the files to a desired 
+directory and run startSpiderSeqR() again to update the connections 
+to the new file location.
+
 
 **TASK:** *"I would like to be more flexible about the location* 
-*of the database files"*
-
-To increase the scope of the search, set **recurse_levels** to a higher level.
-Please note, however, that if the number is too large 
-(e.g. large enough to reach your root directory), the search might take 
-much longer time.
+*of the database files and store them in a subdirectory without having *
+*to specify the exact path"*
 
 
 ```{r, eval = FALSE}
-startSpiderSeqR(getwd(), recurse_levels = 4)
+# For files located e.g. in data/database_files, the following will suffice
+startSpiderSeqR(getwd())
+# OR:
+startSpiderSeqR(".")
+# i.e. don't need to specify the full path:
+startSpiderSeqR("data/database_files")
 ```
 
 
