@@ -34,6 +34,17 @@ Some of the key features of SpiderSeqR include:
 - conversion between (and within) SRA and GEO database entries  
 
 
+## Installation
+
+The package is currently available on github at 
+https://github.com/ss-lab-cancerunit/SpiderSeqR
+To install it, please run:
+
+```{r, eval=FALSE}
+devtools::install_github("ss-lab-cancerunit/SpiderSeqR")
+```
+
+
 
 ## Setup and Requirements
   
@@ -75,7 +86,7 @@ with a small extract from the large database files.
 It is is useful for this vignette and for getting familiar with SpiderSeqR, 
 but to get access to whole databases, please run the code below:
 
-```{r, eval =FALSE}
+```{r, eval=FALSE}
 startSpiderSeqR(dir=getwd()) 
 ## The 'dir' argument determines the location of large database files 
 ## (running this command for the first time can be time consuming, 
