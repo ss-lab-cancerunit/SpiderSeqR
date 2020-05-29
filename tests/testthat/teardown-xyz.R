@@ -8,6 +8,8 @@ print(ls(envir = .GlobalEnv))
 print(q)
 setSpiderSeqROption("quiet", q)
 
+setSpiderSeqROption("testing", testing)
+
 
 
 # print(environment())

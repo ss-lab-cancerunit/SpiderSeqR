@@ -18,6 +18,7 @@ local({
     assign("output_columns", NULL) # Amend
     assign("quiet", FALSE)
     assign("internal", FALSE)
+    assign("testing", FALSE)
 }, SpiderSeqREnv)
 
 
@@ -40,6 +41,7 @@ local({
 #'    for generating file outputs. 
 #'    Defaults to one of the \code{listColumnSets()}.
 #'    \item quiet - Whether any messages should be printed in the console
+#'    \item testing - whether unit tests are being run (for developer use)
 #' }
 #' 
 #' @examples 
@@ -58,7 +60,7 @@ setSpiderSeqROption <- local({function(name, value){
         }
     }
     
-    if (name == "file_output"){
+    if (name %in% c("file_output", "testing")){
         if (!value %in% c(TRUE, FALSE) ){
             stop("File output needs to be logical")
         }

@@ -42,7 +42,9 @@ q <- getSpiderSeqROption("quiet")
 
 setSpiderSeqROption("quiet", TRUE)
 
+testing <- getSpiderSeqROption("testing")
 
+setSpiderSeqROption("testing", TRUE)
 
 
 preserve_connection <- TRUE # Change to FALSE for real ===*===

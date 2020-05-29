@@ -134,6 +134,7 @@
 #'
 #'
 #' @export
+#' 
 startSpiderSeqR <- function(dir, 
                             general_expiry=90, 
                             sra_expiry, 
@@ -700,10 +701,15 @@ startSpiderSeqR <- function(dir,
     #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     
-    .GlobalEnv$sra_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = sra_file)
-    .GlobalEnv$geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
-    .GlobalEnv$srr_gsm <- 
-        DBI::dbConnect(RSQLite::SQLite(), dbname = srr_gsm_file)
+    if (!isTRUE(getSpiderSeqROption("testing"))){
+        .GlobalEnv$sra_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = sra_file)
+        .GlobalEnv$geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
+        .GlobalEnv$srr_gsm <- 
+            DBI::dbConnect(RSQLite::SQLite(), dbname = srr_gsm_file)
+    } else {
+        setwd(ori_wd)
+        return(TRUE)
+    }
     
     setwd(ori_wd)
     
