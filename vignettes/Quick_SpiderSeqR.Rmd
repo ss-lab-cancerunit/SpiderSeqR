@@ -87,8 +87,8 @@ It is is useful for this vignette and for getting familiar with SpiderSeqR,
 but to get access to whole databases, please run the code below:
 
 ```{r, eval=FALSE}
-startSpiderSeqR(dir=getwd()) 
-## The 'dir' argument determines the location of large database files 
+startSpiderSeqR(path=getwd()) 
+## The 'path' argument determines the location of large database files 
 ## (running this command for the first time can be time consuming, 
 ## but will be fast on all successive runs provided 
 ## that the directory does not change)

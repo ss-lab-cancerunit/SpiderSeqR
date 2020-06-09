@@ -1,3 +1,4 @@
+context(".manageLibraryStrategy")
 
 setSpiderSeqROption("quiet", TRUE)
 

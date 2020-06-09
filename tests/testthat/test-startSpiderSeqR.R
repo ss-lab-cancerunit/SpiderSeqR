@@ -2,9 +2,11 @@ context("startSpiderSeqR")
 
 #' Things to check:
 #' - can find files in testdata/Mock_Database_Files/
+#' - can find files in testdata/Mock_Database_Files 
+#'     (both directly within and in the subdirectory)
 
 
-test_that("Seamless behaviour with the files", {
+test_that("Seamless behaviour with all the files", {
     
     expect_true(startSpiderSeqR(
         "testdata/Mock_Database_Files/Duplicate_Location", 

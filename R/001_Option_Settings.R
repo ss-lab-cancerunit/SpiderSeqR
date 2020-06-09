@@ -41,7 +41,8 @@ local({
 #'    for generating file outputs. 
 #'    Defaults to one of the \code{listColumnSets()}.
 #'    \item quiet - Whether any messages should be printed in the console
-#'    \item testing - whether unit tests are being run (for developer use)
+#'    \item testing - (for developer use) whether unit tests are being run
+#'        
 #' }
 #' 
 #' @examples 

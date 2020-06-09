@@ -95,27 +95,27 @@
 #' 
 #' ## Database files are stored (or will be downloaded) 
 #' ##    in the working directory
-#' # startSpiderSeqR(dir = getwd()) 
+#' # startSpiderSeqR(path = getwd()) 
 #' 
 #' ## Use the following if you would like to download 
 #' ##   the newest database files
-#' # startSpiderSeqR(dir = getwd(), general_expiry = 0) 
+#' # startSpiderSeqR(path = getwd(), general_expiry = 0) 
 #' 
 #' ## Use the following if you have old database files
 #' ##   that you do not wish to re-download on this occasion
-#' # startSpiderSeqR(dir = getwd(), general_expiry = 365) 
+#' # startSpiderSeqR(path = getwd(), general_expiry = 365) 
 #' 
 #' ## Use the following if you only wish to ignore 
 #' ##    an old SRAmetadb.sqlite file, 
 #' ##    but get reminders to re-download the other files
-#' # startSpiderSeqR(dir = getwd(), sra_expiry = 365) 
+#' # startSpiderSeqR(path = getwd(), sra_expiry = 365) 
 #' 
 #' ## Use the following if you would like to locate
 #' ##   the database files in a few directory levels above
-#' # startSpiderSeqR(dir = getwd(), recurse_levels = 4)
+#' # startSpiderSeqR(path = getwd(), recurse_levels = 4)
 #' 
 #' 
-#' @param dir Directory where database files will be stored
+#' @param path Directory where database files will be stored
 #' @param general_expiry Maximum number of days since creation 
 #'     of all database files
 #' @param sra_expiry Maximum number of days since creation 
@@ -135,14 +135,11 @@
 #'
 #' @export
 #' 
-startSpiderSeqR <- function(dir, 
+startSpiderSeqR <- function(path, 
                             general_expiry=90, 
-                            sra_expiry, 
-                            geo_expiry, 
-                            srr_gsm_expiry){
-    
-    ori_wd <- getwd()
-    setwd(dir)
+                            sra_expiry=NULL, 
+                            geo_expiry=NULL, 
+                            srr_gsm_expiry=NULL){
     
     
     .mm(cli::rule(), "comm")
@@ -152,92 +149,16 @@ startSpiderSeqR <- function(dir,
     .mm(cli::rule(), "comm")
     
     
+    file_list <- .findDBFiles(path=path)
     
-    sra_file <- "SRAmetadb.sqlite"
-    geo_file <- "GEOmetadb.sqlite"
-    srr_gsm_file <- "SRR_GSM.sqlite"
+    sra_file <- file_list$sra_file
+    geo_file <- file_list$geo_file
+    srr_gsm_file <- file_list$srr_gsm_file
     
-    sra_file_name <- sra_file
-    geo_file_name <- geo_file
-    srr_gsm_file_name <- srr_gsm_file
-    
-    #==========================================================
-    # Checking files and searching within the directory####
-    #==========================================================
-    # NOTE: will be re-checked again later, this is for expanding search
-    # and communicating to the user
-    
-    .mm(paste0("Searching for database files within: "), "comm")
-    .mm(getwd(), "qn")
-    
-    
-    file_list <- c("sra_file", "geo_file", "srr_gsm_file")
-    
-    for (i in seq_along(file_list)){
-        
-        match_files <- .findFiles(paste0("(^|*)", get(file_list[i])), 
-                                  recurse_levels=0)
-        
-        # If length = 0, do nothing
-        if (length(match_files) == 1){
-            .mm(paste0("Found ", get(paste0(file_list[i], "_name")), 
-                       " file:\n", match_files), "comm")
-            assign(file_list[i], match_files) # Substitute the path
-        } else if (length(match_files > 1)){
-            
-            .mm(paste0("Found multiple matching files. ",
-                       "Which one would you like to use?"), "qn")
-            
-            # Let the user choose the file
-            file_choice <- utils::menu(match_files)
-            assign(file_list[i], match_files[file_choice])
-        }
-        
-    }
-    
-    # Repeat missing check after extended search done
-    missing_logical <- c(!file.exists(sra_file), 
-                         !file.exists(geo_file), 
-                         !file.exists(srr_gsm_file))
-    
-    missing_files <- c(sra_file, geo_file, srr_gsm_file)
-    missing_files <- missing_files[missing_logical]
-    
-    
-    if (sum(missing_logical)==3){
-        # ALL missing
-        .mm(paste0("The required files could not be found (", 
-                   paste0(missing_files, collapse = ", "), ")"), "comm")
-        
-    } else if (sum(missing_logical) > 0){
-        # SOME missing
-        .mm(paste0("Some of the required files could not be found (", 
-                   paste0(missing_files, collapse = ", "), ")"), "comm")
-        
-    } else if (sum(missing_logical) == 0){
-        # NONE missing
-        .mm("Successfully found all database files", "comm")
-    }
-    
-    # General message for (any number of) missing files
-    if(sum(missing_logical)>0){
-        .mm(paste0("You will shortly be prompted to download/generate ", 
-                   "the missing files"), "comm")
-        .mm(cli::rule(), "comm")
-        #.mm("NOTE:", "qn")
-        .mm(paste0("NOTE: The total download size of all three files ",
-                   "is about 10-15 GB (compressed)\n", 
-                   "requiring about 40-50 GB disc space after extraction \n",
-                   "(these numbers may change as the databases ",
-                   "keep growing)"), "comm")
-        #.mm(cli::rule(), "comm")
-        
-    }
-    
+    missing_logical <- do.call(.missingFileCheck, c(file_list))
     
     
     #==========================================================
-    
     
     
     #Setup:
@@ -263,191 +184,44 @@ startSpiderSeqR <- function(dir,
     
     
     
-    #==========================================================
-    # Setting expiry parameters ####
-    #==========================================================
-    # Logic:
-    # Use specific parameters (sra, geo, srr_gsm) if available. 
-    # If not, use the expiry date from general_expiry
+    raw_expiry_parameters <- list(general_expiry=general_expiry,
+                                  sra_expiry=sra_expiry,
+                                  geo_expiry=geo_expiry,
+                                  srr_gsm_expiry=srr_gsm_expiry,
+                                  missing_file_number=sum(missing_logical))
     
-    if ((!missing(general_expiry))&
-        (!missing(sra_expiry))&
-        (!missing(geo_expiry))&
-        (!missing(srr_gsm_expiry))){
-        warning(paste0("general_expiry argument will be ignored, ",
-                       "since all the individual expiry dates have been provided"))
-    }
     
-    if (missing(sra_expiry)){
-        sra_expiry <- general_expiry
-    }
-    if (missing(geo_expiry)){
-        geo_expiry <- general_expiry
-    }
-    if (missing(srr_gsm_expiry)){
-        srr_gsm_expiry <- general_expiry
-    }
     
-    if ( !(is.numeric(general_expiry)) | 
-         !(is.numeric(sra_expiry)) | 
-         !(is.numeric(geo_expiry)) | 
-         !(is.numeric(srr_gsm_expiry)) ){
-        stop("Expiry parameters must be numeric")
-    }
+    expiry_parameters <- do.call(.setExpiryParameters, c(raw_expiry_parameters))
     
-    #==========================================================
+    .mm(cli::rule(), "comm")
     
-    # Only communicate the expiry dates if there are some files present
-    if (sum(missing_logical)<3){
+    #return(file_list)
+    
+    .GlobalEnv$file_list <- file_list
+    .GlobalEnv$expiry_parameters <- expiry_parameters
+    
+    # Check (or download) SRA and GEO files
+    for (i in 1:2){
+        
+        .checkDBFile(db_file=file_list[[i]], 
+                        db_file_name=.DBNames()[i], 
+                        db_expiry=expiry_parameters[[i]])
+        
         .mm(cli::rule(), "comm")
-        .mm(paste0("Reminders for outdated database files will occur ",
-                   "once files are older than XX days:"), "comm")
         
-        #.mm(paste0("Using the following expiry dates for databases \n",
-        #    "(max. number of days since file creation date):"), "comm")
-        
-        .mm(paste0("SRA: ", sra_expiry, " days"), "qn")
-        .mm(paste0("GEO: ", geo_expiry, " days"), "qn")
-        .mm(paste0("SRR_GSM: ", srr_gsm_expiry, " days"), "qn")
     }
     
-    
-    
-    .mm(cli::rule(), "comm")
-    
-    
-    #==========================================================
-    
-    
-    
-    #==========================================================
-    # SRAmetadb ####
-    #==========================================================
-    
-    # NO SRA FILE
-    if(!file.exists(sra_file)){ # NO FILE
-        
-        .mm(paste0("The file ", 
-                   sra_file_name, 
-                   " was not found in the specified directories"), 
-            "qn")
-        
-        .mm("Would you like to download the file now?", "qn")
-        
-        sra_menu <- utils::menu(c("yes", "no"))
-        if (sra_menu == 1){
-            .mm("Downloading the file", "comm")
-            sra_file <- SRAdb::getSRAdbFile()
-        } else {
-            stop(paste0(sra_file_name, 
-                        " file is necessary for the functioning of the package"))
-        }
-    }
-    
-    
-    # OLD SRA FILE
-    if(file.exists(sra_file) & 
-       (difftime(Sys.Date(), 
-                 file.info(sra_file)$mtime, units = "days") > sra_expiry) ){
-        
-        .mm(paste0("The file ", sra_file_name, " is out of date"), "qn")
-        .mm(paste0("Last modified: ", file.info(sra_file)$mtime), "comm")
-        .mm(paste0("Would you like to download a new version of the file ",
-                   "right now?\n(this is recommended, though not necessary)"), "qn")
-        
-        sra_menu <- utils::menu(c("yes", "no"))
-        if (sra_menu == 1){
-            .mm("Downloading the file", "comm")
-            sra_file <- SRAdb::getSRAdbFile()
-        } else {
-            .mm(paste0(
-                "Next time please consider downloading a new version of ", 
-                sra_file_name, " file"), "adverse")
-        }
-        
-    } else if(file.exists(sra_file)) {
-        .mm(paste0("The file ", sra_file_name, " is up to date"), "comm")
-        .mm(paste0("Last modified: ", file.info(sra_file)$mtime), "comm")
-    }
-    
-    
-    #==========================================================
-    
-    
-    
-    .mm(cli::rule(), "comm")
-    
-    
-    #==========================================================
-    # GEOmetadb ####
-    #==========================================================
-    
-    # NO GEO FILE
-    if(!file.exists(geo_file)){ # NO FILE
-        
-        
-        .mm(paste0("The file ", 
-                   geo_file_name, 
-                   " was not found in the specified directories"), 
-            "qn")
-        
-        .mm("Would you like to download the file right now?", "qn")
-        
-        geo_menu <- utils::menu(c("yes", "no"))
-        if (geo_menu == 1){
-            .mm("Downloading the file", "comm")
-            geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = 
-                                                        "GEOmetadb.sqlite.gz")
-        } else {
-            stop(paste0(geo_file_name, 
-                        " file is necessary for the functioning of the package"))
-        }
-    }
-    
-    
-    # OLD GEO FILE
-    if(file.exists(geo_file) & 
-       (difftime(Sys.Date(), 
-                 file.info(geo_file)$mtime, units = "days") > geo_expiry) ){
-        
-        .mm(paste0("The file ", geo_file_name, "is out of date"), "qn")
-        .mm(paste0("Last modified: ", file.info(geo_file)$mtime), "comm")
-        .mm(paste0("Would you like to download a new version of the file ",
-                   "right now?\n(this is recommended, though not necessary)"), "qn")
-        
-        geo_menu <- utils::menu(c("yes", "no"))
-        if (geo_menu == 1){
-            .mm("Downloading the file", "comm")
-            geo_gz_file <- 
-                GEOmetadb::getSQLiteFile(destfile = "GEOmetadb.sqlite.gz")
-        } else {
-            .mm(paste0(
-                "Next time please consider downloading a new version of ", 
-                geo_file_name, " file"), "adverse")
-        }
-        
-    } else if(file.exists(geo_file)) {
-        .mm(paste0("The file ", geo_file_name, " is up to date"), "comm")
-        .mm(paste0("Last modified: ", file.info(geo_file)$mtime), "comm")
-    }
-    
-    #==========================================================
-    
-    
-    .mm(cli::rule(), "comm")
-    
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     #==========================================================
     # RE-CHECK THE PRESENCE OF FILES (have they downloaded successfully???)
     #==========================================================
     if (!(file.exists(sra_file) & file.exists(geo_file))){
         warning(paste0("Something went wrong. Some database files might ",
-                       "be missing. Consider loading the package again."))
+                       "be missing. Please run this function again."))
     } else {
         .mm(paste0(
-            "Both db files are present (remember not to remove them!)\n",
+            "Both db files are present (remember not to (re)move them!)\n",
             "Proceeding to the final step ",
             "(checking for the custom database)."), 
             "comm")
@@ -457,279 +231,36 @@ startSpiderSeqR <- function(dir,
     
     .mm(cli::rule(), "comm")
     
-    #==========================================================
-    # FIND OUT WHETHER IT IS NECESSARY TO CREATE CUSTOM DATABASE ####
-    #==========================================================
-    
-    if (!file.exists(srr_gsm_file)){ # NO FILE
-        
-        .mm(paste0("Would you like to create a cutstom database for converting",
-                   " between GEO and SRA? "), "qn")
-        .mm(paste0("This might take a little while, but it is ",
-                   "necessary for the correct functioning \nof the package."), "comm")
-        srr_gsm_menu <- utils::menu(c("yes", "no"))
-        if (srr_gsm_menu == 1){ # WILLING TO CREATE DB
-            .mm("Database will be created shortly", "comm")
-            db_needed <- TRUE
-        } else { # DECLINED CREATION OF DB
-            db_needed <- FALSE
-            stop(
-                "The database is necessary for the functioning of the package")
-        }
-        
-    } else { # FILE PRESENT
-        if (difftime(Sys.Date(), 
-                     file.info(srr_gsm_file)$mtime, 
-                     units = "days") < srr_gsm_expiry){
-            db_needed <- FALSE
-            .mm(paste0("The custom database for converting between ",
-                       "SRA and GEO is up to date"), "comm")
-            .mm(paste0("Last modified: ", 
-                       file.info(srr_gsm_file)$mtime), 
-                "comm")
-            
-        } else { # OLD FILE
-            
-            .mm(paste0("The file\n", 
-                       srr_gsm_file, "\nis out of date"), "qn")
-            
-            .mm(paste0("Last modified: ", 
-                       file.info(srr_gsm_file)$mtime), "comm")
-            
-            .mm(paste0("Would you like to create a new version of the ",
-                       "file right now?\n(this is recommended, though not necessary)"), 
-                "qn")
-            
-            srr_gsm_menu <- utils::menu(c("yes", "no"))
-            if (srr_gsm_menu == 1){ # WILLING TO CREATE DB
-                .mm("Database will be re-created shortly", "comm")
-                db_needed <- TRUE
-            } else { # DECLINED CREATION OF DB
-                db_needed <- FALSE
-                .mm(paste0("Next time please consider re-creating the ", 
-                           srr_gsm_file, " file"), "adverse")
-            }
-        }
-        
-    }
-    #==========================================================
+
+    .checkDBFile(db_file=file_list[[3]], 
+                 db_file_name=.DBNames()[3], 
+                 db_expiry=expiry_parameters[[3]])
     
     
-    
-    
-    #==========================================================
-    # Create custom database ####
-    #==========================================================
-    if (db_needed){
-        .mm("Please wait, creating the custom database...", "comm")
-        
-        #==========================================================
-        #SRR_GSM
-        #==========================================================
-        # Creating a new database for SRA runs:
-        
-        #IDEA
-        # find entries which contain GSM in run alias
-        #                   or in experiment_attribute (GEO Accession: GSM)
-        
-        #BY CHUNK
-        #Select: SRR, SRX, SRS, SRP, run_alias, experiment_attribute
-        #create two new columns: run_gsm, exp_gsm
-        #do grepl(gsm) on run_alias and experiment_attribute
-        #for grepled rows, extract run_gsm and exp_gsm respectively
-        #check two columns are identical - if not, have a false in a new column
-        
-        #MERGE CHUNKS
-        #WRITE AS AN SQLITE FILE (ESTABLISH THE CONNECTION?)
-        
-        sra_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = sra_file)
-        geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
-        
-        db_df <- data.frame()
-        
-        #print(Sys.time())
-        #tt <- 1
-        
-        
-        #Not searching for the total number of entries; it adds a huge overhead
-        #tot_query <- paste0("SELECT count(*) FROM sra WHERE run_alias ",
-        #               "LIKE 'GSM%' OR experiment_attribute LIKE '%GSM%'")
-        #tot_n <- DBI::dbGetQuery(sra_con, tot_query)
-        #tot_n <- as.integer(tot_n)
-        
-        # Last found total (1618978) + ~100 000
-        i <- 80000
-        tot_n <- 1700000
-        .progressBar(i, tot_n)
-        
-        rs <- DBI::dbSendQuery(sra_con, "SELECT
-                        run_accession,
-                        experiment_accession,
-                        sample_accession,
-                        study_accession,
-                        run_alias, --For GSM
-                        experiment_attribute --For GSM
-                        FROM sra WHERE run_alias 
-                        LIKE 'GSM%' OR experiment_attribute LIKE '%GSM%'")
-        i <- i + 20000
-        .progressBar(i, tot_n)
-        while (!DBI::dbHasCompleted(rs)){
-            #cat(".")
-            #if (tt %% 80 ==0) cat("\n")
-            #tt <- tt + 1
-            .progressBar(i, tot_n)
-            
-            chunk <- DBI::dbFetch(rs, 1000)
-            
-            #Create intermediate columns for extracting GSM information
-            chunk$run_gsm <- NA #from run_alias
-            chunk$exp_gsm <- NA #from experiment_attribute
-            
-            #Find indices where GSM is present
-            run_gsm_indices <- grepl("GSM\\d\\d\\d+", chunk$run_alias)
-            #exp_gsm_indices <- grepl("GSM\\d\\d\\d+", 
-            # chunk$experiment_attribute)
-            exp_gsm_indices <- grepl("GEO Accession: GSM\\d\\d\\d+", 
-                                     chunk$experiment_attribute, ignore.case = TRUE)
-            
-            #Extract GSM information
-            chunk$run_gsm[run_gsm_indices] <- 
-                gsub(".*?(GSM\\d\\d\\d+).*", "\\1", 
-                     chunk$run_alias[run_gsm_indices])
-            
-            chunk$exp_gsm[exp_gsm_indices] <- 
-                gsub(".*?GEO Accession: (GSM\\d\\d\\d+).*", "\\1", 
-                     chunk$experiment_attribute[exp_gsm_indices], 
-                     ignore.case = TRUE)
-            
-            #Create a column to indicate whether GSMs agree between two columns
-            chunk$gsm_check <- NA
-            
-            #Fill in check column
-            #Get indices where run_alias and experiment_attribute 
-            # are both present
-            both_indices <- !(is.na(chunk$run_gsm) | is.na(chunk$exp_gsm)) 
-            
-            #Check those indices for equality
-            chunk$gsm_check[both_indices] <- 
-                chunk$run_gsm[both_indices] == chunk$exp_gsm[both_indices] 
-            
-            #GSM_CHECK: NA - either one or both missing
-            #           F - run_gsm and exp_gsm NOT the same
-            #           T - run_gsm and exp_gsm the same
-            
-            #Create a new column for storing GSMs
-            chunk$gsm <- NA
-            
-            #Extract information from exp_gsm and run_gsm columns
-            #Non-NA entries from experiment_attribute
-            chunk$gsm[!is.na(chunk$exp_gsm)] <- 
-                chunk$exp_gsm[!is.na(chunk$exp_gsm)] 
-            
-            #Non-NA entries from run_alias
-            chunk$gsm[!is.na(chunk$run_gsm)] <- 
-                chunk$run_gsm[!is.na(chunk$run_gsm)] 
-            
-            #NOTE: if both exp_gsm and run_gsm are present, 
-            #  the GSM obtained from run_alias will be retained
-            
-            #Chunk columns at present: "run_accession", "experiment_accession",
-            #"sample_accession", "study_accession", "run_alias", 
-            #"experiment_attribute", "run_gsm", "exp_gsm", "gsm_check"
-            
-            #Select columns
-            chunk <- chunk[,c("run_accession", 
-                              "experiment_accession", 
-                              "sample_accession", 
-                              "study_accession", 
-                              "gsm", 
-                              "gsm_check")]
-            
-            #Get the number of entries with GSM content
-            .mm(sum(run_gsm_indices | exp_gsm_indices), "dev")
-            
-            
-            db_df <- rbind(db_df, chunk)
-            
-            i <- i+1000
-            
-        }
-        
-        .progressBar(tot_n, tot_n)
-        
-        cat("\n")
-        
-        #print(Sys.time())
-        
-        DBI::dbClearResult(rs)
-        
-        
-        #Remove duplicates
-        db_df <- unique(db_df)
-        
-        #Remove entries without successfully extracted GSMs
-        db_df <- db_df[!is.na(db_df$gsm),]
-        
-        #Order (will not be used - this will keep the same order as in the db)
-        #order_columns <- list(db_df$study_accession,
-        #                      db_df$sample_accession,
-        #                      db_df$experiment_accession,
-        #                      db_df$run_accession,
-        #                      db_df$gsm)
-        #db_df <- db_df[orderAccessions(order_columns),]
-        
-        #Save df as an slite object
-        srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), dbname = "SRR_GSM.sqlite")
-        
-        DBI::dbWriteTable(conn = srr_gsm, 
-                          name = "srr_gsm", value = db_df, overwrite = TRUE)
-        
-        .vex("db_df", db_df)
-        
-        DBI::dbDisconnect(sra_con)
-        DBI::dbDisconnect(geo_con)
-        
-        #print(Sys.time())
-        
-        
-    }
-    #==========================================================
-    
-    
-    
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
-    #++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
     
     
     if (!isTRUE(getSpiderSeqROption("testing"))){
-        .GlobalEnv$sra_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = sra_file)
-        .GlobalEnv$geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
-        .GlobalEnv$srr_gsm <- 
-            DBI::dbConnect(RSQLite::SQLite(), dbname = srr_gsm_file)
+        .setDBConnections(sra_file=sra_file, 
+                                    geo_file=geo_file, 
+                                    srr_gsm_file=srr_gsm_file)
+
     } else {
-        setwd(ori_wd)
+        #setwd(ori_wd)
+        # Early exit if testing (no real database connections established)
         return(TRUE)
     }
     
-    setwd(ori_wd)
+    #setwd(ori_wd)
     
     .mm(cli::rule(), "comm")
-    .mm(paste0("Further information on ", sra_file_name, " database:"), "comm")
-    #.mm(cli::rule(), "comm")
-    .mm(DBI::dbGetQuery(get("geo_con", 
-                            envir = get(".GlobalEnv")), 
-                        "SELECT * FROM metaInfo"), "comm")
+    .getFurtherDBInfo(db_file_name = .DBNames()[1], database_name = "sra_con")
+    
     
     .mm(cli::rule(), "comm")
-    .mm(paste0("Further information on ", geo_file_name, " database:"), "comm")
-    #.mm(cli::rule(), "comm")
-    .mm(DBI::dbGetQuery(get("sra_con", 
-                            envir = get(".GlobalEnv")), 
-                        "SELECT * FROM metaInfo"), "comm")
+    .getFurtherDBInfo(db_file_name = .DBNames()[2], database_name = "geo_con")
+    
     .mm(cli::rule(), "comm")
     .mm("SpiderSeqR setup complete", "qn")
-    
-    
     
     
 }
@@ -784,7 +315,19 @@ startSpiderSeqR <- function(dir,
 }
 
 
-
+#' Set database connections
+#' @param sra_file SRA file name (including path)
+#' @param geo_file GEO file name (including path)
+#' @param srr_gsm_file SRR_GSM file name (including path)
+#' 
+#' @return Set up database connections in the global environment
+.setDBConnections <- function(sra_file, geo_file, srr_gsm_file){
+    
+    .GlobalEnv$sra_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = sra_file)
+    .GlobalEnv$geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
+    .GlobalEnv$srr_gsm <- 
+        DBI::dbConnect(RSQLite::SQLite(), dbname = srr_gsm_file)
+}
 
 
 
@@ -818,4 +361,7 @@ startSpiderSeqR <- function(dir,
     cat(string, " \r")
     utils::flush.console()
 }
+
+
+
 
