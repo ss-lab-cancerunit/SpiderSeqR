@@ -192,6 +192,15 @@ sra_demo <- sra_df
 
 
 #-----------------------------------------------------------------------------
+
+# Metadata dataframes (metaInfo)
+
+sra_metadata <- DBI::dbGetQuery(sra_con, "SELECT * FROM metaInfo")
+geo_metadata <- DBI::dbGetQuery(geo_con, "SELECT * FROM metaInfo")
+srr_gsm_metadata <- DBI::dbGetQuery(srr_gsm, "SELECT * FROM metaInfo")
+
+
+#-----------------------------------------------------------------------------
 # SRA GEO Category Conversion ####
 
 ## code to prepare `SRA_GEO_Category_Conversion` dataset 

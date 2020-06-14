@@ -157,9 +157,7 @@ startSpiderSeqR <- function(path,
     
     missing_logical <- do.call(.missingFileCheck, c(file_list))
     
-    
     #==========================================================
-    
     
     #Setup:
     # - SRAmetadb
@@ -182,14 +180,11 @@ startSpiderSeqR <- function(path,
     #    * if does not exist - create (else: stop)
     
     
-    
-    
     raw_expiry_parameters <- list(general_expiry=general_expiry,
                                   sra_expiry=sra_expiry,
                                   geo_expiry=geo_expiry,
                                   srr_gsm_expiry=srr_gsm_expiry,
                                   missing_file_number=sum(missing_logical))
-    
     
     
     expiry_parameters <- do.call(.setExpiryParameters, c(raw_expiry_parameters))
@@ -231,12 +226,9 @@ startSpiderSeqR <- function(path,
     
     .mm(cli::rule(), "comm")
     
-
     .checkDBFile(db_file=file_list[[3]], 
                  db_file_name=.DBNames()[3], 
                  db_expiry=expiry_parameters[[3]])
-    
-    
     
     
     if (!isTRUE(getSpiderSeqROption("testing"))){
@@ -252,12 +244,15 @@ startSpiderSeqR <- function(path,
     
     #setwd(ori_wd)
     
-    .mm(cli::rule(), "comm")
-    .getFurtherDBInfo(db_file_name = .DBNames()[1], database_name = "sra_con")
+    con_names <- c("sra_con", "geo_con", "srr_gsm")
     
+    # Display metaInfo tables from the databases
+    for (i in seq_along(con_names)){
+        .mm(cli::rule(), "comm")
+        .getFurtherDBInfo(db_file_name = .DBNames()[i], 
+                            database_name = con_names[i])
+    }
     
-    .mm(cli::rule(), "comm")
-    .getFurtherDBInfo(db_file_name = .DBNames()[2], database_name = "geo_con")
     
     .mm(cli::rule(), "comm")
     .mm("SpiderSeqR setup complete", "qn")
@@ -315,6 +310,8 @@ startSpiderSeqR <- function(path,
 }
 
 
+
+
 #' Set database connections
 #' @param sra_file SRA file name (including path)
 #' @param geo_file GEO file name (including path)
@@ -328,6 +325,8 @@ startSpiderSeqR <- function(path,
     .GlobalEnv$srr_gsm <- 
         DBI::dbConnect(RSQLite::SQLite(), dbname = srr_gsm_file)
 }
+
+
 
 
 

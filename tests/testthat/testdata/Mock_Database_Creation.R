@@ -10,6 +10,9 @@ geo_db <- DBI::dbGetQuery(geo_con, "SELECT * FROM metaInfo")
 srr_gsm_db <- DBI::dbGetQuery(srr_gsm, "SELECT * FROM metaInfo")
 
 
+
+
+
 sra_mock <- DBI::dbConnect(RSQLite::SQLite(), 
             "tests/testthat/testdata/Mock_Database_Files/SRAmetadb.sqlite")
 DBI::dbWriteTable(sra_mock, name='metaInfo', value=sra_db)

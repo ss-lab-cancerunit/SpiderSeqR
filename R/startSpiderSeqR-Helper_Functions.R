@@ -1,6 +1,16 @@
-#' - .findDBFiles()
-#' - .missingFileCheck()
-#' - .setExpiryParameters()
+#' Functions:
+#'  - .findDBFiles
+#' - .missingFileCheck
+#' - .setExpiryParameters
+#' - .DBNames
+#' - .checkDBNames
+#' - .checkDBFile
+#' - .noDBFile
+#' - .oldDBFile
+#' - .DBFileExists
+#' - .getDBFile
+#' - .createCustomDBFile
+#' - .getFurtherDBInfo
 
 
 #' Find database files
@@ -242,13 +252,13 @@
 .checkDBFile <- function(db_file, db_file_name, db_expiry){
     
     print("1")
-    # NO SRA FILE
+    # NO FILE
     if(!file.exists(db_file)){ # NO FILE
         .noDBFile(db_file_name)
     }
     
     print("2")
-    # OLD SRA FILE
+    # OLD FILE
     if(file.exists(db_file) & 
        (difftime(Sys.Date(), 
                  file.info(db_file)$mtime, units = "days") > db_expiry) ){
@@ -256,11 +266,13 @@
         .oldDBFile(db_file_name, db_file)
         
     } else if(file.exists(db_file)) {
+        # FILE PRESENT AND UP TO DATE
         print("2b")
         .DBFileExists(db_file_name, db_file)
     }
     
 }
+
 
 
 #' Course of action to follow if a db file is missing
@@ -289,9 +301,9 @@
         .mm(paste0("This might take a little while, but it is ",
             "necessary for the correct functioning \nof the package."), "comm")
     }
-
     
-    file_menu <- utils::menu(c("yes", "no"))
+    
+    file_menu <- .tmenu(c("yes", "no"), menu_name = "download_file")
     if (file_menu == 1){
         .mm("Downloading the file", "comm")
         
@@ -316,7 +328,7 @@
     .mm(paste0("Would you like to download a new version of the file ",
                "right now?\n(this is recommended, though not necessary)"), "qn")
     
-    db_menu <- utils::menu(c("yes", "no"))
+    db_menu <- .tmenu(c("yes", "no"), menu_name = "download_file")
     if (sra_menu == 1){
         .mm("Downloading the file", "comm")
         .getDBFile(db_file_name=db_file_name)
@@ -346,20 +358,21 @@
 }
 
 
+
 .getDBFile <- function(db_file_name){
     
     db_file_name <- .checkDBNames(db_file_name)
     
-    if (db_file_name == db_names[1]){
+    if (db_file_name == .DBNames()[1]){
         sra_file <- SRAdb::getSRAdbFile()
     }
     
-    if (db_file_name == db_names[2]){
+    if (db_file_name == .DBNames()[2]){
         geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = 
                                                     "GEOmetadb.sqlite.gz")
     }
     
-    if (db_file_name == db_names[3]){
+    if (db_file_name == .DBNames()[3]){
         stop("Not working yet")
         .createCustomDBFile(sra_file, geo_file)
     }
@@ -384,6 +397,32 @@
     
     .mm("Please wait, creating the custom database...", "comm")
     
+    
+    db_df <- .createSRR_GSM(sra_file, geo_file)
+    
+    
+    metainfo <- .createSpiderMetaInfo(sra_file, geo_file)
+    
+    #Save df as an sqlite object
+    srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), dbname = "SRR_GSM.sqlite")
+    
+    DBI::dbWriteTable(conn = srr_gsm, 
+                      name = "srr_gsm", value = db_df, overwrite = TRUE)
+    DBI::dbWriteTable(conn = srr_gsm, 
+                      name = "metaInfo", value = metainfo, overwrite = TRUE)
+    
+    .vex("db_df", db_df)
+    
+    DBI::dbDisconnect(srr_gsm)
+    
+    #print(Sys.time())
+    
+    
+}
+
+
+
+.createSRR_GSM <- function(sra_file, geo_file){
     #==========================================================
     #SRR_GSM
     #==========================================================
@@ -539,21 +578,47 @@
     #                      db_df$gsm)
     #db_df <- db_df[orderAccessions(order_columns),]
     
-    #Save df as an slite object
-    srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), dbname = "SRR_GSM.sqlite")
+    DBI::dbDisconnect(sra_con)
+    DBI::dbDisconnect(geo_con)
     
-    DBI::dbWriteTable(conn = srr_gsm, 
-                      name = "srr_gsm", value = db_df, overwrite = TRUE)
+    return(db_df)
+}
+
+
+
+#' Create metaInfo table for SpiderSeqR database
+#' @param sra_file A character to the path with SRA file
+#' @param geo_file A character to the path with GEO file
+#' 
+#' @return A dataframe with metaInfo
+#' 
+#' @keywords internal
+.createSpiderMetaInfo <- function(sra_file, geo_file){
     
-    .vex("db_df", db_df)
+    sra_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = sra_file)
+    geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
+    
+    sra_metainfo <- DBI::dbGetQuery(sra_con, "SELECT * FROM metaInfo")
+    geo_metainfo <- DBI::dbGetQuery(geo_con, "SELECT * FROM metaInfo")
+    
+    sra_metainfo$name <- paste("SRA", sra_metainfo$name)
+    geo_metainfo$name <- paste("GEO", geo_metainfo$name)
+    
+    
+    metainfo <- rbind(sra_metainfo, geo_metainfo)
+    metainfo <- rbind(metainfo, c("SpiderSeqR schema version", "1.0"))
+    metainfo <- rbind(metainfo, c("SpiderSeqR timestamp", 
+                                  format(Sys.time(), "%Y-%m-%d %H:%M:%S")))
     
     DBI::dbDisconnect(sra_con)
     DBI::dbDisconnect(geo_con)
     
-    #print(Sys.time())
+    
+    return(metainfo)
     
     
 }
+
 
 
 

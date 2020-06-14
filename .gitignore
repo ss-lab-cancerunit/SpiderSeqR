@@ -5,6 +5,10 @@ Meta
 
 *.Rproj
 
+
+# Session Data files
+.RData
+
 # History files
 .Rhistory
 /*.Rhistory
