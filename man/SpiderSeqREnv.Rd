@@ -5,7 +5,7 @@
 \alias{SpiderSeqREnv}
 \title{Environment with default values of the package options}
 \format{
-An object of class \code{environment} of length 4.
+An object of class \code{environment} of length 6.
 }
 \usage{
 SpiderSeqREnv

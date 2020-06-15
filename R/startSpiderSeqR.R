@@ -303,7 +303,7 @@ startSpiderSeqR <- function(path,
                    recursive = TRUE, full.names = TRUE)
     
     
-    setwd(ori_wd)
+    on.exit(setwd(ori_wd))
     #print(matches)
     
     return(matches)

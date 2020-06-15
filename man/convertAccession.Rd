@@ -69,7 +69,7 @@ To improve results, you can do the following:
     and GEOmetadb.sqlite files - this is done by running 
     \code{\link{startSpiderSeqR}}, specifying an appropriate argument 
     for expiry period of database files 
-    (e.g. \code{startSpiderSeqR(dir = getwd(), general_expiry = 1)})
+    (e.g. \code{startSpiderSeqR(path = getwd(), general_expiry = 1)})
     \item Generate a fresh custom database for conversion between 
     accessions (SRR_GSM.sqlite) - this is also done by running 
     \code{\link{startSpiderSeqR}}, specifying an appropriate argument 

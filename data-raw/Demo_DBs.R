@@ -222,6 +222,10 @@ usethis::use_data(gsm_demo, compress = "xz")
 usethis::use_data(srr_demo, compress = "xz")
 usethis::use_data(sra_demo, compress = "xz")
 
+# No need to export metadata
+usethis::use_data(sra_metadata, 
+                    geo_metadata, 
+                    srr_gsm_metadata, compress = "xz", internal = TRUE)
 
 
 # OPTION 2

@@ -29,14 +29,11 @@ startSpiderSeqRDemo <- function(){
     
     database_env <- ".GlobalEnv"
     
-    
     # TBD (not necessary)
     #utils::data("gsm_demo", envir = environment())
     #utils::data("gse_demo", envir = environment())
     #utils::data("srr_demo", envir = environment())
     #utils::data("sra_demo", envir = environment())
-    #print(head(gsm_demo))
-    
     
     # Remove old connections if present
     if(exists("sra_con", envir = get(database_env))){
@@ -55,20 +52,13 @@ startSpiderSeqRDemo <- function(){
     .GlobalEnv$geo_con <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
     .GlobalEnv$srr_gsm <- DBI::dbConnect(RSQLite::SQLite(), ":memory:")
     
+    .createDemoGEO(.GlobalEnv$geo_con)
+    .createDemoSRA(.GlobalEnv$sra_con)
+    .createDemoSRR_GSM(.GlobalEnv$srr_gsm)
     
     
-    DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), 
-                        name='gsm', value=SpiderSeqR::gsm_demo)
-    DBI::dbWriteTable(conn=get("geo_con", envir = get(database_env)), 
-                        name='gse', value=SpiderSeqR::gse_demo)
-    DBI::dbWriteTable(conn=get("srr_gsm", envir = get(database_env)), 
-                        name='srr_gsm', value=SpiderSeqR::srr_demo)
-    DBI::dbWriteTable(conn=get("sra_con", envir = get(database_env)), 
-                        name='sra', value=SpiderSeqR::sra_demo)
     .createFtsTable("sra_con", "sra", "sra_ft")
     
-    #cat(cli::rule(col = "magenta"), "\n")
-    #.mm(cli::rule(), "comm")
     .mm("Welcome to the SpiderSeqR Demo! All set!", "qn")
     .mm(paste0("To use SpiderSeqR for real queries, ",
                     "please run startSpiderSeqR()"), 
@@ -82,4 +72,47 @@ startSpiderSeqRDemo <- function(){
 
 
 
+
+#' Create a DEMO GEO database
+#' 
+#' @param conn A database connection to load the data into
+#' @return Nothing. Update the connection object
+#' 
+#' @keywords internal
+#' 
+.createDemoGEO <- function(conn){
+    DBI::dbWriteTable(conn=conn, name='gsm', value=SpiderSeqR::gsm_demo)
+    DBI::dbWriteTable(conn=conn, name='gse', value=SpiderSeqR::gse_demo)
+    DBI::dbWriteTable(conn=conn, name='metaInfo', value=geo_metadata)
+}
+
+
+
+#' Create a DEMO SRA database
+#' 
+#' @param conn A database connection to load the data into
+#' @return Nothing. Update the connection object. 
+#' NOTE: does not currently include the creation of sra_ft table, 
+#' this is done by .createFtsTable("sra_con", "sra", "sra_ft")
+#' 
+#' @keywords internal
+#' 
+.createDemoSRA <- function(conn){
+    DBI::dbWriteTable(conn=conn, name='sra', value=SpiderSeqR::sra_demo)
+    DBI::dbWriteTable(conn=conn, name='metaInfo', value=sra_metadata)
+}
+
+
+
+#' Create a DEMO SRR_GSM database
+#' 
+#' @param conn A database connection to load the data into
+#' @return Nothing. Update the connection object
+#' 
+#' @keywords internal
+#' 
+.createDemoSRR_GSM <- function(conn){
+    DBI::dbWriteTable(conn=conn, name='srr_gsm', value=SpiderSeqR::srr_demo)
+    DBI::dbWriteTable(conn=conn, name='metaInfo', value=srr_gsm_metadata)
+}
 

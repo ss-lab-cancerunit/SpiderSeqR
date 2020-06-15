@@ -5,15 +5,15 @@
 \title{Prepare the environment to run SpiderSeqR}
 \usage{
 startSpiderSeqR(
-  dir,
+  path,
   general_expiry = 90,
-  sra_expiry,
-  geo_expiry,
-  srr_gsm_expiry
+  sra_expiry = NULL,
+  geo_expiry = NULL,
+  srr_gsm_expiry = NULL
 )
 }
 \arguments{
-\item{dir}{Directory where database files will be stored}
+\item{path}{Directory where database files will be stored}
 
 \item{general_expiry}{Maximum number of days since creation 
 of all database files}
@@ -119,24 +119,24 @@ the function should take an order of \emph{seconds} to complete
 
 ## Database files are stored (or will be downloaded) 
 ##    in the working directory
-# startSpiderSeqR(dir = getwd()) 
+# startSpiderSeqR(path = getwd()) 
 
 ## Use the following if you would like to download 
 ##   the newest database files
-# startSpiderSeqR(dir = getwd(), general_expiry = 0) 
+# startSpiderSeqR(path = getwd(), general_expiry = 0) 
 
 ## Use the following if you have old database files
 ##   that you do not wish to re-download on this occasion
-# startSpiderSeqR(dir = getwd(), general_expiry = 365) 
+# startSpiderSeqR(path = getwd(), general_expiry = 365) 
 
 ## Use the following if you only wish to ignore 
 ##    an old SRAmetadb.sqlite file, 
 ##    but get reminders to re-download the other files
-# startSpiderSeqR(dir = getwd(), sra_expiry = 365) 
+# startSpiderSeqR(path = getwd(), sra_expiry = 365) 
 
 ## Use the following if you would like to locate
 ##   the database files in a few directory levels above
-# startSpiderSeqR(dir = getwd(), recurse_levels = 4)
+# startSpiderSeqR(path = getwd(), recurse_levels = 4)
 
 
 }

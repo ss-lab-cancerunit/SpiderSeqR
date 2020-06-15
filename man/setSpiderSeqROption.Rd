@@ -26,6 +26,8 @@ Set options for global behaviour of the package functions.
    for generating file outputs. 
    Defaults to one of the \code{listColumnSets()}.
    \item quiet - Whether any messages should be printed in the console
+   \item testing - (for developer use) whether unit tests are being run
+       
 }
 }
 
