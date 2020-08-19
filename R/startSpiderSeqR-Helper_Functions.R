@@ -25,6 +25,7 @@
     #===*===
     ori_wd <- getwd()
     setwd(path)
+    on.exit(setwd(ori_wd))
     
     sra_file <- "SRAmetadb.sqlite"
     geo_file <- "GEOmetadb.sqlite"
@@ -72,7 +73,7 @@
                         geo_file=geo_file, 
                         srr_gsm_file=srr_gsm_file)
     
-    setwd(ori_wd)
+    
     return(file_list)
 
 }
@@ -85,7 +86,8 @@
 #' @param geo_file Path to GEO file
 #' @param srr_gsm_file Path to SRR_GSM file
 #' @return A logical vector length 3 indicating whether the respective 
-#'     files are present (in order as above)
+#'     files are present (in order as above). Also prints a relevant message 
+#'     to the user
 #'     
 #' @keywords internal
 #' 
@@ -242,6 +244,7 @@
 #' 
 #' Check and ensure that the DB file is in place
 #' 
+#' @param path Path for storing database files (as passed to startSpiderSeqR())
 #' @param db_file Path to the database file
 #' @param db_file_name File name (without the path)
 #' @param db_expiry Maximum number of days since file was modified
@@ -249,12 +252,12 @@
 #' @return Nothing. If the file doesn't exist or is out of date, offer to 
 #'     download/create it. Otherwise, print information about the file.
 #' 
-.checkDBFile <- function(db_file, db_file_name, db_expiry){
+.checkDBFile <- function(path, db_file, db_file_name, db_expiry){
     
     print("1")
     # NO FILE
     if(!file.exists(db_file)){ # NO FILE
-        .noDBFile(db_file_name)
+        .noDBFile(path, db_file_name)
     }
     
     print("2")
@@ -263,7 +266,7 @@
        (difftime(Sys.Date(), 
                  file.info(db_file)$mtime, units = "days") > db_expiry) ){
         print("2a")
-        .oldDBFile(db_file_name, db_file)
+        .oldDBFile(path, db_file_name, db_file)
         
     } else if(file.exists(db_file)) {
         # FILE PRESENT AND UP TO DATE
@@ -277,13 +280,14 @@
 
 #' Course of action to follow if a db file is missing
 #' 
+#' @param path Path for storing database files
 #' @param db_file_name A character with the db_file_name (SRAmetadb.sqlite, 
 #'     GEOmetadb.sqlite or SRR_GSM.sqlite)
 #' @return Nothing. Offer to download/create the file, otherwise return error.
 #' 
 #' @keywords internal
 #' 
-.noDBFile <- function(db_file_name){
+.noDBFile <- function(path, db_file_name){
     
     db_file_name <- .checkDBNames(db_file_name)
     
@@ -307,7 +311,7 @@
     if (file_menu == 1){
         .mm("Downloading the file", "comm")
         
-        .getDBFile(db_file_name=db_file_name)
+        .getDBFile(path=path, db_file_name=db_file_name)
         
         
     } else {
@@ -319,7 +323,7 @@
 
 
 
-.oldDBFile <- function(db_file_name, db_file){
+.oldDBFile <- function(path, db_file_name, db_file){
     
     db_file_name <- .checkDBNames(db_file_name)
     
@@ -329,9 +333,9 @@
                "right now?\n(this is recommended, though not necessary)"), "qn")
     
     db_menu <- .tmenu(c("yes", "no"), menu_name = "download_file")
-    if (sra_menu == 1){
+    if (db_menu == 1){
         .mm("Downloading the file", "comm")
-        .getDBFile(db_file_name=db_file_name)
+        .getDBFile(path=path, db_file_name=db_file_name)
     } else {
         if (db_file_name %in% .DBNames()[1:2]){
             .mm(paste0(
@@ -348,7 +352,6 @@
 
 
 
-
 .DBFileExists <- function(db_file_name, db_file){
     
     db_file_name <- .checkDBNames(db_file_name)
@@ -359,29 +362,190 @@
 
 
 
-.getDBFile <- function(db_file_name){
+
+.getDBFile <- function(path, db_file_name){
     
     db_file_name <- .checkDBNames(db_file_name)
+    ori_path <- getwd()
+    setwd(path)
+    on.exit(setwd(ori_path))
     
-    if (db_file_name == .DBNames()[1]){
-        sra_file <- SRAdb::getSRAdbFile()
+    if (isTRUE(getSpiderSeqROption("testing"))){
+        
+        # MOCK FILES (for testing)
+        
+        if (db_file_name == .DBNames()[1]){
+            .createMockSRA(".")
+        }
+        
+        if (db_file_name == .DBNames()[2]){
+            .createMockGEO(".")
+        }
+        
+        if (db_file_name == .DBNames()[3]){
+            .createMockCustomDB(".")
+        }
+        
+    } else {
+        
+        # REAL
+        
+        if (db_file_name == .DBNames()[1]){
+            sra_file <- SRAdb::getSRAdbFile()
+        }
+        
+        if (db_file_name == .DBNames()[2]){
+            geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = 
+                                                        "GEOmetadb.sqlite.gz")
+        }
+        
+        if (db_file_name == .DBNames()[3]){
+            stop("Not working yet")
+            .createCustomDBFile(sra_file, geo_file)
+        }
+        
     }
     
-    if (db_file_name == .DBNames()[2]){
-        geo_gz_file <- GEOmetadb::getSQLiteFile(destfile = 
-                                                    "GEOmetadb.sqlite.gz")
-    }
+    print(getwd())
+    print(db_file_name)
     
-    if (db_file_name == .DBNames()[3]){
-        stop("Not working yet")
-        .createCustomDBFile(sra_file, geo_file)
-    }
+    db_file <- list.files(path=getwd(), 
+                            pattern=paste0("^", db_file_name, "$"), 
+                            full.names = TRUE)
     
+    #print(db_file)
+    #===*=== Display message here:
+    .mm(paste0("New file created: ", db_file), "comm")
+    
+    return(db_file)
+}
+
+
+
+#' -------------------------------------------------------
+#' ===*====
+
+
+#' Suggested names:
+#' createMockSRA
+#' createMOckGEO
+#' createMockCustomDB
+#' 
+#' Course of action
+#' - fetch the tables from the environment
+#' - set up the database connection into the relevant file (?path)
+#' - write the tables into the database
+#' - close the connection
+#' - make sure that the directory is changed back to original
+#' 
+#' 
+#' Options:
+#' - everything in one function per DB
+#' - split into db specific part and writing dfs into the database
+#' 
+#' 
+#' .createDBFile
+#' - df
+#' - name
+#' - database file name
+#' - path to database file name
+#' 
+
+
+#' - path to file
+#' - (file known)
+#' - (tables known)
+#' 
+
+
+
+#' Create a mock SRA database file (for use in testing)
+#' 
+#' @param path A character with the path to the directory for the database file
+#' @return Nothing. Creates the database file (unless already present) 
+#'     and writes relevant tables.
+#'     
+#' @keywords internal
+#' 
+.createMockSRA <- function(path){
+    .writeTableToFile(df=sra_demo, table_name="sra", path=path, 
+                        database_file="SRAmetadb.sqlite")
+    .writeTableToFile(df=sra_metadata, table_name="metaInfo", path=path, 
+                      database_file="SRAmetadb.sqlite")
+}
+
+
+
+#' Create a mock GEO database file (for use in testing)
+#' 
+#' @param path A character with the path to the directory for the database file
+#' @return Nothing. Creates the database file (unless already present) 
+#'     and writes relevant tables.
+#'     
+#' @keywords internal
+#' 
+.createMockGEO <- function(path){
+    .writeTableToFile(df=gsm_demo, table_name="gsm", path=path, 
+                      database_file="GEOmetadb.sqlite")
+    .writeTableToFile(df=gse_demo, table_name="gse", path=path, 
+                      database_file="GEOmetadb.sqlite")
+    .writeTableToFile(df=geo_metadata, table_name="metaInfo", path=path, 
+                      database_file="GEOmetadb.sqlite")
 }
 
 
 
 
+#' Create a mock custom database file (for use in testing)
+#' 
+#' @param path A character with the path to the directory for the database file
+#' @return Nothing. Creates the database file (unless already present) 
+#'     and writes relevant tables.
+#'     
+#' @keywords internal
+#' 
+.createMockCustomDB <- function(path){
+    .writeTableToFile(df=srr_demo, table_name="srr_gsm", path=path, 
+                      database_file="SRR_GSM.sqlite")
+    .writeTableToFile(df=srr_gsm_metadata, table_name="metaInfo", path=path, 
+                      database_file="SRR_GSM.sqlite")
+}
+
+
+
+
+
+#' Write table to database file
+#' @param df Data frame to be written as a table in the database
+#' @param table_name A character with the name for the table
+#' @param database_file A character with the name of the database file 
+#'     (without the path)
+#' @param overwrite A logical indicating whether to overwrite an existing 
+#'     table with the same name. Defaults to FALSE.
+#'     
+#' @return Nothing. Write the dataframe into the specified database
+#' 
+#' @keywords internal
+#' 
+.writeTableToFile <- function(df, table_name, path, database_file, 
+                                overwrite=FALSE){
+    
+    ori_path <- getwd()
+    setwd(path)
+    on.exit(setwd(ori_path), add=TRUE)
+    conn <- DBI::dbConnect(RSQLite::SQLite(), 
+                            database_file, overwrite=overwrite)
+    on.exit(DBI::dbDisconnect(conn), add=TRUE)
+    on.exit(print("done done"), add=TRUE)
+    DBI::dbWriteTable(conn=conn, name=table_name, value = df)
+}
+
+
+
+
+
+#' ===*===
+#' -------------------------------------------------------
 
 
 #' Create custom database file
@@ -441,6 +605,8 @@
     
     #MERGE CHUNKS
     #WRITE AS AN SQLITE FILE (ESTABLISH THE CONNECTION?)
+    print(sra_file)
+    print(geo_file)
     
     sra_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = sra_file)
     geo_con <- DBI::dbConnect(RSQLite::SQLite(), dbname = geo_file)
@@ -607,7 +773,7 @@
     
     metainfo <- rbind(sra_metainfo, geo_metainfo)
     metainfo <- rbind(metainfo, c("SpiderSeqR schema version", "1.0"))
-    metainfo <- rbind(metainfo, c("SpiderSeqR timestamp", 
+    metainfo <- rbind(metainfo, c("SpiderSeqR creation timestamp", 
                                   format(Sys.time(), "%Y-%m-%d %H:%M:%S")))
     
     DBI::dbDisconnect(sra_con)

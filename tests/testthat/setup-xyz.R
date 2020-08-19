@@ -31,6 +31,13 @@
 
 
 
+
+#' # General setup
+#' 
+#' 
+
+
+
 print("setup")
 
 
@@ -47,9 +54,57 @@ testing <- getSpiderSeqROption("testing")
 setSpiderSeqROption("testing", TRUE)
 
 
+
+#' # Remove existing database files and prepare new ones for testing
+#' 
+
+current_files <- list.files("testdata/Mock_Database_Files", recursive=TRUE, 
+                              full.names = TRUE)
+
+current_files <- paste0(getwd(), "/", current_files)
+for (i in current_files){
+  file.remove(i, recursive=TRUE)
+}
+
+
+.createMockSRA("testdata/Mock_Database_Files/All_Present")
+.createMockGEO("testdata/Mock_Database_Files/All_Present")
+.createMockCustomDB("testdata/Mock_Database_Files/All_Present")
+
+.createMockSRA("testdata/Mock_Database_Files/Files_in_Subdirectory/Subdir")
+.createMockGEO("testdata/Mock_Database_Files/Files_in_Subdirectory/Subdir")
+.createMockCustomDB("testdata/Mock_Database_Files/Files_in_Subdirectory/Subdir")
+
+
+
+#.createMockSRA()
+.createMockGEO("testdata/Mock_Database_Files/SRA_Missing")
+.createMockCustomDB("testdata/Mock_Database_Files/SRA_Missing")
+
+
+.createMockSRA("testdata/Mock_Database_Files/GEO_Missing")
+#.createMockGEO()
+.createMockCustomDB("testdata/Mock_Database_Files/GEO_Missing")
+
+
+.createMockSRA("testdata/Mock_Database_Files/SpiderSeqR_Missing")
+.createMockGEO("testdata/Mock_Database_Files/SpiderSeqR_Missing")
+#.createMockCustomDB()
+
+
+
+
+
+
+
+#' # Preserve existing connections
+#' 
+#' 
+
 preserve_connection <- TRUE # Change to FALSE for real ===*===
 
-# If pre-existing connections are to be preserved (NOTE: this will throw a warning due to connection which is not disconnected)
+# If pre-existing connections are to be preserved 
+# (NOTE: this will throw a warning due to connection which is not disconnected)
 if (preserve_connection){
   
   if (exists("sra_con", envir = .GlobalEnv)){
@@ -63,10 +118,8 @@ if (preserve_connection){
   if (exists("srr_gsm", envir = .GlobalEnv)){
     assign("temp_srr_gsm", get("srr_gsm", envir = .GlobalEnv), envir = .GlobalEnv)
   }
-  
-  
-  
 }
+
 
 
 startSpiderSeqRDemo()

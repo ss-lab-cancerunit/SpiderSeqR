@@ -181,13 +181,13 @@ startSpiderSeqR <- function(path,
     
     
     raw_expiry_parameters <- list(general_expiry=general_expiry,
-                                  sra_expiry=sra_expiry,
-                                  geo_expiry=geo_expiry,
-                                  srr_gsm_expiry=srr_gsm_expiry,
-                                  missing_file_number=sum(missing_logical))
+                                    sra_expiry=sra_expiry,
+                                    geo_expiry=geo_expiry,
+                                    srr_gsm_expiry=srr_gsm_expiry,
+                                    missing_file_number=sum(missing_logical))
     
     
-    expiry_parameters <- do.call(.setExpiryParameters, c(raw_expiry_parameters))
+    expiry_parameters <- do.call(.setExpiryParameters,c(raw_expiry_parameters))
     
     .mm(cli::rule(), "comm")
     
@@ -199,7 +199,8 @@ startSpiderSeqR <- function(path,
     # Check (or download) SRA and GEO files
     for (i in 1:2){
         
-        .checkDBFile(db_file=file_list[[i]], 
+        .checkDBFile(path=path, 
+                        db_file=file_list[[i]], 
                         db_file_name=.DBNames()[i], 
                         db_expiry=expiry_parameters[[i]])
         
@@ -226,7 +227,8 @@ startSpiderSeqR <- function(path,
     
     .mm(cli::rule(), "comm")
     
-    .checkDBFile(db_file=file_list[[3]], 
+    .checkDBFile(path=path, 
+                 db_file=file_list[[3]], 
                  db_file_name=.DBNames()[3], 
                  db_expiry=expiry_parameters[[3]])
     
