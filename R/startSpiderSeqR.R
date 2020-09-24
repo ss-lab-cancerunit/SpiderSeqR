@@ -148,6 +148,7 @@ startSpiderSeqR <- function(path,
                "are being configured..."), "comm")
     .mm(cli::rule(), "comm")
     
+    path <- normalizePath(path)
     
     file_list <- .findDBFiles(path=path)
     
@@ -263,6 +264,27 @@ startSpiderSeqR <- function(path,
 }
 
 
+#' Find files (a wrapper around list.files)
+#' 
+#' @param path A path to be searched
+#' @param pattern Regular expression pattern to search for (passed to dir())
+#' @return A full path with the matching file(s)
+#' 
+#' @examples 
+#' #.findFiles(getwd(), "*.sqlite")
+#' 
+#' @keywords internal
+#' 
+.findFiles <- function(path, pattern){
+    
+    .mm(paste0("Searching for ", pattern, " files in: ", path), "dev")
+    
+    matches <- list.files(path = path, pattern = pattern, 
+                   recursive = TRUE, full.names = TRUE)
+    
+    return(matches)
+}
+
 
 
 
@@ -278,7 +300,7 @@ startSpiderSeqR <- function(path,
 #' 
 #' @keywords internal
 #' 
-.findFiles <- function(pattern, recurse_levels){
+.findFiles_Ori <- function(pattern, recurse_levels){
     ori_wd <- getwd()
     
     # recurse_levels patterns:

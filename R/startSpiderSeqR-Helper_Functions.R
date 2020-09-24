@@ -22,6 +22,78 @@
 #' 
 .findDBFiles <- function(path){
     
+    sra_file <- "SRAmetadb.sqlite"
+    geo_file <- "GEOmetadb.sqlite"
+    srr_gsm_file <- "SRR_GSM.sqlite"
+    
+    sra_file_name <- sra_file
+    geo_file_name <- geo_file
+    srr_gsm_file_name <- srr_gsm_file
+    
+    #==========================================================
+    # Checking files and searching within the directory####
+    #==========================================================
+    # NOTE: will be re-checked again later, this is for expanding search
+    # and communicating to the user
+    
+    .mm(paste0("Searching for database files within: "), "comm")
+    .mm(path, "qn")
+    
+    
+    var_list <- c("sra_file", "geo_file", "srr_gsm_file")
+    
+    for (i in seq_along(var_list)){
+        
+        match_files <- .findFiles(path, paste0("(^|*)", get(var_list[i])))
+        
+        # If length = 0, do nothing
+        
+        if (length(match_files) == 1){
+            
+            # Normalize path before saving, (only when matched)
+            match_files <- normalizePath(match_files) 
+            
+            .mm(paste0("Found ", get(paste0(var_list[i], "_name")), 
+                       " file:\n", match_files), "comm")
+            
+            assign(var_list[i], match_files) # Substitute the path
+            
+        } else if (length(match_files > 1)){
+            
+            for (k in seq_along(match_files)){
+                match_files[k] <- normalizePath(match_files[k])
+            }
+            
+            .mm(paste0("Found multiple matching files. ",
+                       "Which one would you like to use?"), "qn")
+            
+            # Let the user choose the file
+            file_choice <- utils::menu(match_files)
+            assign(var_list[i], match_files[file_choice])
+        }
+        
+    }
+    
+    file_list <- list(sra_file=sra_file, 
+                      geo_file=geo_file, 
+                      srr_gsm_file=srr_gsm_file)
+    
+    
+    return(file_list)
+    
+}
+
+
+
+#' Find database files
+#' 
+#' @param path Path to search within
+#' @return A list with paths to database files
+#' 
+#' @keywords internal
+#' 
+.findDBFiles_Ori <- function(path){
+    
     #===*===
     ori_wd <- getwd()
     setwd(path)
@@ -514,7 +586,6 @@
 
 
 
-
 #' Write table to database file
 #' @param df Data frame to be written as a table in the database
 #' @param table_name A character with the name for the table
@@ -528,6 +599,35 @@
 #' @keywords internal
 #' 
 .writeTableToFile <- function(df, table_name, path, database_file, 
+                              overwrite=FALSE){
+    
+    path <- normalizePath(path) # Needed as used for test setup
+    database_file <- file.path(path, database_file)
+    print(database_file)
+    
+    conn <- DBI::dbConnect(RSQLite::SQLite(), 
+                           database_file, overwrite=overwrite)
+    on.exit(DBI::dbDisconnect(conn), add=TRUE)
+    on.exit(print("done done"), add=TRUE)
+    DBI::dbWriteTable(conn=conn, name=table_name, value = df)
+}
+
+
+
+
+#' Write table to database file
+#' @param df Data frame to be written as a table in the database
+#' @param table_name A character with the name for the table
+#' @param database_file A character with the name of the database file 
+#'     (without the path)
+#' @param overwrite A logical indicating whether to overwrite an existing 
+#'     table with the same name. Defaults to FALSE.
+#'     
+#' @return Nothing. Write the dataframe into the specified database
+#' 
+#' @keywords internal
+#' 
+.writeTableToFile_Ori <- function(df, table_name, path, database_file, 
                                 overwrite=FALSE){
     
     ori_path <- getwd()

@@ -58,14 +58,27 @@ setSpiderSeqROption("testing", TRUE)
 #' # Remove existing database files and prepare new ones for testing
 #' 
 
-current_files <- list.files("testdata/Mock_Database_Files", recursive=TRUE, 
-                              full.names = TRUE)
-
-current_files <- paste0(getwd(), "/", current_files)
-for (i in current_files){
-  file.remove(i, recursive=TRUE)
+db_files <- list.files("testdata/Mock_Database_Files", 
+                        "*.sqlite", recursive=TRUE, full.names = TRUE)
+for (d in db_files){
+    file.remove(d)
 }
+print(db_files)
 
+
+
+#------------------
+# TBD
+#current_files <- list.files("testdata/Mock_Database_Files", recursive=TRUE, 
+#                              full.names = TRUE)
+
+#current_files <- paste0(getwd(), "/", current_files)
+#for (i in current_files){
+#  file.remove(i, recursive=TRUE)
+#}
+#-------------------
+
+# Populate the directory with mock database files
 
 .createMockSRA("testdata/Mock_Database_Files/All_Present")
 .createMockGEO("testdata/Mock_Database_Files/All_Present")
