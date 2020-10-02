@@ -2,7 +2,9 @@
 % Please edit documentation in R/startSpiderSeqR-Helper_Functions.R
 \name{.createCustomDBFile}
 \alias{.createCustomDBFile}
-\title{Create custom database file}
+\title{===*===
+-------------------------------------------------------
+Create custom database file}
 \usage{
 .createCustomDBFile(sra_file, geo_file)
 }
@@ -16,6 +18,8 @@ Nothing. Create a file with a conversion database
     between SRA and GEO
 }
 \description{
+===*===
+-------------------------------------------------------
 Create custom database file
 }
 \keyword{internal}

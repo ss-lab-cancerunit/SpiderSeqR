@@ -2,24 +2,23 @@
 % Please edit documentation in R/startSpiderSeqR.R
 \name{.findFiles}
 \alias{.findFiles}
-\title{Find files (wrapper around dir allowing to search a few levels up)}
+\title{Find files (a wrapper around list.files)}
 \usage{
-.findFiles(pattern, recurse_levels)
+.findFiles(path, pattern)
 }
 \arguments{
-\item{pattern}{Regular expression pattern to search for (passed to dir())}
+\item{path}{A path to be searched}
 
-\item{recurse_levels}{Integer with the number of directory levels 
-(above current working directory) to search in}
+\item{pattern}{Regular expression pattern to search for (passed to dir())}
 }
 \value{
 A full path with the matching file(s)
 }
 \description{
-Find files (wrapper around dir allowing to search a few levels up)
+Find files (a wrapper around list.files)
 }
 \examples{
-#.findFiles("*.sqlite", 5)
+#.findFiles(getwd(), "*.sqlite")
 
 }
 \keyword{internal}

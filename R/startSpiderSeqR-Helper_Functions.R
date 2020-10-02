@@ -121,8 +121,7 @@
     
     for (i in seq_along(var_list)){
         
-        match_files <- .findFiles(paste0("(^|*)", get(var_list[i])), 
-                                  recurse_levels=0)
+        match_files <- .findFiles(paste0("(^|*)", get(var_list[i])))
         
         # If length = 0, do nothing
         if (length(match_files) == 1){
@@ -196,7 +195,7 @@
                    "the missing files"), "comm")
         .mm(cli::rule(), "comm")
         #.mm("NOTE:", "qn")
-        .mm(paste0("NOTE: The total download size of all three files ",
+        .mm(paste0("NOTE: The total size of all the files ",
                    "is on the order of a few GB (compressed)\n", 
                    "requiring a few dozen GBs disc space after extraction \n",
                    "(these numbers may change as the databases ",
@@ -221,6 +220,7 @@
 #' @param sra_expiry,geo_expiry,srr_gsm_expiry Maximum number of days since 
 #'    modification of respective database files
 #' @param missing_file_number Number of missing files
+#' @return Expiry parameters
 #' 
 #' Sets expiry parameters for three respective databases, according to the 
 #' logic that specific parameters should be used where possible and for missing
@@ -463,7 +463,7 @@
         # REAL
         
         if (db_file_name == .DBNames()[1]){
-            sra_file <- SRAdb::getSRAdbFile()
+            sra_file <- try(SRAdb::getSRAdbFile(), silent=TRUE)
         }
         
         if (db_file_name == .DBNames()[2]){
@@ -478,8 +478,8 @@
         
     }
     
-    print(getwd())
-    print(db_file_name)
+    #print(getwd())
+    #print(db_file_name)
     
     db_file <- list.files(path=getwd(), 
                             pattern=paste0("^", db_file_name, "$"), 
@@ -603,12 +603,12 @@
     
     path <- normalizePath(path) # Needed as used for test setup
     database_file <- file.path(path, database_file)
-    print(database_file)
+    #print(database_file)
     
     conn <- DBI::dbConnect(RSQLite::SQLite(), 
                            database_file, overwrite=overwrite)
     on.exit(DBI::dbDisconnect(conn), add=TRUE)
-    on.exit(print("done done"), add=TRUE)
+    #on.exit(print("done done"), add=TRUE)
     DBI::dbWriteTable(conn=conn, name=table_name, value = df)
 }
 
@@ -726,7 +726,7 @@
     # Last found total (1618978) + ~100 000
     i <- 80000
     tot_n <- 1700000
-    .progressBar(i, tot_n)
+    #.progressBar(i, tot_n)
     
     rs <- DBI::dbSendQuery(sra_con, "SELECT
                         run_accession,
@@ -738,12 +738,12 @@
                         FROM sra WHERE run_alias 
                         LIKE 'GSM%' OR experiment_attribute LIKE '%GSM%'")
     i <- i + 20000
-    .progressBar(i, tot_n)
+    #.progressBar(i, tot_n)
     while (!DBI::dbHasCompleted(rs)){
         #cat(".")
         #if (tt %% 80 ==0) cat("\n")
         #tt <- tt + 1
-        .progressBar(i, tot_n)
+        #.progressBar(i, tot_n)
         
         chunk <- DBI::dbFetch(rs, 1000)
         
@@ -821,7 +821,7 @@
         
     }
     
-    .progressBar(tot_n, tot_n)
+    #.progressBar(tot_n, tot_n)
     
     cat("\n")
     

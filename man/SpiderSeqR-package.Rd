@@ -25,7 +25,7 @@ and automates the search and retrieval of the information.
 }
 
 \author{
-\strong{Maintainer}: A. Sozanska \email{as2382@cam.ac.uk}
+\strong{Maintainer}: A. Sozanska \email{amsozanska@gmail.com}
 
 Authors:
 \itemize{

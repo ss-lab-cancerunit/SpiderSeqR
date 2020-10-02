@@ -209,6 +209,12 @@ startSpiderSeqR <- function(path,
         
     }
     
+    print(sra_file)
+    print(geo_file)
+    print(srr_gsm_file)
+    
+    print(file.exists(sra_file))
+    print(file.exists(geo_file))
     
     #==========================================================
     # RE-CHECK THE PRESENCE OF FILES (have they downloaded successfully???)

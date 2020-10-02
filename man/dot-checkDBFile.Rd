@@ -4,9 +4,11 @@
 \alias{.checkDBFile}
 \title{Check and ensure that the DB file is in place}
 \usage{
-.checkDBFile(db_file, db_file_name, db_expiry)
+.checkDBFile(path, db_file, db_file_name, db_expiry)
 }
 \arguments{
+\item{path}{Path for storing database files (as passed to startSpiderSeqR())}
+
 \item{db_file}{Path to the database file}
 
 \item{db_file_name}{File name (without the path)}

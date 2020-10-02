@@ -19,10 +19,10 @@ setSpiderSeqROption("test_input", test_input_list)
 
 
 #' Some function that will use .tmenu
-.someFunction <- function(){
-    menu_out<- .tmenu(choices = c(1,2,3), menu_name = "sra_file_choice")
-    print(menu_out)
-}
+#.someFunction <- function(){
+#    menu_out<- .tmenu(choices = c(1,2,3), menu_name = "sra_file_choice")
+#    print(menu_out)
+#}
 
 
 

@@ -4,9 +4,11 @@
 \alias{.noDBFile}
 \title{Course of action to follow if a db file is missing}
 \usage{
-.noDBFile(db_file_name)
+.noDBFile(path, db_file_name)
 }
 \arguments{
+\item{path}{Path for storing database files}
+
 \item{db_file_name}{A character with the db_file_name (SRAmetadb.sqlite, 
 GEOmetadb.sqlite or SRR_GSM.sqlite)}
 }

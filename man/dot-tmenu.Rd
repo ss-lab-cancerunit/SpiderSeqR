@@ -2,7 +2,8 @@
 % Please edit documentation in R/temp.R
 \name{.tmenu}
 \alias{.tmenu}
-\title{Menu function with testing interface}
+\title{Some function that will use .tmenu
+Menu function with testing interface}
 \usage{
 .tmenu(choices, menu_name, title = NULL)
 }
@@ -19,6 +20,7 @@ Chosen menu option, either by the users, or by accessing
 pre-set options
 }
 \description{
+Some function that will use .tmenu
 Menu function with testing interface
 }
 \keyword{internal}

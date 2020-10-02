@@ -41,8 +41,8 @@
 print("setup")
 
 
-assign("x", 2, envir = .GlobalEnv)
-print(ls(envir = .GlobalEnv))
+#assign("x", 2, envir = .GlobalEnv)
+#print(ls(envir = .GlobalEnv))
 
 
 q <- getSpiderSeqROption("quiet")
@@ -52,6 +52,8 @@ setSpiderSeqROption("quiet", TRUE)
 testing <- getSpiderSeqROption("testing")
 
 setSpiderSeqROption("testing", TRUE)
+
+local_run <- FALSE
 
 
 
@@ -78,31 +80,33 @@ print(db_files)
 #}
 #-------------------
 
+
 # Populate the directory with mock database files
-
-.createMockSRA("testdata/Mock_Database_Files/All_Present")
-.createMockGEO("testdata/Mock_Database_Files/All_Present")
-.createMockCustomDB("testdata/Mock_Database_Files/All_Present")
-
-.createMockSRA("testdata/Mock_Database_Files/Files_in_Subdirectory/Subdir")
-.createMockGEO("testdata/Mock_Database_Files/Files_in_Subdirectory/Subdir")
-.createMockCustomDB("testdata/Mock_Database_Files/Files_in_Subdirectory/Subdir")
-
-
-
-#.createMockSRA()
-.createMockGEO("testdata/Mock_Database_Files/SRA_Missing")
-.createMockCustomDB("testdata/Mock_Database_Files/SRA_Missing")
-
-
-.createMockSRA("testdata/Mock_Database_Files/GEO_Missing")
-#.createMockGEO()
-.createMockCustomDB("testdata/Mock_Database_Files/GEO_Missing")
-
-
-.createMockSRA("testdata/Mock_Database_Files/SpiderSeqR_Missing")
-.createMockGEO("testdata/Mock_Database_Files/SpiderSeqR_Missing")
-#.createMockCustomDB()
+# Only run if testing locally
+if (local_run){
+  .createMockSRA("testdata/Mock_Database_Files/All_Present")
+  .createMockGEO("testdata/Mock_Database_Files/All_Present")
+  .createMockCustomDB("testdata/Mock_Database_Files/All_Present")
+  
+  .createMockSRA("testdata/Mock_Database_Files/Files_in_Subdirectory/Subdir")
+  .createMockGEO("testdata/Mock_Database_Files/Files_in_Subdirectory/Subdir")
+  .createMockCustomDB("testdata/Mock_Database_Files/Files_in_Subdirectory/Subdir")
+  
+  
+  #.createMockSRA()
+  .createMockGEO("testdata/Mock_Database_Files/SRA_Missing")
+  .createMockCustomDB("testdata/Mock_Database_Files/SRA_Missing")
+  
+  
+  .createMockSRA("testdata/Mock_Database_Files/GEO_Missing")
+  #.createMockGEO()
+  .createMockCustomDB("testdata/Mock_Database_Files/GEO_Missing")
+  
+  
+  .createMockSRA("testdata/Mock_Database_Files/SpiderSeqR_Missing")
+  .createMockGEO("testdata/Mock_Database_Files/SpiderSeqR_Missing")
+  #.createMockCustomDB()
+}
 
 
 

@@ -19,7 +19,8 @@
 }
 \value{
 A logical vector length 3 indicating whether the respective 
-    files are present (in order as above)
+    files are present (in order as above). Also prints a relevant message 
+    to the user
 }
 \description{
 Check for missing files
