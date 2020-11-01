@@ -1,6 +1,6 @@
 
 #print(ls(envir = .GlobalEnv))
-rm("x", envir = .GlobalEnv)
+#rm("x", envir = .GlobalEnv)
 print(ls(envir = .GlobalEnv))
 
 
@@ -43,7 +43,23 @@ if (preserve_connection){
 }
 
 
-
+if (getSpiderSeqROption("local_run")){
+  # For the sanity check of the deletion method:
+  #write.csv(c(1:10), "testdata/Mock_Database_Files/sham.csv")
+  
+  #' Clean up the added db files
+  all_files <- list.files("testdata/Mock_Database_Files", 
+                          recursive = TRUE, full.names = TRUE)
+  new_files <- all_files[!(all_files %in% getSpiderSeqROption("db_files"))]
+  
+  print("NEW FILES:")
+  print(new_files)
+  
+  if (length(new_files) > 0){
+    file.remove(new_files)
+  }
+  
+}
 
 
 

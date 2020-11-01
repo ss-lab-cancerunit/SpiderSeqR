@@ -22,9 +22,10 @@
 #' 
 .findDBFiles <- function(path){
     
+    sra_file <- .DBNames()[1]
     sra_file <- "SRAmetadb.sqlite"
-    geo_file <- "GEOmetadb.sqlite"
-    srr_gsm_file <- "SRR_GSM.sqlite"
+    geo_file <- .DBNames()[2]
+    srr_gsm_file <- .DBNames()[3]
     
     sra_file_name <- sra_file
     geo_file_name <- geo_file
@@ -74,13 +75,16 @@
         
     }
     
-    file_list <- list(sra_file=sra_file, 
+    
+    file_paths <- list(sra_file=sra_file, 
                       geo_file=geo_file, 
                       srr_gsm_file=srr_gsm_file)
     
+    #file_paths <- c(sra_file, geo_file, srr_gsm_file)
     
-    return(file_list)
     
+    #return(file_paths)
+    return(file_paths)
 }
 
 
@@ -88,7 +92,7 @@
 #' Find database files
 #' 
 #' @param path Path to search within
-#' @return A list with paths to database files
+#' @return A vector with paths to database files
 #' 
 #' @keywords internal
 #' 
@@ -162,15 +166,16 @@
 #'     
 #' @keywords internal
 #' 
-.missingFileCheck <- function(sra_file=sra_file, 
-                                geo_file=geo_file,
-                                srr_gsm_file=srr_gsm_file){
-    # Repeat missing check after extended search done
-    missing_logical <- c(!file.exists(sra_file), 
-                         !file.exists(geo_file), 
-                         !file.exists(srr_gsm_file))
+.missingFileCheck <- function(file_paths){
     
-    missing_files <- c(sra_file, geo_file, srr_gsm_file)
+    # Repeat missing check after extended search done
+    #missing_logical <- !file.exists(file_paths)
+    missing_logical <- c(!file.exists(file_paths[1]), 
+                            !file.exists(file_paths[2]), 
+                            !file.exists(file_paths[3]))
+    
+    # Get a vector with names of missing files (in *.sqlite format)
+    missing_files <- .DBNames()
     missing_files <- missing_files[missing_logical]
     
     
@@ -237,6 +242,8 @@
                                  srr_gsm_expiry, 
                                  missing_file_number){
     
+    print("EXPIRY EXPIRY EXPIRY")
+    print(missing_file_number)
     # Logic:
     # Use specific parameters (sra, geo, srr_gsm) if available. 
     # If not, use the expiry date from general_expiry

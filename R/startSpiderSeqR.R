@@ -150,15 +150,29 @@ startSpiderSeqR <- function(path,
     
     path <- normalizePath(path)
     
-    file_list <- .findDBFiles(path=path)
+    print(path)
     
-    sra_file <- file_list$sra_file
-    geo_file <- file_list$geo_file
-    srr_gsm_file <- file_list$srr_gsm_file
+    file_paths <- .findDBFiles(path=path)
+    .GlobalEnv$file_paths <- file_paths
     
-    missing_logical <- do.call(.missingFileCheck, c(file_list))
+    print(getwd())
+    print("THESE ARE THE FILES")
+    print(dir())
+    print(c(file.exists(file_paths[1]), 
+            file.exists(file_paths[2]), 
+            file.exists(file_paths[3])))
     
-    #==========================================================
+    sra_file <- file_paths[1]
+    geo_file <- file_paths[2]
+    srr_gsm_file <- file_paths[3]
+    
+    print(file_paths)
+    
+    
+    missing_logical <- .missingFileCheck(file_paths)
+    #missing_logical <- do.call(.missingFileCheck, list(file_paths))
+    
+        #==========================================================
     
     #Setup:
     # - SRAmetadb
@@ -188,20 +202,20 @@ startSpiderSeqR <- function(path,
                                     missing_file_number=sum(missing_logical))
     
     
-    expiry_parameters <- do.call(.setExpiryParameters,c(raw_expiry_parameters))
+    expiry_parameters <- do.call(.setExpiryParameters, c(raw_expiry_parameters))
     
     .mm(cli::rule(), "comm")
     
-    #return(file_list)
+    #return(file_paths)
     
-    .GlobalEnv$file_list <- file_list
+    .GlobalEnv$file_paths <- file_paths
     .GlobalEnv$expiry_parameters <- expiry_parameters
     
     # Check (or download) SRA and GEO files
     for (i in 1:2){
         
         .checkDBFile(path=path, 
-                        db_file=file_list[[i]], 
+                        db_file=file_paths[[i]], 
                         db_file_name=.DBNames()[i], 
                         db_expiry=expiry_parameters[[i]])
         
@@ -235,7 +249,7 @@ startSpiderSeqR <- function(path,
     .mm(cli::rule(), "comm")
     
     .checkDBFile(path=path, 
-                 db_file=file_list[[3]], 
+                 db_file=file_paths[[3]], 
                  db_file_name=.DBNames()[3], 
                  db_expiry=expiry_parameters[[3]])
     

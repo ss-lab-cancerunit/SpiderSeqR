@@ -53,19 +53,20 @@ testing <- getSpiderSeqROption("testing")
 
 setSpiderSeqROption("testing", TRUE)
 
-local_run <- FALSE
+setSpiderSeqROption("local_run", TRUE) # LOCAL RUN ===*===
+
 
 
 
 #' # Remove existing database files and prepare new ones for testing
-#' 
+#' Replaced by removal of files at the end of the tests
 
-db_files <- list.files("testdata/Mock_Database_Files", 
-                        "*.sqlite", recursive=TRUE, full.names = TRUE)
-for (d in db_files){
-    file.remove(d)
-}
-print(db_files)
+#db_files <- list.files("testdata/Mock_Database_Files", 
+#                        "*.sqlite", recursive=TRUE, full.names = TRUE)
+#for (d in db_files){
+#    file.remove(d)
+#}
+#print(db_files)
 
 
 
@@ -83,7 +84,8 @@ print(db_files)
 
 # Populate the directory with mock database files
 # Only run if testing locally
-if (local_run){
+if (getSpiderSeqROption("local_run")){
+  
   .createMockSRA("testdata/Mock_Database_Files/All_Present")
   .createMockGEO("testdata/Mock_Database_Files/All_Present")
   .createMockCustomDB("testdata/Mock_Database_Files/All_Present")
@@ -106,6 +108,11 @@ if (local_run){
   .createMockSRA("testdata/Mock_Database_Files/SpiderSeqR_Missing")
   .createMockGEO("testdata/Mock_Database_Files/SpiderSeqR_Missing")
   #.createMockCustomDB()
+  
+  setSpiderSeqROption("db_files", 
+                      list.files("testdata/Mock_Database_Files", 
+                                 full.names = TRUE, recursive = TRUE))
+  
 }
 
 
